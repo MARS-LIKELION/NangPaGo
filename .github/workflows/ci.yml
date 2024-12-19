@@ -26,3 +26,4 @@ jobs:
 
       - name: Test Application
         run: ./gradlew test
+
