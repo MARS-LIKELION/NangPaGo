@@ -1,12 +1,9 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - '**'
   pull_request:         # PR 생성 시 실행
     branches:
-      - main
+      - main            # main 브랜치로 PR 생성 시에만 실행
 
 jobs:
   build:
@@ -20,6 +17,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'  # OpenJDK Temurin 배포판 지정
 
       - name: Build with Gradle
         run: ./gradlew build
