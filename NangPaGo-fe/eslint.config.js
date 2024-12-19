@@ -22,7 +22,6 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      prettier: require('eslint-plugin-prettier'),
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -34,7 +33,6 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      'prettier/prettier': 'error',
     },
   },
 ]
