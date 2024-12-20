@@ -1,13 +1,7 @@
-import React from 'react';
-import SOCIAL_BUTTON_STYLES from './styles';
-import { getStyleForProvider } from './utils';
+import SOCIAL_BUTTON_STYLES from '../util/auth.js';
 
 function SocialLoginButton({ provider, onClick }) {
-  const currentStyle = getStyleForProvider(SOCIAL_BUTTON_STYLES, provider);
-
-  if (!currentStyle) {
-    return null;
-  }
+  const currentStyle = SOCIAL_BUTTON_STYLES[provider];
 
   return (
     <button

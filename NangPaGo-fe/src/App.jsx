@@ -1,8 +1,7 @@
-import React from 'react';
-import LoginPage from './pages/LoginPage.jsx';
-
-function App() {
-  return <LoginPage />;
-}
-
-export default App;
+// import LoginPage from './pages/login/LoginPage.jsx';
+//
+// function App() {
+//   return <LoginPage />;
+// }
+//
+// export default App;
