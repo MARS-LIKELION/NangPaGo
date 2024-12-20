@@ -2,27 +2,32 @@ package com.mars.NangPaGo.security.token.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Entity
+
 @Getter
-@Builder
-@AllArgsConstructor
+@Entity
 public class Token {
     @Id
-    private String tokenid;
-    private String accesstoken;
-    private String refreshtoken;
+    private String tokenId;
+    private String accessToken;
+    private String refreshToken;
+
+    @Builder
+    public Token(String tokenId, String accessToken, String refreshToken) {
+        this.tokenId = tokenId;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 
     //리프래쉬 토큰 재발급
-    public Token updateRefreshToken(String refreshtoken){
-        this.refreshtoken = refreshtoken;
+    public Token reissueRefreshToken(String refreshtoken){
+        this.refreshToken = refreshtoken;
         return this;
     }
     //엑세스 토큰 재발급
-    public void updateAccessToken(String accesstoken){
-        this.accesstoken = accesstoken;
+    public void reissueAccessToken(String accesstoken){
+        this.accessToken = accesstoken;
     }
 }

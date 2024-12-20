@@ -14,25 +14,21 @@ public class TokenService {
     //리프래쉬 토큰의 갱신, DB에 저장하는 토큰의 경우 리프래쉬밖에 없어서 리프래쉬만 사용
     @Transactional
     public void saveOrUpdate (Token token, String memberId, String accessToken, String refreshToken){
-        if(token!=null){//이미 토큰이 있을 경우, 만료된 토큰을 변경함
-            token.updateAccessToken(accessToken);
-            token.updateRefreshToken(refreshToken);
-        }else{//토큰이 아예 없는 새로 가입한 회원의 경우
-            token = Token.builder()
-                    .tokenid(memberId) //사용자 고유의 Id
-                    .accesstoken(accessToken)//엑세스 토큰
-                    .refreshtoken(refreshToken)//리프래쉬 토큰
-                    .build();
+        if (token!=null){ //이미 토큰이 있을 경우, 만료된 토큰을 변경함
+            token.reissueAccessToken(accessToken);
+            token.reissueRefreshToken(refreshToken);
+        } else{ //토큰이 아예 없는 새로 가입한 회원의 경우
+            token =  new Token (memberId,accessToken,refreshToken);
         }
         tokenRepository.save(token);
     }
     @Transactional(readOnly = true)
-    public Token findAccessToken(String accessToken) {//예외처리 만들기, 임시로 런타임
+    public Token findAccessToken(String accessToken) { //예외처리 만들기, 임시로 런타임
         return tokenRepository.findByAccesstoken(accessToken).orElseThrow(() -> new RuntimeException("만료된 토큰입니다"));
     }
     @Transactional
     public void updateToken(String accessToken, Token token){
-        token.updateAccessToken(accessToken);
+        token.reissueAccessToken(accessToken);
         tokenRepository.save(token);
     }
 }

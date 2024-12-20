@@ -63,10 +63,10 @@ public class TokenProvider {
 
         return Jwts.builder()
                 .subject(authentication.getName()) //시큐리티 컨텍스트 홀더에서 가져올 유저의 Id값
-                .claim(ROLE,authories)//여러개의 권한은 없지만 기본적으로 시큐리티 익명과 로그인 유저를 구분짓기 위해 추가
-                .issuedAt(data)//발급 기간
-                .expiration(validDateNow)//유효기간
-                .signWith(secretKey, Jwts.SIG.HS256)//JWT 시크릿키, 기존 암호화된 시크릿 키를 한번 더 암호화
+                .claim(ROLE,authories) //여러개의 권한은 없지만 기본적으로 시큐리티 익명과 로그인 유저를 구분짓기 위해 추가
+                .issuedAt(data) //발급 기간
+                .expiration(validDateNow) //유효기간
+                .signWith(secretKey, Jwts.SIG.HS256) //JWT 시크릿키, 기존 암호화된 시크릿 키를 한번 더 암호화
                 .compact();
     };
     private String generateAccessToken(Authentication authentication){
@@ -75,23 +75,26 @@ public class TokenProvider {
     }
 
     private void generateRefreshToken(Token token, Authentication authentication, String accessToken){
-        String refreshToken = generateToken(authentication,REFRESH_TOKEN_VALID_DATE);
+        String refreshToken = generateToken(authentication, REFRESH_TOKEN_VALID_DATE);
         //토큰의 null 여부에 따라 update 또는 save를 함
         tokenService.saveOrUpdate(token, authentication.getName(),accessToken,refreshToken);
     }
     //엑세스 토큰 재발급
     private String reissueAccessToken(String accessToken){
-        if(StringUtils.hasText(accessToken)){//토큰 값이 전달되었을때
-            Token token = tokenService.findAccessToken(accessToken);//해당 토큰값이 있는 리프래쉬 토큰 확인
-            String refreshtoken = token.getRefreshtoken(); //리프래시 토큰의 값 저장
+        if (!StringUtils.hasText(accessToken)){
+            return null;
+        }
 
-            if(validateToken(refreshtoken)){//리프래쉬 토큰의 유효기간이 남았을 경우
-                //엑세스 토큰을 새로 발급하여, 리프래쉬 토큰의 정보를 새로 갱신
-                String newAccessToken = generateAccessToken(getAuthentication(refreshtoken));
-                tokenService.updateToken(newAccessToken,token);
-                return newAccessToken;
-            }//리프래시 토큰이 유효하지 않는 경우는 filter를 통해 거를예정이기에 추가적인 if문 사용X
-        }return null;
+        Token token = tokenService.findAccessToken(accessToken); //해당 토큰값이 있는 리프래쉬 토큰 확인
+        String refreshToken = token.getRefreshToken(); //리프래시 토큰의 값 저장
+
+        if (!validateToken(refreshToken)){//리프래쉬 토큰의 유효기간이 남았을 경우
+            return null;
+        }
+        //엑세스 토큰을 새로 발급하여, 리프래쉬 토큰의 정보를 새로 갱신
+        String newAccessToken = generateAccessToken(getAuthentication(refreshToken));
+        tokenService.updateToken(newAccessToken,token);
+        return newAccessToken;
     }
     //토큰 유효성 검사
     private boolean validateToken(String token){
@@ -106,18 +109,17 @@ public class TokenProvider {
     private Claims parseClaims(String token){
         try{
             return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
-        }catch (ExpiredJwtException e){//토큰 만료되었을 경우
+        } catch (ExpiredJwtException e){//토큰 만료되었을 경우
             return e.getClaims();
-        }catch (MalformedJwtException e){//올바르지 않은 토큰
+        } catch (MalformedJwtException e){//올바르지 않은 토큰
             throw new MalformedJwtException("올바르지 않은 토큰입니다."); //예외처리 따로 하기
-        }catch (SecurityException e){// 잘못된 JWT 시그니처
+        } catch (SecurityException e){// 잘못된 JWT 시그니처
             throw new SecurityException("잘못된 시그니처 입니다."); //예외처리
         }
     }
     //권한 가져오기
     public List<SimpleGrantedAuthority> getAuthorities(Claims claims){
-        return Collections.singletonList(new SimpleGrantedAuthority(
-                claims.get(ROLE).toString()));
+        return Collections.singletonList(new SimpleGrantedAuthority(claims.get(ROLE).toString()));
     }
 
     //유저 객체 생성 이후 시큐리티 ContextHolder의 Context에 등록
