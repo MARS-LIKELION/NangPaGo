@@ -1,32 +1,27 @@
-import React, { useState } from 'react';
-import Modal from '../common/Modal';
-import SocialLoginButton from '../components/SocialLoginButton';
-import { isValidProvider } from '../common/utils/validation';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SocialLoginButton from '../../components/login/SocialLoginButton.jsx';
+import Modal from '../../common/Modal.jsx';
 
 function LoginPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleLoginClick = async (provider) => {
-    if (!isValidProvider(provider)) {
-      setErrorMessage(`잘못된 소셜 로그인 제공자입니다: ${provider}`);
-      setIsModalOpen(true);
-      return;
-    }
-
     try {
       const response = await fetch(
-        `http://localhost:8080/oauth2/authorization/${provider}`,
+        `http://${AUTH_HOST}/oauth2/authorization/${provider}`,
         {
           method: 'GET',
-          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
         },
       );
 
       if (response.ok) {
         const data = await response.json();
         console.log('로그인 성공:', data);
-        window.location.href = '/home';
+        navigate('/');
       } else {
         const errorData = await response.json();
         setErrorMessage(

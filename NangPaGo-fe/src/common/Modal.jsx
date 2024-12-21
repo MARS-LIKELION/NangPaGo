@@ -1,5 +1,3 @@
-import React from 'react';
-
 function Modal({ isOpen, onClose, message }) {
   if (!isOpen) return null;
 
