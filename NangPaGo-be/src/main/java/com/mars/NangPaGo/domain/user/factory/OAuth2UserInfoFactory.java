@@ -25,11 +25,14 @@ public class OAuth2UserInfoFactory {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid provider: " + providerName));
 
         Function<Map<String, Object>, OAuth2UserInfo> creator = USER_INFO_CREATORS.get(provider);
-        if (creator == null) {
-            throw new IllegalArgumentException("No user info creator found for provider: " + provider);
-        }
-
+        validateProvider(creator, provider);
         return creator.apply(attributes);
+    }
+
+    private static void validateProvider(Function<Map<String, Object>, OAuth2UserInfo> creator, Provider provider) {
+        if (creator == null) {
+            throw new IllegalArgumentException("유효하지 않는 제공자: " + provider);
+        }
     }
 }
 
