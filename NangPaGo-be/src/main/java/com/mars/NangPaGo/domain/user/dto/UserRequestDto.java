@@ -32,8 +32,7 @@ public record UserRequestDto(
                 .nickname(this.nickname)
                 .email(this.email)
                 .profileImage(this.profileImage)
-                .provider(Provider.from(this.provider)
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid provider: " + this.provider)))
+                .provider(Provider.from(this.provider))
                 .providerId(this.providerId)
                 .role("ROLE_USER")
                 .build();

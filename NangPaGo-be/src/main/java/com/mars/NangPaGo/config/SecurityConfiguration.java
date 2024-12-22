@@ -26,24 +26,26 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf((csrf) -> csrf.disable())
+            .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions().sameOrigin())
 
-                .httpBasic(httpBasic -> httpBasic.disable())
+            .httpBasic(httpBasic -> httpBasic.disable())
 
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
 
-                .oauth2Login((oauth2) ->
-                        oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService)))
-                                .successHandler(customSuccessHandler)
-                )
+            .oauth2Login((oauth2) ->
+                oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+                        .userService(customOAuth2UserService))
+                    )
+                    .successHandler(customSuccessHandler)
+            )
 
-                .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/", "/login", "/oauth2/**").permitAll()
-                        .anyRequest().authenticated())
+            .authorizeHttpRequests((request) -> request
+                .requestMatchers("/", "/login", "/oauth2/**", "/h2-console/**").permitAll()
+                .anyRequest().authenticated())
 
-                .sessionManagement((session) ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .sessionManagement((session) ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }

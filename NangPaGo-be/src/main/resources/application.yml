@@ -9,10 +9,21 @@ spring:
 #    username: ${DB_USERNAME}
 #    password: ${DB_PASSWORD}
 
+  # 테스트를 위한 인메모리 h2
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
   # Table 자동 생성 방지
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       open-in-view: false
 
   security:

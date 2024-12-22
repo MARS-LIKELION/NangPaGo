@@ -1,6 +1,5 @@
 package com.mars.NangPaGo.domain.user.factory.userinfo;
 
-import com.mars.NangPaGo.domain.user.enums.Provider;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
