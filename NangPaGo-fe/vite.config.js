@@ -4,12 +4,6 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    // proxy: {
-    //   '/nangpago': {
-    //     target: 'http://localhost:8080',
-    //     changeOrigin: true,
-    //     secure: false,
-    //   },
-    // },
+    'process.env': process.env,
   },
 });
