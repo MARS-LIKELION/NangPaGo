@@ -1,38 +1,13 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import SocialLoginButton from '../../components/login/SocialLoginButton.jsx';
 import Modal from '../../common/Modal.jsx';
+import { useState } from 'react';
 
 function LoginPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
+  const HOST = import.meta.env.VITE_HOST;
 
-  const handleLoginClick = async (provider) => {
-    try {
-      const response = await fetch(
-        `http://${AUTH_HOST}/oauth2/authorization/${provider}`,
-        {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('로그인 성공:', data);
-        navigate('/');
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(
-          `로그인 실패: ${errorData.message || '알 수 없는 오류'}`,
-        );
-        setIsModalOpen(true);
-      }
-    } catch (error) {
-      setErrorMessage(`서버와의 통신 중 오류 발생: ${error.message}`);
-      setIsModalOpen(true);
-    }
+  const handleLoginClick = (provider) => {
+    window.location.href = `http://${HOST}/oauth2/authorization/${provider}`;
   };
 
   return (
@@ -54,11 +29,7 @@ function LoginPage() {
         />
       </div>
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        message={errorMessage}
-      />
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
