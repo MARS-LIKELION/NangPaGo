@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
-import { BiSearch } from 'react-icons/bi';
+import SearchBar from '../../components/search/SearchBar';
 
 const RecipeList = () => {
   const [activeTab, setActiveTab] = useState('recommended');
@@ -52,18 +52,10 @@ const RecipeList = () => {
           <RecipeListTab activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
 
-        <div className="px-4 py-2">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="레시피 검색..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
-          </div>
-        </div>
+        <SearchBar 
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+        />
       </div>
 
       {/* 스크롤되는 컨텐츠 영역 */}
@@ -78,4 +70,4 @@ const RecipeList = () => {
   );
 };
 
-export default RecipeList; 
+export default RecipeList;
