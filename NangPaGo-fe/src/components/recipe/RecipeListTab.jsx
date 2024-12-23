@@ -6,7 +6,7 @@ const RecipeListTab = ({ activeTab, setActiveTab }) => {
       <button
         className={`flex-1 py-3 text-center font-medium border-b-2 ${
           activeTab === 'recommended'
-            ? 'border-blue-500 text-blue-500'
+            ? 'border-[var(--primary-color)] text-[var(--primary-color)]'
             : 'border-transparent text-gray-500 hover:text-gray-700'
         }`}
         onClick={() => setActiveTab('recommended')}
@@ -17,7 +17,7 @@ const RecipeListTab = ({ activeTab, setActiveTab }) => {
       <button
         className={`flex-1 py-3 text-center font-medium border-b-2 ${
           activeTab === 'favorites'
-            ? 'border-blue-500 text-blue-500'
+            ? 'border-[var(--primary-color)] text-[var(--primary-color)]'
             : 'border-transparent text-gray-500 hover:text-gray-700'
         }`}
         onClick={() => setActiveTab('favorites')}

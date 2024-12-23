@@ -41,7 +41,7 @@ const RecipeList = () => {
             <h1 className="text-3xl font-bold">냉파고</h1>
             <Link 
               to="/login" 
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-300"
+              className="bg-[var(--primary-color)] hover:bg-[color-mix(in_srgb,var(--primary-color),#000_10%)] text-white px-4 py-2 rounded-lg transition-colors duration-300"
             >
               로그인
             </Link>
