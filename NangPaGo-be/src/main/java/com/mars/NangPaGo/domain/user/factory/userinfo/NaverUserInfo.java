@@ -52,24 +52,28 @@ public class NaverUserInfo implements OAuth2UserInfo {
     }
 
     private String getAttribute(String key) {
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-        if (response == null) {
-            return "";
-        }
-        return response.getOrDefault(key, "").toString();
+        Map<String, Object> response = getMap(attributes.get("response"));
+        return response != null ? getStringValue(response.get(key)) : "";
     }
 
     private String formatPhoneNumber(String rawPhone) {
-        if (rawPhone == null || rawPhone.isEmpty()) {
-            return "";
-        }
-        return rawPhone.replaceAll("(\\d{3})(\\d{4})(\\d+)", "$1-$2-$3");
+        return (rawPhone != null && !rawPhone.isEmpty()) 
+            ? rawPhone.replaceAll("(\\d{3})(\\d{4})(\\d+)", "$1-$2-$3") 
+            : "";
     }
 
     private String formatBirthDay(String year, String day) {
-        if (year.isEmpty() || day.isEmpty()) {
-            return "";
-        }
-        return String.format("%s-%s", year, day);
+        return (year != null && !year.isEmpty() && day != null && !day.isEmpty()) 
+            ? String.format("%s-%s", year, day) 
+            : "";
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getMap(Object obj) {
+        return obj instanceof Map<?, ?> ? (Map<String, Object>) obj : null;
+    }
+
+    private String getStringValue(Object value) {
+        return value != null ? value.toString() : "";
     }
 }

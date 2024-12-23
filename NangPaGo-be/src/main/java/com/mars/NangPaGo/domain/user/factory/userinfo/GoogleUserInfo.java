@@ -45,7 +45,8 @@ public class GoogleUserInfo implements OAuth2UserInfo {
     }
 
     private String getAttribute(String key) {
-        return attributes.get(key).toString();
+        Object value = attributes.get(key);
+        return value != null ? value.toString() : "";
     }
 
 }

@@ -45,6 +45,20 @@ public class JwtUtil {
             .compact();
     }
 
+    public String extractEmailFromToken(String token) {
+        try {
+            @SuppressWarnings("deprecation")
+            Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+            return claims.get("email", String.class);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+    }
+
     public String createRefreshToken(String email, Long expiredMs) {
         return Jwts.builder()
             .claim("email", email)
@@ -54,6 +68,7 @@ public class JwtUtil {
             .compact();
     }
 
+    @SuppressWarnings("deprecation")
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -66,6 +81,7 @@ public class JwtUtil {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
             .setSigningKey(secretKey)
