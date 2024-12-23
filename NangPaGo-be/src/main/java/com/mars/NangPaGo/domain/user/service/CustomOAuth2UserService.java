@@ -24,12 +24,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        log.info("OAuth2User: {}", oAuth2User);
+        log.info("유저 데이터 조회: {}", oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        log.info("registrationId: {}", registrationId);
+        log.info("제공자: {}", registrationId);
+
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.create(registrationId, oAuth2User.getAttributes());
-        log.info("Parsed UserInfo: {}", userInfo);
+        log.info("유저 생성: {}", userInfo.toString());
 
         return new CustomOAuth2User(userRepository.findByEmail(userInfo.getEmail())
                 .orElseGet(() -> registerUser(userInfo)), oAuth2User.getAttributes());

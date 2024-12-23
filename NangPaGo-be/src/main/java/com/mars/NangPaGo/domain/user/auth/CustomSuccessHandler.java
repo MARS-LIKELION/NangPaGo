@@ -1,5 +1,6 @@
 package com.mars.NangPaGo.domain.user.auth;
 
+import com.mars.NangPaGo.domain.user.service.RefreshTokenService;
 import com.mars.NangPaGo.domain.user.util.JwtUtil;
 import com.mars.NangPaGo.domain.user.vo.CustomOAuth2User;
 import jakarta.servlet.ServletException;
@@ -9,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    public static final String URL = "http://localhost:5173/";
+
     private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,22 +33,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .getAuthority();
 
         String accessToken = jwtUtil.createAccessToken(email, role, jwtUtil.getAccessTokenExpire());
-        String refreshToken = jwtUtil.createRefreshToken(email, jwtUtil.getRefreshTokenExpire());
 
-        Cookie accessTokenCookie = new Cookie("Authorization", accessToken);
+        refreshTokenService.saveRefreshToken(jwtUtil.createRefreshToken(email,
+                jwtUtil.getRefreshTokenExpire()), email, jwtUtil.getRefreshTokenExpire());
+
+        Cookie accessTokenCookie = new Cookie("nangpago", accessToken);
         accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setSecure(true);
         accessTokenCookie.setPath("/");
         accessTokenCookie.setMaxAge((int) (jwtUtil.getAccessTokenExpire() / 1000));
         response.addCookie(accessTokenCookie);
 
-        Cookie refreshTokenCookie = new Cookie("RefreshToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge((int) (jwtUtil.getRefreshTokenExpire() / 1000));
-        response.addCookie(refreshTokenCookie);
-
-        response.sendRedirect("http://localhost:5173/");
+        response.sendRedirect(URL);
     }
 }

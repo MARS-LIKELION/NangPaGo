@@ -27,10 +27,14 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return user.getEmail();
+        return principalValue();
     }
 
     public User getUser() {
         return user;
+    }
+
+    private String principalValue() {
+        return user.getEmail();
     }
 }

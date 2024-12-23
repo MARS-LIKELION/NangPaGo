@@ -3,7 +3,9 @@ package com.mars.NangPaGo.domain.user.factory.userinfo;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
+import lombok.ToString;
 
+@ToString
 @RequiredArgsConstructor
 public class KakaoUserInfo implements OAuth2UserInfo {
 
@@ -29,10 +31,6 @@ public class KakaoUserInfo implements OAuth2UserInfo {
         return getNestedAttribute("kakao_account", "name");
     }
 
-    public String getProfileNickname() {
-        return getNestedAttribute("properties", "nickname");
-    }
-
     public String getPhoneNumber() {
         return formatPhoneNumber(getAttribute("phone_number"));
     }
@@ -41,7 +39,7 @@ public class KakaoUserInfo implements OAuth2UserInfo {
         return getNestedAttribute("kakao_account", "gender");
     }
 
-    public String getProfileImage() {
+    public String getProfileImageUrl() {
         return getNestedAttribute("properties", "profile_image");
     }
 
@@ -54,16 +52,20 @@ public class KakaoUserInfo implements OAuth2UserInfo {
 
     private String getAttribute(String key) {
         Object value = attributes.get(key);
-        return value != null ? value.toString() : "";
+        if (!isPresent(value)) {
+            return "";
+        }
+        return value.toString();
     }
 
     private String getNestedAttribute(String parentKey, String childKey) {
         Object parentObject = attributes.get(parentKey);
-        if (parentObject instanceof Map<?, ?> parentMap) {
-            Object value = parentMap.get(childKey);
-            return value != null ? value.toString() : "";
+        if (!isMap(parentObject)) {
+            return "";
         }
-        return "";
+
+        Map<?, ?> parentMap = (Map<?, ?>) parentObject;
+        return getStringValue(parentMap.get(childKey));
     }
 
     private String formatPhoneNumber(String rawPhone) {
@@ -74,9 +76,24 @@ public class KakaoUserInfo implements OAuth2UserInfo {
     }
 
     private String formatBirthDay(String year, String day) {
-        if (year == null || year.isEmpty() || day == null || day.isEmpty()) {
+        if (isPresent(year) || year.isEmpty() || isPresent(day) || day.isEmpty()) {
             return "";
         }
         return String.format("%s-%s-%s", year, day.substring(0, 2), day.substring(2));
+    }
+
+    private boolean isPresent(Object value) {
+        return value == null;
+    }
+
+    private boolean isMap(Object obj) {
+        return obj instanceof Map<?, ?>;
+    }
+
+    private String getStringValue(Object value) {
+        if (!isPresent(value)) {
+            return "";
+        }
+        return value.toString();
     }
 }

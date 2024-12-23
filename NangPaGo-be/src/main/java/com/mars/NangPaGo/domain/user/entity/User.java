@@ -24,12 +24,10 @@ import lombok.NoArgsConstructor;
 @Entity
 public class User {
 
-    @Column(name = "user_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String password;
     private String nickname;
     private LocalDate birthDay;
 
@@ -37,11 +35,10 @@ public class User {
     private Gender gender;
     private String email;
     private String phoneNumber;
-    private String profileImage;
+    private String profileImageUrl;
     private String role;
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
     private String providerId;
-
 }

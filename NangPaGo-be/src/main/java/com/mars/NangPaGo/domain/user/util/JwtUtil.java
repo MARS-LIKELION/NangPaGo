@@ -26,40 +26,40 @@ public class JwtUtil {
     private final Long refreshTokenExpire;
 
     public JwtUtil(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token.access-expiration-time}") Long access,
-            @Value("${jwt.token.refresh-expiration-time}") Long refresh
+        @Value("${jwt.secret}") String secret,
+        @Value("${jwt.token.access-expiration-time}") Long access,
+        @Value("${jwt.token.refresh-expiration-time}") Long refresh
     ) {
         this.secretKey = new SecretKeySpec(secret.getBytes(UTF_8), SIG.HS256.key().build().getAlgorithm());
         this.accessTokenExpire = access;
         this.refreshTokenExpire = refresh;
     }
 
-    public String createRefreshToken(String email, Long expiredMs) {
-        return Jwts.builder()
-                .claim("email", email)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(secretKey)
-                .compact();
-    }
-
     public String createAccessToken(String email, String role, Long expiredMs) {
         return Jwts.builder()
-                .claim("email", email)
-                .claim("role", role)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(secretKey)
-                .compact();
+            .claim("email", email)
+            .claim("role", role)
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + expiredMs))
+            .signWith(secretKey)
+            .compact();
+    }
+
+    public String createRefreshToken(String email, Long expiredMs) {
+        return Jwts.builder()
+            .claim("email", email)
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + expiredMs))
+            .signWith(secretKey)
+            .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token);
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
@@ -68,16 +68,16 @@ public class JwtUtil {
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(secretKey)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
 
         String email = claims.get("email", String.class);
         String role = claims.get("role", String.class);
 
         Collection<GrantedAuthority> authorities =
-                Collections.singletonList(new SimpleGrantedAuthority(role));
+            Collections.singletonList(new SimpleGrantedAuthority(role));
 
         return new UsernamePasswordAuthenticationToken(email, null, authorities);
     }
@@ -90,3 +90,4 @@ public class JwtUtil {
         return refreshTokenExpire;
     }
 }
+

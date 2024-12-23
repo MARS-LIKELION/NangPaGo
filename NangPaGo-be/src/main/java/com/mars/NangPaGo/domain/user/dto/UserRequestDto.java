@@ -5,22 +5,19 @@ import com.mars.NangPaGo.domain.user.enums.Provider;
 import com.mars.NangPaGo.domain.user.factory.userinfo.OAuth2UserInfo;
 import lombok.Builder;
 
-
 @Builder
 public record UserRequestDto(
         String name,
-        String nickname,
         String email,
-        String profileImage,
         String provider,
-        String providerId
+        String providerId,
+        String profileImageUrl
 ) {
     public static UserRequestDto fromOAuth2UserInfo(OAuth2UserInfo userInfo) {
         return UserRequestDto.builder()
                 .name(userInfo.getName())
-                .nickname(userInfo.getName())
                 .email(userInfo.getEmail())
-                .profileImage(userInfo.getProfileImage())
+                .profileImageUrl(userInfo.getProfileImageUrl())
                 .provider(userInfo.getProvider())
                 .providerId(userInfo.getProviderId())
                 .build();
@@ -28,14 +25,13 @@ public record UserRequestDto(
 
     public User toEntity() {
         return User.builder()
-                .name(this.name)
-                .nickname(this.nickname)
-                .email(this.email)
-                .profileImage(this.profileImage)
-                .provider(Provider.from(this.provider))
-                .providerId(this.providerId)
-                .role("ROLE_USER")
-                .build();
+            .name(this.name)
+            .email(this.email)
+            .role("ROLE_USER")
+            .provider(Provider.from(this.provider))
+            .providerId(this.providerId)
+            .profileImageUrl(this.profileImageUrl)
+            .build();
     }
 }
 

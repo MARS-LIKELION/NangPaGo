@@ -7,7 +7,6 @@ import com.mars.NangPaGo.domain.user.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,25 +25,22 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .headers(headers -> headers.frameOptions().sameOrigin())
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**").disable())
 
-            .httpBasic(httpBasic -> httpBasic.disable())
+            .headers(headers -> headers.frameOptions().sameOrigin())
 
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
 
-            .oauth2Login((oauth2) ->
-                oauth2.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
-                        .userService(customOAuth2UserService))
-                    )
-                    .successHandler(customSuccessHandler)
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                .successHandler(customSuccessHandler)
             )
 
-            .authorizeHttpRequests((request) -> request
+            .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/oauth2/**", "/h2-console/**").permitAll()
                 .anyRequest().authenticated())
 
-            .sessionManagement((session) ->
+            .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

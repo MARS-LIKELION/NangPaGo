@@ -10,7 +10,9 @@ import com.mars.NangPaGo.domain.user.factory.userinfo.OAuth2UserInfo;
 
 import java.util.Map;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class OAuth2UserInfoFactory {
 
     private static final Map<Provider, Function<Map<String, Object>, OAuth2UserInfo>> USER_INFO_CREATORS =
