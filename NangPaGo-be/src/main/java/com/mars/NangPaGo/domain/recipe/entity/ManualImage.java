@@ -4,9 +4,9 @@ import com.mars.NangPaGo.common.jpa.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity
 @Getter
 @Table(name = "recipe_image")
+@Entity
 public class ManualImage extends BaseEntity {
 
     @Id
