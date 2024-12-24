@@ -53,7 +53,7 @@ if __name__ == "__main__":
     df_food = pd.read_csv(fname).values.tolist()
 
     food_names = sorted(list(extract_food_names_from_list(df_food)))
-    df_food_csv = pd.DataFrame(food_names, columns=["RCP_PARTS_DTLS"])
-    df_food_csv.to_csv("datasets/food_dict.csv", index=False, encoding="utf-8")
+    df_food_csv = pd.DataFrame(food_names, columns=["recp_ingredients"])
+    df_food_csv.to_csv("datasets/ingredients_dictionary.csv", index=True, index_label="id", encoding="utf-8")
 
     print(len(food_names))

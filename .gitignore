@@ -462,4 +462,8 @@ NangPaGo-data/datasets
 
 ### 가상환경 폴더 ###
 NangPaGo-data/py310
+
+NangPaGo-data/dataAnalysis/
+NangPaGo-data/output.txt
+
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,jupyternotebooks,venv
