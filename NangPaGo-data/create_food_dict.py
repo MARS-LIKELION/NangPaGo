@@ -32,7 +32,7 @@ def extract_food_names_from_list(text_list):
         text = text[0]
         text = re.sub(r'[\[\(][^\]\)]*[\]\)]|<[^>]+>', ',', text) # [] () <> HTML 태크 제거
         text = re.sub(r'\d+인분|소스+\d|소스\s|드레싱\s|양념\s|양념장\s|육수\s', lambda m: m.group(0).strip() + ', ', text)
-        text = re.sub(r'적당량', "", text)
+        text = re.sub(r'적당량|소량', "", text)
         text = re.sub(r'[●\•\-\s]?[a-zA-Z0-9가-힣]+ ?:', ',', text)
         
         items = text.split(',')
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     df_food = pd.read_csv(fname).values.tolist()
 
     food_names = sorted(list(extract_food_names_from_list(df_food)))
-    df_food_csv = pd.DataFrame(food_names, columns=["recp_ingredients"])
+    df_food_csv = pd.DataFrame(food_names, columns=["name"])
     df_food_csv.to_csv("datasets/ingredients_dictionary.csv", index=True, index_label="id", encoding="utf-8")
 
     print(len(food_names))
