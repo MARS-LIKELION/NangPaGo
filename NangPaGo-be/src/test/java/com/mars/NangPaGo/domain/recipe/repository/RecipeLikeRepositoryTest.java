@@ -22,7 +22,7 @@ class RecipeLikeRepositoryTest {
     @Test
     void findById() {
         // given
-        Long id = 1L;
+        Long id = 2L;
 
         // when
         RecipeLike byId = recipeLikeRepository.findById(id).orElse(null);
@@ -30,21 +30,21 @@ class RecipeLikeRepositoryTest {
         // then
         assertThat(byId).isNotNull();
         assertThat(byId.getUser()).isNotNull();
-        assertThat(byId.getUser().getName()).isEqualTo("김동환");
+        assertThat(byId.getUser().getName()).isEqualTo("dummy");
     }
 
     @DisplayName("findByUserAndRecipe 쿼리 확인")
     @Test
     void findByUserAndRecipe() {
         // given
-        String email = "kimdonghwan913@kakao.com";
-        Long recipeId = 1L;
+        String email = "dummy@nangpago.com";
+        Long recipeId = 2L;
 
         // when
         Optional<RecipeLike> findRecipeLike = recipeLikeRepository.findByEmailAndRecipeId(email, recipeId);
 
         // then
         assertThat(findRecipeLike).isPresent();
-        assertThat(findRecipeLike.get().getUser().getName()).isEqualTo("김동환");
+        assertThat(findRecipeLike.get().getUser().getName()).isEqualTo("dummy");
     }
 }
