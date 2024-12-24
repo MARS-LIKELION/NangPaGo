@@ -12,27 +12,26 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class RecipeLikeService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    private User findUser(Principal principal){
+    private User findUser(Principal principal) {
         String userEmail = principal.getName();
         return userRepository.findByEmail(userEmail).get();
     }
 
-    public void likeRecipe(Principal principal,Long recipeId){
+    public void likeRecipe(Principal principal,Long recipeId) {
         User user = findUser(principal);
         Recipe recipe = recipeRepository.findById(recipeId).get();
-        System.out.println(recipe.getClass());
         Optional<RecipeLike> recipeLike = recipeLikeRepository.findByUserAndRecipe(user,recipe);
 
-        if(recipeLike.isEmpty()){
+        if(recipeLike.isEmpty()) {
             recipeLikeRepository.save(RecipeLike.of(user,recipe));
-        }else{
+        } else {
             recipeLikeRepository.delete(recipeLike.get());
         }
     }
