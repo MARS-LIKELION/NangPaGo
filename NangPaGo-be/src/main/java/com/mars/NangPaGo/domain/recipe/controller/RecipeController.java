@@ -22,7 +22,7 @@ public class RecipeController {
     public ResponseEntity<String> toggleRecipeLike(@RequestParam Long recipeId, Principal principal) {
         String email = principal.getName();
 
-        if (email.isEmpty()) {
+        if (email == null || email.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("유저 인증 실패");
         }
