@@ -18,7 +18,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Refresh {
+public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +37,3 @@ public class Refresh {
         return expiration.isBefore(LocalDateTime.now());
     }
 }
-

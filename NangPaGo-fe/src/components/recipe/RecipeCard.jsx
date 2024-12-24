@@ -1,11 +1,12 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
-const RecipeCard = ({ image }) => {
-  const dummyDescription = "이 레시피는 맛있고 건강한 한끼 식사를 위한 완벽한 선택입니다. 신선한 재료들과 특별한 양념의 조화로 특별한 맛을 선사합니다. 조리 과정도 간단해서 초보자도 쉽게 따라할 수 있답니다. 가족들과 함께 즐거운 식사시간을 보내보세요.";
+// 함수 선언 방식으로 RecipeCard 컴포넌트 정의
+function RecipeCard({ image }) {
+  const dummyDescription =
+    '이 레시피는 맛있고 건강한 한끼 식사를 위한 완벽한 선택입니다. 신선한 재료들과 특별한 양념의 조화로 특별한 맛을 선사합니다. 조리 과정도 간단해서 초보자도 쉽게 따라할 수 있답니다. 가족들과 함께 즐거운 식사시간을 보내보세요.';
 
   return (
-    <Link 
+    <Link
       to={`/recipe/${image.id}`}
       className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
     >
@@ -22,6 +23,6 @@ const RecipeCard = ({ image }) => {
       </div>
     </Link>
   );
-};
+}
 
-export default RecipeCard; 
+export default RecipeCard;

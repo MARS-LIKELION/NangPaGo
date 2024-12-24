@@ -35,6 +35,8 @@ public class SecurityConfig {
         http
             .headers(headers -> headers.frameOptions().sameOrigin());
         http
+            .formLogin().disable(); 
+        http
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http
             .oauth2Login(oauth2 -> oauth2
@@ -55,7 +57,7 @@ public class SecurityConfig {
                     response.getWriter().write("{\"message\": \"Successfully logged out\"}");
                 })
                 .invalidateHttpSession(true)
-                .deleteCookies("Authorization", "RefreshToken"));
+                .deleteCookies("Authorization"));
         http
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

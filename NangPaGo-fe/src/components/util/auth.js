@@ -1,4 +1,4 @@
-const SOCIAL_BUTTON_STYLES = {
+export const SOCIAL_BUTTON_STYLES = {
   google: {
     background: 'bg-white border border-[#DADCE0] hover:bg-[#F6F6F6]',
     text: 'text-[#3C4043]',
@@ -18,5 +18,3 @@ const SOCIAL_BUTTON_STYLES = {
     label: '카카오 계정으로 로그인',
   },
 };
-
-export default SOCIAL_BUTTON_STYLES;

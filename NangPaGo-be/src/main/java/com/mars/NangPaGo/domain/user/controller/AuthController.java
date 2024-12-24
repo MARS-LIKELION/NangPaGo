@@ -54,18 +54,24 @@ public class AuthController {
             refreshTokenService.invalidateRefreshToken(email);
             log.info("사용자 로그아웃: {}", email);
         }
-        return ResponseEntity.ok("로그아웃 성공");
+        return ResponseEntity.ok("로그아웃 성공!!!!!");
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        log.info("authentication: {}", authentication);
         if (authentication == null || !authentication.isAuthenticated()) {
             log.warn("Unauthorized access attempt to /me");
-            return ResponseEntity.status(UNAUTHORIZED).body("로그인되지 않은 상태");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인되지 않은 상태");
         }
-
-        String email = authentication.getName();
-        log.info("Authenticated user: {}", email);
-        return ResponseEntity.ok(Map.of("email", email));
+    
+        try {
+            String email = authentication.getName();
+            log.info("Authenticated user: {}", email);
+            return ResponseEntity.ok(Map.of("email", email));
+        } catch (Exception e) {
+            log.error("Error retrieving user information", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("사용자 정보를 가져오는 중 오류 발생");
+        }
     }
 }

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import RecipeCard from './RecipeCard';
 
-const RecipeListContent = ({ activeTab, images, searchTerm }) => {
+// 함수 선언 방식으로 RecipeListContent 컴포넌트 정의
+function RecipeListContent({ activeTab, images, searchTerm }) {
   // 검색어로 이미지 필터링
-  const filteredImages = images.filter(image => 
-    image.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredImages = images.filter((image) =>
+    image.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -22,6 +23,6 @@ const RecipeListContent = ({ activeTab, images, searchTerm }) => {
       )}
     </div>
   );
-};
+}
 
-export default RecipeListContent; 
+export default RecipeListContent;

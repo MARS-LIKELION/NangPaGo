@@ -1,21 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BiSearch, BiArrowBack } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
-const SearchPage = () => {
+const Search = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <div className="mx-auto w-[375px]">
       <div className="sticky top-0 bg-white px-4 py-2 flex items-center gap-2 border-b">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-1"
-        >
+        <button onClick={() => navigate(-1)} className="p-1">
           <BiArrowBack className="text-2xl" />
         </button>
-        
+
         <div className="relative flex-1">
           <input
             type="text"
@@ -34,13 +31,11 @@ const SearchPage = () => {
         {searchTerm ? (
           <div>검색 결과가 여기에 표시됩니다</div>
         ) : (
-          <div className="text-gray-500 text-center">
-            검색어를 입력해주세요
-          </div>
+          <div className="text-gray-500 text-center">검색어를 입력해주세요</div>
         )}
       </div>
     </div>
   );
 };
 
-export default SearchPage;
+export default Search;

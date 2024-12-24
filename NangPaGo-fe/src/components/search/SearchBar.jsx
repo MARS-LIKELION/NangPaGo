@@ -1,13 +1,13 @@
-import React from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
-const SearchBar = () => {
+// 함수 선언 방식으로 SearchBar 컴포넌트 정의
+function SearchBar() {
   const navigate = useNavigate();
 
   return (
     <div className="px-4 py-2">
-      <div 
+      <div
         className="relative cursor-pointer"
         onClick={() => navigate('/search')}
       >
@@ -18,6 +18,6 @@ const SearchBar = () => {
       </div>
     </div>
   );
-};
+}
 
 export default SearchBar;
