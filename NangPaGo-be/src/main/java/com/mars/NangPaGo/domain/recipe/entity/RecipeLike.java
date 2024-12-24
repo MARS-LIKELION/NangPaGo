@@ -1,12 +1,14 @@
-package com.mars.NangPaGo.domain.recipelike.entity;
+package com.mars.NangPaGo.domain.recipe.entity;
 
-import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class RecipeLike {
 
@@ -15,9 +17,11 @@ public class RecipeLike {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     @Builder
