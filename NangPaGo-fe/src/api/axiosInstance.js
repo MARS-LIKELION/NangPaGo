@@ -15,7 +15,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log(response.headers); // 전체 헤더 출력
+    console.log(response.headers);
     const accessToken = response.headers['access'];
     if (accessToken) {
       localStorage.setItem('access', accessToken);

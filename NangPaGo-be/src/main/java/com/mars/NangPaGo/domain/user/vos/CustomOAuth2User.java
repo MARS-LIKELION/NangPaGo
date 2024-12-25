@@ -1,6 +1,5 @@
 package com.mars.NangPaGo.domain.user.vos;
 
-// 필요한 클래스들을 import
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.entity.User;
 import lombok.AllArgsConstructor;
