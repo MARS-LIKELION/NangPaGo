@@ -14,9 +14,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 @RequiredArgsConstructor
+@Component
 public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JwtUtil jwtUtil;
@@ -54,11 +56,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
             throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
         }
 
-        // Refresh Token 삭제
         refreshTokenRepository.deleteByRefreshToken(refreshToken);
 
-        // 쿠키 삭제
+        // Refresh Token 쿠키 삭제
         invalidateCookie(response, "refresh");
+
+        // Access Token 쿠키 삭제
+        invalidateCookie(response, "access");
+
+        // 사용자 세션 초기화 (필요한 경우)
+        request.getSession().invalidate();
 
         response.setStatus(HttpStatus.OK.value());
     }
@@ -91,9 +98,9 @@ public class CustomLogoutFilter extends GenericFilterBean {
     }
 
     private void invalidateCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0); // 쿠키 삭제
-        cookie.setPath("/");
+        Cookie cookie = new Cookie(cookieName, null); // 값 제거
+        cookie.setMaxAge(0); // 즉시 만료
+        cookie.setPath("/"); // 전체 경로에서 삭제
         response.addCookie(cookie);
     }
 }

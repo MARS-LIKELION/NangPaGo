@@ -37,9 +37,10 @@ public class TokenService {
         refreshTokenRepository.deleteByRefreshToken(refreshToken);
         saveNewRefreshToken(email, newRefreshToken);
 
-        response.setHeader("access", newAccessToken);
+        response.addCookie(createCookie("access", newAccessToken));
         response.addCookie(createCookie("refresh", newRefreshToken));
     }
+
 
     private String getRefreshTokenFromRequest(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();

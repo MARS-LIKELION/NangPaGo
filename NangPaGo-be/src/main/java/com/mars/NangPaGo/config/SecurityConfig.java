@@ -35,7 +35,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf((csrf) -> csrf.disable());
         http
-            .headers(headers -> headers.frameOptions().disable()); // 명시적으로 작성
+            .headers(headers -> headers.frameOptions().disable());
         http
             .formLogin((form) -> form.disable());
         http
@@ -48,7 +48,7 @@ public class SecurityConfig {
             );
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/reissue", "/auth/status", "/h2-console/**").permitAll()
+                .requestMatchers("/", "/login", "/oauth2/**", "/reissue", "/auth/status", "/h2-console/**").permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
         http
@@ -58,18 +58,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        configuration.addExposedHeader("access");
-        configuration.addExposedHeader("Set-Cookie");
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.addAllowedOrigin("http://localhost:5173");
+            configuration.addAllowedMethod("*");
+            configuration.addAllowedHeader("*");
+            configuration.setAllowCredentials(true);
+            configuration.addExposedHeader("Set-Cookie");
+            configuration.addExposedHeader("Authorization");
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", configuration);
+            return source;
+        }
 }

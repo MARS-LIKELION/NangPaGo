@@ -1,5 +1,7 @@
 package com.mars.NangPaGo.domain.user.auth;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_OK;
+
 import com.mars.NangPaGo.domain.user.dto.RefreshTokenDto;
 import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.user.util.JwtUtil;
@@ -29,28 +31,24 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-        throws IOException, ServletException {
+        throws IOException {
         String email = ((CustomOAuth2User) authentication.getPrincipal()).getName();
-
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        log.info("authorities = {} ", authorities.toString());
         String role = authorities.stream()
             .map(GrantedAuthority::getAuthority)
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("사용자 권한이 설정되지 않았습니다."));
-        log.info("인증 성공: 사용자 이메일 = {}, 역할 = {}", email, role);
 
         String access = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
         String refresh = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
 
         saveRefreshToken(email, refresh);
 
-        log.info("access = {}", access);
-        log.info("refresh = {}", refresh);
-        response.setHeader("access", access);
-        response.addCookie(createCookie("refresh", refresh));
+        response.addCookie(createCookie("access", access, jwtUtil.getAccessTokenExpireMillis())); // Access Token
+        response.addCookie(createCookie("refresh", refresh, jwtUtil.getRefreshTokenExpireMillis())); // Refresh Token
         response.sendRedirect("http://localhost:5173/");
     }
+
 
     private void saveRefreshToken(String email, String refreshToken) {
         LocalDateTime expiration = LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000);
@@ -59,7 +57,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("Refresh Token 저장 완료: 이메일 = {}, 토큰 = {}", email, refreshToken);
     }
 
-    private Cookie createCookie(String key, String value) {
+    private Cookie createCookie(String key, String value, long expireMillis) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge((int) (jwtUtil.getRefreshTokenExpireMillis() / 1000));
         cookie.setSecure(true);

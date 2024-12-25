@@ -1,19 +1,21 @@
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../slices/loginSlice';
 import axiosInstance from '../../api/axiosInstance';
 
 function Header() {
   const loginState = useSelector((state) => state.loginSlice);
-  console.log('loginState', loginState);
+  const dispatch = useDispatch(); // Redux dispatch
 
-  // const handleLogout = async () => {
-  //   try {
-  //     await axiosInstance.post('/logout');
-  //     console.log('로그아웃 성공');
-  //   } catch (error) {
-  //     console.error('로그아웃 실패:', error.response?.data || error.message);
-  //   }
-  // };
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post('/logout');
+      console.log('로그아웃 성공');
+      dispatch(logout());
+    } catch (error) {
+      console.error('로그아웃 실패:', error.response?.data || error.message);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-10 bg-white px-4 py-4 shadow-md mx-auto w-[375px] mb-5">
