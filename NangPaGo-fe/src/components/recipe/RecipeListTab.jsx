@@ -1,4 +1,3 @@
-// 함수 선언 방식으로 RecipeListTab 컴포넌트 정의
 function RecipeListTab({ activeTab, setActiveTab }) {
   return (
     <div className="flex border-b border-gray-200">

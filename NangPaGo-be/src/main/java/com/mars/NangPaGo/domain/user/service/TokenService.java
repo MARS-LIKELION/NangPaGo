@@ -1,0 +1,78 @@
+package com.mars.NangPaGo.domain.user.service;
+
+import com.mars.NangPaGo.domain.user.dto.RefreshTokenDto;
+import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
+import com.mars.NangPaGo.domain.user.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class TokenService {
+
+    private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    public void reissueTokens(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = getRefreshTokenFromRequest(request);
+        validateRefreshToken(refreshToken);
+
+        boolean isExist = refreshTokenRepository.existsByRefreshToken(refreshToken);
+        if (!isExist) {
+            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
+        }
+
+        String email = jwtUtil.getEmail(refreshToken);
+        String role = jwtUtil.getRole(refreshToken);
+
+        String newAccessToken = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
+        String newRefreshToken = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
+
+        refreshTokenRepository.deleteByRefreshToken(refreshToken);
+        saveNewRefreshToken(email, newRefreshToken);
+
+        response.setHeader("access", newAccessToken);
+        response.addCookie(createCookie("refresh", newRefreshToken));
+    }
+
+    private String getRefreshTokenFromRequest(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            throw new IllegalArgumentException("요청에 쿠키가 존재하지 않습니다.");
+        }
+        return Arrays.stream(cookies)
+            .filter(cookie -> "refresh".equals(cookie.getName()))
+            .map(Cookie::getValue)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Refresh Token이 존재하지 않습니다."));
+    }
+
+    private void validateRefreshToken(String refreshToken) {
+        if (jwtUtil.isExpired(refreshToken)) {
+            throw new ExpiredJwtException(null, null, "Refresh Token이 만료되었습니다.");
+        }
+        if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
+            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
+        }
+    }
+
+    private void saveNewRefreshToken(String email, String refreshToken) {
+        refreshTokenRepository.save(new RefreshTokenDto(refreshToken, email,
+            LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000)).toEntity());
+    }
+
+    private Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge((int) (jwtUtil.getRefreshTokenExpireMillis() / 1000));
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        return cookie;
+    }
+}

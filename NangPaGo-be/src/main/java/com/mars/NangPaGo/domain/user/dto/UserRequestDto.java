@@ -36,7 +36,7 @@ public record UserRequestDto(
         } else if (userInfo instanceof KakaoUserInfo kakaoUserInfo) {
             phone = kakaoUserInfo.getPhoneNumber();
             birthday = kakaoUserInfo.getBirthday();
-            nickname = kakaoUserInfo.getName(); // Assuming nickname is the same as name
+            nickname = kakaoUserInfo.getName();
             gender = kakaoUserInfo.getGender();
         }
 
@@ -66,7 +66,7 @@ public record UserRequestDto(
             .email(this.email)
             .phone(this.phone)
             .nickname(this.nickname)
-            .birthDay(birthDate)
+            .birthday(birthDate)
             .gender(genderEnum)
             .role("ROLE_USER")
             .provider(Provider.from(this.provider))

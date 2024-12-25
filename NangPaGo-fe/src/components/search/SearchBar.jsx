@@ -1,20 +1,19 @@
 import { BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
-// 함수 선언 방식으로 SearchBar 컴포넌트 정의
 function SearchBar() {
   const navigate = useNavigate();
 
   return (
-    <div className="px-4 py-2">
+    <div className="bg-white shadow-md mx-auto w-[375px] px-4 py-2 rounded-lg">
       <div
-        className="relative cursor-pointer"
+        className="relative flex items-center cursor-pointer border border-[var(--primary-color)] rounded-lg bg-white"
         onClick={() => navigate('/search')}
       >
-        <div className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-400 bg-gray-50">
+        <div className="w-full px-4 py-2 text-[var(--secondary-color)]">
           레시피 검색...
         </div>
-        <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
+        <BiSearch className="absolute right-3 text-[var(--secondary-color)] text-xl" />
       </div>
     </div>
   );

@@ -7,9 +7,9 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col items-center justify-center">
       <img src="/logo.png" alt="Logo" className="w-32 h-auto mb-6" />
-      <div className="flex flex-col items-center space-y-4 w-full max-w-xs px-3">
+      <div className="flex flex-col items-center space-y-4 w-full max-w-xs px-4">
         {Object.keys(SOCIAL_BUTTON_STYLES).map((provider) => (
           <SocialLoginButton
             key={provider}

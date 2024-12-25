@@ -1,22 +1,23 @@
-import React from 'react';
 import RecipeCard from './RecipeCard';
 
-// 함수 선언 방식으로 RecipeListContent 컴포넌트 정의
 function RecipeListContent({ activeTab, images, searchTerm }) {
-  // 검색어로 이미지 필터링
   const filteredImages = images.filter((image) =>
     image.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
-    <div className="grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 gap-6 min-h-[400px]">
       {activeTab === 'recommended' ? (
-        // 필터링된 이미지 목록 표시
-        filteredImages.map((image) => (
-          <RecipeCard key={image.id} image={image} />
-        ))
+        filteredImages.length > 0 ? (
+          filteredImages.map((image) => (
+            <RecipeCard key={image.id} image={image} />
+          ))
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            검색 결과가 없습니다.
+          </div>
+        )
       ) : (
-        // 즐겨찾기 목록 (현재는 빈 상태)
         <div className="text-center py-8 text-gray-500">
           즐겨찾기한 레시피가 없습니다.
         </div>

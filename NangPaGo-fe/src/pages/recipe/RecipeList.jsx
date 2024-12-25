@@ -2,12 +2,12 @@ import { useState } from 'react';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
+import Header from '../../components/common/Header.jsx';
 
-const RecipeList = () => {
+function RecipeList() {
   const [activeTab, setActiveTab] = useState('recommended');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 임시 이미지 데이터 배열
   const images = [
     { id: 1, url: 'https://picsum.photos/400/300?random=1', title: 'Image 1' },
     { id: 2, url: 'https://picsum.photos/400/300?random=2', title: 'Image 2' },
@@ -76,12 +76,25 @@ const RecipeList = () => {
   ];
 
   return (
-    <div className="mx-auto w-[375px]">
-      <div className="px-4 pb-1">
+    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen">
+      {/* 헤더 */}
+      <Header />
+
+      {/* 콘텐츠 컨테이너 */}
+      <div className="px-4 py-4 space-y-4">
+        {/* 탭 메뉴 */}
         <RecipeListTab activeTab={activeTab} setActiveTab={setActiveTab} />
-      </div>
-      <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-      <div className="px-4 py-6">
+
+        {/* 서치바 */}
+        <div className="flex justify-center">
+          <SearchBar
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            className="w-[200px]"
+          />
+        </div>
+
+        {/* 레시피 콘텐츠 */}
         <RecipeListContent
           activeTab={activeTab}
           images={images}
@@ -90,6 +103,6 @@ const RecipeList = () => {
       </div>
     </div>
   );
-};
+}
 
 export default RecipeList;

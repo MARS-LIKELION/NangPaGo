@@ -14,9 +14,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter
+@Setter
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +30,7 @@ public class User extends BaseEntity {
     private Long id;
     private String name;
     private String nickname;
-    private String birthDay;
+    private String birthday;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

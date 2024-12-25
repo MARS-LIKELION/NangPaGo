@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.user.service;
 
 import com.mars.NangPaGo.domain.user.dto.UserRequestDto;
+import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.factory.OAuth2UserInfoFactory;
 import com.mars.NangPaGo.domain.user.factory.userinfo.OAuth2UserInfo;
@@ -24,16 +25,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        log.info("유저 데이터 조회: {}", oAuth2User);
-
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        log.info("제공자: {}", registrationId);
+        log.info("OAuth2 제공자: {}", registrationId);
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.create(registrationId, oAuth2User.getAttributes());
-        log.info("유저 생성: {}", userInfo.toString());
+        log.info("OAuth2 사용자 정보: {}", userInfo);
+        User user = findOrRegisterUser(userInfo);
+        UserResponseDto userResponseDto = UserResponseDto.from(user);
+        log.info("Loaded user: email={}, role={}", user.getEmail(), user.getRole());
+        return new CustomOAuth2User(userResponseDto, oAuth2User.getAttributes());
+    }
 
-        return new CustomOAuth2User(userRepository.findByEmail(userInfo.getEmail())
-                .orElseGet(() -> registerUser(userInfo)), oAuth2User.getAttributes());
+    private User findOrRegisterUser(OAuth2UserInfo userInfo) {
+        return userRepository.findByEmail(userInfo.getEmail())
+            .orElseGet(() -> {
+                log.info("새로운 사용자 등록: {}", userInfo.getEmail());
+                return registerUser(userInfo);
+            });
     }
 
     private User registerUser(OAuth2UserInfo userInfo) {
