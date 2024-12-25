@@ -11,14 +11,10 @@ function App() {
   const fetchUserStatus = async () => {
     try {
       const response = await axiosInstance.get('/auth/status');
-      console.log('서버 응답:', response); // 서버 응답 로그
       const { email } = response.data;
 
       if (email) {
-        dispatch(login({ email })); // Redux 상태 업데이트
-        console.log('로그인 상태 업데이트:', email);
-      } else {
-        console.warn('서버 응답에 이메일이 없습니다.');
+        dispatch(login({ email }));
       }
     } catch (error) {
       console.error(

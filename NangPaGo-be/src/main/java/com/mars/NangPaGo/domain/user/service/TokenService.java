@@ -37,8 +37,8 @@ public class TokenService {
         refreshTokenRepository.deleteByRefreshToken(refreshToken);
         saveNewRefreshToken(email, newRefreshToken);
 
-        response.addCookie(createCookie("access", newAccessToken));
-        response.addCookie(createCookie("refresh", newRefreshToken));
+        response.addCookie(createCookie("access", newAccessToken, jwtUtil.getAccessTokenExpireMillis()));
+        response.addCookie(createCookie("refresh", newRefreshToken, jwtUtil.getRefreshTokenExpireMillis()));
     }
 
 
@@ -68,9 +68,9 @@ public class TokenService {
             LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000)).toEntity());
     }
 
-    private Cookie createCookie(String key, String value) {
+    private Cookie createCookie(String key, String value, long expireMillis) {
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge((int) (jwtUtil.getRefreshTokenExpireMillis() / 1000));
+        cookie.setMaxAge((int) (expireMillis / 1000));
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);

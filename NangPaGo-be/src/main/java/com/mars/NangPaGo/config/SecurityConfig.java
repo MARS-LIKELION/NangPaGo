@@ -35,8 +35,6 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf((csrf) -> csrf.disable());
         http
-            .headers(headers -> headers.frameOptions().disable());
-        http
             .formLogin((form) -> form.disable());
         http
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
@@ -48,7 +46,7 @@ public class SecurityConfig {
             );
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/oauth2/**", "/reissue", "/auth/status", "/h2-console/**").permitAll()
+                .requestMatchers("/", "/login", "/oauth2/**", "/auth/reissue", "/auth/status").permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
         http

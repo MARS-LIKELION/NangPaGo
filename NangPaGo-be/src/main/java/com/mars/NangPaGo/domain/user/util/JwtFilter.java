@@ -1,21 +1,13 @@
 package com.mars.NangPaGo.domain.user.util;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-
-import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
-import com.mars.NangPaGo.domain.user.entity.User;
-import com.mars.NangPaGo.domain.user.service.CustomOAuth2UserService;
-import com.mars.NangPaGo.domain.user.vos.CustomOAuth2User;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +29,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = getAccessTokenFromCookies(request);
 
         if (accessToken == null) {
-            log.warn("Access Token이 쿠키에 존재하지 않습니다.");
             filterChain.doFilter(request, response);
             return;
         }

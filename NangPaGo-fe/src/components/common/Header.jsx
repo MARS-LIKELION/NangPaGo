@@ -10,7 +10,6 @@ function Header() {
   const handleLogout = async () => {
     try {
       await axiosInstance.post('/logout');
-      console.log('로그아웃 성공');
       dispatch(logout());
     } catch (error) {
       console.error('로그아웃 실패:', error.response?.data || error.message);
@@ -20,7 +19,6 @@ function Header() {
   return (
     <header className="sticky top-0 z-10 bg-white px-4 py-4 shadow-md mx-auto w-[375px] mb-5">
       <div className="flex justify-between items-center">
-        {/* 로고 */}
         <Link to="/" className="block">
           <img src="/public/logo.png" alt="냉파고" className="h-16 w-auto" />
         </Link>

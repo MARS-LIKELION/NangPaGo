@@ -18,7 +18,6 @@ public class AuthController {
 
     @GetMapping("/status")
     public ResponseEntity<UserResponseDto> currentUser(Authentication authentication) {
-        // 서비스에 비즈니스 로직 위임 후 응답 반환
         return ResponseEntity.ok(userService.getCurrentUser(authentication));
     }
 }

@@ -58,13 +58,10 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         refreshTokenRepository.deleteByRefreshToken(refreshToken);
 
-        // Refresh Token 쿠키 삭제
         invalidateCookie(response, "refresh");
 
-        // Access Token 쿠키 삭제
         invalidateCookie(response, "access");
 
-        // 사용자 세션 초기화 (필요한 경우)
         request.getSession().invalidate();
 
         response.setStatus(HttpStatus.OK.value());
@@ -98,9 +95,9 @@ public class CustomLogoutFilter extends GenericFilterBean {
     }
 
     private void invalidateCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null); // 값 제거
-        cookie.setMaxAge(0); // 즉시 만료
-        cookie.setPath("/"); // 전체 경로에서 삭제
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 }
