@@ -1,7 +1,6 @@
 package com.mars.NangPaGo.domain.user.service;
 
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
-import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

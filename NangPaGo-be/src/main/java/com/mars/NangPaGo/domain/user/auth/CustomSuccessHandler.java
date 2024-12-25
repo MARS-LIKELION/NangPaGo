@@ -1,12 +1,9 @@
 package com.mars.NangPaGo.domain.user.auth;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_OK;
-
 import com.mars.NangPaGo.domain.user.dto.RefreshTokenDto;
 import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.user.util.JwtUtil;
 import com.mars.NangPaGo.domain.user.vos.CustomOAuth2User;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
