@@ -25,7 +25,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetchUserStatus(); // 항상 호출
+    fetchUserStatus();
   }, []);
 
   return <RouterProvider router={router} />;
