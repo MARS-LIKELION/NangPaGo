@@ -48,7 +48,7 @@ public class SecurityConfig {
             );
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/oauth2/**", "/auth/reissue", "/auth/status").permitAll()
+                .requestMatchers("/", "/login", "/oauth2/**", "/auth/reissue", "/auth/status", "api/recipe/upload").permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class);
         http
