@@ -10,9 +10,7 @@ function SearchBar() {
         className="relative flex items-center cursor-pointer border border-[var(--primary-color)] rounded-lg bg-white"
         onClick={() => navigate('/search')}
       >
-        <div className="w-full px-4 py-2 text-[var(--secondary-color)]">
-          레시피 검색...
-        </div>
+        <div className="w-full px-4 py-2 text-gray-500">레시피 검색...</div>
         <BiSearch className="absolute right-3 text-[var(--secondary-color)] text-xl" />
       </div>
     </div>

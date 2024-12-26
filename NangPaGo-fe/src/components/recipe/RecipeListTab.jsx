@@ -1,6 +1,6 @@
 function RecipeListTab({ activeTab, setActiveTab }) {
   return (
-    <div className="flex border-b border-gray-200">
+    <div className="flex border-b border-gray-200 top-[10px]">
       <button
         className={`flex-1 py-3 text-center font-medium border-b-2 ${
           activeTab === 'recommended'
