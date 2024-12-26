@@ -1,7 +1,6 @@
 package com.mars.NangPaGo.domain.recipe.repository;
 
 import com.mars.NangPaGo.domain.recipe.entity.RecipeFavorite;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,15 @@ class RecipeFavoriteRepositoryTest {
     @DisplayName("RecipeFavoriteRepository 토글 사용, 생성 또는 삭제")
     @Test
     void useRecipeFavoriteRepository() {
-        //email
-        String email = "kimdonghwan913@kakao.com";
+        // given
+        String email = "dummy@nangpago.com";
         Long recipeId = 1L;
 
+        // when
         Optional<RecipeFavorite> recipeFavorite = recipeFavoriteRepository.findByEmailAndRecipeId(email,recipeId);
-        
+
+        // then
         assertThat(recipeFavorite).isPresent();
         assertThat(recipeFavorite.get().getUser().getEmail()).isEqualTo(email);
-        assertThat(recipeFavorite).get();
     }
 }

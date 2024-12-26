@@ -9,9 +9,11 @@ import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class RecipeFavoriteService {
@@ -19,6 +21,7 @@ public class RecipeFavoriteService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void toggleRecipeFavorite(String email, Long recipeId) {
         Optional<RecipeFavorite> recipeFavorite = recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId);
 
