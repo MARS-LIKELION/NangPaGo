@@ -1,7 +1,6 @@
-package com.mars.NangPaGo.domain.user.vos;
+package com.mars.NangPaGo.domain.user.vo;
 
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
-import com.mars.NangPaGo.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;

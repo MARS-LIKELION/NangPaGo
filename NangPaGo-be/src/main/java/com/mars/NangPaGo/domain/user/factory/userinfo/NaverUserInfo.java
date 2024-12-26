@@ -2,9 +2,7 @@ package com.mars.NangPaGo.domain.user.factory.userinfo;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
-@ToString
 @RequiredArgsConstructor
 public class NaverUserInfo implements OAuth2UserInfo {
 

@@ -2,9 +2,6 @@ package com.mars.NangPaGo.domain.user.factory.userinfo;
 
 import java.util.Map;
 
-import lombok.ToString;
-
-@ToString
 public class KakaoUserInfo implements OAuth2UserInfo {
 
     private final Map<String, Object> attributes;

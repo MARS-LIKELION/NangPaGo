@@ -8,7 +8,11 @@ public record UserResponseDto(
     String email,
     String role
 ) {
+
     public static UserResponseDto from(User user) {
-        return new UserResponseDto(user.getEmail(), user.getRole());
+        return UserResponseDto.builder()
+            .email(user.getEmail())
+            .role(user.getRole())
+            .build();
     }
 }

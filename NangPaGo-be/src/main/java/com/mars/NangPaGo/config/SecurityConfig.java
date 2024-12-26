@@ -37,6 +37,9 @@ public class SecurityConfig {
         http
             .formLogin((form) -> form.disable());
         http
+            .headers(header -> header.frameOptions().disable());
+
+        http
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http
             .oauth2Login((oauth2) -> oauth2
@@ -46,7 +49,7 @@ public class SecurityConfig {
             );
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/oauth2/**", "/auth/reissue", "/auth/status").permitAll()
+                .requestMatchers("/", "/login", "/oauth2/**", "/auth/reissue", "/auth/status", "/h2-console", "users").permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
         http
