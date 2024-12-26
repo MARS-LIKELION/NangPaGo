@@ -4,7 +4,7 @@ import com.mars.NangPaGo.domain.recipe.dto.RecipePageResponseDto;
 import com.mars.NangPaGo.domain.recipe.service.RecipeFavoriteService;
 import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
