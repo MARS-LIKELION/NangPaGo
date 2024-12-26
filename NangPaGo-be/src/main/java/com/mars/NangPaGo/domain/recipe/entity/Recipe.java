@@ -2,8 +2,11 @@ package com.mars.NangPaGo.domain.recipe.entity;
 
 import com.mars.NangPaGo.common.jpa.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 @Entity
 public class Recipe extends BaseEntity {
 
