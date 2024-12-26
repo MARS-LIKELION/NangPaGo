@@ -46,7 +46,14 @@ public class SecurityConfig {
             );
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/oauth2/**", "/auth/reissue", "/auth/status").permitAll()
+                .requestMatchers(
+                    "/",
+                    "/login",
+                    "/oauth2/**",
+                    "/auth/reissue",
+                    "/auth/status",
+                    "/common/example"  // TODO: 제거 예정
+                ).permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
         http
