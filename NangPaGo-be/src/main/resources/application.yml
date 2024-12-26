@@ -8,6 +8,12 @@ spring:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 10
+      idle-timeout: 300000
+      connection-timeout: 30000
+      max-lifetime: 1500000
 
   # Table 자동 생성 방지
   jpa:
