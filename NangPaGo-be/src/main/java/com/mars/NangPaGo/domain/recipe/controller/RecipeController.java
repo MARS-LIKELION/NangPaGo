@@ -1,16 +1,16 @@
 package com.mars.NangPaGo.domain.recipe.controller;
 
+import com.mars.NangPaGo.domain.recipe.dto.RecipeListResponseDto;
 import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
 import com.mars.NangPaGo.domain.recipe.service.RecipeFavoriteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.security.Principal;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RequestMapping("/recipe")
@@ -34,13 +34,22 @@ public class RecipeController {
     }
 
     @PostMapping("/toggle/favorite")
-    public ResponseEntity<String> favoriteRecipe(@RequestParam Long recipeId, Principal principal) {
-        String email = principal.getName();
-        if (email == null || email.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("유저 인증 실패");
-        }
+    public ResponseEntity<String> favoriteRecipe(@RequestParam Long recipeId, Principal principal) throws UserPrincipalNotFoundException {
+        String email = Optional.ofNullable(principal)
+                .map(Principal::getName)
+                .orElseThrow(() -> new UserPrincipalNotFoundException("유저 정보 확인 실패"));
+
         recipeFavoriteService.toggleRecipeFavorite(email, recipeId);
         return ResponseEntity.ok("레시피 즐겨찾기 토글 변경");
+    }
+
+    @GetMapping("/favorite/recipes")
+    public ResponseEntity<Page<RecipeListResponseDto>> findFavoriteRecipe(
+            @RequestParam(defaultValue = "1") int page, Principal principal) throws UserPrincipalNotFoundException {
+        String email = Optional.ofNullable(principal)
+                .map(Principal::getName)
+                .orElseThrow(() -> new UserPrincipalNotFoundException("유저 정보 확인 실패"));
+
+        return ResponseEntity.ok(recipeFavoriteService.findSortedFavoritRecipes(email, page));
     }
 }

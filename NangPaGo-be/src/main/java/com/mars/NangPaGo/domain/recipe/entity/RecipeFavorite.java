@@ -1,5 +1,6 @@
 package com.mars.NangPaGo.domain.recipe.entity;
 
+import com.mars.NangPaGo.common.jpa.BaseEntity;
 import com.mars.NangPaGo.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class RecipeFavorite {
+public class RecipeFavorite extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
