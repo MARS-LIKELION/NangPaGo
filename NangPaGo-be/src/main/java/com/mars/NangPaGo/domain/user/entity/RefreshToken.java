@@ -17,17 +17,17 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String refreshToken;
     private String email;
     private LocalDateTime expiration;
+    private String refreshToken;
 
-    private RefreshToken(String refreshToken, String email, LocalDateTime expiration) {
-        this.refreshToken = refreshToken;
+    private RefreshToken(String email, String refreshToken, LocalDateTime expiration) {
         this.email = email;
+        this.refreshToken = refreshToken;
         this.expiration = expiration;
     }
 
-    public static RefreshToken create(String refreshToken, String email, LocalDateTime expiration) {
-        return new RefreshToken(refreshToken, email, expiration);
+    public static RefreshToken create(String email, String refreshToken, LocalDateTime expiration) {
+        return new RefreshToken(email, refreshToken, expiration);
     }
 }
