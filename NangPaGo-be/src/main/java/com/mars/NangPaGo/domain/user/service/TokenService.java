@@ -7,7 +7,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ public class TokenService {
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Transactional
     public void reissueTokens(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = getRefreshTokenFromRequest(request);
         validateRefreshToken(refreshToken);
@@ -66,7 +64,7 @@ public class TokenService {
     }
 
     private void saveNewRefreshToken(String email, String refreshToken) {
-        refreshTokenRepository.save(new RefreshTokenDto(refreshToken, email,
+        refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken,
             LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000)).toEntity());
     }
 
