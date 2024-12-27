@@ -1,10 +1,9 @@
 package com.mars.NangPaGo.domain.recipe.controller;
 
-import com.mars.NangPaGo.domain.recipe.dto.RecipeListResponseDto;
-import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
+import com.mars.NangPaGo.domain.recipe.dto.RecipePageResponseDto;
 import com.mars.NangPaGo.domain.recipe.service.RecipeFavoriteService;
+import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,12 +44,12 @@ public class RecipeController {
     }
 
     @GetMapping("/favorite/recipes")
-    public ResponseEntity<Page<RecipeListResponseDto>> findFavoriteRecipe(
+    public ResponseEntity<RecipePageResponseDto> findFavoriteRecipe(
             @RequestParam(defaultValue = "1") int page, Principal principal) throws UserPrincipalNotFoundException {
         String email = Optional.ofNullable(principal)
                 .map(Principal::getName)
                 .orElseThrow(() -> new UserPrincipalNotFoundException("유저 정보 확인 실패"));
 
-        return ResponseEntity.ok(recipeFavoriteService.findSortedFavoritRecipes(email, page));
+        return ResponseEntity.ok(recipeFavoriteService.findSortedFavoriteRecipes(email, page));
     }
 }

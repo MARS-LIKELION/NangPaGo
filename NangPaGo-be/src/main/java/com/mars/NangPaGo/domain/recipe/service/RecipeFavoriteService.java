@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.recipe.service;
 
 import com.mars.NangPaGo.domain.recipe.dto.RecipeListResponseDto;
+import com.mars.NangPaGo.domain.recipe.dto.RecipePageResponseDto;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeFavorite;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeFavoriteRepository;
@@ -29,7 +30,7 @@ public class RecipeFavoriteService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Page<RecipeListResponseDto> findSortedFavoritRecipes(String email, int page) {
+    public RecipePageResponseDto findSortedFavoriteRecipes(String email, int page) {
         Pageable pageable = PageRequest.of(page - 1, 5);
 
         // 처음 Page로 받은 다음, Page -> List(Dto 전환) -> Page(PageImpl)로 변환하는 과정이 이상하긴한데,
@@ -44,9 +45,12 @@ public class RecipeFavoriteService {
         // dto 변환
         List<RecipeListResponseDto> dtoList = favoriteRecipes.stream().map(RecipeListResponseDto::toDto).toList();
 
-        return new PageImpl<>(dtoList, pageable, totalElements);
+        Page<RecipeListResponseDto> changedDtoPage = new PageImpl<>(dtoList, pageable, totalElements);
+
+        return getPageInfo(changedDtoPage, page);
     }
 
+    @Transactional
     public void toggleRecipeFavorite(String email, Long recipeId) {
         Optional<RecipeFavorite> recipeFavorite = recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId);
 
@@ -68,5 +72,22 @@ public class RecipeFavoriteService {
         } else {
             recipeFavoriteRepository.delete(recipeFavorite.get());
         }
+    }
+
+    private RecipePageResponseDto getPageInfo(Page<RecipeListResponseDto> recipes, int page) {
+        final int PAGE_RANGE = 3; //현재 페이지 기준 이전, 다음 페이지 버튼의 갯수
+        int totalPageCount = recipes.getTotalPages();
+
+        boolean hasPrevPage = page > 1;
+        boolean hasNextPage = page < totalPageCount;
+        int startPage = Math.max(0, page - PAGE_RANGE);
+        int endPage = Math.min(totalPageCount - 1, page + PAGE_RANGE);
+
+        // 페이지 수가 6개를 초과할 경우 조정
+        if (endPage - startPage < 5) {
+            startPage = Math.max(0, endPage - 5);
+        }
+
+        return new RecipePageResponseDto(recipes, hasPrevPage, hasNextPage, startPage, endPage);
     }
 }
