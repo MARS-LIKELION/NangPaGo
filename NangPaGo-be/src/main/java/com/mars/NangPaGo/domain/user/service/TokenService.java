@@ -66,7 +66,7 @@ public class TokenService {
     }
 
     private void saveNewRefreshToken(String email, String refreshToken) {
-        refreshTokenRepository.save(new RefreshTokenDto(refreshToken, email,
+        refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken,
             LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000)).toEntity());
     }
 

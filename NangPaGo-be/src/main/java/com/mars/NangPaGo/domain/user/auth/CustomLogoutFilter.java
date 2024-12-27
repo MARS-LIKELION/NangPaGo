@@ -1,8 +1,6 @@
 package com.mars.NangPaGo.domain.user.auth;
 
-import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
-import com.mars.NangPaGo.domain.user.util.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.mars.NangPaGo.domain.user.service.CustomLogoutService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -21,8 +19,7 @@ import org.springframework.web.filter.GenericFilterBean;
 @Component
 public class CustomLogoutFilter extends GenericFilterBean {
 
-    private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final CustomLogoutService customLogoutService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -36,7 +33,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         try {
-            handleLogout(httpRequest, httpResponse);
+            String refreshToken = extractRefreshToken(httpRequest);
+            customLogoutService.handleLogout(refreshToken, httpResponse);
         } catch (IllegalArgumentException e) {
             httpResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             httpResponse.getWriter().write(e.getMessage());
@@ -45,26 +43,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
     private boolean isLogoutRequest(HttpServletRequest request) {
         return "/logout".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod());
-    }
-
-    private void handleLogout(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = extractRefreshToken(request);
-
-        validateRefreshToken(refreshToken);
-
-        if (!refreshTokenRepository.existsByRefreshToken(refreshToken)) {
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
-        }
-
-        refreshTokenRepository.deleteByRefreshToken(refreshToken);
-
-        invalidateCookie(response, "refresh");
-
-        invalidateCookie(response, "access");
-
-        request.getSession().invalidate();
-
-        response.setStatus(HttpStatus.OK.value());
     }
 
     private String extractRefreshToken(HttpServletRequest request) {
@@ -78,26 +56,5 @@ public class CustomLogoutFilter extends GenericFilterBean {
             .map(Cookie::getValue)
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Refresh Token이 존재하지 않습니다."));
-    }
-
-    private void validateRefreshToken(String refreshToken) {
-        try {
-            if (jwtUtil.isExpired(refreshToken)) {
-                throw new IllegalArgumentException("Refresh Token이 만료되었습니다.");
-            }
-
-            if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
-                throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
-            }
-        } catch (ExpiredJwtException e) {
-            throw new IllegalArgumentException("Refresh Token이 만료되었습니다.");
-        }
-    }
-
-    private void invalidateCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
     }
 }
