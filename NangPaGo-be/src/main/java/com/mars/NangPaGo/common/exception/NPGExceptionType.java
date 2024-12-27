@@ -13,8 +13,12 @@ public enum NPGExceptionType {
     // BAD_REQUEST(400)
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청"),
 
+    // UNAUTHORIZED(401)
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
+
     // (404)
     NOT_FOUND(HttpStatus.NOT_FOUND, "데이터가 존재하지 않음"),
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     NOT_FOUND_RECIPE(HttpStatus.NOT_FOUND, "레시피를 찾을 수 없습니다."),
 
     // Internal Server Error(500)

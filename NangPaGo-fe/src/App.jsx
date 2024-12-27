@@ -11,7 +11,8 @@ function App() {
   const fetchUserStatus = async () => {
     try {
       const response = await axiosInstance.get('/auth/status');
-      const { email } = response.data;
+      const { data } = response.data;
+      const { email } = data;
 
       if (email) {
         dispatch(login({ email }));
