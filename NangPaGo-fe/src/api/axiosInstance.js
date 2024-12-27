@@ -27,7 +27,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await axiosInstance.post('/auth/reissue');
+        await axiosInstance.post('/token/reissue');
         const newAccessToken = getCookie('access');
         if (newAccessToken) {
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

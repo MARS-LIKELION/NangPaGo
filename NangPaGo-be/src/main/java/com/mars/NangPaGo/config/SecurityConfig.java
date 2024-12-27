@@ -52,7 +52,7 @@ public class SecurityConfig {
                     "/",
                     "/login",
                     "/oauth2/**",
-                    "/auth/reissue",
+                    "/token/reissue",
                     "/auth/status",
                     "/common/example/**"  // TODO: 제거 예정
                 ).permitAll()
