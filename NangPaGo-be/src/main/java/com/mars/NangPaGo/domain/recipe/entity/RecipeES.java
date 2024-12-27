@@ -10,9 +10,14 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.List;
 
 @Getter
-@Setter
 @Document(indexName = "recipes")
 public class RecipeES {
+
+    public RecipeES(String id, String name, List<String> ingredients) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
+    }
 
     @Id
     private String id;

@@ -51,13 +51,14 @@ public class RecipeEsService {
                         System.err.println("Ingredients field truncated at line (" + lineNumber + ")");
                     }
 
-                    RecipeES recipeES = new RecipeES();
-                    recipeES.setId(id);
-                    recipeES.setName(name);
-                    recipeES.setIngredients(List.of(ingredientsData.split(",")).stream()
-                            .map(String::trim)
-                            .filter(ingredient -> !ingredient.isEmpty())
-                            .toList());
+                    RecipeES recipeES = new RecipeES(
+                            id,
+                            name,
+                            List.of(ingredientsData.split(",")).stream()
+                                    .map(String::trim)
+                                    .filter(ingredient -> !ingredient.isEmpty())
+                                    .toList()
+                    );
 
                     recipeESList.add(recipeES);
                     lineNumber++;
