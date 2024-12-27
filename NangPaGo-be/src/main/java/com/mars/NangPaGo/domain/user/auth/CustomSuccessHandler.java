@@ -48,11 +48,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.sendRedirect("http://localhost:5173/");
     }
 
-
     private void saveRefreshToken(String email, String refreshToken) {
         LocalDateTime expiration = LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000);
         refreshTokenRepository.deleteByRefreshToken(email);
-        refreshTokenRepository.save(new RefreshTokenDto(refreshToken, email, expiration).toEntity());
+        refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken, expiration).toEntity());
     }
 
     private Cookie createCookie(String key, String value, long expireMillis) {
