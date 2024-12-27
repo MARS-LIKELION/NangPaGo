@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
-    @GetMapping("/nangpago")
-    public String nangPaGo() {
-        return "냉파고의 시작";
-    }
-
     // TODO: 엔드포인트 삭제 (단순 예제를 위해 만듦)
     @GetMapping("/common/example/ok")
     public ResponseDto<ExampleResponseDto> exampleResponseDtoOk() {
