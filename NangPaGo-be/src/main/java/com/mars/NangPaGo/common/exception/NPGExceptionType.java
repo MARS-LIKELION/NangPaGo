@@ -15,7 +15,7 @@ public enum NPGExceptionType {
 
     // (404)
     NOT_FOUND(HttpStatus.NOT_FOUND, "데이터가 존재하지 않음"),
-    NOT_FOUND_RECIPE(HttpStatus.NOT_FOUND, "조회한 레시피가 없습니다."),
+    NOT_FOUND_RECIPE(HttpStatus.NOT_FOUND, "레시피를 찾을 수 없습니다."),
 
     // Internal Server Error(500)
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"),
