@@ -52,7 +52,7 @@ public class SecurityConfig {
                     "/oauth2/**",
                     "/auth/reissue",
                     "/auth/status",
-                    "/common/example"  // TODO: 제거 예정
+                    "/common/example/**"  // TODO: 제거 예정
                 ).permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenRepository), LogoutFilter.class);
