@@ -89,11 +89,6 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
-  servlet:
-    multipart:
-      max-file-size: 10MB  # 파일 크기 제한 설정 (예: 10MB)
-      max-request-size: 10MB  # 요청 크기 제한 설정 (예: 10MB)
-
 jwt:
   secret: ${JWT_SECRET_KEY}
   token:
