@@ -17,6 +17,6 @@ public class RecipeService {
 
     public RecipeResponseDto recipeById(Long id) {
         return RecipeResponseDto.from(recipeRepository.findById(id)
-            .orElseThrow(() -> NOT_FOUND_RECIPE.of()));
+            .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다.")));
     }
 }

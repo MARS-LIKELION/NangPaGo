@@ -54,7 +54,7 @@ public class SecurityConfig {
                     "/oauth2/**",
                     "/auth/reissue",
                     "/auth/status",
-                    "/recipe/**",
+                    "/recipe/{id}",
                     "/common/example/**" // TODO: 제거 예정
                 ).permitAll()
                 .anyRequest().authenticated());
