@@ -1,9 +1,14 @@
 package com.mars.NangPaGo.domain.recipe.controller;
 
+import com.mars.NangPaGo.common.dto.ResponseDto;
+import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
+import com.mars.NangPaGo.domain.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +22,13 @@ import java.security.Principal;
 public class RecipeController {
 
     private final RecipeLikeService recipeLikeService;
+
+    private final RecipeService recipeService;
+
+    @GetMapping("/{id}")
+    public ResponseDto<RecipeResponseDto> recipeById(@PathVariable Long id) {
+        return ResponseDto.of(recipeService.recipeById(id), "레시피를 성공적으로 조회했습니다.");
+    }
 
     @PostMapping("/toggle/like")
     public ResponseEntity<String> toggleRecipeLike(@RequestParam Long recipeId, Principal principal) {

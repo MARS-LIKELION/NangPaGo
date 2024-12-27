@@ -3,7 +3,13 @@ package com.mars.NangPaGo.domain.recipe.entity;
 import com.mars.NangPaGo.common.jpa.BaseEntity;
 import jakarta.persistence.*;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Recipe extends BaseEntity {
 
@@ -53,4 +59,6 @@ public class Recipe extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "recipe")
     private List<ManualImage> manualImages;
+
+
 }
