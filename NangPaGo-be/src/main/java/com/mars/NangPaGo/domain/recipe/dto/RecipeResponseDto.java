@@ -26,7 +26,6 @@ public record RecipeResponseDto(
     List<ManualDto> manuals,
     List<ManualImageDto> manualImages
 ) {
-
     public static RecipeResponseDto from(Recipe recipe) {
         return RecipeResponseDto.builder()
             .id(recipe.getId())

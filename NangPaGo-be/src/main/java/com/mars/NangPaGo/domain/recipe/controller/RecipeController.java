@@ -21,9 +21,8 @@ import java.security.Principal;
 @RestController
 public class RecipeController {
 
-    private final RecipeLikeService recipeLikeService;
-
     private final RecipeService recipeService;
+    private final RecipeLikeService recipeLikeService;
 
     @GetMapping("/{id}")
     public ResponseDto<RecipeResponseDto> recipeById(@PathVariable Long id) {
