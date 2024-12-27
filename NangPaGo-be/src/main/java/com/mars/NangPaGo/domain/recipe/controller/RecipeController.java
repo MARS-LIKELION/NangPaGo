@@ -5,6 +5,7 @@ import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
 import com.mars.NangPaGo.domain.recipe.service.RecipeFavoriteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,6 @@ public class RecipeController {
     private final RecipeFavoriteService recipeFavoriteService;
 
     private final RecipeLikeService recipeLikeService;
-    private final RecipeFavoriteService recipeFavoriteService;
 
     @PostMapping("/toggle/like")
     public ResponseEntity<String> toggleRecipeLike(@RequestParam Long recipeId, Principal principal) {
