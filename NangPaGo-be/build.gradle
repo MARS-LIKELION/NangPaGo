@@ -38,15 +38,12 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// Elasticsearch
-	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch:3.4.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	implementation 'co.elastic.clients:elasticsearch-java:8.15.4'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 
 	// CSV parser
 	implementation 'org.apache.commons:commons-csv:1.10.0'
-
-
-
-
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
