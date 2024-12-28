@@ -3,7 +3,6 @@ package com.mars.NangPaGo.domain.user.service;
 import com.mars.NangPaGo.domain.user.dto.RefreshTokenDto;
 import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.user.util.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.mars.NangPaGo.common.exception.NPGExceptionType.*;
 
 @RequiredArgsConstructor
 @Service
@@ -27,7 +28,7 @@ public class TokenService {
 
         boolean isExist = refreshTokenRepository.existsByRefreshToken(refreshToken);
         if (!isExist) {
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
+            throw BAD_REQUEST_INVALID.of("유효하지 않은 Refresh Token 입니다.");
         }
 
         String email = jwtUtil.getEmail(refreshToken);
@@ -43,25 +44,25 @@ public class TokenService {
         response.addCookie(createCookie("refresh", newRefreshToken, jwtUtil.getRefreshTokenExpireMillis()));
     }
 
-
     private String getRefreshTokenFromRequest(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            throw new IllegalArgumentException("요청에 쿠키가 존재하지 않습니다.");
+            throw BAD_REQUEST_INVALID.of("요청에 쿠키가 존재하지 않습니다.");
         }
         return Arrays.stream(cookies)
             .filter(cookie -> "refresh".equals(cookie.getName()))
             .map(Cookie::getValue)
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Refresh Token이 존재하지 않습니다."));
+            .orElseThrow(() -> BAD_REQUEST_INVALID.of("Refresh Token이 존재하지 않습니다."));
     }
 
     private void validateRefreshToken(String refreshToken) {
         if (jwtUtil.isExpired(refreshToken)) {
-            throw new ExpiredJwtException(null, null, "Refresh Token이 만료되었습니다.");
+            throw UNAUTHORIZED_TOKEN_EXPIRED.of("Refresh Token이 만료되었습니다.");
         }
+
         if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
+            throw BAD_REQUEST_INVALID.of("유효하지 않은 Refresh Token입니다.");
         }
     }
 

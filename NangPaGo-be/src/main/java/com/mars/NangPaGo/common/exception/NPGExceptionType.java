@@ -12,9 +12,11 @@ public enum NPGExceptionType {
 
     // BAD_REQUEST(400)
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청"),
+    BAD_REQUEST_INVALID(HttpStatus.BAD_REQUEST, "유효하지 않은 요청"),
 
     // UNAUTHORIZED(401)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
+    UNAUTHORIZED_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰"),
 
     // (404)
     NOT_FOUND(HttpStatus.NOT_FOUND, "데이터가 존재하지 않음"),
