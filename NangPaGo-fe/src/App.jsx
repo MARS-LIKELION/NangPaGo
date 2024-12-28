@@ -8,7 +8,14 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUserStatus());
+    console.log('App mounted, dispatching fetchUserStatus...');
+    dispatch(fetchUserStatus())
+      .then((result) => {
+        console.log('FetchUserStatus result:', result);
+      })
+      .catch((error) => {
+        console.error('FetchUserStatus error:', error);
+      });
   }, [dispatch]);
 
   return <RouterProvider router={router} />;

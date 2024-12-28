@@ -19,27 +19,23 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
+  async (response) => {
+    if (response.data?.data === '') {
       try {
         await axiosInstance.post('/token/reissue');
         const newAccessToken = getCookie('access');
         if (newAccessToken) {
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          response.config.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axiosInstance(response.config);
         }
-        console.log('원래 요청 재시도 중...');
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        console.error('토큰 재발급 실패:', refreshError);
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
+        throw new Error('Failed to retrieve new access token from cookies.');
+      } catch {
+        return Promise.reject();
       }
     }
+    return response;
+  },
+  async (error) => {
     return Promise.reject(error);
   },
 );
