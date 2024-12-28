@@ -81,7 +81,7 @@ function RecipeList() {
       <Header />
 
       {/* 콘텐츠 컨테이너 */}
-      <div className="px-4 py-4 space-y-4">
+      <div className="px-4 space-y-4">
         {/* 탭 메뉴 */}
         <RecipeListTab activeTab={activeTab} setActiveTab={setActiveTab} />
 

@@ -26,11 +26,19 @@ function RecipeDetail() {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary-color)]"></div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <p className="text-[var(--primary-color)]">{error}</p>
+      </div>
+    );
   }
 
   return <Recipe recipe={recipe} />;

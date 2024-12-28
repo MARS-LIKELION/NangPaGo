@@ -44,7 +44,7 @@ function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-10 bg-white px-4 py-2 shadow-md mx-auto w-[375px] mb-1">
+    <header className="sticky top-0 z-10 bg-white px-4 py-2 shadow-md mx-auto w-[375px] mb-4">
       <div className="flex justify-between items-center">
         <Link to="/" className="block">
           <img src="/public/logo.png" alt="냉파고" className="h-12 w-auto" />
