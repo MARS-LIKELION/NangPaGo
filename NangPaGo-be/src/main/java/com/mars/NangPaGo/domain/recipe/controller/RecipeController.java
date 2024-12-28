@@ -32,7 +32,7 @@ public class RecipeController {
     }
 
     @PostMapping("/toggle/like")
-    public ResponseEntity<String> toggleRecipeLike(@RequestParam Long recipeId, Principal principal) {
+    public ResponseEntity<String> toggleRecipeLike(@RequestParam("recipeId") Long recipeId, Principal principal) {
         String email = principal.getName();
 
         if (email == null || email.isEmpty()) {
