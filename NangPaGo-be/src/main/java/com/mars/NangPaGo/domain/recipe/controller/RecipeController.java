@@ -25,7 +25,7 @@ public class RecipeController {
     private final RecipeLikeService recipeLikeService;
 
     @GetMapping("/{id}")
-    public ResponseDto<RecipeResponseDto> recipeById(@PathVariable Long id) {
+    public ResponseDto<RecipeResponseDto> recipeById(@PathVariable("id") Long id) {
         return ResponseDto.of(recipeService.recipeById(id), "레시피를 성공적으로 조회했습니다.");
     }
 
