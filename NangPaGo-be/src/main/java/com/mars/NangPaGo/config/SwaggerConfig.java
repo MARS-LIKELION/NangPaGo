@@ -1,0 +1,21 @@
+package com.mars.NangPaGo.config;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SwaggerConfig {
+
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+            .info(new Info()
+                .title("NangPaGo API")
+                .description("NangPaGo API Documentation")
+                .version("v0.2.0"))
+            .components(new Components());
+    }
+}

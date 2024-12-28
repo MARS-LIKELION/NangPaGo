@@ -20,10 +20,29 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private static final String[] WHITE_LIST = {
+        "/",
+        "/login",
+        "/oauth2/**",
+        "/token/reissue",
+        "/auth/status",
+        "/recipe/{id}",
+		"/ingredient/search",
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/api-docs/**",
+        "/v3/api-docs/**",
+        "/common/example/**", // TODO: 제거 예정
+    };
 
     private final JwtUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -41,22 +60,13 @@ public class SecurityConfig {
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http
             .oauth2Login((oauth2) -> oauth2
-                    .userInfoEndpoint(userInfoEndpointConfig ->
-                        userInfoEndpointConfig.userService(customOAuth2UserService))
-                    .successHandler(customSuccessHandler)
+                .userInfoEndpoint(userInfoEndpointConfig ->
+                    userInfoEndpointConfig.userService(customOAuth2UserService))
+                .successHandler(customSuccessHandler)
             );
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/",
-                    "/login",
-                    "/oauth2/**",
-                    "/token/reissue",
-                    "/auth/status",
-                    "/recipe/{id}",
-                    "/ingredient/search",
-                    "/common/example/**" // TODO: 제거 예정
-                ).permitAll()
+                .requestMatchers(WHITE_LIST).permitAll()
                 .anyRequest().authenticated());
         http.addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class);
         http
@@ -67,18 +77,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-        @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.addAllowedOrigin("http://localhost:5173");
-            configuration.addAllowedMethod("*");
-            configuration.addAllowedHeader("*");
-            configuration.setAllowCredentials(true);
-            configuration.addExposedHeader("Set-Cookie");
-            configuration.addExposedHeader("Authorization");
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Set-Cookie");
+        configuration.addExposedHeader("Authorization");
 
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            return source;
-        }
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

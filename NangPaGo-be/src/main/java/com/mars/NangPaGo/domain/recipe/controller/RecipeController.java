@@ -4,6 +4,7 @@ import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
 import com.mars.NangPaGo.domain.recipe.service.RecipeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RequiredArgsConstructor
+@Tag(name = "레시피 API", description = "레시피 관련 API")
 @RequestMapping("/recipe")
 @RestController
 public class RecipeController {
