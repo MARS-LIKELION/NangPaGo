@@ -1,4 +1,4 @@
-package com.mars.NangPaGo.domain.user.util;
+package com.mars.NangPaGo.domain.jwt.util;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

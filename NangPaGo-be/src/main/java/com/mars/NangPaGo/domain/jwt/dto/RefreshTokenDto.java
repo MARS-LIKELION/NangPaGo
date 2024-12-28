@@ -1,6 +1,6 @@
-package com.mars.NangPaGo.domain.user.dto;
+package com.mars.NangPaGo.domain.jwt.dto;
 
-import com.mars.NangPaGo.domain.user.entity.RefreshToken;
+import com.mars.NangPaGo.domain.jwt.entity.RefreshToken;
 
 import java.time.LocalDateTime;
 

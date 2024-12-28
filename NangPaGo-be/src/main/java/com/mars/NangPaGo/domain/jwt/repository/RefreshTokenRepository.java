@@ -1,6 +1,6 @@
-package com.mars.NangPaGo.domain.user.repository;
+package com.mars.NangPaGo.domain.jwt.repository;
 
-import com.mars.NangPaGo.domain.user.entity.RefreshToken;
+import com.mars.NangPaGo.domain.jwt.entity.RefreshToken;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

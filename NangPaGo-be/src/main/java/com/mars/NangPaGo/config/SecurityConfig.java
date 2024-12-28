@@ -2,11 +2,10 @@ package com.mars.NangPaGo.config;
 
 import com.mars.NangPaGo.domain.user.auth.CustomLogoutFilter;
 import com.mars.NangPaGo.domain.user.auth.CustomSuccessHandler;
-import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.user.service.CustomLogoutService;
 import com.mars.NangPaGo.domain.user.service.CustomOAuth2UserService;
-import com.mars.NangPaGo.domain.user.util.JwtFilter;
-import com.mars.NangPaGo.domain.user.util.JwtUtil;
+import com.mars.NangPaGo.domain.jwt.util.JwtFilter;
+import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

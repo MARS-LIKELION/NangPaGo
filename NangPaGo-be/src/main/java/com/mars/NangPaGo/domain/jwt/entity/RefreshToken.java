@@ -1,4 +1,4 @@
-package com.mars.NangPaGo.domain.user.entity;
+package com.mars.NangPaGo.domain.jwt.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

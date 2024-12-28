@@ -1,6 +1,6 @@
-package com.mars.NangPaGo.domain.user.controller;
+package com.mars.NangPaGo.domain.jwt.controller;
 
-import com.mars.NangPaGo.domain.user.service.TokenService;
+import com.mars.NangPaGo.domain.jwt.service.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

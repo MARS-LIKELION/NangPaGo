@@ -1,7 +1,7 @@
 package com.mars.NangPaGo.domain.user.service;
 
-import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
-import com.mars.NangPaGo.domain.user.util.JwtUtil;
+import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
+import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;

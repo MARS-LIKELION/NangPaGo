@@ -1,8 +1,8 @@
 package com.mars.NangPaGo.domain.user.auth;
 
-import com.mars.NangPaGo.domain.user.dto.RefreshTokenDto;
-import com.mars.NangPaGo.domain.user.repository.RefreshTokenRepository;
-import com.mars.NangPaGo.domain.user.util.JwtUtil;
+import com.mars.NangPaGo.domain.jwt.dto.RefreshTokenDto;
+import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
+import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import com.mars.NangPaGo.domain.user.vo.CustomOAuth2User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
