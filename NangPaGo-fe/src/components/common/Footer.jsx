@@ -1,8 +1,11 @@
 function Footer() {
   return (
-    <footer className="bg-gray-100 p-4 mt-4 flex flex-col items-center text-center">
+    <footer className="bg-gray-100 p-4 mt-6 flex flex-col items-center text-center">
       <div className="flex gap-4 mb-2">
-        <a href="https://github.com/MARS-LIKELION/NangPaGo" className="text-[var(--secondary-color)] text-sm">
+        <a
+          href="https://github.com/MARS-LIKELION/NangPaGo"
+          className="text-[var(--secondary-color)] text-sm"
+        >
           팀 소개
         </a>
         <button className="text-[var(--secondary-color)] text-sm">
@@ -16,4 +19,4 @@ function Footer() {
   );
 }
 
-export default Footer; 
+export default Footer;
