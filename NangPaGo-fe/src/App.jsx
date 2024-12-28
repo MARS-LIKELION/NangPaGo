@@ -1,33 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { login } from './slices/loginSlice';
-import axiosInstance from './api/axiosInstance.js';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchUserStatus } from './slices/loginSlice';
 import { RouterProvider } from 'react-router-dom';
 import router from './routes/Router.jsx';
 
 function App() {
   const dispatch = useDispatch();
 
-  const fetchUserStatus = async () => {
-    try {
-      const response = await axiosInstance.get('/auth/status');
-      const { data } = response.data;
-      const { email } = data;
-
-      if (email) {
-        dispatch(login({ email }));
-      }
-    } catch (error) {
-      console.error(
-        '사용자 상태를 가져오는 데 실패:',
-        error.response || error.message,
-      );
-    }
-  };
-
   useEffect(() => {
-    fetchUserStatus();
-  }, []);
+    dispatch(fetchUserStatus());
+  }, [dispatch]);
 
   return <RouterProvider router={router} />;
 }

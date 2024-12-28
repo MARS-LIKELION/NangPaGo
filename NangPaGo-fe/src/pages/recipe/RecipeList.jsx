@@ -3,7 +3,7 @@ import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
 import Header from '../../components/common/Header.jsx';
-
+import Footer from '../../components/common/Footer.jsx';
 function RecipeList() {
   const [activeTab, setActiveTab] = useState('recommended');
   const [searchTerm, setSearchTerm] = useState('');
@@ -101,6 +101,7 @@ function RecipeList() {
           searchTerm={searchTerm}
         />
       </div>
+      <Footer />
     </div>
   );
 }

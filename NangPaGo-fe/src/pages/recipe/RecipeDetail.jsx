@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux'; // Redux 상태 가져오기
 import axiosInstance from '../../api/axiosInstance';
 import Recipe from '../../components/recipe/Recipe';
 
@@ -8,6 +9,10 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Redux 상태에서 이메일 확인
+  const email = useSelector((state) => state.loginSlice.email);
+  const isLoggedIn = Boolean(email); // 로그인 여부
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -41,7 +46,7 @@ function RecipeDetail() {
     );
   }
 
-  return <Recipe recipe={recipe} />;
+  return <Recipe recipe={recipe} isLoggedIn={isLoggedIn} />;
 }
 
 export default RecipeDetail;
