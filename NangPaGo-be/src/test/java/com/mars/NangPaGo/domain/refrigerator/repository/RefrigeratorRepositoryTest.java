@@ -40,7 +40,7 @@ class RefrigeratorRepositoryTest {
         // then
         List<Refrigerator> remainingRefrigerators = refrigeratorRepository.findByUserEmail(email);
         assertThat(remainingRefrigerators.size()).isGreaterThan(3); // 테스트 현재 데이터 5개 존재
-        assertThat(remainingRefrigerators.size()).isGreaterThan(4); // 에러가 떠야 정상, 성공한다면 DB확인 필요
+/*        assertThat(remainingRefrigerators.size()).isGreaterThan(4); // 에러가 떠야 정상, 성공한다면 DB확인 필요*/
     }
 
     @DisplayName("사용자의 등록된 냉장고 속 재료를 추가")
@@ -61,6 +61,6 @@ class RefrigeratorRepositoryTest {
         // then
         List<Refrigerator> remainingRefrigerators = refrigeratorRepository.findByUserEmail(email);
         assertThat(remainingRefrigerators.size()).isGreaterThan(5); // 테스트 현재 데이터 5개 존재
-        assertThat(remainingRefrigerators.size()).isGreaterThan(6); // 에러가 떠야 정상, 성공한다면 DB확인 필요
+/*        assertThat(remainingRefrigerators.size()).isGreaterThan(6); // 에러가 떠야 정상, 성공한다면 DB확인 필요*/
     }
 }
