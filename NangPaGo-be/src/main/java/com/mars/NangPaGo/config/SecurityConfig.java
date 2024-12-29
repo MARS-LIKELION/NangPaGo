@@ -68,8 +68,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST).permitAll()
                 .requestMatchers(
-                    "/recipe/{id}/comments/**"
-                ).hasAuthority("ROLE_USER")
+                    "/recipe/{id}/comments/**",
+                    "/recipe/{id}/like/**"
+                )
+                .hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
             );
 

@@ -1,8 +1,7 @@
 package com.mars.NangPaGo.domain.recipe.dto;
 
-public record RecipeListRequestDto(
-    Long userId,
+public record RecipeLikeRequestDto(
+    String email,
     Long recipeId
 ) {
-
 }

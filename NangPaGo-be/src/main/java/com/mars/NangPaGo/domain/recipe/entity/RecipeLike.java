@@ -1,39 +1,47 @@
 package com.mars.NangPaGo.domain.recipe.entity;
 
+import com.mars.NangPaGo.common.jpa.BaseEntity;
 import com.mars.NangPaGo.domain.user.entity.User;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "recipe_id"})
+    }
+)
 public class RecipeLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
-    @Builder
-    private RecipeLike(User user, Recipe recipe) {
-        this.user = user;
-        this.recipe = recipe;
-    }
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public static RecipeLike of(User user, Recipe recipe) {
         return RecipeLike.builder()
-                .user(user)
-                .recipe(recipe)
-                .build();
+            .user(user)
+            .recipe(recipe)
+            .build();
     }
 }

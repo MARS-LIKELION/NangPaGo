@@ -14,13 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
-
+@Slf4j
 @RequiredArgsConstructor
 @Tag(name = "레시피 API", description = "레시피 관련 API")
 @RequestMapping("/api/recipe")
@@ -36,17 +36,18 @@ public class RecipeController {
         return ResponseDto.of(recipeService.recipeById(id), "레시피를 성공적으로 조회했습니다.");
     }
 
-    @PostMapping("/toggle/like")
-    public ResponseEntity<String> toggleRecipeLike(@RequestParam("recipeId") Long recipeId, Principal principal) {
-        String email = principal.getName();
+    @PostMapping("/{id}/like/toggle")
+    public ResponseDto<RecipeLikeResponseDto> toggleLike(@RequestBody RecipeLikeRequestDto requestDto) {
+        log.info("[좋아요 토글 요청] recipeId={}, email={}", requestDto.recipeId(), requestDto.email());
+        return ResponseDto.of(recipeLikeService.toggleRecipeLike(requestDto), "좋아요 버튼");
+    }
 
-        if (email == null || email.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("유저 인증 실패");
-        }
-
-        recipeLikeService.toggleRecipeLike(recipeId, email);
-        return ResponseEntity.ok("좋아요 정보를 수정했습니다.");
+    @GetMapping("/{id}/like/status")
+    public ResponseEntity<Boolean> checkLikeStatus(
+        @RequestParam("email") String email,
+        @PathVariable("id") Long id) {
+        log.info("[좋아요 상태 확인 요청] recipeId={}, email={}", id, email);
+        return ResponseEntity.ok(recipeLikeService.isLikedByUser(email, id));
     }
 
     // CSV 파일 업로드로 엘라스틱 데이터 삽입

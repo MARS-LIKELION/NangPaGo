@@ -2,6 +2,7 @@ package com.mars.NangPaGo.domain.user.entity;
 
 import com.mars.NangPaGo.common.jpa.BaseEntity;
 import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
+import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
 import com.mars.NangPaGo.domain.user.enums.Gender;
 import com.mars.NangPaGo.domain.user.enums.Provider;
 import jakarta.persistence.CascadeType;
@@ -45,4 +46,7 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeComment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeLike> likes;
 }
