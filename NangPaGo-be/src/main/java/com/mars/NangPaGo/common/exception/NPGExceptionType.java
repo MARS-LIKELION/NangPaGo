@@ -25,6 +25,7 @@ public enum NPGExceptionType {
 
     // Internal Server Error(500)
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"),
+    SERVER_ERROR_ELASTICSEARCH(HttpStatus.INTERNAL_SERVER_ERROR, "Elasticsearch 서버 에러"),
     ;
 
     private final HttpStatus httpStatus;
