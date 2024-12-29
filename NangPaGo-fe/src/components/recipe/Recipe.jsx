@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import axiosInstance from '../../api/axiosInstance.js';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CookingSteps from './CookingSteps';
 import NutritionInfo from './NutritionInfo';
@@ -10,15 +11,46 @@ import Footer from '../common/Footer';
 function Recipe({ recipe }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);
   const isLoggedIn = Boolean(userEmail);
+
   const [isHeartActive, setIsHeartActive] = useState(false);
   const [isStarActive, setIsStarActive] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  const toggleHeart = () => {
+  useEffect(() => {
     if (isLoggedIn) {
-      setIsHeartActive(!isHeartActive);
-    } else {
+      fetchLikeStatus();
+    }
+  }, [isLoggedIn]);
+
+  const fetchLikeStatus = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/recipe/${recipe.id}/like/status?email=${userEmail}`,
+      );
+      setIsHeartActive(response.data);
+    } catch (error) {
+      console.error('좋아요 상태를 불러오는 중 오류가 발생했습니다.', error);
+    }
+  };
+
+  const toggleHeart = async () => {
+    if (!isLoggedIn) {
       setShowLoginModal(true);
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        `/recipe/${recipe.id}/like/toggle`,
+        {
+          recipeId: recipe.id,
+          email: userEmail,
+        },
+      );
+      setIsHeartActive(response.data.liked);
+      fetchLikeStatus();
+    } catch (error) {
+      console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다.', error);
     }
   };
 
@@ -73,7 +105,7 @@ function Recipe({ recipe }) {
               .split(/,|\n/)
               .map((ingredient, index) => (
                 <li key={`ingredient-${index}`} className="font-medium">
-                  {ingredient.replace(/[^\w\s가-힣()./×]/gi, ' ').trim()}
+                  {ingredient.replace(/[^가-힣a-zA-Z0-9()./×\s]/gi, '').trim()}
                 </li>
               ))}
           </ul>
@@ -87,7 +119,7 @@ function Recipe({ recipe }) {
                 .split(/,|\n/)
                 .map((sauce, index) => (
                   <li key={`sauce-${index}`} className="font-medium">
-                    {sauce.replace(/[^\w\s가-힣()./×]/gi, ' ').trim()}
+                    {sauce.replace(/[^가-힣a-zA-Z0-9()./×\s]/gi, '').trim()}
                   </li>
                 ))}
             </ul>
