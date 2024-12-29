@@ -42,7 +42,6 @@ public class RecipeComment extends BaseEntity {
     private String content;
 
     public static RecipeComment create(Recipe recipe, User user, String content) {
-        validateContent(content);
         return RecipeComment.builder()
             .recipe(recipe)
             .user(user)
@@ -51,13 +50,6 @@ public class RecipeComment extends BaseEntity {
     }
 
     public void updateText(String content) {
-        validateContent(content);
         this.content = content;
-    }
-
-    private static void validateContent(String content) {
-        if (content.isBlank()) {
-            throw BAD_REQUEST_INVALID_COMMENT.of("댓글 내용은 비어 있을 수 없습니다.");
-        }
     }
 }
