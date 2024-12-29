@@ -19,10 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -41,7 +37,6 @@ public class SecurityConfig {
         "/swagger-ui.html",
         "/api-docs/**",
         "/v3/api-docs/**",
-        "/common/example/**", // TODO: 제거 예정
     };
 
     private final JwtUtil jwtUtil;
