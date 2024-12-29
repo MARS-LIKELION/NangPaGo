@@ -30,7 +30,7 @@ public class RecipeCommentService {
     @Transactional
     public RecipeCommentResponseDto create(RecipeCommentRequestDto requestDto, Long recipeId) {
         return RecipeCommentResponseDto.from(recipeCommentRepository.save(
-            RecipeComment.create(getRecipe(recipeId), getUser(requestDto.userId()), requestDto.content())));
+            RecipeComment.create(getRecipe(recipeId), getUserEmail(requestDto.userEmail()), requestDto.content())));
     }
 
     public List<RecipeCommentResponseDto> commentsByRecipe(Long recipeId) {
@@ -56,8 +56,8 @@ public class RecipeCommentService {
             .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
     }
 
-    private User getUser(Long userId) {
-        return userRepository.findById(userId)
+    private User getUserEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail)
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
     }
 
