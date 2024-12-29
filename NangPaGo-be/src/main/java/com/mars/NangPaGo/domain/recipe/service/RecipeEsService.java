@@ -151,6 +151,7 @@ public class RecipeEsService {
                     .toList();
 
             return new PageImpl<>(results, pageable, response.hits().total().value());
+
         } catch (Exception e) {
             log.error("검색 중 오류 발생: {}", e.getMessage());
             throw new NPGException(NPGExceptionType.SERVER_ERROR, "레시피 검색 실패");
