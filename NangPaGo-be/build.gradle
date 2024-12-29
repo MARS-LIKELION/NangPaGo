@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
+// `gradle.properties` 파일로부터 정보 가져오기
 def loadProjectProperties() {
     def projectProps = new Properties()
     file("gradle.properties").withInputStream {
@@ -15,6 +16,11 @@ def loadProjectProperties() {
 def projectProps = loadProjectProperties()
 group = projectProps['group']
 version = projectProps['version']
+
+// build/resources/main/META-INF/build-info.properties 파일 생성
+springBoot {
+    buildInfo()
+}
 
 java {
     toolchain {
@@ -30,10 +36,6 @@ configurations {
 
 repositories {
     mavenCentral()
-}
-
-springBoot {
-    buildInfo()
 }
 
 dependencies {
