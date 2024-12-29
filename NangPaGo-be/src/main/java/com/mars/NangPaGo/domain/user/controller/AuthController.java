@@ -1,7 +1,6 @@
 package com.mars.NangPaGo.domain.user.controller;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;

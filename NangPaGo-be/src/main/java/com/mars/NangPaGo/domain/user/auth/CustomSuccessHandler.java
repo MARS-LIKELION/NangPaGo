@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -22,6 +23,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+    @Value("${client.host}")
+    private String clientHost;
 
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -45,7 +49,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.addCookie(createCookie("access", access, jwtUtil.getAccessTokenExpireMillis()));
         response.addCookie(createCookie("refresh", refresh, jwtUtil.getRefreshTokenExpireMillis()));
-        response.sendRedirect("http://localhost:5173/");
+        response.sendRedirect(clientHost);
     }
 
     private void saveRefreshToken(String email, String refreshToken) {

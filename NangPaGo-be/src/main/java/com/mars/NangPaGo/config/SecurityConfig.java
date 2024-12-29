@@ -7,6 +7,7 @@ import com.mars.NangPaGo.domain.user.service.CustomOAuth2UserService;
 import com.mars.NangPaGo.domain.jwt.util.JwtFilter;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${client.host}")
+    private String clientHost;
 
     private static final String[] WHITE_LIST = {
         "/",
@@ -70,7 +74,6 @@ public class SecurityConfig {
 
         http.addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class);
         http
-
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -80,7 +83,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin(clientHost);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);

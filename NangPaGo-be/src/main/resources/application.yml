@@ -106,3 +106,6 @@ springdoc:
     display-request-duration: true
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+client:
+  host: ${CLIENT_HOST}
