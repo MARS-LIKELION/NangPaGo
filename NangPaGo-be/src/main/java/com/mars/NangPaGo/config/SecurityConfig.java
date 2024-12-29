@@ -65,8 +65,23 @@ public class SecurityConfig {
             );
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(WHITE_LIST).permitAll()
-                .anyRequest().authenticated());
+                // 댓글 조회는 모든 사용자 허용
+                .requestMatchers(
+                    "/",
+                    "/login",
+                    "/oauth2/**",
+                    "/token/reissue",
+                    "/auth/status",
+                    "/recipe/{id}",
+                    "/recipe/{id}/comments",
+                    "/common/example/**" // TODO: 제거 예정
+                ).permitAll()
+                .requestMatchers(
+                    "/recipe/{id}/comments/**"
+                ).hasAuthority("ROLE_USER")
+                .anyRequest().authenticated()
+            );
+
         http.addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class);
         http
 

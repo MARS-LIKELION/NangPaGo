@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.recipe.entity;
 
 import com.mars.NangPaGo.common.jpa.BaseEntity;
+import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -54,11 +55,12 @@ public class Recipe extends BaseEntity {
     @Column(name = "att_file_no_mk")
     private String stepImage;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Manual> manuals;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ManualImage> manualImages;
 
-
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeComment> comments;
 }
