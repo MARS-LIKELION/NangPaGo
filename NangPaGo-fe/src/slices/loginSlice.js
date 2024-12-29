@@ -6,7 +6,7 @@ export const fetchUserStatus = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       console.log('Fetching user status...');
-      const response = await axiosInstance.get('/auth/status');
+      const response = await axiosInstance.get('/api/auth/status');
       console.log('User status response:', response);
 
       const { data } = response.data;

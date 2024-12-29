@@ -19,7 +19,7 @@ import java.security.Principal;
 
 @RequiredArgsConstructor
 @Tag(name = "레시피 API", description = "레시피 관련 API")
-@RequestMapping("/recipe")
+@RequestMapping("/api/recipe")
 @RestController
 public class RecipeController {
 

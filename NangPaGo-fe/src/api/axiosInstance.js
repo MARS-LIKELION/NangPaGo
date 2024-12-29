@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
   async (response) => {
     if (response.data?.data === '') {
       try {
-        await axiosInstance.post('/token/reissue');
+        await axiosInstance.post('/api/token/reissue');
         const newAccessToken = getCookie('access');
         if (newAccessToken) {
           response.config.headers.Authorization = `Bearer ${newAccessToken}`;

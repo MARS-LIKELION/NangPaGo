@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/recipe/{recipeId}/comments")
+@RequestMapping("/api/recipe/{recipeId}/comments")
 @RequiredArgsConstructor
 public class RecipeCommentController {
 

@@ -17,7 +17,7 @@ function RecipeDetail() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await axiosInstance.get(`/recipe/${id}`);
+        const response = await axiosInstance.get(`/api/recipe/${id}`);
         setRecipe(response.data.data);
       } catch (err) {
         setError('레시피를 불러오는데 실패했습니다.');

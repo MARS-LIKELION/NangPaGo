@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Tag(name = "재료사전 API", description = "재료사전 관련 API")
-@RequestMapping("/ingredient")
+@RequestMapping("/api/ingredient")
 @RestController
 public class IngredientElasticController {
     private final IngredientElasticSynchronizer ingredientElasticSynchronizer;
