@@ -4,11 +4,16 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@RequiredArgsConstructor
 @Configuration
 public class SwaggerConfig {
+
+    private final BuildProperties buildProperties;
 
     @Bean
     public OpenAPI openAPI() {
@@ -19,7 +24,7 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("NangPaGo API")
                 .description("NangPaGo API Documentation")
-                .version("v0.2.0"))
+                .version(buildProperties.getVersion()))
             .addSecurityItem(securityRequirement)
             .schemaRequirement("BearerAuth", securityScheme);
     }
