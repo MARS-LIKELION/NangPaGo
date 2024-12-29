@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     element: <Search />,
   },
   {
-    path: '/recipe/:id', // 상세 페이지 경로 추가
+    path: '/recipe/:id',
     element: <RecipeDetail />,
   },
 ]);

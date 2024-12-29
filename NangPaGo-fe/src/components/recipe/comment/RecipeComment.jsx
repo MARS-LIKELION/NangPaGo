@@ -35,7 +35,6 @@ function RecipeComment({ recipeId }) {
       const response = await fetchComments(recipeId);
       setComments(response.data.data.reverse());
     } catch (error) {
-      console.error('댓글을 불러오는 중 오류가 발생했습니다.', error);
       alert('댓글을 불러오는 중 문제가 발생했습니다.');
     } finally {
       setIsLoading(false);
@@ -62,7 +61,6 @@ function RecipeComment({ recipeId }) {
       setComments((prevComments) => [newComment, ...prevComments]);
       setCommentText('');
     } catch (error) {
-      console.error('댓글 생성 중 오류가 발생했습니다.', error);
       alert('댓글 생성 중 문제가 발생했습니다.');
     } finally {
       setIsSubmitting(false);
@@ -86,7 +84,6 @@ function RecipeComment({ recipeId }) {
       setIsEditing(null);
       setEditedComment('');
     } catch (error) {
-      console.error('댓글 수정 중 오류가 발생했습니다.', error);
       alert('댓글 수정 중 문제가 발생했습니다.');
     }
   };
@@ -102,7 +99,6 @@ function RecipeComment({ recipeId }) {
       setCommentToDelete(null);
       setShowDeleteModal(false);
     } catch (error) {
-      console.error('댓글 삭제 중 오류가 발생했습니다.', error);
       alert('댓글 삭제 중 문제가 발생했습니다.');
     }
   };
@@ -128,7 +124,7 @@ function RecipeComment({ recipeId }) {
         className="w-full p-2 border border-gray-300 rounded-md mb-4"
         placeholder={
           isLoggedIn
-            ? '댓글을 입력하세요...'
+            ? '댓글을 입력하세요.'
             : '로그인 후 댓글을 입력할 수 있습니다.'
         }
         disabled={!isLoggedIn || isSubmitting}
@@ -158,7 +154,7 @@ function RecipeComment({ recipeId }) {
                     onClick={() => handleEditComment(comment.id)}
                     className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md"
                   >
-                    수정 완료
+                    수정
                   </button>
                   <button
                     onClick={() => setIsEditing(null)}

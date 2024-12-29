@@ -77,15 +77,9 @@ function RecipeList() {
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen">
-      {/* 헤더 */}
       <Header />
-
-      {/* 콘텐츠 컨테이너 */}
       <div className="px-4 space-y-4">
-        {/* 탭 메뉴 */}
         <RecipeListTab activeTab={activeTab} setActiveTab={setActiveTab} />
-
-        {/* 서치바 */}
         <div className="flex justify-center">
           <SearchBar
             searchTerm={searchTerm}
@@ -93,8 +87,6 @@ function RecipeList() {
             className="w-[200px]"
           />
         </div>
-
-        {/* 레시피 콘텐츠 */}
         <RecipeListContent
           activeTab={activeTab}
           images={images}

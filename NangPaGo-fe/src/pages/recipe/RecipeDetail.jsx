@@ -10,9 +10,8 @@ function RecipeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Redux 상태에서 이메일 확인
   const email = useSelector((state) => state.loginSlice.email);
-  const isLoggedIn = Boolean(email); // 로그인 여부
+  const isLoggedIn = Boolean(email);
 
   useEffect(() => {
     const fetchRecipe = async () => {

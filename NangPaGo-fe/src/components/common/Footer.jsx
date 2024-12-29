@@ -9,7 +9,7 @@ function Footer() {
           팀 소개
         </a>
         <button className="text-[var(--secondary-color)] text-sm">
-          서비스 피드백하기
+          서비스 피드백
         </button>
       </div>
       <p className="text-gray-600 text-sm">
