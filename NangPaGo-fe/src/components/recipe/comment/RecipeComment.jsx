@@ -33,7 +33,7 @@ function RecipeComment({ recipeId }) {
     setIsLoading(true);
     try {
       const response = await fetchComments(recipeId);
-      setComments(response.data.data.reverse()); // 최신 댓글이 맨 위로 오도록 reverse() 사용
+      setComments(response.data.data.reverse());
     } catch (error) {
       console.error('댓글을 불러오는 중 오류가 발생했습니다.', error);
       alert('댓글을 불러오는 중 문제가 발생했습니다.');
@@ -47,7 +47,6 @@ function RecipeComment({ recipeId }) {
       setShowLoginModal(true);
       return;
     }
-
     if (!commentText.trim()) {
       alert('댓글 내용을 입력하세요.');
       return;
@@ -111,7 +110,11 @@ function RecipeComment({ recipeId }) {
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleCommentSubmit();
+      if (isEditing !== null) {
+        handleEditComment(isEditing);
+      } else {
+        handleCommentSubmit();
+      }
     }
   };
 
@@ -148,6 +151,7 @@ function RecipeComment({ recipeId }) {
                   <textarea
                     value={editedComment}
                     onChange={(e) => setEditedComment(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className="w-full p-2 border border-gray-300 rounded-md"
                   />
                   <button
