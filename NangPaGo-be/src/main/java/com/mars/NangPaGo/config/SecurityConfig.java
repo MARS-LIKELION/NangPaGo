@@ -35,7 +35,7 @@ public class SecurityConfig {
         "/token/reissue",
         "/auth/status",
         "/recipe/{id}",
-		"/ingredient/search",
+        "/ingredient/search",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/api-docs/**",
