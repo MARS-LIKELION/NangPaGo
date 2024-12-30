@@ -1,24 +1,20 @@
-FROM node:lts-alpine as builder
+# Base image for Node.js
+FROM node:18-alpine
 
+# Set the working directory
 WORKDIR /app
 
-# 먼저 패키지 파일만 복사
-COPY package*.json ./
-
-# 의존성 설치
+# Copy package files and install dependencies
+COPY package.json package-lock.json ./
 RUN npm install
 
-# 그 다음 나머지 파일들 복사
+# Copy the application source
 COPY . .
 
-# 빌드 실행
 RUN npm run build
 
-# 실행 스테이지
-FROM nginx:alpine
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-
+# Expose the port for the application
 EXPOSE ${VITE_FRONT_SERVER_PORT}
 
-CMD ["nginx", "-g", "daemon off;"]
+# Start the application
+CMD ["npm", "run", "dev"]

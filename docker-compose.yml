@@ -3,49 +3,25 @@ version: '3.8'
 services:
   app:
     build:
-      context: .
+      context: ./NangPaGo-be
       dockerfile: Dockerfile
-    image: ${API_SERVER_IMAGE}
     container_name: spring-boot-app
     ports:
       - "${API_SERVER_PORT}:${API_SERVER_PORT}"
     environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_NAME}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - API_SERVER_PORT=${API_SERVER_PORT}
-      - CLIENT_HOST=${CLIENT_HOST}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
-      - NAVER_CLIENT_ID=${NAVER_CLIENT_ID}
-      - NAVER_CLIENT_SECRET=${NAVER_CLIENT_SECRET}
-      - NAVER_REDIRECT_URI=${NAVER_REDIRECT_URI}
-      - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
-      - KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET}
-      - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - jwt.token.access-expiration-time=${jwt.token.access-expiration-time}
-      - jwt.token.refresh-expiration-time=${jwt.token.refresh-expiration-time}
-      - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST}
-      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
-      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+      - ./NangPaGo-be/.env
     networks:
       - app-network
 
   frontend:
     build:
-      context: .
+      context: ./NangPaGo-fe
       dockerfile: Dockerfile
-    image: ${REACT_SERVER_IMAGE}
     container_name: react-front
     ports:
       - "${VITE_FRONT_SERVER_PORT}:${VITE_FRONT_SERVER_PORT}"
     environment:
-      - VITE_HOST=${VITE_HOST}
-      - VITE_FRONT_SERVER_PORT=${VITE_FRONT_SERVER_PORT}
+      - ./NangPaGo-fe/.env
     networks:
       - app-network
 
