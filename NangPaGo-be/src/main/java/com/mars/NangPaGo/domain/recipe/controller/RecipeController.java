@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Slf4j
 @RequiredArgsConstructor
 @Tag(name = "레시피 API", description = "레시피 관련 API")
 @RequestMapping("/api/recipe")
@@ -38,15 +37,11 @@ public class RecipeController {
 
     @PostMapping("/{id}/like/toggle")
     public ResponseDto<RecipeLikeResponseDto> toggleLike(@RequestBody RecipeLikeRequestDto requestDto) {
-        log.info("[좋아요 토글 요청] recipeId={}, email={}", requestDto.recipeId(), requestDto.email());
         return ResponseDto.of(recipeLikeService.toggleRecipeLike(requestDto), "좋아요 버튼");
     }
 
     @GetMapping("/{id}/like/status")
-    public ResponseEntity<Boolean> checkLikeStatus(
-        @RequestParam("email") String email,
-        @PathVariable("id") Long id) {
-        log.info("[좋아요 상태 확인 요청] recipeId={}, email={}", id, email);
+    public ResponseEntity<Boolean> checkLikeStatus(@RequestParam("email") String email, @PathVariable("id") Long id) {
         return ResponseEntity.ok(recipeLikeService.isLikedByUser(email, id));
     }
 

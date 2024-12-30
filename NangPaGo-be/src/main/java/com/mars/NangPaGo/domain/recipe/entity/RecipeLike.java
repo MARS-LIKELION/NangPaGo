@@ -1,6 +1,5 @@
 package com.mars.NangPaGo.domain.recipe.entity;
 
-import com.mars.NangPaGo.common.jpa.BaseEntity;
 import com.mars.NangPaGo.domain.user.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -16,11 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"user_id", "recipe_id"})
-    }
-)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "recipe_id"})})
 public class RecipeLike {
 
     @Id

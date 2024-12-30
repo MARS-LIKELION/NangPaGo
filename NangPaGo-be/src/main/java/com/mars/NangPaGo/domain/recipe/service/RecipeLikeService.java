@@ -25,10 +25,13 @@ public class RecipeLikeService {
     private final UserRepository userRepository;
 
     public RecipeLikeResponseDto toggleRecipeLike(RecipeLikeRequestDto requestDto) {
-        return RecipeLikeResponseDto.of(
-            requestDto.recipeId(),
-            toggleLike(requestDto.email(), requestDto.recipeId())
-        );
+        boolean isLiked = toggleLike(requestDto.email(), requestDto.recipeId());
+        return RecipeLikeResponseDto.of(requestDto.recipeId(), isLiked);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isLikedByUser(String email, Long recipeId) {
+        return recipeLikeRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
 
     private boolean toggleLike(String email, Long recipeId) {
@@ -44,11 +47,6 @@ public class RecipeLikeService {
                 recipeLikeRepository.save(RecipeLike.of(user, recipe));
                 return true;
             });
-    }
-
-    @Transactional(readOnly = true)
-    public boolean isLikedByUser(String email, Long recipeId) {
-        return recipeLikeRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
 
     private User findUserByEmail(String email) {
