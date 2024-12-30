@@ -144,7 +144,7 @@ public class RecipeEsService {
                     RecipeES.class);
 
             List<RecipeEsResponseDto> results = response.hits().hits().stream()
-                    .map(hit -> RecipeEsResponseDto.from(
+                    .map(hit -> RecipeEsResponseDto.of(
                             hit.source(), // RecipeES 엔티티
                             hit.score() != null ? hit.score().floatValue() : 0.0f // matchScore를 가져옴
                     ))

@@ -13,7 +13,7 @@ public record RecipeEsResponseDto(
         List<String> ingredientsTag,
         float matchScore
 ) {
-    public static RecipeEsResponseDto from(RecipeES recipeES, float score) {
+    public static RecipeEsResponseDto of(RecipeES recipeES, float score) {
         return RecipeEsResponseDto.builder()
                 .id(recipeES.getId())
                 .name(recipeES.getName())

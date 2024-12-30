@@ -56,10 +56,10 @@ public class RecipeController {
     }
 
     // 엘라스틱 검색 API
-    @GetMapping("/es")
+    @GetMapping("/es/search")
     public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "pageNo", defaultValue = "1") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int size,
             @RequestParam(name = "keyword", required = false) String keyword) {
         Page<RecipeEsResponseDto> results = recipeEsService.searchRecipes(page, size, keyword);
         return ResponseDto.of(results, "검색 결과를 성공적으로 조회했습니다.");
