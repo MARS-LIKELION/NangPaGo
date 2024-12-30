@@ -29,9 +29,9 @@ public class RecipeCommentService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public PageDto<RecipeCommentResponseDto> getPagedCommentsByRecipe(Long recipeId, int page, int size) {
+    public PageDto<RecipeCommentResponseDto> PagedCommentsByRecipe(Long recipeId, int pageNo, int pageSize) {
         vaildateRecipe(recipeId);
-        return PageDto.of(recipeCommentRepository.findByRecipeId(recipeId, createPageRequest(page, size))
+        return PageDto.of(recipeCommentRepository.findByRecipeId(recipeId, createPageRequest(pageNo, pageSize))
             .map(RecipeCommentResponseDto::from));
     }
 
@@ -53,8 +53,8 @@ public class RecipeCommentService {
         recipeCommentRepository.delete(vaildateComment(commentId));
     }
 
-    private PageRequest createPageRequest(int page, int size) {
-        return PageRequest.of(page, size, Sort.by(DESC, "createdAt"));
+    private PageRequest createPageRequest(int pageNo, int pageSize) {
+        return PageRequest.of(pageNo, pageSize, Sort.by(DESC, "createdAt"));
     }
 
     private Recipe vaildateRecipe(Long recipeId) {

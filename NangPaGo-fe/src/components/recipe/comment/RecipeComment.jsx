@@ -197,7 +197,7 @@ function RecipeComment({ recipeId }) {
                   </div>
                 )
               ) : (
-                <div className="h-16"></div>
+                <div className="h-8"></div> // Adjusted height to match when comments are present
               )}
             </div>
           );

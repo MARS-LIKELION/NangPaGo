@@ -1,8 +1,8 @@
 import axiosInstance from './axiosInstance';
 
-export const fetchComments = (recipeId, page = 0, size = 5) =>
+export const fetchComments = (recipeId, pageNo = 0, pageSize = 5) =>
   axiosInstance.get(`/api/recipe/${recipeId}/comments`, {
-    params: { page, size },
+    params: { pageNo, pageSize },
   });
 
 export const createComment = (recipeId, commentData) => {

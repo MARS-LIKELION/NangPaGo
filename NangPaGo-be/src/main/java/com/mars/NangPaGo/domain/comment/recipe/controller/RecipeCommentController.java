@@ -6,10 +6,7 @@ import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.service.RecipeCommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/recipe/{recipeId}/comments")
@@ -21,9 +18,9 @@ public class RecipeCommentController {
     @GetMapping
     public ResponseDto<PageDto<RecipeCommentResponseDto>> list(
         @PathVariable("recipeId") Long recipeId,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) {
-        return ResponseDto.of(recipeCommentService.getPagedCommentsByRecipe(recipeId, page, size), "댓글 조회");
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "5") int pageSize) {
+        return ResponseDto.of(recipeCommentService.PagedCommentsByRecipe(recipeId, pageNo, pageSize), "댓글 조회");
     }
 
     @PostMapping
