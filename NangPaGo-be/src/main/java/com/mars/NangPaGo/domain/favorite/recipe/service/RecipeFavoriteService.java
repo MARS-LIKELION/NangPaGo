@@ -39,14 +39,8 @@ public class RecipeFavoriteService {
         Recipe recipe = findRecipeById(recipeId);
 
         return recipeFavoriteRepository.findByUserAndRecipe(user, recipe)
-            .map(recipeFavorite -> {
-                recipeFavoriteRepository.delete(recipeFavorite);
-                return false;
-            })
-            .orElseGet(() -> {
-                recipeFavoriteRepository.save(RecipeFavorite.of(user, recipe));
-                return true;
-            });
+            .map(this::removeFavorite)
+            .orElseGet(() -> addFavorite(user, recipe));
     }
 
     private User findUserByEmail(String email) {
@@ -57,5 +51,15 @@ public class RecipeFavoriteService {
     private Recipe findRecipeById(Long recipeId) {
         return recipeRepository.findById(recipeId)
             .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
+    }
+
+    private boolean removeFavorite(RecipeFavorite recipeFavorite) {
+        recipeFavoriteRepository.delete(recipeFavorite);
+        return false;
+    }
+
+    private boolean addFavorite(User user, Recipe recipe) {
+        recipeFavoriteRepository.save(RecipeFavorite.of(user, recipe));
+        return true;
     }
 }
