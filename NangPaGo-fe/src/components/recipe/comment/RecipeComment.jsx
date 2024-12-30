@@ -8,7 +8,12 @@ import {
 } from '../../../api/commentService.js';
 import LoginModal from '../../../common/modal/LoginModal';
 import DeleteModal from '../../../common/modal/DeleteModal';
-import { FaArrowLeft, FaArrowRight, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaAngleDoubleLeft,
+  FaAngleDoubleRight,
+} from 'react-icons/fa';
 
 function RecipeComment({ recipeId }) {
   const [comments, setComments] = useState([]);
@@ -44,7 +49,7 @@ function RecipeComment({ recipeId }) {
       setTotalPages(data.totalPages);
       setTotalItems(data.totalItems);
     } catch (error) {
-      setError('댓글을 불러오는 중 문제가 발생했습니다.');
+      alert('댓글을 불러오는 중 문제가 발생했습니다.');
     }
   };
 
@@ -124,9 +129,11 @@ function RecipeComment({ recipeId }) {
   return (
     <div className="mt-8">
       <div className="mt-10 flex justify-center items-center border-t-2 border-b-2 border-gray-300 p-4 mx-auto">
-        <h1 className="text-18px font-bold md:text-30px">댓글 ({totalItems})</h1>
+        <h1 className="text-18px font-bold md:text-30px">
+          댓글 ({totalItems})
+        </h1>
       </div>
-      
+
       <div className="mt-4 space-y-3">
         {Array.from({ length: 5 }).map((_, index) => {
           const comment = comments[index];
@@ -158,7 +165,8 @@ function RecipeComment({ recipeId }) {
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-gray-700 text-sm">
-                        <strong>{comment.userEmail.slice(0, 3)}***</strong>: {comment.content}
+                        <strong>{comment.userEmail.slice(0, 3)}***</strong>:{' '}
+                        {comment.content}
                       </p>
                       <p className="text-gray-500 text-xs">
                         {new Date(comment.createdAt).toLocaleString()}
