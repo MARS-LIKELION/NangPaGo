@@ -36,14 +36,14 @@ public class RecipeController {
         return ResponseDto.of(recipeService.recipeById(id), "레시피를 성공적으로 조회했습니다.");
     }
 
-    @PostMapping("/{id}/like/toggle")
-    public ResponseDto<RecipeLikeResponseDto> toggleLike(@RequestBody RecipeLikeRequestDto requestDto) {
-        return ResponseDto.of(recipeLikeService.toggleRecipeLike(requestDto), "좋아요 버튼");
-    }
-
     @GetMapping("/{id}/like/status")
     public ResponseEntity<Boolean> checkLikeStatus(@RequestParam("email") String email, @PathVariable("id") Long id) {
         return ResponseEntity.ok(recipeLikeService.isLikedByUser(email, id));
+    }
+
+    @PostMapping("/{id}/like/toggle")
+    public ResponseDto<RecipeLikeResponseDto> toggleLike(@RequestBody RecipeLikeRequestDto requestDto) {
+        return ResponseDto.of(recipeLikeService.toggleRecipeLike(requestDto), "좋아요 이벤트 발생");
     }
 
     @GetMapping("/search")

@@ -1,13 +1,13 @@
-package com.mars.NangPaGo.domain.recipe.service;
+package com.mars.NangPaGo.domain.favorite.recipe.service;
 
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
-import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeRequestDto;
-import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeResponseDto;
+import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteRequestDto;
+import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
+import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
+import com.mars.NangPaGo.domain.favorite.recipe.repository.RecipeFavoriteRepository;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
-import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
-import com.mars.NangPaGo.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
@@ -18,33 +18,33 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class RecipeLikeService {
+public class RecipeFavoriteService {
 
-    private final RecipeLikeRepository recipeLikeRepository;
+    private final RecipeFavoriteRepository recipeFavoriteRepository;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    public RecipeLikeResponseDto toggleRecipeLike(RecipeLikeRequestDto requestDto) {
-        boolean isLiked = toggleLike(requestDto.email(), requestDto.recipeId());
-        return RecipeLikeResponseDto.of(requestDto.recipeId(), isLiked);
+    public RecipeFavoriteResponseDto toggleFavorite(RecipeFavoriteRequestDto requestDto) {
+        boolean isFavorite = toggleFavoriteStatus(requestDto.email(), requestDto.recipeId());
+        return RecipeFavoriteResponseDto.of(requestDto.recipeId(), isFavorite);
     }
 
     @Transactional(readOnly = true)
-    public boolean isLikedByUser(String email, Long recipeId) {
-        return recipeLikeRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
+    public boolean isFavoriteByUser(String email, Long recipeId) {
+        return recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
 
-    private boolean toggleLike(String email, Long recipeId) {
+    private boolean toggleFavoriteStatus(String email, Long recipeId) {
         User user = findUserByEmail(email);
         Recipe recipe = findRecipeById(recipeId);
 
-        return recipeLikeRepository.findByUserAndRecipe(user, recipe)
-            .map(recipeLike -> {
-                recipeLikeRepository.delete(recipeLike);
+        return recipeFavoriteRepository.findByUserAndRecipe(user, recipe)
+            .map(recipeFavorite -> {
+                recipeFavoriteRepository.delete(recipeFavorite);
                 return false;
             })
             .orElseGet(() -> {
-                recipeLikeRepository.save(RecipeLike.of(user, recipe));
+                recipeFavoriteRepository.save(RecipeFavorite.of(user, recipe));
                 return true;
             });
     }

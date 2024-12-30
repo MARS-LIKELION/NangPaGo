@@ -18,21 +18,29 @@ function Recipe({ recipe }) {
 
   useEffect(() => {
     if (isLoggedIn) {
-      fetchLikeStatus();
+      fetchStatuses();
     }
   }, [isLoggedIn]);
 
-  const fetchLikeStatus = async () => {
+  // 좋아요와 즐겨찾기 상태를 동시에 가져오는 함수
+  const fetchStatuses = async () => {
     try {
-      const response = await axiosInstance.get(
-        `/api/recipe/${recipe.id}/like/status?email=${userEmail}`,
-      );
-      setIsHeartActive(response.data);
+      const [likeResponse, favoriteResponse] = await Promise.all([
+        axiosInstance.get(
+          `/api/recipe/${recipe.id}/like/status?email=${userEmail}`,
+        ),
+        axiosInstance.get(
+          `/api/recipe/${recipe.id}/favorite/status?email=${userEmail}`,
+        ),
+      ]);
+      setIsHeartActive(likeResponse.data);
+      setIsStarActive(favoriteResponse.data);
     } catch (error) {
-      console.error('좋아요 상태를 불러오는 중 오류가 발생했습니다.', error);
+      console.error('상태를 불러오는 중 오류가 발생했습니다.', error);
     }
   };
 
+  // 좋아요 토글
   const toggleHeart = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -47,18 +55,32 @@ function Recipe({ recipe }) {
           email: userEmail,
         },
       );
-      setIsHeartActive(response.data.liked);
-      fetchLikeStatus();
+      setIsHeartActive(response.data.isLiked); // 서버 응답 값 반영
+      fetchStatuses(); // 상태 다시 불러오기
     } catch (error) {
       console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다.', error);
     }
   };
 
-  const toggleStar = () => {
-    if (isLoggedIn) {
-      setIsStarActive(!isStarActive);
-    } else {
+  // 즐겨찾기 토글
+  const toggleStar = async () => {
+    if (!isLoggedIn) {
       setShowLoginModal(true);
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        `/api/recipe/${recipe.id}/favorite/toggle`,
+        {
+          recipeId: recipe.id,
+          email: userEmail,
+        },
+      );
+      setIsStarActive(response.data.isFavorite); // 서버 응답 값 반영
+      fetchStatuses(); // 상태 다시 불러오기
+    } catch (error) {
+      console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다.', error);
     }
   };
 
@@ -77,17 +99,13 @@ function Recipe({ recipe }) {
           <h1 className="text-xl font-bold">{recipe.name}</h1>
           <div className="flex gap-2">
             <button
-              className={`bg-white ${
-                isHeartActive ? 'text-red-500' : 'text-gray-500'
-              }`}
+              className={`bg-white ${isHeartActive ? 'text-red-500' : 'text-gray-500'}`}
               onClick={toggleHeart}
             >
               <FaHeart className="bg-white text-2xl" />
             </button>
             <button
-              className={`bg-white ${
-                isStarActive ? 'text-yellow-500' : 'text-gray-500'
-              }`}
+              className={`bg-white ${isStarActive ? 'text-yellow-500' : 'text-gray-500'}`}
               onClick={toggleStar}
             >
               <FaStar className="bg-white text-2xl" />

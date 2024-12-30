@@ -2,6 +2,7 @@ package com.mars.NangPaGo.domain.recipe.entity;
 
 import com.mars.NangPaGo.common.jpa.BaseEntity;
 import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
+import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -66,4 +67,7 @@ public class Recipe extends BaseEntity {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeLike> likes;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecipeFavorite> favorites;
 }

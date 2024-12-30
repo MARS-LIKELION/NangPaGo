@@ -69,7 +69,8 @@ public class SecurityConfig {
                 .requestMatchers(WHITE_LIST).permitAll()
                 .requestMatchers(
                     "/api/recipe/{id}/comments/**",
-                    "/api/recipe/{id}/like/**"
+                    "/api/recipe/{id}/like/**",
+                    "/api/recipe/{id}/favorite/**"
                 )
                 .hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
