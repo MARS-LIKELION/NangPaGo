@@ -14,8 +14,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "recipe_id"})})
+@Entity
 public class RecipeLike {
 
     @Id

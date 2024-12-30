@@ -1,7 +1,5 @@
 package com.mars.NangPaGo.domain.comment.recipe.entity;
 
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.BAD_REQUEST_INVALID_COMMENT;
-
 import com.mars.NangPaGo.common.jpa.BaseEntity;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.user.entity.User;
@@ -13,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -72,9 +72,9 @@ public class RecipeEsService {
         """;
 
             CreateIndexRequest request = new CreateIndexRequest.Builder()
-                    .index("recipes")
-                    .withJson(new StringReader(indexSettings))
-                    .build();
+                .index("recipes")
+                .withJson(new StringReader(indexSettings))
+                .build();
 
             elasticsearchClient.indices().create(request);
             return "Elasticsearch 인덱스가 성공적으로 생성되었습니다!";
@@ -88,8 +88,8 @@ public class RecipeEsService {
     public String insertRecipesFromCsv(MultipartFile file) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"))) {
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT
-                    .withFirstRecordAsHeader()
-                    .withIgnoreSurroundingSpaces()
+                .withFirstRecordAsHeader()
+                .withIgnoreSurroundingSpaces()
                     .withTrim());
 
             List<RecipeES> recipeESList = new ArrayList<>();
@@ -98,9 +98,9 @@ public class RecipeEsService {
                 String name = record.get("RCP_NM").trim();
                 String recipeImageUrl = record.get("ATT_FILE_NO_MAIN").trim();
                 List<String> ingredientsList = List.of(record.get("RCP_PARTS_DTLS").split(",")).stream()
-                        .map(String::trim)
-                        .filter(ingredient -> !ingredient.isEmpty())
-                        .toList();
+                    .map(String::trim)
+                    .filter(ingredient -> !ingredient.isEmpty())
+                    .toList();
                 List<String> ingredientsTag = ingredientsList.stream().limit(5).toList();
 
                 RecipeES recipeES = new RecipeES(id, name, recipeImageUrl, ingredientsList, ingredientsTag);
@@ -109,9 +109,9 @@ public class RecipeEsService {
 
             for (RecipeES recipe : recipeESList) {
                 elasticsearchClient.index(i -> i
-                        .index("recipes")
-                        .id(recipe.getId())
-                        .document(recipe)
+                    .index("recipes")
+                    .id(recipe.getId())
+                    .document(recipe)
                 );
             }
 
@@ -128,27 +128,26 @@ public class RecipeEsService {
 
         try {
             var query = (keyword == null || keyword.trim().isEmpty())
-                    ? QueryBuilders.functionScore(fs -> fs
-                    .functions(f -> f.randomScore(rs -> rs.seed(String.valueOf(System.currentTimeMillis()))))
+                ? QueryBuilders.functionScore(fs -> fs
+                .functions(f -> f.randomScore(rs -> rs.seed(String.valueOf(System.currentTimeMillis()))))
             )
-                    : QueryBuilders.match(m -> m
-                    .field("ingredients")
-                    .query(keyword)
+                : QueryBuilders.match(m -> m
+                .field("ingredients")
+                .query(keyword)
             );
 
             SearchResponse<RecipeES> response = elasticsearchClient.search(s -> s
-                            .index("recipes")
-                            .query(query)
-                            .from((int) pageable.getOffset())
-                            .size(pageable.getPageSize()),
-                    RecipeES.class);
+                .index("recipes")
+                .query(query)
+                .from((int) pageable.getOffset())
+                .size(pageable.getPageSize()), RecipeES.class);
 
             List<RecipeEsResponseDto> results = response.hits().hits().stream()
-                    .map(hit -> RecipeEsResponseDto.of(
-                            hit.source(), // RecipeES 엔티티
-                            hit.score() != null ? hit.score().floatValue() : 0.0f // matchScore를 가져옴
-                    ))
-                    .toList();
+                .map(hit -> RecipeEsResponseDto.of(
+                    hit.source(), // RecipeES 엔티티
+                    hit.score() != null ? hit.score().floatValue() : 0.0f // matchScore를 가져옴
+                ))
+                .toList();
 
             return new PageImpl<>(results, pageable, response.hits().total().value());
 
