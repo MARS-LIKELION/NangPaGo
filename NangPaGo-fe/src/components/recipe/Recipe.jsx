@@ -25,7 +25,7 @@ function Recipe({ recipe }) {
   const fetchLikeStatus = async () => {
     try {
       const response = await axiosInstance.get(
-        `/recipe/${recipe.id}/like/status?email=${userEmail}`,
+        `/api/recipe/${recipe.id}/like/status?email=${userEmail}`,
       );
       setIsHeartActive(response.data);
     } catch (error) {
@@ -41,7 +41,7 @@ function Recipe({ recipe }) {
 
     try {
       const response = await axiosInstance.post(
-        `/recipe/${recipe.id}/like/toggle`,
+        `/api/recipe/${recipe.id}/like/toggle`,
         {
           recipeId: recipe.id,
           email: userEmail,
