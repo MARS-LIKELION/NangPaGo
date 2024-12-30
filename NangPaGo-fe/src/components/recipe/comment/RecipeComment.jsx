@@ -8,40 +8,48 @@ import {
 } from '../../../api/commentService.js';
 import LoginModal from '../../../common/modal/LoginModal';
 import DeleteModal from '../../../common/modal/DeleteModal';
+import { FaArrowLeft, FaArrowRight, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 
 function RecipeComment({ recipeId }) {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
   const [isEditing, setIsEditing] = useState(null);
   const [editedComment, setEditedComment] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
+  const [error, setError] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
 
   const userEmail = useSelector((state) => state.loginSlice.email);
   const isLoggedIn = Boolean(userEmail);
 
   useEffect(() => {
     if (recipeId) {
-      loadComments();
+      loadComments(0);
     }
   }, [recipeId]);
 
-  const loadComments = async () => {
-    setIsLoading(true);
+  const loadComments = async (page) => {
+    setError(null);
     try {
-      const response = await fetchComments(recipeId);
-      setComments(response.data.data.reverse());
+      const response = await fetchComments(recipeId, page, 5);
+      const data = response.data.data;
+      setComments(data.content);
+      setCurrentPage(data.currentPage);
+      setTotalPages(data.totalPages);
+      setTotalItems(data.totalItems);
     } catch (error) {
-      alert('댓글을 불러오는 중 문제가 발생했습니다.');
-    } finally {
-      setIsLoading(false);
+      setError('댓글을 불러오는 중 문제가 발생했습니다.');
     }
   };
 
-  const handleCommentSubmit = async () => {
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
     if (!isLoggedIn) {
       setShowLoginModal(true);
       return;
@@ -53,12 +61,11 @@ function RecipeComment({ recipeId }) {
 
     setIsSubmitting(true);
     try {
-      const response = await createComment(recipeId, {
+      await createComment(recipeId, {
         email: userEmail,
         content: commentText,
       });
-      const newComment = response.data.data;
-      setComments((prevComments) => [newComment, ...prevComments]);
+      await loadComments(currentPage);
       setCommentText('');
     } catch (error) {
       alert('댓글 생성 중 문제가 발생했습니다.');
@@ -72,15 +79,10 @@ function RecipeComment({ recipeId }) {
       alert('수정할 댓글 내용을 입력하세요.');
       return;
     }
+
     try {
       await updateComment(recipeId, commentId, { content: editedComment });
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === commentId
-            ? { ...comment, content: editedComment }
-            : comment,
-        ),
-      );
+      await loadComments(currentPage);
       setIsEditing(null);
       setEditedComment('');
     } catch (error) {
@@ -93,9 +95,7 @@ function RecipeComment({ recipeId }) {
 
     try {
       await deleteComment(recipeId, commentToDelete);
-      setComments((prevComments) =>
-        prevComments.filter((comment) => comment.id !== commentToDelete),
-      );
+      await loadComments(currentPage);
       setCommentToDelete(null);
       setShowDeleteModal(false);
     } catch (error) {
@@ -103,103 +103,167 @@ function RecipeComment({ recipeId }) {
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (isEditing !== null) {
         handleEditComment(isEditing);
       } else {
-        handleCommentSubmit();
+        handleCommentSubmit(e);
       }
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      loadComments(newPage);
+      setCurrentPage(newPage);
     }
   };
 
   return (
     <div className="mt-8">
-      <h2 className="text-lg font-semibold mb-4">댓글</h2>
-      <textarea
-        value={commentText}
-        onChange={(e) => setCommentText(e.target.value)}
-        onKeyPress={handleKeyPress}
-        className="w-full p-2 border border-gray-300 rounded-md mb-4"
-        placeholder={
-          isLoggedIn
-            ? '댓글을 입력하세요.'
-            : '로그인 후 댓글을 입력할 수 있습니다.'
-        }
-        disabled={!isLoggedIn || isSubmitting}
-      />
-      <button
-        onClick={handleCommentSubmit}
-        className="block bg-[var(--primary-color)] text-white px-4 py-2 rounded-md"
-      >
-        전송
-      </button>
-
-      {isLoading ? (
-        <p className="text-center text-gray-500 mt-4">로딩 중...</p>
-      ) : (
-        <div className="mt-4 space-y-4">
-          {comments.map((comment) => (
-            <div key={comment.id} className="border-b pb-4">
-              {isEditing === comment.id ? (
-                <>
-                  <textarea
-                    value={editedComment}
-                    onChange={(e) => setEditedComment(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  <button
-                    onClick={() => handleEditComment(comment.id)}
-                    className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md"
-                  >
-                    수정
-                  </button>
-                  <button
-                    onClick={() => setIsEditing(null)}
-                    className="mt-2 ml-2 bg-gray-500 text-white px-4 py-2 rounded-md"
-                  >
-                    취소
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p className="text-gray-700 text-sm">
-                    <strong>{comment.userEmail.slice(0, 3)}***</strong>:{' '}
-                    {comment.content}
-                  </p>
-                  <p className="text-gray-500 text-xs">
-                    {new Date(comment.createdAt).toLocaleString()}
-                  </p>
-                  {comment.userEmail === userEmail && (
-                    <div className="flex gap-2 mt-2">
-                      <button
-                        onClick={() => {
-                          setIsEditing(comment.id);
-                          setEditedComment(comment.content);
-                        }}
-                        className="text-blue-500"
-                      >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => {
-                          setCommentToDelete(comment.id);
-                          setShowDeleteModal(true);
-                        }}
-                        className="text-red-500"
-                      >
-                        삭제
-                      </button>
+      <div className="mt-10 flex justify-center items-center border-t-2 border-b-2 border-gray-300 p-4 mx-auto">
+        <h1 className="text-18px font-bold md:text-30px">댓글 ({totalItems})</h1>
+      </div>
+      
+      <div className="mt-4 space-y-3">
+        {Array.from({ length: 5 }).map((_, index) => {
+          const comment = comments[index];
+          return (
+            <div key={comment ? comment.id : index} className="border-b pb-1">
+              {comment ? (
+                isEditing === comment.id ? (
+                  <div className="grid grid-cols-2 gap-2">
+                    <textarea
+                      value={editedComment}
+                      onChange={(e) => setEditedComment(e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e)}
+                      className="col-span-2 w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    <button
+                      onClick={() => handleEditComment(comment.id)}
+                      className="bg-[var(--primary-color)] text-white px-4 py-2 rounded-md"
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(null)}
+                      className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                    >
+                      취소
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-gray-700 text-sm">
+                        <strong>{comment.userEmail.slice(0, 3)}***</strong>: {comment.content}
+                      </p>
+                      <p className="text-gray-500 text-xs">
+                        {new Date(comment.createdAt).toLocaleString()}
+                      </p>
                     </div>
-                  )}
-                </>
+                    {comment.userEmail === userEmail && (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            setIsEditing(comment.id);
+                            setEditedComment(comment.content);
+                          }}
+                          className="text-[var(--primary-color)]"
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() => {
+                            setCommentToDelete(comment.id);
+                            setShowDeleteModal(true);
+                          }}
+                          className="text-gray-500"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )
+              ) : (
+                <div className="h-16"></div>
               )}
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
+
+      <div className="flex justify-center items-center gap-2 mt-6">
+        <button
+          onClick={() => handlePageChange(0)}
+          disabled={currentPage === 0}
+          className={`px-1 py-2 rounded-md ${currentPage === 0 ? 'text-gray-300' : 'text-[var(--secondary-color)]'}`}
+        >
+          <FaAngleDoubleLeft size={20} />
+        </button>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0}
+          className={`px-1 py-2 rounded-md ${currentPage === 0 ? 'text-gray-300' : 'text-[var(--secondary-color)]'}`}
+        >
+          <FaArrowLeft size={20} />
+        </button>
+        <span>
+          {currentPage + 1} / {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage + 1 >= totalPages}
+          className={`px-1 py-2 rounded-md ${
+            currentPage + 1 >= totalPages
+              ? 'text-gray-300'
+              : 'text-[var(--secondary-color)]'
+          }`}
+        >
+          <FaArrowRight size={20} />
+        </button>
+        <button
+          onClick={() => handlePageChange(totalPages - 1)}
+          disabled={currentPage + 1 >= totalPages}
+          className={`px-1 py-2 rounded-md ${
+            currentPage + 1 >= totalPages
+              ? 'text-gray-300'
+              : 'text-[var(--secondary-color)]'
+          }`}
+        >
+          <FaAngleDoubleRight size={20} />
+        </button>
+      </div>
+
+      <form onSubmit={handleCommentSubmit} className="mt-4">
+        <textarea
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className="w-full p-2 border border-gray-300 rounded-md mb-4"
+          placeholder={
+            isLoggedIn
+              ? '댓글을 입력하세요.'
+              : '로그인 후 댓글을 입력할 수 있습니다.'
+          }
+          disabled={!isLoggedIn}
+        />
+        <button
+          type="submit"
+          className={`block w-full text-white px-4 py-2 rounded-md bg-[var(--primary-color)] ${
+            isSubmitting ? 'cursor-not-allowed' : ''
+          }`}
+          disabled={isSubmitting}
+        >
+          전송
+        </button>
+      </form>
+
+      {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
+
       <LoginModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}

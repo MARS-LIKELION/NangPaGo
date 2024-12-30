@@ -8,6 +8,7 @@ public class
 NangPaGoApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(NangPaGoApplication.class, args);
 	}
 

@@ -3,7 +3,9 @@ package com.mars.NangPaGo.domain.comment.recipe.service;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_COMMENT;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
+import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
@@ -13,11 +15,10 @@ import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -27,41 +28,46 @@ public class RecipeCommentService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
+    public PageDto<RecipeCommentResponseDto> getPagedCommentsByRecipe(Long recipeId, int page, int size) {
+        vaildateRecipe(recipeId);
+        return PageDto.of(recipeCommentRepository.findByRecipeId(recipeId, createPageRequest(page, size))
+            .map(RecipeCommentResponseDto::from));
+    }
+
     @Transactional
     public RecipeCommentResponseDto create(RecipeCommentRequestDto requestDto, Long recipeId) {
         return RecipeCommentResponseDto.from(recipeCommentRepository.save(
-            RecipeComment.create(getRecipe(recipeId), getUserEmail(requestDto.userEmail()), requestDto.content())));
-    }
-
-    public List<RecipeCommentResponseDto> commentsByRecipe(Long recipeId) {
-        return recipeCommentRepository.findByRecipeId(recipeId).stream()
-            .map(RecipeCommentResponseDto::from)
-            .collect(Collectors.toList());
+            RecipeComment.create(vaildateRecipe(recipeId), vaildateEmail(requestDto.userEmail()), requestDto.content())));
     }
 
     @Transactional
     public RecipeCommentResponseDto update(Long commentId, RecipeCommentRequestDto requestDto) {
-        RecipeComment comment = getComment(commentId);
+        RecipeComment comment = vaildateComment(commentId);
         comment.updateText(requestDto.content());
         return RecipeCommentResponseDto.from(comment);
     }
 
     @Transactional
     public void delete(Long commentId) {
-        recipeCommentRepository.delete(getComment(commentId));
+        recipeCommentRepository.delete(vaildateComment(commentId));
     }
 
-    private Recipe getRecipe(Long recipeId) {
+    private PageRequest createPageRequest(int page, int size) {
+        return PageRequest.of(page, size, Sort.by(DESC, "createdAt"));
+    }
+
+    private Recipe vaildateRecipe(Long recipeId) {
         return recipeRepository.findById(recipeId)
             .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
     }
 
-    private User getUserEmail(String userEmail) {
+    private User vaildateEmail(String userEmail) {
         return userRepository.findByEmail(userEmail)
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
     }
 
-    private RecipeComment getComment(Long commentId) {
+    private RecipeComment vaildateComment(Long commentId) {
         return recipeCommentRepository.findById(commentId)
             .orElseThrow(() -> NOT_FOUND_COMMENT.of("댓글을 찾을 수 없습니다."));
     }
