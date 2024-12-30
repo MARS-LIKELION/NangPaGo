@@ -24,18 +24,18 @@ public class RefrigeratorService {
     private final UserRepository userRepository;
     private final IngredientRepository ingredientRepository;
 
-    public List<RefrigeratorResponseDto> findMyRefrigerator(String email) {
+    public List<RefrigeratorResponseDto> findRefrigerator(String email) {
         return refrigeratorRepository.findByUserEmail(email)
-                .stream().map(RefrigeratorResponseDto::toDto).toList();
+                .stream().map(RefrigeratorResponseDto::from).toList();
     }
 
     @Transactional
-    public void deleteMyIngredient(String email, String ingredientName) {
+    public void deleteIngredient(String email, String ingredientName) {
         refrigeratorRepository.deleteByUser_EmailAndIngredient_Name(ingredientName, email);
     }
 
     @Transactional
-    public void addMyIngredient(String email, String ingredientName) {
+    public void addIngredient(String email, String ingredientName) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NPGException(NPGExceptionType.UNAUTHORIZED));
         Ingredient ingredient = ingredientRepository.findByName(ingredientName)
@@ -44,7 +44,6 @@ public class RefrigeratorService {
         try {
             refrigeratorRepository.save(Refrigerator.of(user, ingredient));
         } catch (ConstraintViolationException e) {
-            //복합 유니크 제약조건으로 인한 충돌, 추후에 수량 정보를 추가하면 에러 반환 대신 수량을 늘려주는식으로 수정 필요
             throw new NPGException(NPGExceptionType.DUPLICATE_INGREDIENT, "이미 냉장고에 동일한 재료가 있습니다.");
         }
     }

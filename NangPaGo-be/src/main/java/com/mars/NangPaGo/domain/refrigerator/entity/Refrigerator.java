@@ -27,7 +27,7 @@ public class Refrigerator {
     private Ingredient ingredient;
 
     @Builder
-    public Refrigerator(User user, Ingredient ingredient) {
+    private Refrigerator(User user, Ingredient ingredient) {
         this.user = user;
         this.ingredient = ingredient;
     }
