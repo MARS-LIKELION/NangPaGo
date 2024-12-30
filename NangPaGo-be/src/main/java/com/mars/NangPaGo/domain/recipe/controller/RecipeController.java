@@ -48,21 +48,21 @@ public class RecipeController {
         recipeLikeService.toggleRecipeLike(recipeId, email);
         return ResponseEntity.ok("좋아요 정보를 수정했습니다.");
     }
+
     // CSV 파일 업로드로 엘라스틱 데이터 삽입
+    @GetMapping("/search")
+    public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
+        @RequestParam(name = "pageNo", defaultValue = "1") int page,
+        @RequestParam(name = "pageSize", defaultValue = "10") int size,
+        @RequestParam(name = "keyword", required = false) String keyword) {
+        Page<RecipeEsResponseDto> results = recipeEsService.searchRecipes(page, size, keyword);
+        return ResponseDto.of(results, "검색 결과를 성공적으로 조회했습니다.");
+    }
+
     @PostMapping("/es")
     public ResponseDto<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
         String response = recipeEsService.insertRecipesFromCsv(file);
         return ResponseDto.of(response, "CSV 파일 업로드 성공");
-    }
-
-    // 엘라스틱 검색 API
-    @GetMapping("/es/search")
-    public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
-            @RequestParam(name = "pageNo", defaultValue = "1") int page,
-            @RequestParam(name = "pageSize", defaultValue = "10") int size,
-            @RequestParam(name = "keyword", required = false) String keyword) {
-        Page<RecipeEsResponseDto> results = recipeEsService.searchRecipes(page, size, keyword);
-        return ResponseDto.of(results, "검색 결과를 성공적으로 조회했습니다.");
     }
 
     // 엘라스틱 인덱스 생성 API
