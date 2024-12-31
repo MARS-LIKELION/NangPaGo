@@ -1,6 +1,8 @@
 package com.mars.NangPaGo.domain.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeRequestDto;
@@ -40,41 +42,21 @@ class RecipeLikeServiceTest {
     void toggleRecipeLike() {
         // given
         String email = "dummy@nangpago.com";
-
         Long recipeId = 1L;
-        String recipeName = "파인애플피자";
 
         User user = User.builder()
             .email(email)
             .build();
 
-        Recipe recipe = new Recipe(
-            recipeId,
-            recipeName,
-            "김치, 두부, 돼지고기, 양파, 대파",
-            "1. 재료를 준비한다. 2. 끓인다.",
-            "찌개",
-            300,
-            10,
-            20,
-            15,
-            500,
-            "#김치 #찌개",
-            "main_image_url.jpg",
-            "step_image_url.jpg",
-            new ArrayList<>(),
-            new ArrayList<>(),
-            new ArrayList<>(),
-            new ArrayList<>()
-        );
+        Recipe recipe = new Recipe();
 
         RecipeLikeRequestDto requestDto =
-            new RecipeLikeRequestDto(user.getEmail(), recipe.getId());
+            new RecipeLikeRequestDto(email, recipeId);
 
         // mocking
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(recipeRepository.findById(recipe.getId())).thenReturn(Optional.of(recipe));
-        when(recipeLikeRepository.findWithLockByUserAndRecipe(user, recipe)).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        when(recipeLikeRepository.findByUserAndRecipe(user, recipe)).thenReturn(Optional.empty());
 
         // when
         RecipeLikeResponseDto recipeLikeResponseDto = recipeLikeService.toggleRecipeLike(requestDto);
@@ -96,28 +78,11 @@ class RecipeLikeServiceTest {
             .email(email)
             .build();
 
-        Recipe recipe = new Recipe(
-            recipeId,
-            "파워에이드라면",
-            "김치, 두부, 돼지고기, 양파, 대파",
-            "1. 재료를 준비한다. 2. 끓인다.",
-            "찌개",
-            300,
-            10,
-            20,
-            15,
-            500,
-            "#김치 #찌개",
-            "main_image_url.jpg",
-            "step_image_url.jpg",
-            new ArrayList<>(),
-            new ArrayList<>(),
-            new ArrayList<>(),
-            new ArrayList<>()
-        );
+        Recipe recipe = new Recipe();
+
         RecipeLike recipeLike = RecipeLike.of(user, recipe);
         // mocking
-        when(recipeLikeRepository.findByEmailAndRecipeId(email, recipeId)).thenReturn(Optional.ofNullable(recipeLike));
+        when(recipeLikeRepository.findByEmailAndRecipeId(anyString(), anyLong())).thenReturn(Optional.ofNullable(recipeLike));
 
         // when
         boolean liked = recipeLikeService.isLikedByUser(email, recipeId);
