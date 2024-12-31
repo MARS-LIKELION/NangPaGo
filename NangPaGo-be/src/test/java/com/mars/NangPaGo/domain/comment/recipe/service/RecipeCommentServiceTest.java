@@ -2,6 +2,7 @@ package com.mars.NangPaGo.domain.comment.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -113,8 +114,20 @@ class RecipeCommentServiceTest {
         assertThat(responseDto).extracting("content").isEqualTo(updateText);
     }
 
+    @DisplayName("레시피 댓글 삭제")
     @Test
     void delete() {
+// given
+        long commentId = anyLong();
 
+        // mocking
+        when(recipeCommentRepository.findById(commentId)).thenReturn(Optional.ofNullable(comment));
+
+        // when
+        recipeCommentService.delete(commentId);
+
+        // then
+        verify(recipeCommentRepository, times(1)).delete(any(RecipeComment.class));
+        assertFalse(recipeCommentRepository.existsById(commentId));
     }
 }
