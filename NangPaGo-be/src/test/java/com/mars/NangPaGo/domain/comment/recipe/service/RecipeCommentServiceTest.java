@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.comment.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -90,9 +91,26 @@ class RecipeCommentServiceTest {
         verify(recipeCommentRepository, times(1)).save(any(RecipeComment.class));
     }
     
+    @DisplayName("레시피 댓글 수정")
     @Test
     void update() {
+        // given
+        long commentId = anyLong();
+        assertEquals(content, comment.getContent()); // 수정 전 텍스트 확인
 
+        String updateText = "변경된 텍스트 내용입니다.";
+        RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(recipeId, email, updateText); // 텍스트 변경
+
+        // mocking
+        when(recipeCommentRepository.findById(commentId)).thenReturn(Optional.ofNullable(comment));
+
+        // when
+        comment.updateText(updateText);
+        RecipeCommentResponseDto responseDto = recipeCommentService.update(commentId, requestDto);
+
+        // then
+        assertThat(responseDto).isNotNull();
+        assertThat(responseDto).extracting("content").isEqualTo(updateText);
     }
 
     @Test
