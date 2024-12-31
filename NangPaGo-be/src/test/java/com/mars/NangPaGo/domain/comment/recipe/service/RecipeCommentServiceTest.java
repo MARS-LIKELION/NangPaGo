@@ -91,7 +91,7 @@ class RecipeCommentServiceTest {
         assertThat(responseDto).isNotNull();
         verify(recipeCommentRepository, times(1)).save(any(RecipeComment.class));
     }
-    
+
     @DisplayName("레시피 댓글 수정")
     @Test
     void update() {
@@ -117,7 +117,7 @@ class RecipeCommentServiceTest {
     @DisplayName("레시피 댓글 삭제")
     @Test
     void delete() {
-// given
+        // given
         long commentId = anyLong();
 
         // mocking
