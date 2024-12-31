@@ -1,10 +1,12 @@
-name: CI
+name: CI/CD
 
 on:
   pull_request:
     branches:
       - main
       - 'release/*'
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -14,6 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Backend Build
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -25,3 +28,74 @@ jobs:
 
       - name: Build with Gradle
         run: cd NangPaGo-be && ./gradlew build testClasses -x test # 프로젝트 디렉토리로 이동 후 빌드 실행 (테스트 제외)
+
+      # Frontend build
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+
+      - name: Install Frontend Dependencies
+        run: cd NangPaGo-fe && npm install
+
+      - name: Build Frontend
+        run: cd NangPaGo-fe && npm run build
+
+  deploy:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Backend Deploy
+      - name: Build for deployment
+        run: cd NangPaGo-be && ./gradlew build -x test
+
+      - name: Docker build & push to docker repo
+        run: |
+          echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker buildx build --platform linux/amd64 -t zooxop/nangpago-app:latest --push .
+
+      # Frontend Deploy
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+
+      - name: Install Frontend Dependencies
+        run: cd NangPaGo-fe && npm install
+
+      - name: Build Frontend
+        run: cd NangPaGo-fe && npm run build
+
+      - name: Frontend Docker build & push
+        run: |
+          cd NangPaGo-fe
+          echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker buildx build --platform linux/amd64 -t zooxop/nangpago-frontend:latest --push .
+
+      - name: Deploy to instance
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.SERVER_ADDRESS }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: root
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            docker rm -f react-front spring-boot-app || true
+            sudo docker pull zooxop/nangpago-app:latest
+            sudo docker pull zooxop/nangpago-frontend:latest
+            docker-compose -p nangpago up -d
+            docker image prune -f
