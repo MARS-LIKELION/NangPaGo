@@ -20,41 +20,20 @@ public class Recipe extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "rcp_nm", nullable = false)
     private String name;
 
-    @Column(name = "rcp_parts_dtls", columnDefinition = "TEXT")
+    @Column(name = "ingredient_detail", columnDefinition = "TEXT")
     private String ingredients;
 
-    @Column(name = "rcp_way2")
     private String cookingMethod;
-
-    @Column(name = "rcp_pat2")
     private String category;
-
-    @Column(name = "info_eng")
-    private Integer calories;
-
-    @Column(name = "info_fat")
+    private Integer calorie;
     private Integer fat;
-
-    @Column(name = "info_car")
-    private Integer carbohydrates;
-
-    @Column(name = "info_pro")
+    private Integer carbohydrate;
     private Integer protein;
-
-    @Column(name = "info_na")
-    private Integer sodium;
-
-    @Column(name = "hash_tag")
-    private String hashTag;
-
-    @Column(name = "att_file_no_main")
+    private Integer natrium;
+    private String mainIngredient;
     private String mainImage;
-
-    @Column(name = "att_file_no_mk")
-    private String stepImage;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Manual> manuals;

@@ -15,14 +15,13 @@ public record RecipeResponseDto(
     String ingredients,
     String cookingMethod,
     String category,
-    Integer calories,
+    Integer calorie,
     Integer fat,
-    Integer carbohydrates,
+    Integer carbohydrate,
     Integer protein,
-    Integer sodium,
-    String hashTag,
+    Integer natrium,
+    String mainIngredient,
     String mainImage,
-    String stepImage,
     List<ManualDto> manuals,
     List<ManualImageDto> manualImages
 ) {
@@ -33,14 +32,13 @@ public record RecipeResponseDto(
             .ingredients(recipe.getIngredients())
             .cookingMethod(recipe.getCookingMethod())
             .category(recipe.getCategory())
-            .calories(recipe.getCalories())
+            .calorie(recipe.getCalorie())
             .fat(recipe.getFat())
-            .carbohydrates(recipe.getCarbohydrates())
+            .carbohydrate(recipe.getCarbohydrate())
             .protein(recipe.getProtein())
-            .sodium(recipe.getSodium())
-            .hashTag(recipe.getHashTag())
+            .natrium(recipe.getNatrium())
+            .mainIngredient(recipe.getMainIngredient())
             .mainImage(recipe.getMainImage())
-            .stepImage(recipe.getStepImage())
             .manuals(recipe.getManuals().stream().map(ManualDto::from).collect(Collectors.toList()))
             .manualImages(recipe.getManualImages().stream().map(ManualImageDto::from).collect(Collectors.toList()))
             .build();

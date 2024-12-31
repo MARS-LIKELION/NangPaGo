@@ -156,11 +156,11 @@ function Recipe({ recipe }) {
         </div>
         <div className="mt-7">
           <NutritionInfo
-            calories={recipe.calories}
+            calories={recipe.calorie}
             fat={recipe.fat}
-            carbs={recipe.carbohydrates}
+            carbs={recipe.carbohydrate}
             protein={recipe.protein}
-            sodium={recipe.sodium}
+            sodium={recipe.natrium}
           />
         </div>
         <RecipeComment recipeId={recipe.id} />

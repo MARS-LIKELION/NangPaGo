@@ -18,6 +18,13 @@ public enum NPGExceptionType {
     // UNAUTHORIZED(401)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
     UNAUTHORIZED_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰"),
+    UNAUTHORIZED_TOKEN_MISSING(HttpStatus.UNAUTHORIZED, "JWT 토큰이 없습니다."),
+    UNAUTHORIZED_HEADER_MISSING(HttpStatus.UNAUTHORIZED, "Authorization 헤더가 없습니다."),
+
+    // Forbidden(403)
+    FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다."),
+    FORBIDDEN_UPDATE_COMMENT(HttpStatus.FORBIDDEN, "댓글을 수정할 권한이 없습니다."),
+    FORBIDDEN_DELETE_COMMENT(HttpStatus.FORBIDDEN, "댓글을 삭제할 권한이 없습니다."),
 
     // NOT_FOUND(404)
     NOT_FOUND(HttpStatus.NOT_FOUND, "데이터가 존재하지 않음"),
