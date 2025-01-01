@@ -29,8 +29,8 @@ public class SecurityConfig {
     private String clientHost;
 
     private static final String[] WHITE_LIST = {
-        "/api/oauth2/authorization/**", // OAuth2 인증 시작점
-        "/api/login/oauth2/code/**",    // OAuth2 리다이렉트 URI
+        "/api/oauth2/authorization/**",
+        "/api/login/oauth2/code/**",
         "/api/token/reissue",
         "/api/auth/status",
         "/api/recipe/{id}",

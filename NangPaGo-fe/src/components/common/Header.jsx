@@ -15,7 +15,7 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      await axiosInstance.post('/logout');
+      await axiosInstance.post('/api/logout');
       dispatch(logout());
     } catch (error) {
       console.error('로그아웃 실패:', error.response?.data || error.message);

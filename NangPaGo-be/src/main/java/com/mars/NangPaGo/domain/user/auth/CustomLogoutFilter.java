@@ -42,7 +42,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
     }
 
     private boolean isLogoutRequest(HttpServletRequest request) {
-        return "/logout".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod());
+        return "/api/logout".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod());
     }
 
     private String extractRefreshToken(HttpServletRequest request) {
