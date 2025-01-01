@@ -26,9 +26,7 @@ function Header() {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const getUsername = (email) => {
-    return email.split('@')[0];
-  };
+  const getUsername = (email) => email.split('@')[0];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -43,6 +41,10 @@ function Header() {
     };
   }, []);
 
+  if (!loginState.isInitialized) {
+    return null; // 초기화 중에는 렌더링하지 않음
+  }
+
   return (
     <header className="sticky top-0 z-10 bg-white px-4 py-2 shadow-md mx-auto w-[375px] mb-4">
       <div className="flex justify-between items-center">
@@ -50,7 +52,7 @@ function Header() {
           <img src="/public/logo.png" alt="냉파고" className="h-12 w-auto" />
         </Link>
 
-        {loginState.email ? (
+        {loginState.isLoggedIn ? (
           <div className="flex items-center space-x-7">
             <Link to="/recipes" className="text-[var(--primary-color)]">
               <IoReceiptOutline size={26} />
@@ -72,7 +74,6 @@ function Header() {
                     : 'opacity-0 max-h-0 invisible'
                 }`}
               >
-                {/* Arrow */}
                 <div className="absolute top-[-10px] right-[10px] w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-[var(--secondary-color)]"></div>
                 <div className="px-4 py-2 text-gray-700 text-[13px]">
                   {getUsername(loginState.email)}
