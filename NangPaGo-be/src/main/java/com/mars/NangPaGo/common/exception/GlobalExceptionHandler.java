@@ -14,7 +14,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NPGException.class)
     public ResponseEntity<Object> handleNPGException(NPGException exception) {
         if (exception.isMessageNotEmpty()) {
-            log.warn("[{}] {}", exception.getNpgExceptionType().name(), this);
+            log.warn("[{}] {}", exception.getNpgExceptionType().name(), exception.getMessage());
         }
 
         if (exception.isInternalServerError()) {
