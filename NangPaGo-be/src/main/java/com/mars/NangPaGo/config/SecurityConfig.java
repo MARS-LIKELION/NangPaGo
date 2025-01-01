@@ -29,9 +29,8 @@ public class SecurityConfig {
     private String clientHost;
 
     private static final String[] WHITE_LIST = {
-        "/",
-        "/login",
-        "/oauth2/**",
+        "/api/oauth2/authorization/**", // OAuth2 인증 시작점
+        "/api/login/oauth2/code/**",    // OAuth2 리다이렉트 URI
         "/api/token/reissue",
         "/api/auth/status",
         "/api/recipe/{id}",
@@ -60,6 +59,10 @@ public class SecurityConfig {
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         http
             .oauth2Login((oauth2) -> oauth2
+                .authorizationEndpoint(authorization ->
+                    authorization.baseUri("/api/oauth2/authorization")
+                )
+                .loginProcessingUrl("/api/login/oauth2/code/*")
                 .userInfoEndpoint(userInfoEndpointConfig ->
                     userInfoEndpointConfig.userService(customOAuth2UserService))
                 .successHandler(customSuccessHandler)

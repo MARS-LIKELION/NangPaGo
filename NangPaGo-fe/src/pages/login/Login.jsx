@@ -2,11 +2,10 @@ import SocialLoginButton from '../../components/login/SocialLoginButton.jsx';
 import { SOCIAL_BUTTON_STYLES } from '../../components/util/auth.js';
 
 const API_HOST = import.meta.env.VITE_HOST;
-const API_URI_PREFIX = import.meta.env.VITE_API_URI_PREFIX;
 
 function Login() {
   const handleLoginClick = (provider) => {
-    window.location.href = `${API_HOST}${API_URI_PREFIX}/oauth2/authorization/${provider}`;
+    window.location.href = `${API_HOST}/api/oauth2/authorization/${provider}`;
   };
 
   return (
