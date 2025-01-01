@@ -111,4 +111,4 @@ jobs:
             sudo docker pull zooxop/nangpago-app:${{ env.VERSION }}
             sudo docker pull zooxop/nangpago-frontend:${{ env.VERSION }}
             docker-compose -p nangpago up -d
-            docker image prune -f
+            sudo docker image prune -f -a
