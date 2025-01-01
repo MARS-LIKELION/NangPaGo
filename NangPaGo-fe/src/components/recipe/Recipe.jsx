@@ -22,7 +22,6 @@ function Recipe({ recipe }) {
     }
   }, [isLoggedIn]);
 
-  // 좋아요와 즐겨찾기 상태를 동시에 가져오는 함수
   const fetchStatuses = async () => {
     try {
       const [likeResponse, favoriteResponse] = await Promise.all([
@@ -40,7 +39,6 @@ function Recipe({ recipe }) {
     }
   };
 
-  // 좋아요 토글
   const toggleHeart = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -55,14 +53,13 @@ function Recipe({ recipe }) {
           email: userEmail,
         },
       );
-      setIsHeartActive(response.data.isLiked); // 서버 응답 값 반영
-      fetchStatuses(); // 상태 다시 불러오기
+      setIsHeartActive(response.data.isLiked);
+      fetchStatuses();
     } catch (error) {
       console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다.', error);
     }
   };
 
-  // 즐겨찾기 토글
   const toggleStar = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -77,8 +74,8 @@ function Recipe({ recipe }) {
           email: userEmail,
         },
       );
-      setIsStarActive(response.data.isFavorite); // 서버 응답 값 반영
-      fetchStatuses(); // 상태 다시 불러오기
+      setIsStarActive(response.data.isFavorite);
+      fetchStatuses();
     } catch (error) {
       console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다.', error);
     }
@@ -112,8 +109,22 @@ function Recipe({ recipe }) {
             </button>
           </div>
         </div>
-        <div>
-          <p className="text-gray-600 text-[14px] mt-2">{recipe.category}</p>
+        <div className="flex gap-2">
+          {recipe.mainIngredient && (
+            <p className="bg-[var(--primary-color)] text-white text-[14px] mt-2 p-1 rounded-md">
+              {recipe.mainIngredient}
+            </p>
+          )}
+          {recipe.category && (
+            <p className="bg-[var(--primary-color)] text-white text-[14px] mt-2 p-1 rounded-md">
+              {recipe.category}
+            </p>
+          )}
+          {recipe.cookingMethod && (
+            <p className="bg-[var(--primary-color)] text-white text-[14px] mt-2 p-1 rounded-md">
+              {recipe.cookingMethod}
+            </p>
+          )}
         </div>
         <div className="mt-7">
           <h2 className="text-lg font-semibold mb-3">재료</h2>
