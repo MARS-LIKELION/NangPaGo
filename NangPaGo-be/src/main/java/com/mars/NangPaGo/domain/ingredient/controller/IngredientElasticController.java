@@ -1,7 +1,7 @@
 package com.mars.NangPaGo.domain.ingredient.controller;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.domain.ingredient.entity.IngredientElastic;
+import com.mars.NangPaGo.domain.ingredient.dto.IngredientElasticResponseDto;
 import com.mars.NangPaGo.domain.ingredient.service.IngredientElasticSearchService;
 import com.mars.NangPaGo.domain.ingredient.service.IngredientElasticSynchronizer;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,18 +22,18 @@ public class IngredientElasticController {
     private final IngredientElasticSynchronizer ingredientElasticSynchronizer;
     private final IngredientElasticSearchService ingredientElasticSearchService;
 
-    @PostMapping("/sync")
+    @PostMapping("/upload/mysql")
     public ResponseDto<String> syncMysql() {
         return ResponseDto.of(ingredientElasticSynchronizer.insertIngredientFromMysql());
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/csv")
     public ResponseDto<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
         return ResponseDto.of(ingredientElasticSynchronizer.insertIngredientFromCsv(file));
     }
 
     @GetMapping("/search")
-    public ResponseDto<List<IngredientElastic>> searchByPrefix(@RequestParam("keyword") String keyword) {
-        return ResponseDto.of(ingredientElasticSearchService.searchByPrefix(keyword));
+    public ResponseDto<List<IngredientElasticResponseDto>> searchByPrefix(@RequestParam("keyword") String keyword) {
+        return ResponseDto.of(ingredientElasticSearchService.searchIngredients(keyword));
     }
 }

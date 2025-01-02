@@ -29,7 +29,7 @@ public class IngredientElasticSynchronizer {
 
             List<IngredientElastic> ingredientElasticList = new ArrayList<>();
             for (Ingredient ingredient : ingredientList) {
-                IngredientElastic ingredientElastic = IngredientElastic.create(ingredient.getId(), ingredient.getName());
+                IngredientElastic ingredientElastic = IngredientElastic.of(ingredient.getId(), ingredient.getName());
 
                 ingredientElasticList.add(ingredientElastic);
             }
@@ -53,7 +53,7 @@ public class IngredientElasticSynchronizer {
                 String id = record.get("id").trim();
                 String name = record.get("name").trim();
 
-                IngredientElastic ingredientElastic = IngredientElastic.create(id, name);
+                IngredientElastic ingredientElastic = IngredientElastic.of(id, name);
 
                 ingredientElasticList.add(ingredientElastic);
             }
