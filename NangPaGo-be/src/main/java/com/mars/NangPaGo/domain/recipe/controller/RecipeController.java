@@ -2,7 +2,6 @@ package com.mars.NangPaGo.domain.recipe.controller;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeEsResponseDto;
-import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeRequestDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.recipe.service.RecipeEsService;
@@ -12,12 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,12 +36,12 @@ public class RecipeController {
 
     @GetMapping("/{id}/like/status")
     public ResponseEntity<Boolean> checkLikeStatus(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(recipeLikeService.isLikedByCurrentUser(id));
+        return ResponseEntity.ok(recipeLikeService.isLikedByRecipe(id));
     }
 
     @PostMapping("/{id}/like/toggle")
     public ResponseDto<RecipeLikeResponseDto> toggleLike(@PathVariable("id") Long id) {
-        return ResponseDto.of(recipeLikeService.toggleLikeByCurrentUser(id), "좋아요 이벤트 발생");
+        return ResponseDto.of(recipeLikeService.toggleLike(id), "좋아요 이벤트 발생");
     }
 
     @GetMapping("/search")
