@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.recipe.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -11,10 +12,11 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.List;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "recipes")
-public class RecipeES {
+public class RecipeEs {
 
     @Id
     private String id;
@@ -30,4 +32,7 @@ public class RecipeES {
 
     @Field(type = FieldType.Text)
     private List<String> ingredientsTag;
+
+    @Field(type = FieldType.Text)
+    private List<String> ingredientsDisplayTag;
 }
