@@ -5,6 +5,7 @@ import com.mars.NangPaGo.domain.recipe.dto.RecipeEsResponseDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.recipe.service.RecipeEsService;
+import com.mars.NangPaGo.domain.recipe.service.RecipeEsSynchronizerService;
 import com.mars.NangPaGo.domain.recipe.service.RecipeLikeService;
 import com.mars.NangPaGo.domain.recipe.service.RecipeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,7 @@ public class RecipeController {
     private final RecipeService recipeService;
     private final RecipeLikeService recipeLikeService;
     private final RecipeEsService recipeEsService;
+    private final RecipeEsSynchronizerService recipeEsSynchronizerService;
 
     @GetMapping("/{id}")
     public ResponseDto<RecipeResponseDto> recipeById(@PathVariable("id") Long id) {
@@ -56,9 +58,8 @@ public class RecipeController {
     public ResponseDto<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
         return ResponseDto.of(recipeEsService.insertRecipesFromCsv(file), "CSV 파일 업로드 성공");
     }
-
-    @PostMapping("/es/index")
-    public ResponseDto<String> createIndex() {
-        return ResponseDto.of(recipeEsService.createIndex(), "인덱스를 성공적으로 생성했습니다.");
+    @PostMapping("/sync")
+    public ResponseDto<String> syncMysql() {
+        return ResponseDto.of(recipeEsSynchronizerService.insertRecipeFromMysql(), "MySQL 데이터를 Elastic에 성공적으로 동기화했습니다");
     }
 }

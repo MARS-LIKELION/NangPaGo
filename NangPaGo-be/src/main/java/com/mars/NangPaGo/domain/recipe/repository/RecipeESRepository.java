@@ -1,8 +1,8 @@
 package com.mars.NangPaGo.domain.recipe.repository;
 
-import com.mars.NangPaGo.domain.recipe.entity.RecipeES;
+import com.mars.NangPaGo.domain.recipe.entity.RecipeEs;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 
-public interface RecipeESRepository extends ElasticsearchRepository<RecipeES, String> {
+public interface RecipeESRepository extends ElasticsearchRepository<RecipeEs, String> {
 }
