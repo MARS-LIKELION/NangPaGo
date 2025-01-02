@@ -1,0 +1,33 @@
+#!/bin/sh
+
+echo "Running tests before push..."
+
+# Git 프로젝트 루트 디렉토리 경로 얻기
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT/NangPaGo-be"
+
+# OS 확인 및 Gradle 명령어 실행
+case "$(uname -s)" in
+    Darwin*|Linux*)    # Mac & Linux
+        ./gradlew clean test
+        ;;
+    MINGW*|MSYS*)     # Windows
+        ./gradlew.bat clean test
+        ;;
+    *)
+        echo "Unknown operating system"
+        exit 1
+        ;;
+esac
+
+# 테스트 결과 확인
+TEST_RESULT=$?
+
+if [ $TEST_RESULT -ne 0 ]; then
+    echo "❌ 테스트 실패: push가 중단되었습니다"
+    exit 1
+else
+    echo "✅ 테스트 성공: push를 진행합니다"
+    exit 0
+fi
+
