@@ -22,14 +22,9 @@ public class IngredientEsController {
     private final IngredientEsSynchronizer ingredientEsSynchronizer;
     private final IngredientEsService ingredientEsService;
 
-    @PostMapping("/upload/mysql")
+    @PostMapping("/es/bulk-upload/mysql")
     public ResponseDto<String> syncMysql() {
         return ResponseDto.of(ingredientEsSynchronizer.insertIngredientFromMysql());
-    }
-
-    @PostMapping("/upload/csv")
-    public ResponseDto<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
-        return ResponseDto.of(ingredientEsSynchronizer.insertIngredientFromCsv(file));
     }
 
     @GetMapping("/search")
