@@ -26,15 +26,12 @@ function Recipe({ recipe }) {
     try {
       const [likeResponse, favoriteResponse] = await Promise.all([
         axiosInstance.get(`/api/recipe/${recipe.id}/like/status`),
-        axiosInstance.get(
-          `/api/recipe/${recipe.id}/favorite/status?email=${userEmail}`,
-        ),
+        axiosInstance.get(`/api/recipe/${recipe.id}/favorite/status`),
       ]);
       setIsHeartActive(likeResponse.data);
       setIsStarActive(favoriteResponse.data);
     } catch (error) {
       console.error('상태를 불러오는 중 오류가 발생했습니다.', error);
-      alert('상태를 불러오지 못했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -66,7 +63,7 @@ function Recipe({ recipe }) {
         `/api/recipe/${recipe.id}/favorite/toggle`,
       );
       console.log('Response:', response);
-      setIsStarActive(response.data.data.favorite);
+      setIsStarActive(response.data.data.favorited);
     } catch (error) {
       console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다.', error);
     }

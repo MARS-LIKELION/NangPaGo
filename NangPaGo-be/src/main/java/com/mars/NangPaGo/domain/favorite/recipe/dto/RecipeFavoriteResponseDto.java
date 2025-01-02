@@ -5,12 +5,12 @@ import lombok.Builder;
 @Builder
 public record RecipeFavoriteResponseDto(
     Long recipeId,
-    boolean isFavorite
+    boolean favorited
 ) {
-    public static RecipeFavoriteResponseDto of(Long recipeId, boolean isFavorite) {
+    public static RecipeFavoriteResponseDto of(Long recipeId, boolean favorited) {
         return RecipeFavoriteResponseDto.builder()
             .recipeId(recipeId)
-            .isFavorite(isFavorite)
+            .favorited(favorited)
             .build();
     }
 }

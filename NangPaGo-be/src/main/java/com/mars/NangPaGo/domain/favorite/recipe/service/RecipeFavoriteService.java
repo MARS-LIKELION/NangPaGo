@@ -2,8 +2,8 @@ package com.mars.NangPaGo.domain.favorite.recipe.service;
 
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 
-import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteRequestDto;
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import com.mars.NangPaGo.domain.favorite.recipe.repository.RecipeFavoriteRepository;
@@ -12,6 +12,7 @@ import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +25,22 @@ public class RecipeFavoriteService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    public RecipeFavoriteResponseDto toggleFavorite(RecipeFavoriteRequestDto requestDto) {
-        boolean isFavorite = toggleFavoriteStatus(requestDto.email(), requestDto.recipeId());
-        return RecipeFavoriteResponseDto.of(requestDto.recipeId(), isFavorite);
+    public RecipeFavoriteResponseDto toggleFavorite(Long recipeId) {
+        boolean isFavorite = toggleFavoriteStatus(getAuthenticatedEmail(), recipeId);
+        return RecipeFavoriteResponseDto.of(recipeId, isFavorite);
     }
 
     @Transactional(readOnly = true)
-    public boolean isFavoriteByUser(String email, Long recipeId) {
-        return recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
+    public boolean isFavoriteByUser(Long recipeId) {
+        return recipeFavoriteRepository.findByEmailAndRecipeId(getAuthenticatedEmail(), recipeId).isPresent();
+    }
+
+    private String getAuthenticatedEmail() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("인증 정보가 존재하지 않습니다.");
+        }
+        return authentication.getName();
     }
 
     private boolean toggleFavoriteStatus(String email, Long recipeId) {
