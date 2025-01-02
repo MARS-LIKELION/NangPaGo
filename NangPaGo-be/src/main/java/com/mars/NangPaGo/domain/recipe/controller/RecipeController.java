@@ -54,11 +54,7 @@ public class RecipeController {
         return ResponseDto.of(recipeEsService.searchRecipes(page, size, keyword), "검색 결과를 성공적으로 조회했습니다.");
     }
 
-    @PostMapping("/es")
-    public ResponseDto<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
-        return ResponseDto.of(recipeEsService.insertRecipesFromCsv(file), "CSV 파일 업로드 성공");
-    }
-    @PostMapping("/sync")
+    @PostMapping("/es/sync")
     public ResponseDto<String> syncMysql() {
         return ResponseDto.of(recipeEsSynchronizerService.insertRecipeFromMysql(), "MySQL 데이터를 Elastic에 성공적으로 동기화했습니다");
     }

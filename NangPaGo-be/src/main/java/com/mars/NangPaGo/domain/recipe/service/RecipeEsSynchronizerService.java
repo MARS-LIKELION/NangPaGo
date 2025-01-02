@@ -51,12 +51,12 @@ public class RecipeEsSynchronizerService {
                 }
 
                 // 카테고리
-                if (recipe.getCategory() != null && !recipe.getCategory().isBlank()) {
+                if (recipe.getCategory() != null){
                     displayTag.add(recipe.getCategory());
                 }
 
                 // 쿠킹 메서드
-                if (recipe.getCookingMethod() != null && !recipe.getCookingMethod().equalsIgnoreCase("기타")) {
+                if (recipe.getCookingMethod() != null) {
                     displayTag.add(recipe.getCookingMethod());
                 }
 
