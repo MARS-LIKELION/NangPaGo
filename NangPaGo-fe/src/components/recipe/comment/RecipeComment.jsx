@@ -30,8 +30,7 @@ function RecipeComment({ recipeId }) {
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
 
-  const userEmail = useSelector((state) => state.loginSlice.email);
-  const isLoggedIn = Boolean(userEmail);
+  const isLoggedIn = useSelector((state) => Boolean(state.loginSlice.email));
 
   // 댓글 로드 함수
   const loadComments = useCallback(
@@ -70,10 +69,7 @@ function RecipeComment({ recipeId }) {
 
     setIsSubmitting(true);
     try {
-      await createComment(recipeId, {
-        email: userEmail,
-        content: commentText,
-      });
+      await createComment(recipeId, { content: commentText });
       await loadComments(currentPage);
       setCommentText('');
     } catch (error) {
@@ -129,6 +125,11 @@ function RecipeComment({ recipeId }) {
     }
   };
 
+  const maskEmail = (email) => {
+    const visiblePart = email.slice(0, 3);
+    return `${visiblePart}***`;
+  };
+
   return (
     <div className="mt-8">
       <div className="mt-10 flex justify-center items-center border-t-2 border-b-2 border-gray-300 p-4 mx-auto">
@@ -165,14 +166,14 @@ function RecipeComment({ recipeId }) {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-gray-700 text-sm">
-                    <strong>{comment.userEmail.slice(0, 3)}***</strong>:{' '}
+                    <strong>{maskEmail(comment.email)}</strong>:{' '}
                     {comment.content}
                   </p>
                   <p className="text-gray-500 text-xs">
                     {new Date(comment.createdAt).toLocaleString()}
                   </p>
                 </div>
-                {comment.userEmail === userEmail && (
+                {comment.isOwnedByUser && (
                   <div className="flex gap-2">
                     <button
                       onClick={() => {
@@ -198,27 +199,28 @@ function RecipeComment({ recipeId }) {
             )}
           </div>
         ))}
-
-        {/* 빈 공간 추가 */}
-        {Array.from({ length: Math.max(0, 5 - comments.length) }).map(
-          (_, idx) => (
-            <div key={`empty-${idx}`} className="h-8"></div>
-          ),
-        )}
       </div>
 
       <div className="flex justify-center items-center gap-2 mt-6">
         <button
           onClick={() => handlePageChange(0)}
           disabled={currentPage === 0}
-          className={`px-1 py-2 rounded-md ${currentPage === 0 ? 'text-gray-300' : 'text-[var(--secondary-color)]'}`}
+          className={`px-1 py-2 rounded-md ${
+            currentPage === 0
+              ? 'text-gray-300'
+              : 'text-[var(--secondary-color)]'
+          }`}
         >
           <FaAngleDoubleLeft size={20} />
         </button>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 0}
-          className={`px-1 py-2 rounded-md ${currentPage === 0 ? 'text-gray-300' : 'text-[var(--secondary-color)]'}`}
+          className={`px-1 py-2 rounded-md ${
+            currentPage === 0
+              ? 'text-gray-300'
+              : 'text-[var(--secondary-color)]'
+          }`}
         >
           <FaArrowLeft size={20} />
         </button>

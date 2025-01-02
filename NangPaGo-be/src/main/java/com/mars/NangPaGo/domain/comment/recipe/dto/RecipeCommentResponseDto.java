@@ -8,17 +8,26 @@ import lombok.Builder;
 public record RecipeCommentResponseDto(
     Long id,
     String content,
-    String userEmail,
+    String email,
+    boolean isOwnedByUser,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
-    public static RecipeCommentResponseDto from(RecipeComment recipeComment) {
+    public static RecipeCommentResponseDto from(RecipeComment recipeComment, String email) {
         return RecipeCommentResponseDto.builder()
             .id(recipeComment.getId())
             .content(recipeComment.getContent())
-            .userEmail(recipeComment.getUser().getEmail())
+            .email(maskEmail(recipeComment.getUser().getEmail()))
+            .isOwnedByUser(recipeComment.getUser().getEmail().equals(email))
             .createdAt(recipeComment.getCreatedAt())
             .updatedAt(recipeComment.getUpdatedAt())
             .build();
+    }
+
+    private static String maskEmail(String email) {
+        if (email.indexOf("@") <= 3) {
+            return email.replaceAll("(?<=.).(?=.*@)", "*");
+        }
+        return email.replaceAll("(?<=.{3}).(?=.*@)", "*");
     }
 }

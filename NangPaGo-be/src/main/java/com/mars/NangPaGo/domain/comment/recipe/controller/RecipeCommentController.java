@@ -20,29 +20,29 @@ public class RecipeCommentController {
         @PathVariable("recipeId") Long recipeId,
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "5") int pageSize) {
-        return ResponseDto.of(recipeCommentService.PagedCommentsByRecipe(recipeId, pageNo, pageSize), "댓글 조회");
+        return ResponseDto.of(recipeCommentService.PagedCommentsByRecipe(recipeId, pageNo, pageSize));
     }
 
     @PostMapping
     public ResponseDto<RecipeCommentResponseDto> create(
         @RequestBody RecipeCommentRequestDto requestDto,
         @PathVariable("recipeId") Long recipeId) {
-        return ResponseDto.of(recipeCommentService.create(requestDto, recipeId), "댓글 생성");
+        return ResponseDto.of(recipeCommentService.create(requestDto, recipeId));
     }
 
     @PutMapping("/{commentId}")
     public ResponseDto<RecipeCommentResponseDto> update(
         @RequestBody RecipeCommentRequestDto requestDto,
-        @PathVariable("recipeId") Long recipeId,
-        @PathVariable("commentId") Long commentId) {
-        return ResponseDto.of(recipeCommentService.update(commentId, requestDto), "댓글 수정");
+        @PathVariable("commentId") Long commentId,
+        @PathVariable String recipeId) {
+        return ResponseDto.of(recipeCommentService.update(commentId, requestDto));
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseDto<Void> delete(
-        @PathVariable("recipeId") Long recipeId,
-        @PathVariable("commentId") Long commentId) {
+        @PathVariable("commentId") Long commentId,
+        @PathVariable String recipeId) {
         recipeCommentService.delete(commentId);
-        return ResponseDto.of(null, "댓글 삭제");
+        return ResponseDto.of(null);
     }
 }
