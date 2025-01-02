@@ -2,6 +2,7 @@ package com.mars.NangPaGo.domain.recipe.service;
 
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 
 import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
@@ -12,7 +13,6 @@ import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ public class RecipeLikeService {
     private String getAuthenticatedEmail() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UsernameNotFoundException("인증 정보가 존재하지 않습니다.");
+            throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("인증 정보가 존재하지 않습니다.");
         }
         return authentication.getName();
     }
