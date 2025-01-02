@@ -64,7 +64,7 @@ spring:
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
-              - name
+              - profile_nickname
               - account_email
               - profile_image
         provider:
