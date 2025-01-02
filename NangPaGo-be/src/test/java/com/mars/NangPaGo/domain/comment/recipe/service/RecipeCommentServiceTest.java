@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
@@ -18,6 +19,8 @@ import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +29,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -68,9 +75,39 @@ class RecipeCommentServiceTest {
         comment = RecipeComment.create(recipe, user, content);
     }
 
+    @DisplayName("레시피 댓글 Page 조회")
     @Test
     void pagedCommentsByRecipe() {
+        // given
+        int pageNo = 0;
+        int pageSize = 3;
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<RecipeComment> comments = new ArrayList<>();
 
+        RecipeComment comment1 = RecipeComment.create(recipe, user, "두번째 레시피 내용");
+        RecipeComment comment2 = RecipeComment.create(recipe, user, "세번째 레시피 내용");
+        RecipeComment comment3 = RecipeComment.create(recipe, user, "네번째 레시피 내용");
+
+        comments.add(comment);
+        comments.add(comment1);
+        comments.add(comment2);
+        comments.add(comment3);
+
+        Page<RecipeComment> page = new PageImpl<>(comments.subList(0, 2), pageable, comments.size());
+
+        //mocking
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(recipe));
+        when(recipeCommentRepository.findByRecipeId(anyLong(),
+            any(PageRequest.class))).thenReturn(page);
+
+        // when
+        PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.PagedCommentsByRecipe(anyLong(), pageNo,
+            pageSize);
+
+        //then
+        System.out.println(pageDto.getContent());
+        assertThat(pageDto.getTotalPages()).isEqualTo(2);
+        assertThat(pageDto.getTotalItems()).isEqualTo(4);
     }
 
     @DisplayName("레시피에 댓글 작성")
