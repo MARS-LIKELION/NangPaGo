@@ -1,8 +1,8 @@
 package com.mars.NangPaGo.domain.ingredient.service;
 
 import com.mars.NangPaGo.domain.ingredient.entity.Ingredient;
-import com.mars.NangPaGo.domain.ingredient.entity.IngredientElastic;
-import com.mars.NangPaGo.domain.ingredient.repository.IngredientElasticRepository;
+import com.mars.NangPaGo.domain.ingredient.entity.IngredientEs;
+import com.mars.NangPaGo.domain.ingredient.repository.IngredientEsRepository;
 import com.mars.NangPaGo.domain.ingredient.repository.IngredientRepository;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,22 +18,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
-public class IngredientElasticSynchronizer {
+public class IngredientEsSynchronizer {
     private final IngredientRepository ingredientRepository;
-    private final IngredientElasticRepository ingredientElasticRepository;
+    private final IngredientEsRepository ingredientEsRepository;
 
     @Transactional
     public String insertIngredientFromMysql() {
         try {
             List<Ingredient> ingredientList = ingredientRepository.findAll();
 
-            List<IngredientElastic> ingredientElasticList = new ArrayList<>();
+            List<IngredientEs> ingredientEsList = new ArrayList<>();
             for (Ingredient ingredient : ingredientList) {
-                IngredientElastic ingredientElastic = IngredientElastic.of(ingredient.getId(), ingredient.getName());
+                IngredientEs ingredientEs = IngredientEs.of(ingredient.getId(), ingredient.getName());
 
-                ingredientElasticList.add(ingredientElastic);
+                ingredientEsList.add(ingredientEs);
             }
-            ingredientElasticRepository.saveAll(ingredientElasticList); // 덮어쓰기
+            ingredientEsRepository.saveAll(ingredientEsList); // 덮어쓰기
             return "MySQL로부터 데이터를 성공적으로 삽입했습니다!";
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,17 +47,17 @@ public class IngredientElasticSynchronizer {
 
             CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
-            List<IngredientElastic> ingredientElasticList = new ArrayList<>();
+            List<IngredientEs> ingredientEsList = new ArrayList<>();
 
             for (CSVRecord record : csvParser) {
                 String id = record.get("id").trim();
                 String name = record.get("name").trim();
 
-                IngredientElastic ingredientElastic = IngredientElastic.of(id, name);
+                IngredientEs ingredientEs = IngredientEs.of(id, name);
 
-                ingredientElasticList.add(ingredientElastic);
+                ingredientEsList.add(ingredientEs);
             }
-            ingredientElasticRepository.saveAll(ingredientElasticList);  // 덮어쓰기
+            ingredientEsRepository.saveAll(ingredientEsList);  // 덮어쓰기
             return "CSV 파일로부터 데이터를 성공적으로 삽입했습니다!";
         } catch (Exception e) {
             e.printStackTrace();

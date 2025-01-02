@@ -20,7 +20,7 @@ import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 @Setting(settingPath = "elastic/ingredient/post-setting.json")
 @Mapping(mappingPath = "elastic/ingredient/post-mapping.json")
 @Document(indexName = "ingredients_dictionary", writeTypeHint = WriteTypeHint.FALSE)
-public class IngredientElastic {
+public class IngredientEs {
 
     @Id
     private String id;
@@ -28,15 +28,15 @@ public class IngredientElastic {
     @Field(type = FieldType.Text)
     private String name;
 
-    public static IngredientElastic of(String id, String name) {
-        return IngredientElastic.builder()
+    public static IngredientEs of(String id, String name) {
+        return IngredientEs.builder()
             .id(id)
             .name(name)
             .build();
     }
 
-    public static IngredientElastic of(Long id, String name) {
-        return IngredientElastic.builder()
+    public static IngredientEs of(Long id, String name) {
+        return IngredientEs.builder()
             .id(String.valueOf(id))
             .name(name)
             .build();

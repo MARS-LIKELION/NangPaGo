@@ -1,9 +1,9 @@
 package com.mars.NangPaGo.domain.ingredient.controller;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.domain.ingredient.dto.IngredientElasticResponseDto;
-import com.mars.NangPaGo.domain.ingredient.service.IngredientElasticSearchService;
-import com.mars.NangPaGo.domain.ingredient.service.IngredientElasticSynchronizer;
+import com.mars.NangPaGo.domain.ingredient.dto.IngredientEsResponseDto;
+import com.mars.NangPaGo.domain.ingredient.service.IngredientEsService;
+import com.mars.NangPaGo.domain.ingredient.service.IngredientEsSynchronizer;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,22 +18,22 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "재료사전 API", description = "재료사전 관련 API")
 @RequestMapping("/api/ingredient")
 @RestController
-public class IngredientElasticController {
-    private final IngredientElasticSynchronizer ingredientElasticSynchronizer;
-    private final IngredientElasticSearchService ingredientElasticSearchService;
+public class IngredientEsController {
+    private final IngredientEsSynchronizer ingredientEsSynchronizer;
+    private final IngredientEsService ingredientEsService;
 
     @PostMapping("/upload/mysql")
     public ResponseDto<String> syncMysql() {
-        return ResponseDto.of(ingredientElasticSynchronizer.insertIngredientFromMysql());
+        return ResponseDto.of(ingredientEsSynchronizer.insertIngredientFromMysql());
     }
 
     @PostMapping("/upload/csv")
     public ResponseDto<String> uploadCsvFile(@RequestParam("file") MultipartFile file) {
-        return ResponseDto.of(ingredientElasticSynchronizer.insertIngredientFromCsv(file));
+        return ResponseDto.of(ingredientEsSynchronizer.insertIngredientFromCsv(file));
     }
 
     @GetMapping("/search")
-    public ResponseDto<List<IngredientElasticResponseDto>> searchByPrefix(@RequestParam("keyword") String keyword) {
-        return ResponseDto.of(ingredientElasticSearchService.searchIngredients(keyword));
+    public ResponseDto<List<IngredientEsResponseDto>> searchByPrefix(@RequestParam("keyword") String keyword) {
+        return ResponseDto.of(ingredientEsService.searchIngredients(keyword));
     }
 }
