@@ -16,7 +16,7 @@ public class RecipeFavoriteController {
 
     @GetMapping("/{id}/favorite/status")
     public ResponseEntity<Boolean> isFavorite(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(recipeFavoriteService.isFavoriteByUser(id));
+        return ResponseEntity.ok(recipeFavoriteService.isFavorite(id));
     }
 
     @PostMapping("/{id}/favorite/toggle")

@@ -31,7 +31,7 @@ public class RecipeFavoriteService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isFavoriteByUser(Long recipeId) {
+    public boolean isFavorite(Long recipeId) {
         return recipeFavoriteRepository.findByEmailAndRecipeId(getAuthenticatedEmail(), recipeId).isPresent();
     }
 
