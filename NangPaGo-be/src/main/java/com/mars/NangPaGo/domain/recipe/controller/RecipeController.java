@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,13 +39,13 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}/like/status")
-    public ResponseEntity<Boolean> checkLikeStatus(@RequestParam("email") String email, @PathVariable("id") Long id) {
-        return ResponseEntity.ok(recipeLikeService.isLikedByUser(email, id));
+    public ResponseEntity<Boolean> checkLikeStatus(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(recipeLikeService.isLikedByCurrentUser(id));
     }
 
     @PostMapping("/{id}/like/toggle")
-    public ResponseDto<RecipeLikeResponseDto> toggleLike(@RequestBody RecipeLikeRequestDto requestDto) {
-        return ResponseDto.of(recipeLikeService.toggleRecipeLike(requestDto), "좋아요 이벤트 발생");
+    public ResponseDto<RecipeLikeResponseDto> toggleLike(@PathVariable("id") Long id) {
+        return ResponseDto.of(recipeLikeService.toggleLikeByCurrentUser(id), "좋아요 이벤트 발생");
     }
 
     @GetMapping("/search")

@@ -22,13 +22,10 @@ function Recipe({ recipe }) {
     }
   }, [isLoggedIn]);
 
-  // 좋아요와 즐겨찾기 상태를 동시에 가져오는 함수
   const fetchStatuses = async () => {
     try {
       const [likeResponse, favoriteResponse] = await Promise.all([
-        axiosInstance.get(
-          `/api/recipe/${recipe.id}/like/status?email=${userEmail}`,
-        ),
+        axiosInstance.get(`/api/recipe/${recipe.id}/like/status`),
         axiosInstance.get(
           `/api/recipe/${recipe.id}/favorite/status?email=${userEmail}`,
         ),
@@ -37,6 +34,7 @@ function Recipe({ recipe }) {
       setIsStarActive(favoriteResponse.data);
     } catch (error) {
       console.error('상태를 불러오는 중 오류가 발생했습니다.', error);
+      alert('상태를 불러오지 못했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -50,13 +48,9 @@ function Recipe({ recipe }) {
     try {
       const response = await axiosInstance.post(
         `/api/recipe/${recipe.id}/like/toggle`,
-        {
-          recipeId: recipe.id,
-          email: userEmail,
-        },
       );
-      setIsHeartActive(response.data.isLiked); // 서버 응답 값 반영
-      fetchStatuses(); // 상태 다시 불러오기
+      console.log('Response:', response);
+      setIsHeartActive(response.data.data.liked);
     } catch (error) {
       console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다.', error);
     }
@@ -72,13 +66,9 @@ function Recipe({ recipe }) {
     try {
       const response = await axiosInstance.post(
         `/api/recipe/${recipe.id}/favorite/toggle`,
-        {
-          recipeId: recipe.id,
-          email: userEmail,
-        },
       );
-      setIsStarActive(response.data.isFavorite); // 서버 응답 값 반영
-      fetchStatuses(); // 상태 다시 불러오기
+      console.log('Response:', response);
+      setIsStarActive(response.data.data.favorite);
     } catch (error) {
       console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다.', error);
     }

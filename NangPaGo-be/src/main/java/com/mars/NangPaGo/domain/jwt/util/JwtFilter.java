@@ -68,5 +68,4 @@ public class JwtFilter extends OncePerRequestFilter {
             .findFirst()
             .orElse(null);
     }
-
 }
