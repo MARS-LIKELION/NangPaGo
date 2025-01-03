@@ -81,16 +81,16 @@ public class RecipeFavoriteService {
     @Transactional(readOnly = true)
     public List<RecipeFavoriteListResponseDto> getFavoriteRecipes(String email) {
 
+            User user = findUserByEmail(email);
+
         User user = findUserByEmail(email);
 
-        List<RecipeFavorite> favorites = recipeFavoriteRepository.findAllByUser(user);
+            if (favorites.isEmpty()) {
+                throw NPGExceptionType.NOT_FOUND_RECIPE_FAVORITE.of();
+            }
 
-        if (favorites.isEmpty()) {
-            throw NPGExceptionType.NOT_FOUND_RECIPE_FAVORITE.of();
-        }
-
-        return favorites.stream()
-            .map(favorite -> RecipeFavoriteListResponseDto.of(favorite.getRecipe()))
-            .collect(Collectors.toList());
+            return favorites.stream()
+                .map(favorite -> RecipeFavoriteListResponseDto.of(favorite.getRecipe()))
+                .collect(Collectors.toList());
     }
 }
