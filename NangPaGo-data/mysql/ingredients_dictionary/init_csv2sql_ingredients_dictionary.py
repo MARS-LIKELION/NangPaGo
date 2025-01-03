@@ -73,3 +73,4 @@ if __name__ == "__main__":
     finally:
         cursor.close()
         connection.close()
+        

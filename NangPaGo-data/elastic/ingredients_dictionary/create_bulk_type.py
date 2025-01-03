@@ -12,3 +12,4 @@ if __name__ == "__main__":
             for row in reader:
                 f.write(f'{{ "index":{{ "_index" : "ingredients_dictionary", "_type" : "_doc" }} }}\n')
                 f.write(json.dumps({"name": row["name"]}, ensure_ascii=False) + "\n")
+                
