@@ -8,6 +8,7 @@ import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
 import com.mars.NangPaGo.domain.user.service.MyPageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +23,12 @@ public class UserController {
 
     @GetMapping("/mypage")
     public ResponseDto<MyPageDto> findMypage() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (email.equals("anonymousUser")) {
+        if (authentication == null || authentication.getName().equals("anonymousUser")) {
             throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of();
         }
-
+        String email = authentication.getName();
         MyPageDto myPageDto = myPageService.myPage(email);
 
         return ResponseDto.of(myPageDto);
