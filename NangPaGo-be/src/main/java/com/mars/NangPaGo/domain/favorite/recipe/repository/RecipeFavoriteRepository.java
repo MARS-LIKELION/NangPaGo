@@ -5,7 +5,7 @@ import static jakarta.persistence.LockModeType.PESSIMISTIC_WRITE;
 import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.user.entity.User;
-import jakarta.persistence.LockModeType;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -18,6 +18,9 @@ public interface RecipeFavoriteRepository extends JpaRepository<RecipeFavorite, 
 
     @Lock(PESSIMISTIC_WRITE)
     Optional<RecipeFavorite> findByUserAndRecipe(User user, Recipe recipe);
+
+    @Query("SELECT rf FROM RecipeFavorite rf WHERE rf.user = :user")
+    List<RecipeFavorite> findAllByUser(@Param("user") User user);
 
     @Query("SELECT rf FROM RecipeFavorite rf WHERE rf.user.email = :email AND rf.recipe.id = :recipeId")
     Optional<RecipeFavorite> findByEmailAndRecipeId(@Param("email") String email, @Param("recipeId") Long recipeId);
