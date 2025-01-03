@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -50,15 +51,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf((csrf) -> csrf.disable());
-        http
-            .formLogin((form) -> form.disable());
-        http
-            .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-        http
-            .oauth2Login((oauth2) -> oauth2
+            .csrf(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+            .oauth2Login(oauth2 -> oauth2
                 .authorizationEndpoint(authorization ->
                     authorization.baseUri("/api/oauth2/authorization")
                 )
@@ -66,8 +64,7 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfoEndpointConfig ->
                     userInfoEndpointConfig.userService(customOAuth2UserService))
                 .successHandler(customSuccessHandler)
-            );
-        http
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST).permitAll()
                 .requestMatchers(
@@ -77,14 +74,12 @@ public class SecurityConfig {
                 )
                 .hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
-            );
-
-        http.addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class);
-        http
-            .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
+            )
+            .addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .build();
     }
 
     @Bean
