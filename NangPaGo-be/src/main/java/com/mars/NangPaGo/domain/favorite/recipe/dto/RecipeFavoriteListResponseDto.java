@@ -23,7 +23,7 @@ public record RecipeFavoriteListResponseDto(
             .ingredientsTag(List.of(recipe.getIngredients().split(",")))
             .ingredientsDisplayTag(List.of(
                     recipe.getMainIngredient(),
-                    recipe.getCalorie() != null ? recipe.getCalorie() + "" : null,
+                    recipe.getCalorie() != null ? recipe.getCalorie() + " kcal" : null,
                     recipe.getCategory(),
                     recipe.getCookingMethod()
                 ).stream()
