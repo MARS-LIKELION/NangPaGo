@@ -6,6 +6,7 @@ import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,4 +50,9 @@ public class Recipe extends BaseEntity {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeFavorite> favorites;
+
+    @Builder
+    private Recipe(Long id) {
+        this.id = id;
+    }
 }
