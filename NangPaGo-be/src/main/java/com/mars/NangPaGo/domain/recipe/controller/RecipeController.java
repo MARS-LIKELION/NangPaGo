@@ -54,7 +54,7 @@ public class RecipeController {
         return ResponseDto.of(recipeEsService.searchRecipes(page, size, keyword), "검색 결과를 성공적으로 조회했습니다.");
     }
 
-    @PostMapping("/es/sync")
+    @PostMapping("/bulk-upload/mysql")
     public ResponseDto<String> syncMysql() {
         return ResponseDto.of(recipeEsSynchronizerService.insertRecipeFromMysql(), "MySQL 데이터를 Elastic에 성공적으로 동기화했습니다");
     }

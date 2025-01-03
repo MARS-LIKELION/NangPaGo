@@ -1,12 +1,11 @@
 package com.mars.NangPaGo.domain.recipe.service;
 
-import com.mars.NangPaGo.common.exception.NPGException;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeEs;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeESRepository;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class RecipeEsSynchronizerService {
 
