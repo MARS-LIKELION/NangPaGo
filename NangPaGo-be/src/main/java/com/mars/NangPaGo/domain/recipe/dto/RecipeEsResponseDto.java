@@ -14,14 +14,14 @@ public record RecipeEsResponseDto(
     List<String> ingredientsDisplayTag,
     float matchScore
 ) {
-    public static RecipeEsResponseDto of(RecipeEs recipeES, float score) {
+    public static RecipeEsResponseDto of(RecipeEs recipeEs, float score) {
         return RecipeEsResponseDto.builder()
-            .id(recipeES.getId())
-            .name(recipeES.getName())
-            .recipeImageUrl(recipeES.getRecipeImageUrl())
-            .ingredients(recipeES.getIngredients())
-            .ingredientsTag(recipeES.getIngredientsTag())
-            .ingredientsDisplayTag(recipeES.getIngredientsDisplayTag())
+            .id(recipeEs.getId())
+            .name(recipeEs.getName())
+            .recipeImageUrl(recipeEs.getRecipeImageUrl())
+            .ingredients(recipeEs.getIngredients())
+            .ingredientsTag(recipeEs.getIngredientsTag())
+            .ingredientsDisplayTag(recipeEs.getIngredientsDisplayTag())
             .matchScore(score)
             .build();
     }

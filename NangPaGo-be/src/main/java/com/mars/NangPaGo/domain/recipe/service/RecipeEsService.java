@@ -38,15 +38,11 @@ public class RecipeEsService {
                 .query(keyword)
             );
 
-            log.info("Elasticsearch 검색 쿼리: {}", query);
-
             SearchResponse<RecipeEs> response = elasticsearchClient.search(s -> s
                 .index("recipes")
                 .query((Query) query)
                 .from((int) pageable.getOffset())
                 .size(pageable.getPageSize()), RecipeEs.class);
-
-            log.info("Elasticsearch 응답: {}", response);
 
             List<RecipeEsResponseDto> results = response.hits().hits().stream()
                 .map(hit -> RecipeEsResponseDto.of(
@@ -57,7 +53,6 @@ public class RecipeEsService {
 
             return new PageImpl<>(results, pageable, response.hits().total().value());
         } catch (Exception e) {
-            log.error("검색 중 오류 발생: ", e);
             throw new NPGException(NPGExceptionType.SERVER_ERROR, "레시피 검색 실패");
         }
     }

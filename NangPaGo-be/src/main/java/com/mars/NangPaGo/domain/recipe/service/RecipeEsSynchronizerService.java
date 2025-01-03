@@ -27,7 +27,7 @@ public class RecipeEsSynchronizerService {
             List<Recipe> recipeList = recipeRepository.findAll();
 
             if (recipeList.isEmpty()) {
-                throw new NPGException(NPGExceptionType.NOT_FOUND_RECIPE, "MySQL에서 가져온 Recipe 데이터가 없습니다.");
+                throw NPGExceptionType.NOT_FOUND_RECIPE.of("MySQL에서 가져온 Recipe 데이터가 없습니다.");
             }
 
             List<RecipeEs> recipeElasticList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class RecipeEsSynchronizerService {
                     displayTag.add(recipe.getCookingMethod());
                 }
 
-                RecipeEs recipeES = new RecipeEs(
+                RecipeEs recipeEs = new RecipeEs(
                     String.valueOf(recipe.getId()),
                     recipe.getName(),
                     recipe.getMainImage(),
@@ -68,16 +68,14 @@ public class RecipeEsSynchronizerService {
                     ingredientsTagList,
                     displayTag
                 );
-                recipeElasticList.add(recipeES);
+                recipeElasticList.add(recipeEs);
             }
 
             recipeEsRepository.saveAll(recipeElasticList);
 
             return "MySQL로부터 Recipe 데이터를 Elasticsearch에 성공적으로 동기화했습니다!";
-        } catch (NPGException e) {
-            throw e;
         } catch (Exception e) {
-            throw new NPGException(NPGExceptionType.SERVER_ERROR_ELASTICSEARCH, "Elasticsearch 동기화 중 오류 발생: " + e.getMessage());
+            throw NPGExceptionType.SERVER_ERROR_ELASTICSEARCH.of("Elasticsearch 동기화 중 오류 발생: " + e.getMessage());
         }
     }
 }
