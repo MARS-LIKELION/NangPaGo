@@ -18,7 +18,7 @@ function RecipeListContent({ activeTab, images, searchTerm }) {
         params: { pageNo, pageSize, keyword },
       });
 
-      setRecipes(response.data.data.content); 
+      setRecipes(response.data.data.content);
     } catch (error) {
       console.error('레시피를 가져오는 중 오류가 발생했습니다:', error);
     }
