@@ -10,7 +10,7 @@ public record IngredientEsResponseDto(
     Double matchScore
 ) {
 
-    public static IngredientEsResponseDto from(IngredientEs ingredientEs, String highlightedName, double matchScore) {
+    public static IngredientEsResponseDto of(IngredientEs ingredientEs, String highlightedName, double matchScore) {
         return IngredientEsResponseDto.builder()
             .id(ingredientEs.getId())
             .name(highlightedName)

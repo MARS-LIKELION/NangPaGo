@@ -64,7 +64,7 @@ public class IngredientEsService {
                     String highlightedName = (highlightNames != null && !highlightNames.isEmpty())
                         ? highlightNames.get(0) : source.getName();
 
-                    return IngredientEsResponseDto.from(source, highlightedName, matchScore);
+                    return IngredientEsResponseDto.of(source, highlightedName, matchScore);
                 })
                 .sorted(Comparator.comparingDouble(IngredientEsResponseDto::matchScore).reversed())
                 .collect(Collectors.toList());
