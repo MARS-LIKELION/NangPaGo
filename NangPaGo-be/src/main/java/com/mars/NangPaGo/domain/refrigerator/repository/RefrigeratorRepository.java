@@ -14,6 +14,4 @@ public interface RefrigeratorRepository extends JpaRepository<Refrigerator, Long
     List<Refrigerator> findByUserEmail(@Param("email") String email);
 
     void deleteByUser_EmailAndIngredient_Name(@Param("email") String email, @Param("name") String name);
-
-    int countByUser(User user);
 }

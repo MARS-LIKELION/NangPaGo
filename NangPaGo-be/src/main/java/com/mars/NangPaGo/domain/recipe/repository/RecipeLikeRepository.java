@@ -18,6 +18,4 @@ public interface RecipeLikeRepository extends JpaRepository<RecipeLike, Long> {
 
     @Query("SELECT rl FROM RecipeLike rl WHERE rl.user.email = :email AND rl.recipe.id = :recipeId")
     Optional<RecipeLike> findByEmailAndRecipeId(@Param("email") String email, @Param("recipeId") Long recipeId);
-
-    int countByUser(User user);
 }
