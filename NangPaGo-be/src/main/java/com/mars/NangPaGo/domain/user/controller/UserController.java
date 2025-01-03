@@ -4,6 +4,7 @@ import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_N
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.common.exception.NPGException;
+import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
 import com.mars.NangPaGo.domain.user.service.MyPageService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class UserController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (email.equals("anonymousUser")) {
-            throw new NPGException(UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT);
+            throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of();
         }
 
         MyPageDto myPageDto = myPageService.myPage(email);

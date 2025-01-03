@@ -27,7 +27,7 @@ public class MyPageService {
     public MyPageDto myPage(String email) {
 
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new NPGException(NPGExceptionType.NOT_FOUND_USER));
+            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
 
         int likeCount = recipeLikeRepository.countByUser(user);
         int favoriteCount = recipeFavoriteRepository.countByUser(user);
