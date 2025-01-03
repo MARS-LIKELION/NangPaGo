@@ -5,39 +5,20 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-function getCookie(name) {
-  const matches = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
-  return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-axiosInstance.interceptors.request.use((config) => {
-  const accessToken = getCookie('access');
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+// 응답 인터셉터: 토큰 만료 시 쿠키를 사용하여 토큰 갱신
+axiosInstance.interceptors.response.use((response) => {
+  if (response.data?.message === '인증되지 않은 상태') {
+    return axiosInstance
+      .post('/api/token/reissue')
+      .then(() => {
+        return axiosInstance(response.config);
+      })
+      .catch((error) => {
+        console.error('토큰 갱신 실패:', error);
+        return Promise.reject(error);
+      });
   }
-  return config;
+  return response; // 정상 응답 반환
 });
-
-axiosInstance.interceptors.response.use(
-  async (response) => {
-    if (response.data?.data === '') {
-      try {
-        await axiosInstance.post('/api/token/reissue');
-        const newAccessToken = getCookie('access');
-        if (newAccessToken) {
-          response.config.headers.Authorization = `Bearer ${newAccessToken}`;
-          return axiosInstance(response.config);
-        }
-        throw new Error('Failed to retrieve new access token from cookies.');
-      } catch {
-        return Promise.reject();
-      }
-    }
-    return response;
-  },
-  async (error) => {
-    return Promise.reject(error);
-  },
-);
 
 export default axiosInstance;
