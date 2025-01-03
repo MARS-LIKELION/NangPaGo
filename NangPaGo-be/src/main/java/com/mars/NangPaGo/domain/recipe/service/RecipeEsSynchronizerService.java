@@ -46,7 +46,7 @@ public class RecipeEsSynchronizerService {
 
                 // 칼로리
                 if (recipe.getCalorie() != null) {
-                    displayTag.add(String.valueOf(recipe.getCalorie()));
+                    displayTag.add(String.valueOf(recipe.getCalorie() + " kcal"));
                 }
 
                 // 카테고리
