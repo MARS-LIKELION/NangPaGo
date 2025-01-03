@@ -65,7 +65,6 @@ public class RecipeEsSynchronizerService {
                 );
                 recipeElasticList.add(recipeEs);
             }
-
             recipeEsRepository.saveAll(recipeElasticList);
 
             return "MySQL로부터 Recipe 데이터를 Elasticsearch에 성공적으로 동기화했습니다!";
