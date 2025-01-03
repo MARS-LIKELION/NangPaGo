@@ -1,18 +1,12 @@
 package com.mars.NangPaGo.domain.recipe.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
-import com.mars.NangPaGo.common.exception.NPGException;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeEsResponseDto;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeEs;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RecipeEsService {
@@ -31,12 +24,22 @@ public class RecipeEsService {
         Pageable pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(size, 1));
 
         try {
-            var query = (keyword == null || keyword.isEmpty())
-                ? QueryBuilders.matchAll()
-                : QueryBuilders.match(m -> m
-                .field("ingredients")
-                .query(keyword)
-            );
+            Query query;
+            //키워드 없이 검색 시 랜덤 데이터 출력
+            if (keyword == null || keyword.isEmpty()) {
+                query = QueryBuilders.functionScore(fs -> fs
+                    .query(QueryBuilders.matchAll(m -> m))
+                    .functions(f -> f
+                        .randomScore(rs -> rs.seed(String.valueOf(System.currentTimeMillis())))
+                    )
+                );
+            } else {
+                //키워드 있이 검색
+                query = QueryBuilders.match(m -> m
+                    .field("ingredients")
+                    .query(keyword)
+                );
+            }
 
             SearchResponse<RecipeEs> response = elasticsearchClient.search(s -> s
                 .index("recipes")
