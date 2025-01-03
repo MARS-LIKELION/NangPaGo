@@ -1,3 +1,9 @@
+spring:
+  profiles:
+    default: local
+
+---
+
 server:
   port: ${API_SERVER_PORT}
 client:
@@ -90,6 +96,7 @@ jwt:
     access-expiration-time: ${JWT_ACCESS_EXPIRATION_TIME}
     refresh-expiration-time: ${JWT_REFRESH_EXPIRATION_TIME}
 
+# Swagger-UI 관련 설정
 springdoc:
   packages-to-scan: com.mars.NangPaGo.domain
   api-docs:
@@ -101,3 +108,32 @@ springdoc:
     display-request-duration: true
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+# 개발(로컬) 환경: local / 배포 환경: prod
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+logging:
+  level:
+    root: info
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  file:
+    name: /logs/application.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+  level:
+    root: warn
