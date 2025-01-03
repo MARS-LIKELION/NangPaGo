@@ -53,7 +53,7 @@ public class RecipeEsService {
 
             return new PageImpl<>(results, pageable, response.hits().total().value());
         } catch (Exception e) {
-            throw new NPGException(NPGExceptionType.SERVER_ERROR, "레시피 검색 실패");
+            throw NPGExceptionType.SERVER_ERROR_ELASTICSEARCH.of("레시피 검색 오류 " + e.getMessage());
         }
     }
 
