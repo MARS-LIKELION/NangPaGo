@@ -80,7 +80,7 @@ function Recipe({ recipe }) {
             className="w-full h-48 object-cover rounded-md"
           />
         </div>
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex items-center pb-3 justify-between">
           <h1 className="text-xl font-bold">{recipe.name}</h1>
           <div className="flex gap-2">
             <button
@@ -99,17 +99,17 @@ function Recipe({ recipe }) {
         </div>
         <div className="flex gap-2">
           {recipe.mainIngredient && (
-            <p className="bg-[var(--primary-color)] text-white text-[14px] mt-2 p-1 rounded-md">
+            <p className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded">
               {recipe.mainIngredient}
             </p>
           )}
           {recipe.category && (
-            <p className="bg-[var(--primary-color)] text-white text-[14px] mt-2 p-1 rounded-md">
+            <p className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded">
               {recipe.category}
             </p>
           )}
           {recipe.cookingMethod && (
-            <p className="bg-[var(--primary-color)] text-white text-[14px] mt-2 p-1 rounded-md">
+            <p className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded">
               {recipe.cookingMethod}
             </p>
           )}

@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 
 function RecipeCard({ recipe }) {
-  const dummyDescription =
-    '이 레시피는 맛있고 건강한 한끼 식사를 위한 완벽한 선택입니다. 신선한 재료들과 특별한 양념의 조화로 특별한 맛을 선사합니다. 조리 과정도 간단해서 초보자도 쉽게 따라할 수 있답니다. 가족들과 함께 즐거운 식사시간을 보내보세요.';
-
+  
   return (
     <Link
       to={`/recipe/${recipe.id}`}
@@ -16,9 +14,16 @@ function RecipeCard({ recipe }) {
       />
       <div className="p-4 flex flex-col gap-2">
         <h3 className="text-lg font-semibold">{recipe.name}</h3>
-        <p className="text-sm text-gray-600 overflow-hidden line-clamp-3">
-          {dummyDescription}
-        </p>
+        <div className="flex flex-wrap gap-2">
+          {recipe.ingredientsDisplayTag.map((tag, index) => (
+            <span
+              key={index}
+              className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </Link>
   );
