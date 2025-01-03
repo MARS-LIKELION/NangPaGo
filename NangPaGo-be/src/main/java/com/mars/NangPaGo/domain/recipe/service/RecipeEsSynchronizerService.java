@@ -39,22 +39,18 @@ public class RecipeEsSynchronizerService {
                 List<String> ingredientsTagList = ingredientsList.stream().limit(5).toList();
                 List<String> displayTag = new ArrayList<>();
 
-                // 주재료
                 if (recipe.getMainIngredient() != null && !recipe.getMainIngredient().isBlank()) {
                     displayTag.add(recipe.getMainIngredient());
                 }
 
-                // 칼로리
                 if (recipe.getCalorie() != null) {
                     displayTag.add(String.valueOf(recipe.getCalorie() + " kcal"));
                 }
 
-                // 카테고리
                 if (recipe.getCategory() != null){
                     displayTag.add(recipe.getCategory());
                 }
 
-                // 쿠킹 메서드
                 if (recipe.getCookingMethod() != null) {
                     displayTag.add(recipe.getCookingMethod());
                 }
