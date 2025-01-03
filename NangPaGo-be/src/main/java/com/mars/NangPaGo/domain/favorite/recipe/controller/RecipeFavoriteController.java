@@ -5,8 +5,7 @@ import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.service.RecipeFavoriteService;
-import com.mars.NangPaGo.domain.recipe.dto.RecipeEsResponseDto;
-import com.mars.NangPaGo.domain.recipe.entity.RecipeEs;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController
+@Tag(name = "레시피 즐겨찾기 API", description = "레시피 즐겨찾기 관련 API")
 @RequestMapping("/api/recipe")
+@RestController
 public class RecipeFavoriteController {
 
     private final RecipeFavoriteService recipeFavoriteService;

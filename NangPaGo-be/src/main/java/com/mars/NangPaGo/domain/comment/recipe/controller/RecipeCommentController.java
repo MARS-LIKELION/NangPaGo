@@ -5,12 +5,14 @@ import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.service.RecipeCommentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/recipe/{recipeId}/comments")
 @RequiredArgsConstructor
+@Tag(name = "레시피 댓글 API", description = "레시피 댓글 관련 API")
+@RequestMapping("/api/recipe/{recipeId}/comments")
+@RestController
 public class RecipeCommentController {
 
     private final RecipeCommentService recipeCommentService;

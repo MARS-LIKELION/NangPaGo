@@ -5,6 +5,7 @@ import com.mars.NangPaGo.common.exception.NPGException;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.refrigerator.dto.RefrigeratorResponseDto;
 import com.mars.NangPaGo.domain.refrigerator.service.RefrigeratorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Tag(name = "내 냉장고 API", description = "내 냉장고 관련 API")
 @RequestMapping("/api/refrigerator")
 @RestController
 public class RefrigeratorController {
