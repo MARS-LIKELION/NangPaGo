@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,11 @@ public class RefreshToken {
 
     private RefreshToken(String email, String refreshToken, LocalDateTime expiration) {
         this.email = email;
+        this.refreshToken = refreshToken;
+        this.expiration = expiration;
+    }
+
+    public void updateToken(String refreshToken, LocalDateTime expiration) {
         this.refreshToken = refreshToken;
         this.expiration = expiration;
     }

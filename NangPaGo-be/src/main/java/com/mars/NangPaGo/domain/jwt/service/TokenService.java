@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.jwt.service;
 
 import com.mars.NangPaGo.domain.jwt.dto.RefreshTokenDto;
+import com.mars.NangPaGo.domain.jwt.entity.RefreshToken;
 import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -24,6 +25,12 @@ public class TokenService {
     @Transactional
     public void reissueTokens(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = getRefreshTokenFromRequest(request);
+
+        if (jwtUtil.isExpired(refreshToken)) {
+            handleExpiredRefreshToken(request, response);
+            return;
+        }
+
         validateRefreshToken(refreshToken);
 
         boolean isExist = refreshTokenRepository.existsByRefreshToken(refreshToken);
@@ -35,10 +42,39 @@ public class TokenService {
         String role = jwtUtil.getRole(refreshToken);
 
         String newAccessToken = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
-        String newRefreshToken = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
 
-        refreshTokenRepository.deleteByRefreshToken(refreshToken);
+        response.addCookie(createCookie("access", newAccessToken, jwtUtil.getAccessTokenExpireMillis()));
+        response.addCookie(createCookie("refresh", refreshToken, jwtUtil.getRefreshTokenExpireMillis()));
+    }
+
+    @Transactional
+    public void saveNewRefreshToken(String email, String refreshToken) {
+        RefreshToken existingToken = refreshTokenRepository.findByEmail(email).orElse(null);
+
+        if (existingToken != null) {
+            existingToken.updateToken(refreshToken,
+                LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000));
+            refreshTokenRepository.save(existingToken);
+        } else {
+            refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken,
+                LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000)).toEntity());
+        }
+    }
+
+    private void handleExpiredRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = getRefreshTokenFromRequest(request);
+
+        if (!(boolean) refreshTokenRepository.existsByRefreshToken(refreshToken)) {
+            throw BAD_REQUEST_INVALID.of("유효하지 않은 Refresh Token 입니다.");
+        }
+
+        String email = jwtUtil.getEmail(refreshToken);
+        String role = jwtUtil.getRole(refreshToken);
+
+        String newRefreshToken = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
         saveNewRefreshToken(email, newRefreshToken);
+
+        String newAccessToken = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
 
         response.addCookie(createCookie("access", newAccessToken, jwtUtil.getAccessTokenExpireMillis()));
         response.addCookie(createCookie("refresh", newRefreshToken, jwtUtil.getRefreshTokenExpireMillis()));
@@ -64,11 +100,6 @@ public class TokenService {
         if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
             throw BAD_REQUEST_INVALID.of("유효하지 않은 Refresh Token입니다.");
         }
-    }
-
-    private void saveNewRefreshToken(String email, String refreshToken) {
-        refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken,
-            LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000)).toEntity());
     }
 
     private Cookie createCookie(String key, String value, long expireMillis) {
