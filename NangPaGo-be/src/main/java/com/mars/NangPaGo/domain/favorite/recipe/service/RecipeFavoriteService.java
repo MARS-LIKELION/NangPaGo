@@ -80,16 +80,17 @@ public class RecipeFavoriteService {
 
     @Transactional(readOnly = true)
     public List<RecipeFavoriteListResponseDto> getFavoriteRecipes(String email) {
-        try {
+
             User user = findUserByEmail(email);
 
             List<RecipeFavorite> favorites = recipeFavoriteRepository.findAllByUser(user);
 
+            if (favorites.isEmpty()) {
+                throw NPGExceptionType.NOT_FOUND_RECIPE_FAVORITE.of();
+            }
+
             return favorites.stream()
                 .map(favorite -> RecipeFavoriteListResponseDto.of(favorite.getRecipe()))
                 .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw NPGExceptionType.SERVER_ERROR.of("즐겨찾기 리스트 조회 중 에러 발생: " + e.getMessage());
-        }
     }
 }
