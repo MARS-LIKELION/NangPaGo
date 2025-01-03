@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface RecipeCommentRepository extends JpaRepository<RecipeComment, Long> {
 
     Page<RecipeComment> findByRecipeId(Long recipeId, Pageable pageable);
+
+    int countByUser(User user);
 }

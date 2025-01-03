@@ -3,8 +3,6 @@ package com.mars.NangPaGo.domain.user.controller;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.common.exception.NPGException;
-import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
 import com.mars.NangPaGo.domain.user.service.MyPageService;
 import lombok.RequiredArgsConstructor;

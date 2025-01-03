@@ -7,14 +7,20 @@ import lombok.Builder;
 public record MyPageDto(
     String nickName,
     String providerName,
-    UserActivityStats userActivityStats
+    int likeCount,
+    int favoriteCount,
+    int commentCount,
+    int refrigeratorCount
 ) {
 
-    public static MyPageDto of(User user, UserActivityStats userActivityStats) {
+    public static MyPageDto of(User user, int likeCount, int favoriteCount, int commentCount, int refrigeratorCount) {
         return MyPageDto.builder()
             .nickName(user.getNickname())
             .providerName(user.getProvider().name())
-            .userActivityStats(userActivityStats)
+            .likeCount(likeCount)
+            .favoriteCount(favoriteCount)
+            .commentCount(commentCount)
+            .refrigeratorCount(refrigeratorCount)
             .build();
     }
 }
