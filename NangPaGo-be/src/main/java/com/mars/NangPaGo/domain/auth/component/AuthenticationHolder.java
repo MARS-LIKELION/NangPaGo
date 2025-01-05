@@ -14,6 +14,6 @@ public class AuthenticationHolder {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             return userDetails.getUsername();
         }
-        return null;
+        return "anonymous_user";
     }
 }
