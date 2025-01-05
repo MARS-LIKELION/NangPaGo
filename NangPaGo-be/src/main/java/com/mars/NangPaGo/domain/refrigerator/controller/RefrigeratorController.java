@@ -1,8 +1,7 @@
 package com.mars.NangPaGo.domain.refrigerator.controller;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.common.exception.NPGException;
-import com.mars.NangPaGo.common.exception.NPGExceptionType;
+import com.mars.NangPaGo.domain.auth.aop.AuthenticatedUser;
 import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
 import com.mars.NangPaGo.domain.refrigerator.dto.RefrigeratorResponseDto;
 import com.mars.NangPaGo.domain.refrigerator.service.RefrigeratorService;
@@ -10,9 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Tag(name = "내 냉장고 API", description = "내 냉장고 관련 API")
@@ -22,29 +19,26 @@ public class RefrigeratorController {
 
     private final RefrigeratorService refrigeratorService;
 
+    @AuthenticatedUser
     @GetMapping
     public ResponseDto<List<RefrigeratorResponseDto>> getRefrigerator() {
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(refrigeratorService.findRefrigerator(email), "");
     }
 
+    @AuthenticatedUser
     @PostMapping
-    public ResponseDto<RefrigeratorResponseDto> addIngredient(Principal principal, @RequestParam(name = "ingredientName") String ingredientName) {
-        String email = Optional.ofNullable(principal)
-            .map(Principal::getName)
-            .orElseThrow(() -> new NPGException(NPGExceptionType.UNAUTHORIZED));
-
+    public ResponseDto<RefrigeratorResponseDto> addIngredient(@RequestParam(name = "ingredientName") String ingredientName) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
         refrigeratorService.addIngredient(email, ingredientName);
 
         return ResponseDto.of(RefrigeratorResponseDto.from(ingredientName));
     }
 
+    @AuthenticatedUser
     @DeleteMapping
-    public ResponseDto<RefrigeratorResponseDto> deleteMyIngredient(Principal principal, @RequestParam(name = "ingredientName") String ingredientName) {
-        String email = Optional.ofNullable(principal)
-            .map(Principal::getName)
-            .orElseThrow(() -> new NPGException(NPGExceptionType.UNAUTHORIZED));
-
+    public ResponseDto<RefrigeratorResponseDto> deleteMyIngredient(@RequestParam(name = "ingredientName") String ingredientName) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
         refrigeratorService.deleteIngredient(email, ingredientName);
 
         return ResponseDto.of(RefrigeratorResponseDto.from(ingredientName));

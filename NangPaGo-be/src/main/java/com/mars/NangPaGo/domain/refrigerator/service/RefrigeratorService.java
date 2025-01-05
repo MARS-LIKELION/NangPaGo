@@ -26,7 +26,6 @@ public class RefrigeratorService {
     private final IngredientRepository ingredientRepository;
 
     public List<RefrigeratorResponseDto> findRefrigerator(String email) {
-        //String email = AuthenticationHolder.getCurrentUserEmail();
         return refrigeratorRepository.findByUserEmail(email)
                 .stream().map(RefrigeratorResponseDto::from).toList();
     }
