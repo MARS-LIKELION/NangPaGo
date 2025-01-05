@@ -1,13 +1,11 @@
 package com.mars.NangPaGo.domain.jwt.service;
 
-import com.mars.NangPaGo.domain.jwt.dto.RefreshTokenDto;
 import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,13 +33,8 @@ public class TokenService {
         String role = jwtUtil.getRole(refreshToken);
 
         String newAccessToken = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
-        String newRefreshToken = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
-
-        refreshTokenRepository.deleteByRefreshToken(refreshToken);
-        saveNewRefreshToken(email, newRefreshToken);
 
         response.addCookie(createCookie("access", newAccessToken, jwtUtil.getAccessTokenExpireMillis()));
-        response.addCookie(createCookie("refresh", newRefreshToken, jwtUtil.getRefreshTokenExpireMillis()));
     }
 
     private String getRefreshTokenFromRequest(HttpServletRequest request) {
@@ -57,18 +50,13 @@ public class TokenService {
     }
 
     private void validateRefreshToken(String refreshToken) {
-        if (jwtUtil.isExpired(refreshToken)) {
+        if (Boolean.TRUE.equals(jwtUtil.isExpired(refreshToken))) {
             throw UNAUTHORIZED_TOKEN_EXPIRED.of("Refresh Token이 만료되었습니다.");
         }
 
         if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
             throw BAD_REQUEST_INVALID.of("유효하지 않은 Refresh Token입니다.");
         }
-    }
-
-    private void saveNewRefreshToken(String email, String refreshToken) {
-        refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken,
-            LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000)).toEntity());
     }
 
     private Cookie createCookie(String key, String value, long expireMillis) {

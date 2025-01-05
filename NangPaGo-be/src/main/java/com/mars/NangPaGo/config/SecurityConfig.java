@@ -34,7 +34,6 @@ public class SecurityConfig {
         "/api/oauth2/authorization/**",
         "/api/login/oauth2/code/**",
         "/api/token/reissue",
-        "/api/auth/status",
         "/api/recipe/{id}",
         "/api/recipe/{id}/comments",
         "/api/ingredient/search",
