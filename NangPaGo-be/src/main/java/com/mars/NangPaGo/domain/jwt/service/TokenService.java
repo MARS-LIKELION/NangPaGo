@@ -76,7 +76,7 @@ public class TokenService {
         cookie.setMaxAge((int) (expireMillis / 1000));
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
         return cookie;
     }
 }

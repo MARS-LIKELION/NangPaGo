@@ -1,10 +1,10 @@
 package com.mars.NangPaGo.config;
 
-import com.mars.NangPaGo.domain.user.auth.CustomLogoutFilter;
-import com.mars.NangPaGo.domain.user.auth.CustomSuccessHandler;
-import com.mars.NangPaGo.domain.user.service.CustomLogoutService;
-import com.mars.NangPaGo.domain.user.service.CustomOAuth2UserService;
-import com.mars.NangPaGo.domain.jwt.util.JwtFilter;
+import com.mars.NangPaGo.domain.auth.filter.CustomLogoutFilter;
+import com.mars.NangPaGo.domain.auth.handler.CustomSuccessHandler;
+import com.mars.NangPaGo.domain.auth.service.CustomLogoutService;
+import com.mars.NangPaGo.domain.auth.service.CustomOAuth2UserService;
+import com.mars.NangPaGo.domain.auth.filter.JwtAuthenticationFilter;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -55,7 +55,11 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
-            .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), SecurityContextHolderFilter.class)
+            .addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class)
             .oauth2Login(oauth2 -> oauth2
                 .authorizationEndpoint(authorization ->
                     authorization.baseUri("/api/oauth2/authorization")
@@ -74,10 +78,6 @@ public class SecurityConfig {
                 )
                 .hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
-            )
-            .addFilterBefore(new CustomLogoutFilter(customLogoutService), LogoutFilter.class)
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .build();
     }

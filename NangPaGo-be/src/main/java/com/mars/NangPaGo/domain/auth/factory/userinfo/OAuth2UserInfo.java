@@ -1,4 +1,4 @@
-package com.mars.NangPaGo.domain.user.factory.userinfo;
+package com.mars.NangPaGo.domain.auth.factory.userinfo;
 
 public interface OAuth2UserInfo {
     String getProvider();

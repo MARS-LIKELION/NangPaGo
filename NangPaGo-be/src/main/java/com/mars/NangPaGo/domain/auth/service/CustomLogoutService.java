@@ -1,4 +1,4 @@
-package com.mars.NangPaGo.domain.user.service;
+package com.mars.NangPaGo.domain.auth.service;
 
 import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;

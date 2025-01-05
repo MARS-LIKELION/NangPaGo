@@ -1,6 +1,6 @@
-package com.mars.NangPaGo.domain.user.auth;
+package com.mars.NangPaGo.domain.auth.filter;
 
-import com.mars.NangPaGo.domain.user.service.CustomLogoutService;
+import com.mars.NangPaGo.domain.auth.service.CustomLogoutService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

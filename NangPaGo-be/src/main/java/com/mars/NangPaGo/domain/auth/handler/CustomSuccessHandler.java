@@ -1,9 +1,9 @@
-package com.mars.NangPaGo.domain.user.auth;
+package com.mars.NangPaGo.domain.auth.handler;
 
 import com.mars.NangPaGo.domain.jwt.dto.RefreshTokenDto;
 import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
-import com.mars.NangPaGo.domain.user.vo.CustomOAuth2User;
+import com.mars.NangPaGo.domain.auth.vo.CustomOAuth2User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,7 +63,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setMaxAge((int) (expireMillis / 1000));
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
         return cookie;
     }
 }

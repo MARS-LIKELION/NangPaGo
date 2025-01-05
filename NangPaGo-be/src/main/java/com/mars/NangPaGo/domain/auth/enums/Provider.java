@@ -1,4 +1,4 @@
-package com.mars.NangPaGo.domain.user.enums;
+package com.mars.NangPaGo.domain.auth.enums;
 
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;

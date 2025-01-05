@@ -4,15 +4,21 @@ import axiosInstance from '../api/axiosInstance';
 export const fetchUserStatus = createAsyncThunk(
   'login/fetchUserStatus',
   async (_, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get('/api/auth/status');
-      const { data } = response.data;
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || 'Failed to fetch user status',
-      );
+    // API 호출 대신 localStorage만 확인
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn) {
+      return { email: localStorage.getItem('userEmail') || '' }; // 필요한 경우 이메일도 localStorage에 저장/복원
     }
+    return rejectWithValue('Not logged in');
+    // try {
+    //   const response = await axiosInstance.get('/api/auth/status');
+    //   const { data } = response.data;
+    //   return data;
+    // } catch (error) {
+    //   return rejectWithValue(
+    //     error.response?.data?.message || 'Failed to fetch user status',
+    //   );
+    // }
   },
 );
 

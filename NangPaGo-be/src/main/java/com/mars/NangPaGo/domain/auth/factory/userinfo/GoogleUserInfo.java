@@ -1,4 +1,4 @@
-package com.mars.NangPaGo.domain.user.factory.userinfo;
+package com.mars.NangPaGo.domain.auth.factory.userinfo;
 
 import java.util.Map;
 import java.util.Optional;

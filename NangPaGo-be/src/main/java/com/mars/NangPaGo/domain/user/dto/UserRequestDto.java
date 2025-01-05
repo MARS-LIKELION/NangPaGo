@@ -2,10 +2,10 @@ package com.mars.NangPaGo.domain.user.dto;
 
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.enums.Gender;
-import com.mars.NangPaGo.domain.user.enums.Provider;
-import com.mars.NangPaGo.domain.user.factory.userinfo.OAuth2UserInfo;
-import com.mars.NangPaGo.domain.user.factory.userinfo.KakaoUserInfo;
-import com.mars.NangPaGo.domain.user.factory.userinfo.NaverUserInfo;
+import com.mars.NangPaGo.domain.auth.enums.Provider;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.OAuth2UserInfo;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.KakaoUserInfo;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.NaverUserInfo;
 import lombok.Builder;
 
 @Builder

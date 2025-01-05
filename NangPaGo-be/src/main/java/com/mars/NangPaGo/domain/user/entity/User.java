@@ -5,7 +5,7 @@ import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
 import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
 import com.mars.NangPaGo.domain.user.enums.Gender;
-import com.mars.NangPaGo.domain.user.enums.Provider;
+import com.mars.NangPaGo.domain.auth.enums.Provider;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

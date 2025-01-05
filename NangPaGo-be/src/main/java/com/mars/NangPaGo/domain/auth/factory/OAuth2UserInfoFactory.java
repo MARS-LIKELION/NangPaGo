@@ -1,12 +1,12 @@
-package com.mars.NangPaGo.domain.user.factory;
+package com.mars.NangPaGo.domain.auth.factory;
 
-import static com.mars.NangPaGo.domain.user.enums.Provider.*;
+import static com.mars.NangPaGo.domain.auth.enums.Provider.*;
 
-import com.mars.NangPaGo.domain.user.enums.Provider;
-import com.mars.NangPaGo.domain.user.factory.userinfo.GoogleUserInfo;
-import com.mars.NangPaGo.domain.user.factory.userinfo.KakaoUserInfo;
-import com.mars.NangPaGo.domain.user.factory.userinfo.NaverUserInfo;
-import com.mars.NangPaGo.domain.user.factory.userinfo.OAuth2UserInfo;
+import com.mars.NangPaGo.domain.auth.enums.Provider;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.GoogleUserInfo;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.KakaoUserInfo;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.NaverUserInfo;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.OAuth2UserInfo;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OAuth2UserInfoFactory {
+
+    private OAuth2UserInfoFactory() { }
 
     private static final Map<Provider, Function<Map<String, Object>, OAuth2UserInfo>> USER_INFO_CREATORS =
         Map.of(

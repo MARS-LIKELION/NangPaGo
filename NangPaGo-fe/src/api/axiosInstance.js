@@ -5,6 +5,24 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+// 요청 인터셉터
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('access'))
+      ?.split('=')[1];
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // 응답 인터셉터: 토큰 만료 시 쿠키를 사용하여 토큰 갱신
 axiosInstance.interceptors.response.use((response) => {
   if (response.data?.message === '인증되지 않은 상태') {

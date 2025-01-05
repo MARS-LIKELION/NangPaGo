@@ -1,4 +1,4 @@
-package com.mars.NangPaGo.domain.user.vo;
+package com.mars.NangPaGo.domain.auth.vo;
 
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import lombok.AllArgsConstructor;

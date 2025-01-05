@@ -1,12 +1,12 @@
-package com.mars.NangPaGo.domain.user.service;
+package com.mars.NangPaGo.domain.auth.service;
 
 import com.mars.NangPaGo.domain.user.dto.UserRequestDto;
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.entity.User;
-import com.mars.NangPaGo.domain.user.factory.OAuth2UserInfoFactory;
-import com.mars.NangPaGo.domain.user.factory.userinfo.OAuth2UserInfo;
+import com.mars.NangPaGo.domain.auth.factory.OAuth2UserInfoFactory;
+import com.mars.NangPaGo.domain.auth.factory.userinfo.OAuth2UserInfo;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
-import com.mars.NangPaGo.domain.user.vo.CustomOAuth2User;
+import com.mars.NangPaGo.domain.auth.vo.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
