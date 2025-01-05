@@ -2,7 +2,7 @@ import RecipeCard from './RecipeCard';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../api/axiosInstance.js';
 
-function RecipeListContent({ activeTab, images, searchTerm }) {
+function RecipeListContent({ activeTab }) {
   const [recipes, setRecipes] = useState([]);
   const pageNo = 1;
   const pageSize = 10;
