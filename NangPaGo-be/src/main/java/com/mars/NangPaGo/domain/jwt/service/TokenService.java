@@ -40,6 +40,7 @@ public class TokenService {
         response.addCookie(createCookie("access", newAccessToken, jwtUtil.getAccessTokenExpireMillis()));
     }
 
+    @Transactional
     public void renewRefreshToken(String email, String refreshToken) {
         LocalDateTime expiration = LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000);
         refreshTokenRepository.deleteByEmail(email);

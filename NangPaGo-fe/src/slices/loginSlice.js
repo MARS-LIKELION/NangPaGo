@@ -5,15 +5,21 @@ import axiosInstance from '../api/axiosInstance';
 const hasAccessToken = () => {
   return document.cookie
     .split('; ')
-    .some(row => row.startsWith('access='));
+    .some(row => row.startsWith('access'));
+};
+
+const hasRefreshToken = () => {
+  return document.cookie
+    .split('; ')
+    .some(row => row.startsWith('refresh'));
 };
 
 export const fetchUserStatus = createAsyncThunk(
   'login/fetchUserStatus',
   async (_, { rejectWithValue }) => {
     // access 토큰이 없으면 API 호출하지 않고 바로 종료
-    if (!hasAccessToken()) {
-      return rejectWithValue('No access token found');
+    if (!hasAccessToken() && !hasRefreshToken()) {
+      return rejectWithValue('No tokens found');
     }
     
     try {

@@ -51,7 +51,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         tokenService.renewRefreshToken(email, refresh);
 
         response.addCookie(createCookie("access", access, jwtUtil.getAccessTokenExpireMillis(), false));
-        response.addCookie(createCookie("refresh", refresh, jwtUtil.getRefreshTokenExpireMillis(), true));
+        response.addCookie(createCookie("refresh", refresh, jwtUtil.getRefreshTokenExpireMillis(), false));
         response.sendRedirect(clientHost);
     }
 

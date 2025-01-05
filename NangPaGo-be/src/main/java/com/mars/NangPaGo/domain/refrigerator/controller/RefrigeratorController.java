@@ -24,7 +24,8 @@ public class RefrigeratorController {
 
     @GetMapping
     public ResponseDto<List<RefrigeratorResponseDto>> getRefrigerator() {
-        return ResponseDto.of(refrigeratorService.findRefrigerator(), "내 냉장고를 성공적으로 조회했습니다.");
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(refrigeratorService.findRefrigerator(email), "");
     }
 
     @PostMapping
