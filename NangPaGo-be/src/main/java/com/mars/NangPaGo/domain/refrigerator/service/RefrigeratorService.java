@@ -2,6 +2,7 @@ package com.mars.NangPaGo.domain.refrigerator.service;
 
 import com.mars.NangPaGo.common.exception.NPGException;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
+import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
 import com.mars.NangPaGo.domain.ingredient.entity.Ingredient;
 import com.mars.NangPaGo.domain.ingredient.repository.IngredientRepository;
 import com.mars.NangPaGo.domain.refrigerator.dto.RefrigeratorResponseDto;
@@ -24,7 +25,8 @@ public class RefrigeratorService {
     private final UserRepository userRepository;
     private final IngredientRepository ingredientRepository;
 
-    public List<RefrigeratorResponseDto> findRefrigerator(String email) {
+    public List<RefrigeratorResponseDto> findRefrigerator() {
+        String email = AuthenticationHolder.getCurrentUserEmail();
         return refrigeratorRepository.findByUserEmail(email)
                 .stream().map(RefrigeratorResponseDto::from).toList();
     }

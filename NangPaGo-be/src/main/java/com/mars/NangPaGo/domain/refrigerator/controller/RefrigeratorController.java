@@ -3,6 +3,7 @@ package com.mars.NangPaGo.domain.refrigerator.controller;
 import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.common.exception.NPGException;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
+import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
 import com.mars.NangPaGo.domain.refrigerator.dto.RefrigeratorResponseDto;
 import com.mars.NangPaGo.domain.refrigerator.service.RefrigeratorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,12 +23,8 @@ public class RefrigeratorController {
     private final RefrigeratorService refrigeratorService;
 
     @GetMapping
-    public ResponseDto<List<RefrigeratorResponseDto>> getRefrigerator(Principal principal) {
-        String email = Optional.ofNullable(principal)
-            .map(Principal::getName)
-            .orElseThrow(() -> new NPGException(NPGExceptionType.UNAUTHORIZED));
-
-        return ResponseDto.of(refrigeratorService.findRefrigerator(email), "내 냉장고를 성공적으로 조회했습니다.");
+    public ResponseDto<List<RefrigeratorResponseDto>> getRefrigerator() {
+        return ResponseDto.of(refrigeratorService.findRefrigerator(), "내 냉장고를 성공적으로 조회했습니다.");
     }
 
     @PostMapping

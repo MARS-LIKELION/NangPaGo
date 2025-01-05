@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.jwt.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import javax.crypto.spec.SecretKeySpec;
@@ -65,13 +66,17 @@ public class JwtUtil {
     }
 
     public Boolean isExpired(String token) {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .getExpiration()
-            .before(new Date());
+        try {
+            Date expiration = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getExpiration();
+            return expiration.before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public String createJwt(String category, String email, String role, Long expiredMs) {

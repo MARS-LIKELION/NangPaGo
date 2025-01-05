@@ -1,5 +1,9 @@
 package com.mars.NangPaGo.domain.auth.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mars.NangPaGo.common.dto.ResponseDto;
+import com.mars.NangPaGo.common.exception.NPGException;
+import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,7 +31,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = extractJwtFromRequest(request);
 
-        if (token != null && !jwtUtil.isExpired(token)) {
+        if (token != null) {
+            if (Boolean.TRUE.equals(jwtUtil.isExpired(token))) {
+                processExpiredToken(response);
+                return;  // 필터 체인 진행 중단
+            }
+
             Authentication authentication = jwtUtil.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -41,5 +50,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    // 설명: Filter 에서 발생하는 예외는 GlobalExceptionHandler 를 거치지 않는다.
+    private void processExpiredToken(HttpServletResponse response) throws IOException {
+        NPGException exception = NPGExceptionType.UNAUTHORIZED_TOKEN_EXPIRED.of();
+        response.setStatus(exception.getNpgExceptionType().getHttpStatus().value());
+        response.setContentType("application/json;charset=UTF-8");
+
+        ResponseDto<String> responseDto = ResponseDto.of("", exception.getMessage());
+        String jsonResponse = new ObjectMapper().writeValueAsString(responseDto);
+
+        response.getWriter().write(jsonResponse);
     }
 }

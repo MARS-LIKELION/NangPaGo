@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.user.service;
 
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
+import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +18,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserResponseDto getCurrentUser(Authentication authentication) {
-        return UserResponseDto.from(userRepository.findByEmail(extractEmail(authentication))
-            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of));
-    }
+    public UserResponseDto getCurrentUser() {
+        String email = AuthenticationHolder.getCurrentUserEmail();
 
-    private String extractEmail(Authentication authentication) {
-        return Optional.ofNullable(authentication)
-            .map(Authentication::getPrincipal)
-            .filter(String.class::isInstance)
-            .map(String.class::cast)
-            .orElseThrow(() -> NPGExceptionType.UNAUTHORIZED.of("알 수 없는 인증 객체입니다."));
+        return UserResponseDto.from(userRepository.findByEmail(email)
+            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of));
     }
 }

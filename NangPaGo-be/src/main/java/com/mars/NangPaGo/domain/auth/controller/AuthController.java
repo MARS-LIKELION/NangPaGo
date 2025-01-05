@@ -19,16 +19,8 @@ public class AuthController {
     private final UserService userService;
 
     @GetMapping("/status")
-    public ResponseDto<Object> currentUser(Authentication authentication) {
-        if (isNeedLogin(authentication)) {
-            return ResponseDto.of("", "인증되지 않은 상태");
-        }
-
-        UserResponseDto currentUser = userService.getCurrentUser(authentication);
+    public ResponseDto<Object> currentUser() {
+        UserResponseDto currentUser = userService.getCurrentUser();
         return ResponseDto.of(currentUser);
-    }
-
-    private boolean isNeedLogin(Authentication authentication) {
-        return authentication == null || !authentication.isAuthenticated();
     }
 }
