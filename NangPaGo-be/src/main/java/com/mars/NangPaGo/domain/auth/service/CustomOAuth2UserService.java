@@ -33,9 +33,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User findOrRegisterUser(OAuth2UserInfo userInfo) {
         return userRepository.findByEmail(userInfo.getEmail())
-            .orElseGet(() -> {
-                return registerUser(userInfo);
-            });
+            .orElseGet(() -> registerUser(userInfo));
     }
 
     private User registerUser(OAuth2UserInfo userInfo) {

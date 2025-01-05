@@ -1,11 +1,14 @@
 package com.mars.NangPaGo.domain.jwt.service;
 
+import com.mars.NangPaGo.domain.jwt.dto.RefreshTokenDto;
 import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,12 @@ public class TokenService {
         String newAccessToken = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
 
         response.addCookie(createCookie("access", newAccessToken, jwtUtil.getAccessTokenExpireMillis()));
+    }
+
+    public void renewRefreshToken(String email, String refreshToken) {
+        LocalDateTime expiration = LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000);
+        refreshTokenRepository.deleteByEmail(email);
+        refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken, expiration).toEntity());
     }
 
     private String getRefreshTokenFromRequest(HttpServletRequest request) {

@@ -2,6 +2,7 @@ package com.mars.NangPaGo.domain.auth.handler;
 
 import com.mars.NangPaGo.domain.jwt.dto.RefreshTokenDto;
 import com.mars.NangPaGo.domain.jwt.repository.RefreshTokenRepository;
+import com.mars.NangPaGo.domain.jwt.service.TokenService;
 import com.mars.NangPaGo.domain.jwt.util.JwtUtil;
 import com.mars.NangPaGo.domain.auth.vo.CustomOAuth2User;
 import jakarta.servlet.http.Cookie;
@@ -9,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Collection;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +31,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private String clientHost;
 
     private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenService tokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -45,25 +48,19 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String access = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
         String refresh = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
 
-        saveRefreshToken(email, refresh);
+        tokenService.renewRefreshToken(email, refresh);
 
-        response.addCookie(createCookie("access", access, jwtUtil.getAccessTokenExpireMillis()));
-        response.addCookie(createCookie("refresh", refresh, jwtUtil.getRefreshTokenExpireMillis()));
+        response.addCookie(createCookie("access", access, jwtUtil.getAccessTokenExpireMillis(), false));
+        response.addCookie(createCookie("refresh", refresh, jwtUtil.getRefreshTokenExpireMillis(), true));
         response.sendRedirect(clientHost);
     }
 
-    private void saveRefreshToken(String email, String refreshToken) {
-        LocalDateTime expiration = LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000);
-        refreshTokenRepository.deleteByRefreshToken(email);
-        refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken, expiration).toEntity());
-    }
-
-    private Cookie createCookie(String key, String value, long expireMillis) {
+    private Cookie createCookie(String key, String value, long expireMillis, boolean httpOnly) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge((int) (expireMillis / 1000));
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(false);
+        cookie.setHttpOnly(httpOnly);
         return cookie;
     }
 }

@@ -46,8 +46,8 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomLogoutService customLogoutService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final CustomLogoutService customLogoutService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
