@@ -18,7 +18,6 @@ import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,48 +30,43 @@ public class RecipeCommentService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public PageDto<RecipeCommentResponseDto> PagedCommentsByRecipe(Long recipeId, int pageNo, int pageSize) {
+    public PageDto<RecipeCommentResponseDto> pagedCommentsByRecipe(Long recipeId,
+                                                                   String email,
+                                                                   int pageNo,
+                                                                   int pageSize) {
         validateRecipe(recipeId);
         return PageDto.of(
             recipeCommentRepository.findByRecipeId(recipeId, createPageRequest(pageNo, pageSize))
-                .map(comment -> RecipeCommentResponseDto.from(comment, getAuthenticatedEmail()))
+                .map(comment -> RecipeCommentResponseDto.from(comment, email))
         );
     }
 
     @Transactional
-    public RecipeCommentResponseDto create(RecipeCommentRequestDto requestDto, Long recipeId) {
-        User user = findUserByEmail(getAuthenticatedEmail());
+    public RecipeCommentResponseDto create(RecipeCommentRequestDto requestDto, String email, Long recipeId) {
+        User user = findUserByEmail(email);
         return RecipeCommentResponseDto.from(recipeCommentRepository.save(
             RecipeComment.create(validateRecipe(recipeId), user, requestDto.content())), user.getEmail());
     }
 
     @Transactional
-    public RecipeCommentResponseDto update(Long commentId, RecipeCommentRequestDto requestDto) {
+    public RecipeCommentResponseDto update(Long commentId, String email, RecipeCommentRequestDto requestDto) {
         RecipeComment comment = validateComment(commentId);
-        validateOwnership(comment);
+        validateOwnership(comment, email);
         comment.updateText(requestDto.content());
-        return RecipeCommentResponseDto.from(comment, getAuthenticatedEmail());
+        return RecipeCommentResponseDto.from(comment, email);
     }
 
     @Transactional
-    public void delete(Long commentId) {
+    public void delete(Long commentId, String email) {
         RecipeComment comment = validateComment(commentId);
-        validateOwnership(comment);
+        validateOwnership(comment, email);
         recipeCommentRepository.delete(comment);
     }
 
-    private void validateOwnership(RecipeComment comment) {
-        if (!comment.getUser().getEmail().equals(getAuthenticatedEmail())) {
+    private void validateOwnership(RecipeComment comment, String email) {
+        if (!comment.getUser().getEmail().equals(email)) {
             throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("댓글을 수정/삭제할 권한이 없습니다.");
         }
-    }
-
-    private String getAuthenticatedEmail() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("인증 정보가 존재하지 않습니다.");
-        }
-        return authentication.getName();
     }
 
     private Recipe validateRecipe(Long recipeId) {

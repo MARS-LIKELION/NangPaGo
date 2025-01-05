@@ -2,6 +2,8 @@ package com.mars.NangPaGo.domain.comment.recipe.controller;
 
 import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.dto.ResponseDto;
+import com.mars.NangPaGo.domain.auth.aop.AuthenticatedUser;
+import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.service.RecipeCommentService;
@@ -22,29 +24,41 @@ public class RecipeCommentController {
         @PathVariable("recipeId") Long recipeId,
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "5") int pageSize) {
-        return ResponseDto.of(recipeCommentService.PagedCommentsByRecipe(recipeId, pageNo, pageSize));
+
+        String email = AuthenticationHolder.getCurrentUserEmail();
+
+        return ResponseDto.of(recipeCommentService.pagedCommentsByRecipe(recipeId, email, pageNo, pageSize));
     }
 
+    @AuthenticatedUser
     @PostMapping
     public ResponseDto<RecipeCommentResponseDto> create(
         @RequestBody RecipeCommentRequestDto requestDto,
         @PathVariable("recipeId") Long recipeId) {
-        return ResponseDto.of(recipeCommentService.create(requestDto, recipeId));
+
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(recipeCommentService.create(requestDto, email, recipeId));
     }
 
+    @AuthenticatedUser
     @PutMapping("/{commentId}")
     public ResponseDto<RecipeCommentResponseDto> update(
         @RequestBody RecipeCommentRequestDto requestDto,
         @PathVariable("commentId") Long commentId,
         @PathVariable String recipeId) {
-        return ResponseDto.of(recipeCommentService.update(commentId, requestDto));
+
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(recipeCommentService.update(commentId, email, requestDto));
     }
 
+    @AuthenticatedUser
     @DeleteMapping("/{commentId}")
     public ResponseDto<Void> delete(
         @PathVariable("commentId") Long commentId,
         @PathVariable String recipeId) {
-        recipeCommentService.delete(commentId);
+
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        recipeCommentService.delete(commentId, email);
         return ResponseDto.of(null);
     }
 }
