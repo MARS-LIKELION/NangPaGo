@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.mars.NangPaGo.common.exception.NPGException;
@@ -70,7 +72,29 @@ class RecipeFavoriteServiceTest {
 
         SecurityContextHolder.setContext(securityContext);
     }
-    
+
+    @DisplayName("유저가 레시피 즐겨찾기를 클릭하여 즐겨찾기 추가")
+    @Test
+    void RecipeFavoriteAdd() {
+        // given
+        setUp();
+
+        // mocking
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        when(recipeFavoriteRepository.findByUserAndRecipe(user, recipe)).thenReturn(Optional.empty());
+
+        // when
+        RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipeId);
+
+        // then
+        verify(recipeFavoriteRepository, times(1)).findByUserAndRecipe(user, recipe);
+
+        assertThat(favoriteResponseDto)
+            .extracting("favorited")
+            .isEqualTo(true);
+    }
+
     @DisplayName("이미 즐겨찾기를 한 상태에서 유저가 레시피 즐겨찾기를 클릭하여 즐겨찾기 취소")
     @Test
     void RecipeFavoriteCancel() {
@@ -87,6 +111,8 @@ class RecipeFavoriteServiceTest {
         RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipeId);
 
         // then
+        verify(recipeFavoriteRepository, times(1)).findByUserAndRecipe(user, recipe);
+
         assertThat(favoriteResponseDto)
             .extracting("favorited")
             .isEqualTo(false);
@@ -107,6 +133,39 @@ class RecipeFavoriteServiceTest {
         boolean favorite = recipeFavoriteService.isFavorite(recipeId);
         
         // then
+        verify(recipeFavoriteRepository, times(1)).findByEmailAndRecipeId(email, recipeId);
+
         assertThat(favorite).isTrue();
+    }
+
+    @DisplayName("유저가 레시피에 즐겨찾기를 클릭할때 SecurityContext의 email과 DB의 유저 email이 일치하지 않을 경우 예외처리")
+    @Test
+    void NotCorrectUserException() {
+        // given
+        setUp();
+
+        // mocking
+        when(userRepository.findByEmail(anyString())).thenThrow(new NPGException(NOT_FOUND_USER));
+
+        // when, then
+        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipeId))
+            .isInstanceOf(NPGException.class)
+            .hasMessage("사용자를 찾을 수 없습니다.");
+    }
+
+    @DisplayName("유저가 레시피에 즐겨찾기를 클릭할때 레시피 ID를 못받는 경우 예외처리")
+    @Test
+    void NotFoundRecipeException() {
+        // given
+        setUp();
+
+        // mocking
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(recipeRepository.findById(anyLong())).thenThrow(new NPGException(NOT_FOUND_RECIPE));
+
+        // when, then
+        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipeId))
+            .isInstanceOf(NPGException.class)
+            .hasMessage("레시피를 찾을 수 없습니다.");
     }
 }
