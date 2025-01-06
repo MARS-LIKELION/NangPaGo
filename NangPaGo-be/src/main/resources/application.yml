@@ -137,3 +137,29 @@ logging:
       max-history: 7
   level:
     root: warn
+
+---
+
+# Test 코드 실행용 데이터베이스로 연결
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${TEST_DB_HOST}:${TEST_DB_PORT}/${TEST_DB_NAME}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+
+  # Table 자동 생성 방지
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+        highlight_sql: true
+        format_sql: true
+        use_sql_comments: true

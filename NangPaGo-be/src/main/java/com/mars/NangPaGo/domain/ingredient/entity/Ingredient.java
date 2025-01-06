@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,6 +26,7 @@ public class Ingredient {
     @NotNull
     private String name;
 
+    @Builder
     private Ingredient(Long id, Long ingredientId, String name) {
         this.id = id;
         this.ingredientId = ingredientId;

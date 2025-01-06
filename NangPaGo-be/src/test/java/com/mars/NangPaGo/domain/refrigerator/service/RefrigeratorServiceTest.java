@@ -7,61 +7,73 @@ import com.mars.NangPaGo.domain.refrigerator.entity.Refrigerator;
 import com.mars.NangPaGo.domain.refrigerator.repository.RefrigeratorRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
+import com.mars.NangPaGo.support.IntegrationTestSupport;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
-@Transactional
-@ExtendWith(MockitoExtension.class)
-class RefrigeratorServiceTest {
+class RefrigeratorServiceTest extends IntegrationTestSupport {
 
-    @Mock
+    @Autowired
     private RefrigeratorRepository refrigeratorRepository;
 
-    @Mock
+    @Autowired
     private UserRepository userRepository;
 
-    @Mock
+    @Autowired
     private IngredientRepository ingredientRepository;
 
-    @InjectMocks
+    @Autowired
     private RefrigeratorService refrigeratorService;
+
+    @AfterEach
+    void tearDown() {
+        refrigeratorRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+        ingredientRepository.deleteAllInBatch();
+    }
+
+    private User createUser(String email) {
+        return User.builder()
+            .email(email)
+            .build();
+    }
+
+    private Ingredient createIngredient(Long ingredientId, String name) {
+        return Ingredient.builder()
+            .ingredientId(ingredientId)
+            .name(name)
+            .build();
+    }
+
+    private Refrigerator createRefrigerator(User user, Ingredient ingredient) {
+        return Refrigerator.builder()
+            .user(user)
+            .ingredient(ingredient)
+            .build();
+    }
 
     @DisplayName("사용자의 등록된 냉장고 속 재료 조회")
     @Test
     void findRefrigerator() {
         // given
-        String email = "dummy@nangpago.com";
-        User user = User.builder()
-            .email(email)
-            .build();
+        String email = "email@example.com";
+        User user = createUser(email);
 
-        Ingredient ingredient1 = Ingredient.builder()
-            .name("당근")
-            .build();
+        Ingredient ingredient1 = createIngredient(1L, "당근");
+        Ingredient ingredient2 = createIngredient(2L, "양파");
 
-        Ingredient ingredient2 = Ingredient.builder()
-            .name("양파")
-            .build();
+        Refrigerator refrigerator1 = createRefrigerator(user, ingredient1);
+        Refrigerator refrigerator2 = createRefrigerator(user, ingredient2);
 
-        List<Refrigerator> expectedResponse = Arrays.asList(
-            Refrigerator.of(user, ingredient1),
-            Refrigerator.of(user, ingredient2)
-        );
-
-        // Mocking
-        when(refrigeratorRepository.findByUserEmail(anyString()))
-            .thenReturn(expectedResponse);
+        userRepository.save(user);
+        ingredientRepository.saveAll(List.of(ingredient1, ingredient2));
+        refrigeratorRepository.saveAll(List.of(refrigerator1, refrigerator2));
 
         // when
         List<RefrigeratorResponseDto> result = refrigeratorService.findRefrigerator(email);
@@ -70,6 +82,6 @@ class RefrigeratorServiceTest {
         assertThat(result).hasSize(2)
             .extracting("ingredientName")
             .containsExactlyInAnyOrder("당근", "양파");
-        verify(refrigeratorRepository, times(1)).findByUserEmail(email);
+
     }
 }
