@@ -61,14 +61,15 @@ public class UserService {
 
     @Transactional
     public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
-
-        if (requestDto.DuplicateCheck()) {
-            throw NPGExceptionType.BAD_REQUSET_CHECK_NICKNAME.of();
-        }
-
+        duplicateCheck(requestDto);
         return UserInfoResponseDto.from(updateUser(requestDto, email));
     }
 
+    private void duplicateCheck(UserInfoRequestDto requestDto){
+        if (!requestDto.DuplicateCheck()) {
+            throw NPGExceptionType.BAD_REQUSET_CHECK_NICKNAME.of();
+        }
+    }
     private User updateUser(UserInfoRequestDto requestDto, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
