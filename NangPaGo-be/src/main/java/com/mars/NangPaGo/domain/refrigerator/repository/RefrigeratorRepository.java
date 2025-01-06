@@ -4,6 +4,7 @@ import com.mars.NangPaGo.domain.refrigerator.entity.Refrigerator;
 import com.mars.NangPaGo.domain.user.entity.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,7 +15,9 @@ public interface RefrigeratorRepository extends JpaRepository<Refrigerator, Long
         "WHERE r.user.email = :email")
     List<Refrigerator> findByUserEmail(@Param("email") String email);
 
-    void deleteByUser_EmailAndIngredient_Name(@Param("email") String email, @Param("name") String name);
+    @Modifying
+    @Query("DELETE FROM Refrigerator r WHERE r.user.email = :email AND r.ingredient.name = :ingredientName")
+    void deleteByUserEmailAndIngredientName(@Param("email") String email, @Param("ingredientName") String ingredientName);
 
     int countByUser(User user);
 }

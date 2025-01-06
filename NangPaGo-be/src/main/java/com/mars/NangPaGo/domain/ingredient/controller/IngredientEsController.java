@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequiredArgsConstructor
 @Tag(name = "재료사전 API", description = "재료사전 관련 API")
+@RequiredArgsConstructor
 @RequestMapping("/api/ingredient")
 @RestController
 public class IngredientEsController {
+
     private final IngredientEsSynchronizer ingredientEsSynchronizer;
     private final IngredientEsService ingredientEsService;
 

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Tag(name = "내 냉장고 API", description = "내 냉장고 관련 API")
+@RequiredArgsConstructor
 @RequestMapping("/api/refrigerator")
 @RestController
 public class RefrigeratorController {
@@ -22,25 +22,20 @@ public class RefrigeratorController {
     @AuthenticatedUser
     @GetMapping
     public ResponseDto<List<RefrigeratorResponseDto>> getRefrigerator() {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(refrigeratorService.findRefrigerator(email), "");
+        return ResponseDto.of(refrigeratorService.findRefrigerator(AuthenticationHolder.getCurrentUserEmail()));
     }
 
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<RefrigeratorResponseDto> addIngredient(@RequestParam(name = "ingredientName") String ingredientName) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        refrigeratorService.addIngredient(email, ingredientName);
-
+        refrigeratorService.addIngredient(AuthenticationHolder.getCurrentUserEmail(), ingredientName);
         return ResponseDto.of(RefrigeratorResponseDto.from(ingredientName));
     }
 
     @AuthenticatedUser
     @DeleteMapping
     public ResponseDto<RefrigeratorResponseDto> deleteMyIngredient(@RequestParam(name = "ingredientName") String ingredientName) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        refrigeratorService.deleteIngredient(email, ingredientName);
-
+        refrigeratorService.deleteIngredient(AuthenticationHolder.getCurrentUserEmail(), ingredientName);
         return ResponseDto.of(RefrigeratorResponseDto.from(ingredientName));
     }
 }

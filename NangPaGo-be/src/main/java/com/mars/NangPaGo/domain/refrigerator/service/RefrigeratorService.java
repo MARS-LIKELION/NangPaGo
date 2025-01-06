@@ -16,10 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class RefrigeratorService {
+
     private final RefrigeratorRepository refrigeratorRepository;
     private final UserRepository userRepository;
     private final IngredientRepository ingredientRepository;
@@ -30,16 +31,11 @@ public class RefrigeratorService {
     }
 
     @Transactional
-    public void deleteIngredient(String email, String ingredientName) {
-        refrigeratorRepository.deleteByUser_EmailAndIngredient_Name(ingredientName, email);
-    }
-
-    @Transactional
     public void addIngredient(String email, String ingredientName) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NPGException(NPGExceptionType.UNAUTHORIZED));
+            .orElseThrow(() -> new NPGException(NPGExceptionType.UNAUTHORIZED));
         Ingredient ingredient = ingredientRepository.findByName(ingredientName)
-                .orElseThrow(() -> new NPGException(NPGExceptionType.NOT_FOUND_INGREDIENT));
+            .orElseThrow(() -> new NPGException(NPGExceptionType.NOT_FOUND_INGREDIENT));
 
         try {
             refrigeratorRepository.save(Refrigerator.of(user, ingredient));
@@ -47,4 +43,10 @@ public class RefrigeratorService {
             throw new NPGException(NPGExceptionType.DUPLICATE_INGREDIENT, "이미 냉장고에 동일한 재료가 있습니다.");
         }
     }
+
+    @Transactional
+    public void deleteIngredient(String email, String ingredientName) {
+        refrigeratorRepository.deleteByUserEmailAndIngredientName(email, ingredientName);
+    }
+
 }
