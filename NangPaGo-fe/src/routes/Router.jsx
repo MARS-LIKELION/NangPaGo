@@ -3,6 +3,7 @@ import RecipeList from '../pages/recipe/RecipeList.jsx';
 import Login from '../pages/login/Login.jsx';
 import Search from '../pages/search/Search.jsx';
 import RecipeDetail from '../pages/recipe/RecipeDetail';
+import UserInfoModify from '../components/mypage/UserInfoModify';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: '/recipe/:id',
     element: <RecipeDetail />,
+  },
+  {
+    path: '/mypage/modify',
+    element: <UserInfoModify />,
   },
 ]);
 
