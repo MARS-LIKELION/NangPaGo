@@ -67,9 +67,9 @@ const Refrigerator = () => {
       <div className="w-full px-4 mt-auto mb-4">
         <button
           className="bg-[var(--primary-color)] text-white w-full py-3 rounded-lg text-lg font-medium"
-          onClick={() => console.log('냉파고 레시피 찾기 클릭')}
+          onClick={() => console.log('레시피 찾기 클릭')}
         >
-          냉파고 레시피 찾기
+          레시피 찾기
         </button>
       </div>
     </div>
