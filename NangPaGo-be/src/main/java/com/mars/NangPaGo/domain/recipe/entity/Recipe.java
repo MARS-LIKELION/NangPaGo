@@ -51,4 +51,9 @@ public class Recipe extends BaseEntity {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeFavorite> favorites;
+
+    @Builder
+    private Recipe(Long id) {
+        this.id = id;
+    }
 }
