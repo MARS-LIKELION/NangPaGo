@@ -1,13 +1,21 @@
 package com.mars.NangPaGo.domain.user.entity;
 
+import com.mars.NangPaGo.auth.enums.OAuth2Provider;
 import com.mars.NangPaGo.common.jpa.BaseEntity;
 import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
 import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
+import com.mars.NangPaGo.domain.user.dto.UserInfoRequestDto;
 import com.mars.NangPaGo.domain.user.enums.Gender;
-import com.mars.NangPaGo.auth.enums.OAuth2Provider;
-import jakarta.persistence.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,4 +56,10 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeFavorite> favorites;
+
+    public User updateUser(UserInfoRequestDto requestDto) {
+        this.name = requestDto.name();
+        this.nickname = requestDto.nickName();
+        return this;
+    }
 }

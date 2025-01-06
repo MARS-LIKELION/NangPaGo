@@ -5,12 +5,18 @@ import com.mars.NangPaGo.common.aop.auth.AuthenticatedUser;
 import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
+import com.mars.NangPaGo.domain.user.dto.UserInfoRequestDto;
+import com.mars.NangPaGo.domain.user.dto.UserInfoResponseDto;
 import com.mars.NangPaGo.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -29,5 +35,24 @@ public class UserController {
         MyPageDto myPageDto = userService.getMyPage(email);
 
         return ResponseDto.of(myPageDto);
+    }
+
+    @AuthenticatedUser
+    @GetMapping("/profile")
+    public ResponseDto<UserInfoResponseDto> findUserInfo() {
+        return ResponseDto.of(userService.getUserInfo());
+    }
+
+    @AuthenticatedUser
+    @PostMapping("/profile/check")
+    public ResponseDto<Boolean> checkNickname(@RequestParam String nickname) {
+        return ResponseDto.of(userService.checkNickname(nickname));
+    }
+
+    @AuthenticatedUser
+    @PutMapping("/profile")
+    public ResponseDto<UserInfoResponseDto> updateUserInfo(@RequestBody UserInfoRequestDto requestDto,
+        @RequestParam(name = "checkNickname") boolean check) {
+        return ResponseDto.of(userService.updateUserInfo(requestDto, check));
     }
 }
