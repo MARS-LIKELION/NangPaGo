@@ -40,7 +40,8 @@ public class UserController {
     @AuthenticatedUser
     @GetMapping("/profile")
     public ResponseDto<UserInfoResponseDto> findUserInfo() {
-        return ResponseDto.of(userService.getUserInfo());
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(userService.getUserInfo(email));
     }
 
     @AuthenticatedUser
@@ -53,6 +54,7 @@ public class UserController {
     @PutMapping("/profile")
     public ResponseDto<UserInfoResponseDto> updateUserInfo(@RequestBody UserInfoRequestDto requestDto,
         @RequestParam(name = "checkNickname") boolean check) {
-        return ResponseDto.of(userService.updateUserInfo(requestDto, check));
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(userService.updateUserInfo(requestDto, email, check));
     }
 }

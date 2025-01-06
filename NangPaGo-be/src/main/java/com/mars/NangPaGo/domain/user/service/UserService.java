@@ -50,8 +50,7 @@ public class UserService {
         );
     }
 
-    public UserInfoResponseDto getUserInfo() {
-        String email = AuthenticationHolder.getCurrentUserEmail();
+    public UserInfoResponseDto getUserInfo(String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
         return UserInfoResponseDto.from(user);
@@ -62,14 +61,14 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, boolean check) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
+    public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
 
-        if (!check) {
+        if (requestDto.DuplicateCheck()) {
             throw NPGExceptionType.BAD_REQUSET_CHECK_NICKNAME.of();
         }
+
         user.updateUser(requestDto);
         return UserInfoResponseDto.from(user);
     }
