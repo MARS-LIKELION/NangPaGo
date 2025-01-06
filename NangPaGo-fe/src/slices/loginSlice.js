@@ -1,27 +1,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../api/axiosInstance';
 
-// access 토큰이 쿠키에 있는지 확인하는 함수
 const hasAccessToken = () => {
-  return document.cookie
-    .split('; ')
-    .some(row => row.startsWith('access'));
+  return document.cookie.split('; ').some((row) => row.startsWith('access'));
 };
 
 const hasRefreshToken = () => {
-  return document.cookie
-    .split('; ')
-    .some(row => row.startsWith('refresh'));
+  return document.cookie.split('; ').some((row) => row.startsWith('refresh'));
 };
 
 export const fetchUserStatus = createAsyncThunk(
   'login/fetchUserStatus',
   async (_, { rejectWithValue }) => {
-    // access 토큰이 없으면 API 호출하지 않고 바로 종료
     if (!hasAccessToken() && !hasRefreshToken()) {
       return rejectWithValue('No tokens found');
     }
-    
     try {
       const response = await axiosInstance.get('/api/auth/status');
       const { data } = response.data;

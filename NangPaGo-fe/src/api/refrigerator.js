@@ -32,7 +32,7 @@ export async function deleteIngredient(ingredientName) {
       params: { ingredientName },
     });
     console.log(response.data.message);
-    return response.data.message; // 삭제 성공 메시지 반환
+    return response.data.message;
   } catch (error) {
     console.error('재료 삭제 실패:', error);
     throw error;
