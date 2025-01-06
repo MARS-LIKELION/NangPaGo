@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     element: <RecipeDetail />,
   },
   {
-    path: '/mypage/modify',
+    path: '/my-page/modify',
     element: <UserInfoModify />,
   },
 ]);
