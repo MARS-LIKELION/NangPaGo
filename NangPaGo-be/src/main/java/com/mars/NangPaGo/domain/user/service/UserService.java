@@ -62,6 +62,11 @@ public class UserService {
     @Transactional
     public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
         duplicateCheck(requestDto);
+
+        if (!usableNickname(requestDto.nickName())) {
+            throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of();
+        }
+        
         return UserInfoResponseDto.from(updateUser(requestDto, email));
     }
 
