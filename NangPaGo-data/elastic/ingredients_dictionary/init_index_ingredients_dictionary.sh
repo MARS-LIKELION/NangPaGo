@@ -27,16 +27,23 @@ curl -XPUT "${ELASTICSEARCH_URI}/ingredients_dictionary?include_type_name=true&p
         },
         "analyzer": {
           "my_ngram_analyzer": {
-            "tokenizer": "my_ngram_tokenizer"
+            "tokenizer": "my_ngram_tokenizer",
+            "filter": [
+              "lowercase"
+            ]
           },
           "suggest_search_analyzer": {
             "type": "custom",
-            "tokenizer": "jaso_search_tokenizer"
+            "tokenizer": "jaso_search_tokenizer",
+            "filter": [
+              "lowercase"
+            ]
           },
           "suggest_index_analyzer": {
             "type": "custom",
             "tokenizer": "jaso_index_tokenizer",
             "filter": [
+              "lowercase",
               "suggest_filter"
             ]
           }

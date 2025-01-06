@@ -25,6 +25,8 @@ public class IngredientEsSynchronizer {
     @Transactional
     public String insertIngredientFromMysql() {
         try {
+            ingredientEsRepository.deleteAll();
+
             List<Ingredient> ingredientList = ingredientRepository.findAll();
             List<IngredientEs> ingredientEsList = new ArrayList<>();
             for (Ingredient ingredient : ingredientList) {

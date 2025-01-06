@@ -27,7 +27,8 @@ public class IngredientEsController {
     }
 
     @GetMapping("/search")
-    public ResponseDto<List<IngredientEsResponseDto>> searchByPrefix(@RequestParam("keyword") String keyword) {
+    public ResponseDto<List<IngredientEsResponseDto>> searchIngredient(
+        @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
         return ResponseDto.of(ingredientEsService.searchIngredients(keyword));
     }
 }
