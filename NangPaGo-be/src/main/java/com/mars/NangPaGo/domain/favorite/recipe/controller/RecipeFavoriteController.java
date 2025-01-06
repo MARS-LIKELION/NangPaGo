@@ -41,6 +41,6 @@ public class RecipeFavoriteController {
             .orElseThrow(() -> new NPGException(NPGExceptionType.UNAUTHORIZED, "사용자 인증 정보가 없습니다."));
 
         List<RecipeFavoriteListResponseDto> favoriteRecipes = recipeFavoriteService.getFavoriteRecipes(email);
-        return ResponseDto.of(favoriteRecipes, "즐겨찾기 레시피를 성공적으로 조회했습니다.");
+        return ResponseDto.of(favoriteRecipes);
     }
 }

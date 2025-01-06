@@ -30,9 +30,9 @@ public enum NPGExceptionType {
     NOT_FOUND(HttpStatus.NOT_FOUND, "데이터가 존재하지 않음"),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     NOT_FOUND_RECIPE(HttpStatus.NOT_FOUND, "레시피를 찾을 수 없습니다."),
+    NOT_FOUND_RECIPE_FAVORITE(HttpStatus.NOT_FOUND, "즐겨찾기한 레시피가 없습니다."),
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
     NOT_FOUND_INGREDIENT(HttpStatus.NOT_FOUND, "등록된 식재료 정보를 찾을 수 없습니다."),
-    NOT_FOUND_RECIPE_FAVORITE(HttpStatus.NOT_FOUND, "레시피 즐겨찾기 목록이 없습니다."),
 
     // Conflict(409)
     DUPLICATE_INGREDIENT(HttpStatus.CONFLICT, "이미 등록되어있는 정보입니다."),
