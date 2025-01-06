@@ -19,7 +19,7 @@ public class AuthenticationAspect {
     @Around("@annotation(AuthenticatedUser)")
     public Object validateAndGetUserEmail(ProceedingJoinPoint joinPoint) throws Throwable {
         String email = AuthenticationHolder.getCurrentUserEmail();
-        if (email == null) {
+        if (email == null || "anonymous_user".equals(email)) {
             throw NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of();
         }
 
