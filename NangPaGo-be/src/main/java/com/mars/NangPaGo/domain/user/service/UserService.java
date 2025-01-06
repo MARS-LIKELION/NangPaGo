@@ -57,8 +57,8 @@ public class UserService {
         return UserInfoResponseDto.from(user);
     }
 
-    public boolean checkNickname(String nickname) {
-        return !userRepository.existsByNickname(nickname) || nickname.length() > 1;
+    public boolean usableNickname(String nickname) {
+        return !userRepository.existsByNickname(nickname) && nickname.length() > 1;
     }
 
     @Transactional

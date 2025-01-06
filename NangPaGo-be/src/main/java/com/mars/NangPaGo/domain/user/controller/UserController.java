@@ -46,7 +46,7 @@ public class UserController {
     @AuthenticatedUser
     @GetMapping("/profile/check")
     public ResponseDto<Boolean> checkNickname(@RequestParam String nickname) {
-        return ResponseDto.of(userService.checkNickname(nickname));
+        return ResponseDto.of(userService.usableNickname(nickname));
     }
 
     @AuthenticatedUser
