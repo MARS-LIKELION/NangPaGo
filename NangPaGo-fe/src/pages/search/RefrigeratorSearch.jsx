@@ -2,8 +2,14 @@ import { useState } from 'react';
 import { BiSearch, BiArrowBack } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import parse from 'html-react-parser';
+import {
+  parseHighlightedName,
+  stripHtmlTags,
+} from '../../components/util/stringUtil.jsx';
 import { addIngredient } from '../../api/refrigerator';
+import SearchResult from '../../components/search/SearchResult';
+import NoResult from '../../components/search/NoResult';
+import EmptyState from '../../components/search/EmptyState';
 
 function RefrigeratorSearch() {
   const navigate = useNavigate();
@@ -15,7 +21,7 @@ function RefrigeratorSearch() {
   const handleChange = async (e) => {
     const newKeyword = e.target.value;
     setKeyword(newKeyword);
-    setExistingIngredientMessage(''); // Clear the message when keyword changes
+    setExistingIngredientMessage('');
 
     if (!newKeyword.trim()) {
       setResults([]);
@@ -34,28 +40,10 @@ function RefrigeratorSearch() {
     }
   };
 
-  const parseHighlightedName = (htmlString) => {
-    return parse(htmlString, {
-      replace: (domNode) => {
-        if (domNode.name === 'em') {
-          return (
-            <strong style={{ color: 'var(--secondary-color)' }}>
-              {domNode.children[0]?.data}
-            </strong>
-          );
-        }
-      },
-    });
-  };
-
-  const stripHtmlTags = (htmlString) => {
-    return htmlString.replace(/<[^>]+>/g, '');
-  };
-
   const handleResultClick = async (highlightedName) => {
     const rawName = stripHtmlTags(highlightedName);
     try {
-      const addedIngredient = await addIngredient(rawName);
+      const ingredient = await addIngredient(rawName); // 변수명 변경
       navigate('/refrigerator');
     } catch (error) {
       setExistingIngredientMessage(`${rawName} 이미 추가되어 있습니다.`);
@@ -95,52 +83,18 @@ function RefrigeratorSearch() {
           </div>
         ) : keyword ? (
           results.length > 0 ? (
-            <SearchResults
+            <SearchResult
               results={results}
               parseHighlightedName={parseHighlightedName}
               onResultClick={handleResultClick}
             />
           ) : (
-            <NoResults searchTerm={keyword} />
+            <NoResult searchTerm={keyword} />
           )
         ) : (
           <EmptyState />
         )}
       </div>
-    </div>
-  );
-}
-
-function SearchResults({ results, parseHighlightedName, onResultClick }) {
-  return (
-    <div>
-      <ul>
-        {results.map((item) => (
-          <li
-            key={item.ingredientId}
-            onClick={() => onResultClick(item.highlightedName)}
-            className="p-2 mb-2 cursor-pointer"
-          >
-            {parseHighlightedName(item.highlightedName)}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function NoResults({ searchTerm }) {
-  return (
-    <div className="text-center text-gray-500">
-      <p>{searchTerm} 검색 결과가 없습니다.</p>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="text-gray-500 text-center">
-      <p>검색어를 입력해주세요.</p>
     </div>
   );
 }

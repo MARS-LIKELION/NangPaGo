@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
 function RecipeCard({ recipe }) {
-  
   return (
     <Link
       to={`/recipe/${recipe.id}`}

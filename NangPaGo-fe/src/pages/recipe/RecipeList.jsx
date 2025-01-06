@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
@@ -6,8 +7,11 @@ import Header from '../../components/common/Header.jsx';
 import Footer from '../../components/common/Footer.jsx';
 
 function RecipeList() {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('recommended');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const recipes = location.state?.recipes || [];
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen">
@@ -21,9 +25,7 @@ function RecipeList() {
             className="w-[200px]"
           />
         </div>
-        <RecipeListContent
-          activeTab={activeTab}
-        />
+        <RecipeListContent activeTab={activeTab} recipes={recipes} />
       </div>
       <Footer />
     </div>
