@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @AuthenticatedUser
-    @PostMapping("/profile/check")
+    @GetMapping("/profile/check")
     public ResponseDto<Boolean> checkNickname(@RequestParam String nickname) {
         return ResponseDto.of(userService.checkNickname(nickname));
     }
