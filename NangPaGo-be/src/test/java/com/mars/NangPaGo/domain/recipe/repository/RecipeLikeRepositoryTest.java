@@ -1,19 +1,16 @@
 package com.mars.NangPaGo.domain.recipe.repository;
 
 import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
+import com.mars.NangPaGo.support.AbstractRepositoryTestSupport;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-
 @Transactional
-@SpringBootTest
-class RecipeLikeRepositoryTest {
+class RecipeLikeRepositoryTest extends AbstractRepositoryTestSupport {
 
     @Autowired
     private RecipeLikeRepository recipeLikeRepository;

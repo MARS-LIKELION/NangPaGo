@@ -3,17 +3,16 @@ package com.mars.NangPaGo.domain.refrigerator.repository;
 import com.mars.NangPaGo.domain.ingredient.repository.IngredientRepository;
 import com.mars.NangPaGo.domain.refrigerator.entity.Refrigerator;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
+import com.mars.NangPaGo.support.AbstractRepositoryTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional
-@SpringBootTest
-class RefrigeratorRepositoryTest {
+class RefrigeratorRepositoryTest extends AbstractRepositoryTestSupport {
     @Autowired
     private RefrigeratorRepository refrigeratorRepository;
     @Autowired
