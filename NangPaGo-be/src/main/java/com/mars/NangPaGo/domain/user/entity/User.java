@@ -58,7 +58,6 @@ public class User extends BaseEntity {
     private List<RecipeFavorite> favorites;
 
     public User updateUser(UserInfoRequestDto requestDto) {
-        this.name = requestDto.name();
         this.nickname = requestDto.nickName();
         return this;
     }

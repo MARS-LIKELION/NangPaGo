@@ -4,7 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record UserInfoRequestDto(
-    String name,
     String nickName
 ) {
 
