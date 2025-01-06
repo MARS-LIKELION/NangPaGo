@@ -1,10 +1,6 @@
 package com.mars.NangPaGo.domain.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
@@ -13,77 +9,80 @@ import com.mars.NangPaGo.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
-import java.util.Optional;
+
+import com.mars.NangPaGo.support.IntegrationTestSupport;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Transactional
-@ExtendWith(MockitoExtension.class)
-class RecipeLikeServiceTest {
+class RecipeLikeServiceTest extends IntegrationTestSupport {
 
-    @Mock
+    @Autowired
     private RecipeLikeRepository recipeLikeRepository;
-    @Mock
+    @Autowired
     private RecipeRepository recipeRepository;
-    @Mock
+    @Autowired
     private UserRepository userRepository;
 
-    @InjectMocks
+    @Autowired
     private RecipeLikeService recipeLikeService;
 
+    @AfterEach
+    void tearDown() {
+        recipeLikeRepository.deleteAllInBatch();
+        recipeRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+    }
+
+    private User createUser(String email) {
+        return User.builder()
+            .email(email)
+            .build();
+    }
+
+    private Recipe createRecipe(String name) {
+        return Recipe.builder()
+            .name(name)
+            .build();
+    }
+
+    @Transactional
     @DisplayName("유저가 레시피에 좋아요를 클릭하여 RecipeLike 추가")
     @Test
     void addRecipeLike() {
         // given
-        long recipeId = 1L;
-        String email = "dummy@nangpago.com";
-        Recipe recipe = Recipe.builder()
-            .id(recipeId)
-            .build();
-        User user = User.builder()
-            .email(email)
-            .build();
+        User user = createUser("dummy@nangpago.com");
+        Recipe recipe = createRecipe("파스타");
 
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
-        when(recipeLikeRepository.findByUserAndRecipe(user, recipe)).thenReturn(Optional.empty());
+        userRepository.save(user);
+        recipeRepository.save(recipe);
 
         // when
-        RecipeLikeResponseDto recipeLikeResponseDto = recipeLikeService.toggleLike(recipeId, email);
+        RecipeLikeResponseDto recipeLikeResponseDto = recipeLikeService.toggleLike(recipe.getId(), user.getEmail());
 
         // then
         assertThat(recipeLikeResponseDto).isNotNull()
             .extracting("liked")
             .isEqualTo(true);
+        assertThat(recipeLikeResponseDto.recipeId()).isEqualTo(recipe.getId());
     }
 
     @DisplayName("이미 좋아요를 누른 레시피에서 유저가 레시피에 좋아요를 클릭하여 RecipeLike 삭제")
     @Test
     void cancelRecipeLike() {
         // given
-        long recipeId = 1L;
-        String email = "dummy@nangpago.com";
-        Recipe recipe = Recipe.builder()
-            .id(recipeId)
-            .build();
-        User user = User.builder()
-            .email(email)
-            .build();
+        User user = createUser("dummy@nangpago.com");
+        Recipe recipe = createRecipe("파스타");
         RecipeLike recipeLike = RecipeLike.of(user, recipe);
 
-        // mocking
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
-        when(recipeLikeRepository.findByUserAndRecipe(any(User.class), any(Recipe.class))).thenReturn(
-            Optional.of(recipeLike));
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeLikeRepository.save(recipeLike);
 
         // when
-        RecipeLikeResponseDto recipeLikeResponseDto = recipeLikeService.toggleLike(recipeId, email);
+        RecipeLikeResponseDto recipeLikeResponseDto = recipeLikeService.toggleLike(recipe.getId(), user.getEmail());
 
         // then
         assertThat(recipeLikeResponseDto).isNotNull()

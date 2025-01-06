@@ -8,6 +8,7 @@ import com.mars.NangPaGo.domain.refrigerator.repository.RefrigeratorRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import com.mars.NangPaGo.support.IntegrationTestSupport;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,6 +59,7 @@ class RefrigeratorServiceTest extends IntegrationTestSupport {
             .build();
     }
 
+    @Transactional
     @DisplayName("사용자의 등록된 냉장고 속 재료 조회")
     @Test
     void findRefrigerator() {
