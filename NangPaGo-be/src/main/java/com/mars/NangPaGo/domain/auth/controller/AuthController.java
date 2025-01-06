@@ -1,7 +1,7 @@
 package com.mars.NangPaGo.domain.auth.controller;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
+import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;

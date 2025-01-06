@@ -5,7 +5,7 @@ import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
 import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
 import com.mars.NangPaGo.domain.user.enums.Gender;
-import com.mars.NangPaGo.domain.auth.enums.Provider;
+import com.mars.NangPaGo.auth.enums.OAuth2Provider;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     private String role;
 
     @Enumerated(EnumType.STRING)
-    private Provider provider;
+    private OAuth2Provider oauth2Provider;
     private String providerId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

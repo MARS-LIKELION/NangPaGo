@@ -2,8 +2,8 @@ package com.mars.NangPaGo.domain.comment.recipe.controller;
 
 import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.domain.auth.aop.AuthenticatedUser;
-import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
+import com.mars.NangPaGo.common.aop.auth.AuthenticatedUser;
+import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.service.RecipeCommentService;

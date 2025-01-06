@@ -2,10 +2,10 @@ package com.mars.NangPaGo.domain.user.dto;
 
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.enums.Gender;
-import com.mars.NangPaGo.domain.auth.enums.Provider;
-import com.mars.NangPaGo.domain.auth.factory.userinfo.OAuth2UserInfo;
-import com.mars.NangPaGo.domain.auth.factory.userinfo.KakaoUserInfo;
-import com.mars.NangPaGo.domain.auth.factory.userinfo.NaverUserInfo;
+import com.mars.NangPaGo.auth.enums.OAuth2Provider;
+import com.mars.NangPaGo.auth.factory.userinfo.OAuth2UserInfo;
+import com.mars.NangPaGo.auth.factory.userinfo.KakaoUserInfo;
+import com.mars.NangPaGo.auth.factory.userinfo.NaverUserInfo;
 import lombok.Builder;
 
 @Builder
@@ -69,7 +69,7 @@ public record UserRequestDto(
             .birthday(birthDate)
             .gender(genderEnum)
             .role("ROLE_USER")
-            .provider(Provider.from(this.provider))
+            .oauth2Provider(OAuth2Provider.from(this.provider))
             .providerId(this.providerId)
             .profileImageUrl(this.profileImageUrl)
             .build();

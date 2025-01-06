@@ -16,7 +16,7 @@ public record MyPageDto(
     public static MyPageDto of(User user, int likeCount, int favoriteCount, int commentCount, int refrigeratorCount) {
         return MyPageDto.builder()
             .nickName(user.getNickname())
-            .providerName(user.getProvider().name())
+            .providerName(user.getOauth2Provider().name())
             .likeCount(likeCount)
             .favoriteCount(favoriteCount)
             .commentCount(commentCount)

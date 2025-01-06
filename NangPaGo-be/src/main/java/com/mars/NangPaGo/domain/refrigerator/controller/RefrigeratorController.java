@@ -1,8 +1,8 @@
 package com.mars.NangPaGo.domain.refrigerator.controller;
 
 import com.mars.NangPaGo.common.dto.ResponseDto;
-import com.mars.NangPaGo.domain.auth.aop.AuthenticatedUser;
-import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
+import com.mars.NangPaGo.common.aop.auth.AuthenticatedUser;
+import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.domain.refrigerator.dto.RefrigeratorResponseDto;
 import com.mars.NangPaGo.domain.refrigerator.service.RefrigeratorService;
 import io.swagger.v3.oas.annotations.tags.Tag;

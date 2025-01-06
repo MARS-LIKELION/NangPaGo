@@ -2,7 +2,6 @@ package com.mars.NangPaGo.domain.refrigerator.service;
 
 import com.mars.NangPaGo.common.exception.NPGException;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
-import com.mars.NangPaGo.domain.auth.component.AuthenticationHolder;
 import com.mars.NangPaGo.domain.ingredient.entity.Ingredient;
 import com.mars.NangPaGo.domain.ingredient.repository.IngredientRepository;
 import com.mars.NangPaGo.domain.refrigerator.dto.RefrigeratorResponseDto;
