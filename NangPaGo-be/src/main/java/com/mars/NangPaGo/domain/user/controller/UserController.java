@@ -52,9 +52,8 @@ public class UserController {
 
     @AuthenticatedUser
     @PutMapping("/profile")
-    public ResponseDto<UserInfoResponseDto> updateUserInfo(@RequestBody UserInfoRequestDto requestDto,
-        @RequestParam(name = "checkNickname") boolean check) {
+    public ResponseDto<UserInfoResponseDto> updateUserInfo(@RequestBody UserInfoRequestDto requestDto) {
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.updateUserInfo(requestDto, email, check));
+        return ResponseDto.of(userService.updateUserInfo(requestDto, email));
     }
 }
