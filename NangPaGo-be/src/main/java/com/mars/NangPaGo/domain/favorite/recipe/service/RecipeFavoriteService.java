@@ -2,8 +2,6 @@ package com.mars.NangPaGo.domain.favorite.recipe.service;
 
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
-
 
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
@@ -15,12 +13,10 @@ import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -31,22 +27,30 @@ public class RecipeFavoriteService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    public RecipeFavoriteResponseDto toggleFavorite(Long recipeId) {
-        boolean isFavorite = toggleFavoriteStatus(getAuthenticatedEmail(), recipeId);
+    public RecipeFavoriteResponseDto toggleFavorite(Long recipeId, String email) {
+        boolean isFavorite = toggleFavoriteStatus(email, recipeId);
         return RecipeFavoriteResponseDto.of(recipeId, isFavorite);
     }
 
     @Transactional(readOnly = true)
-    public boolean isFavorite(Long recipeId) {
-        return recipeFavoriteRepository.findByEmailAndRecipeId(getAuthenticatedEmail(), recipeId).isPresent();
+    public boolean isFavorite(Long recipeId, String email) {
+        return recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
 
-    private String getAuthenticatedEmail() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("인증 정보가 존재하지 않습니다.");
+    @Transactional(readOnly = true)
+    public List<RecipeFavoriteListResponseDto> getFavoriteRecipes(String email) {
+
+        User user = findUserByEmail(email);
+
+        List<RecipeFavorite> favorites = recipeFavoriteRepository.findAllByUser(user);
+
+        if (favorites.isEmpty()) {
+            throw NPGExceptionType.NOT_FOUND_RECIPE_FAVORITE.of();
         }
-        return authentication.getName();
+
+        return favorites.stream()
+            .map(favorite -> RecipeFavoriteListResponseDto.of(favorite.getRecipe()))
+            .toList();
     }
 
     private boolean toggleFavoriteStatus(String email, Long recipeId) {
@@ -76,21 +80,5 @@ public class RecipeFavoriteService {
     private boolean addFavorite(User user, Recipe recipe) {
         recipeFavoriteRepository.save(RecipeFavorite.of(user, recipe));
         return true;
-    }
-
-    @Transactional(readOnly = true)
-    public List<RecipeFavoriteListResponseDto> getFavoriteRecipes(String email) {
-
-        User user = findUserByEmail(email);
-
-        List<RecipeFavorite> favorites = recipeFavoriteRepository.findAllByUser(user);
-
-        if (favorites.isEmpty()) {
-            throw NPGExceptionType.NOT_FOUND_RECIPE_FAVORITE.of();
-        }
-
-        return favorites.stream()
-            .map(favorite -> RecipeFavoriteListResponseDto.of(favorite.getRecipe()))
-            .collect(Collectors.toList());
     }
 }
