@@ -1,6 +1,5 @@
 package com.mars.NangPaGo.domain.user.service;
 
-import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.NangPaGo.domain.favorite.recipe.repository.RecipeFavoriteRepository;
@@ -62,14 +61,19 @@ public class UserService {
 
     @Transactional
     public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
 
         if (requestDto.DuplicateCheck()) {
             throw NPGExceptionType.BAD_REQUSET_CHECK_NICKNAME.of();
         }
 
+        return UserInfoResponseDto.from(updateUser(requestDto, email));
+    }
+
+    private User updateUser(UserInfoRequestDto requestDto, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
         user.updateUser(requestDto);
-        return UserInfoResponseDto.from(user);
+
+        return user;
     }
 }
