@@ -57,7 +57,7 @@ function Header() {
             <Link to="/recipes" className="text-[var(--primary-color)]">
               <IoReceiptOutline size={26} />
             </Link>
-            <Link to="/fridge" className="text-[var(--primary-color)]">
+            <Link to="/refrigerator" className="text-[var(--primary-color)]">
               <CgSmartHomeRefrigerator size={28} />
             </Link>
             <div className="relative" ref={dropdownRef}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
@@ -44,13 +44,14 @@ const UserInfoModify = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.patch('/api/v1/members/me', 
+      await axios.patch(
+        '/api/v1/members/me',
         { nickname },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           },
-        }
+        },
       );
       alert('회원정보가 수정되었습니다.');
     } catch (error) {
@@ -63,7 +64,9 @@ const UserInfoModify = () => {
       <div>
         <Header />
         <div className="px-6 bg-white">
-          <h3 className="text-xl font-bold mb-6 text-gray-800 text-center">회원정보 수정</h3>
+          <h3 className="text-xl font-bold mb-6 text-gray-800 text-center">
+            회원정보 수정
+          </h3>
           <div>
             <div className="mb-4">
               <label className="block text-gray-700 mb-2">이름</label>
@@ -105,9 +108,13 @@ const UserInfoModify = () => {
                 <div className="flex justify-between py-2 border-b">
                   <span className="text-gray-600">연결 계정</span>
                   <span className="text-gray-800">
-                    {userInfo.provider === 'NAVER' ? '네이버' : 
-                     userInfo.provider === 'KAKAO' ? '카카오' : 
-                     userInfo.provider === 'GOOGLE' ? '구글' : ''}
+                    {userInfo.provider === 'NAVER'
+                      ? '네이버'
+                      : userInfo.provider === 'KAKAO'
+                        ? '카카오'
+                        : userInfo.provider === 'GOOGLE'
+                          ? '구글'
+                          : ''}
                   </span>
                 </div>
               </div>

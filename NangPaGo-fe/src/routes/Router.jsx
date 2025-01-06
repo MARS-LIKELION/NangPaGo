@@ -4,6 +4,8 @@ import Login from '../pages/login/Login.jsx';
 import Search from '../pages/search/Search.jsx';
 import RecipeDetail from '../pages/recipe/RecipeDetail';
 import UserInfoModify from '../components/mypage/UserInfoModify';
+import Refrigerator from '../pages/refrigerator/Refrigerator.jsx';
+import RefrigeratorSearch from '../pages/search/RefrigeratorSearch.jsx';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +17,10 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: '/my-page/modify',
+    element: <UserInfoModify />,
+  },
+  {
     path: '/search',
     element: <Search />,
   },
@@ -22,9 +28,14 @@ const router = createBrowserRouter([
     path: '/recipe/:id',
     element: <RecipeDetail />,
   },
+
   {
-    path: '/my-page/modify',
-    element: <UserInfoModify />,
+    path: '/refrigerator',
+    element: <Refrigerator />,
+  },
+  {
+    path: '/refrigerator/search',
+    element: <RefrigeratorSearch />,
   },
 ]);
 
