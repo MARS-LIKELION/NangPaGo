@@ -74,7 +74,7 @@ class RecipeLikeServiceTest {
 
     @DisplayName("유저가 레시피에 좋아요를 클릭하여 RecipeLike 추가")
     @Test
-    void RecipeLike() {
+    void RecipeLikeAdd() {
         // when
         setUp();
 
@@ -92,7 +92,7 @@ class RecipeLikeServiceTest {
             .isEqualTo(true);
     }
 
-    @DisplayName("유저가 레시피에 좋아요를 클릭하여 RecipeLike 삭제")
+    @DisplayName("이미 좋아요를 누른 레시피에서 유저가 레시피에 좋아요를 클릭하여 RecipeLike 삭제")
     @Test
     void RecipeLikeCancel() {
         // given
@@ -132,9 +132,9 @@ class RecipeLikeServiceTest {
             .hasMessage("인증 정보가 존재하지 않습니다.");
     }
 
-    @DisplayName("유저가 레시피에 좋아요를 클릭할때 유저 ID와 SecurityContext의 유저 정보와 일치하지 않을 경우 예외처리")
+    @DisplayName("유저가 레시피에 좋아요를 클릭할때 SecurityContext의 email과 DB의 유저 email이 일치하지 않을 경우 예외처리")
     @Test
-    void NotFoundUserException() {
+    void NotCorrectUserException() {
         // given
         setUp();
 
@@ -164,7 +164,7 @@ class RecipeLikeServiceTest {
             .hasMessage("레시피를 찾을 수 없습니다.");
     }
 
-    @DisplayName("좋아요를 누른 레시피는 RecipeLike 엔티티를 조회할 수 있다.")
+    @DisplayName("이미 좋아요를 누른 레시피는 RecipeLike 엔티티를 조회할 수 있다.")
     @Test
     void isLikedByUser() {
         // given
