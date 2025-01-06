@@ -54,8 +54,10 @@ public class RecipeController {
     public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
         @RequestParam(name = "pageNo", defaultValue = "1") int page,
         @RequestParam(name = "pageSize", defaultValue = "10") int size,
-        @RequestParam(name = "keyword", required = false) String keyword) {
-        return ResponseDto.of(recipeEsService.searchRecipes(page, size, keyword));
+        @RequestParam(name = "keyword", required = false) String keyword,
+        @RequestParam(name = "searchType", defaultValue = "ingredients") String searchType) {
+
+        return ResponseDto.of(recipeEsService.searchRecipes(page, size, keyword, searchType));
     }
 
     @PostMapping("/bulk-upload/mysql")
