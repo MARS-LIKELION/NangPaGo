@@ -101,11 +101,12 @@ class RecipeCommentServiceTest {
             any(PageRequest.class))).thenReturn(page);
 
         // when
-        PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.PagedCommentsByRecipe(anyLong(), pageNo,
-            pageSize);
+        PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipeId, email,
+            pageNo, pageSize);
 
         //then
         System.out.println(pageDto.getContent());
+
         assertThat(pageDto.getTotalPages()).isEqualTo(2);
         assertThat(pageDto.getTotalItems()).isEqualTo(4);
     }
@@ -114,7 +115,7 @@ class RecipeCommentServiceTest {
     @Test
     void create() {
         // given
-        RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(recipeId, email, content);
+        RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(content);
 
         // mocking
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
@@ -122,7 +123,7 @@ class RecipeCommentServiceTest {
         when(recipeCommentRepository.save(any())).thenReturn(comment);
 
         // when
-        RecipeCommentResponseDto responseDto = recipeCommentService.create(requestDto, recipeId);
+        RecipeCommentResponseDto responseDto = recipeCommentService.create(requestDto, email, recipeId);
 
         // then
         assertThat(responseDto).isNotNull();
@@ -137,14 +138,14 @@ class RecipeCommentServiceTest {
         assertEquals(content, comment.getContent()); // 수정 전 텍스트 확인
 
         String updateText = "변경된 텍스트 내용입니다.";
-        RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(recipeId, email, updateText); // 텍스트 변경
+        RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(updateText); // 텍스트 변경
 
         // mocking
         when(recipeCommentRepository.findById(commentId)).thenReturn(Optional.ofNullable(comment));
 
         // when
         comment.updateText(updateText);
-        RecipeCommentResponseDto responseDto = recipeCommentService.update(commentId, requestDto);
+        RecipeCommentResponseDto responseDto = recipeCommentService.update(commentId, email, requestDto);
 
         // then
         assertThat(responseDto).isNotNull();
@@ -161,7 +162,7 @@ class RecipeCommentServiceTest {
         when(recipeCommentRepository.findById(commentId)).thenReturn(Optional.ofNullable(comment));
 
         // when
-        recipeCommentService.delete(commentId);
+        recipeCommentService.delete(commentId, email);
 
         // then
         verify(recipeCommentRepository, times(1)).delete(any(RecipeComment.class));
