@@ -1,6 +1,5 @@
 package com.mars.NangPaGo.domain.user.controller;
 
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 
 import com.mars.NangPaGo.common.aop.auth.AuthenticatedUser;
 import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
@@ -10,8 +9,6 @@ import com.mars.NangPaGo.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
