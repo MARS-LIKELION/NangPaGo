@@ -29,7 +29,7 @@ const onRefreshError = (error) => {
 // 요청 인터셉터
 axiosInstance.interceptors.request.use(
   async (config) => {
-    if (!config.url?.includes('/api/token/reissue')) {
+    if (!config.url?.includes('/api/auth/reissue')) {
         const token = document.cookie
         .split('; ')
         .find(row => row.startsWith('access'))
@@ -59,7 +59,7 @@ axiosInstance.interceptors.response.use(
         isRefreshing = true;
 
         try {
-          await axiosInstance.post('/api/token/reissue');
+          await axiosInstance.post('/api/auth/reissue');
           isRefreshing = false;
           onRefreshed();
           return axiosInstance(originalRequest);

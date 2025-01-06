@@ -33,7 +33,7 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST = {
         "/api/oauth2/authorization/**",
         "/api/login/oauth2/code/**",
-        "/api/token/reissue",
+        "/api/auth/reissue",
         "/api/recipe/{id}",
         "/api/recipe/{id}/comments",
         "/api/ingredient/search",
