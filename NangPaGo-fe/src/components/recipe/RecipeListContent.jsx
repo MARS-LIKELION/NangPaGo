@@ -37,7 +37,7 @@ function RecipeListContent({ activeTab, searchTerm = '' }) {
           }));
           setHasMoreRecipes((prev) => ({
             ...prev,
-            recommended: data.length === pageSize, // 페이지 데이터 크기로 더 있음 여부 결정
+            recommended: !data.last,
           }));
           setCurrentPage((prev) => ({
             ...prev,
@@ -51,7 +51,7 @@ function RecipeListContent({ activeTab, searchTerm = '' }) {
           }));
           setHasMoreRecipes((prev) => ({
             ...prev,
-            favorites: !data.last,
+            favorites: data.content.length === pageSize,
           }));
           setCurrentPage((prev) => ({
             ...prev,
@@ -102,7 +102,7 @@ function RecipeListContent({ activeTab, searchTerm = '' }) {
         }));
         setHasMoreRecipes((prev) => ({
           ...prev,
-          recommended: data.length === pageSize,
+          recommended: !data.last,
         }));
         setCurrentPage((prev) => ({
           ...prev,
@@ -124,7 +124,7 @@ function RecipeListContent({ activeTab, searchTerm = '' }) {
         }));
         setHasMoreRecipes((prev) => ({
           ...prev,
-          favorites: !data.last,
+          favorites: data.content.length === pageSize,
         }));
         setCurrentPage((prev) => ({
           ...prev,
@@ -156,9 +156,6 @@ function RecipeListContent({ activeTab, searchTerm = '' }) {
             ? '검색 결과가 없습니다.'
             : '즐겨찾기한 레시피가 없습니다.'}
         </div>
-      )}
-      {hasMoreRecipes[activeTab] && (
-        <div ref={observerRef} className="h-10"></div>
       )}
     </div>
   );

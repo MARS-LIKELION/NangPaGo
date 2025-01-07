@@ -25,11 +25,13 @@ public class RecipeFavoriteService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public RecipeFavoriteResponseDto toggleFavorite(Long recipeId, String email) {
         boolean isFavorite = toggleFavoriteStatus(email, recipeId);
         return RecipeFavoriteResponseDto.of(recipeId, isFavorite);
     }
 
+    @Transactional
     public boolean isFavorite(Long recipeId, String email) {
         return recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
