@@ -69,6 +69,9 @@ dependencies {
     implementation 'co.elastic.clients:elasticsearch-java:8.15.4'
     implementation 'org.apache.commons:commons-csv:1.10.0'
 
+    // Firebase
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
