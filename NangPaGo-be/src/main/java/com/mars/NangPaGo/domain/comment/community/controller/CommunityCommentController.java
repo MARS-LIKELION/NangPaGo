@@ -7,6 +7,7 @@ import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.domain.comment.community.dto.CommunityCommentRequestDto;
 import com.mars.NangPaGo.domain.comment.community.dto.CommunityCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.community.service.CommunityCommentService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +28,7 @@ public class CommunityCommentController {
 
     private final CommunityCommentService communityCommentService;
 
+    @Operation(summary = "댓글 목록 조회")
     @GetMapping
     public ResponseDto<PageDto<CommunityCommentResponseDto>> list(
         @PathVariable("communityId") Long communityId,
@@ -38,6 +40,7 @@ public class CommunityCommentController {
         return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(communityId, email, pageNo, pageSize));
     }
 
+    @Operation(summary = "댓글 작성")
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<CommunityCommentResponseDto> create(
@@ -48,6 +51,7 @@ public class CommunityCommentController {
         return ResponseDto.of(communityCommentService.create(requestDto, email, communityId));
     }
 
+    @Operation(summary = "댓글 수정")
     @AuthenticatedUser
     @PutMapping("/{commentId}")
     public ResponseDto<CommunityCommentResponseDto> update(
@@ -59,6 +63,7 @@ public class CommunityCommentController {
         return ResponseDto.of(communityCommentService.update(commentId, email, requestDto));
     }
 
+    @Operation(summary = "댓글 삭제")
     @AuthenticatedUser
     @DeleteMapping("/{commentId}")
     public ResponseDto<Void> delete(
