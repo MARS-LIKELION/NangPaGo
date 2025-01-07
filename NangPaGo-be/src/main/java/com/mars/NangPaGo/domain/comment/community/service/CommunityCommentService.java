@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CommunityCommentService {
@@ -29,7 +30,6 @@ public class CommunityCommentService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
     public PageDto<CommunityCommentResponseDto> pagedCommentsByCommunity(Long communityId,
         String email,
         int pageNo,

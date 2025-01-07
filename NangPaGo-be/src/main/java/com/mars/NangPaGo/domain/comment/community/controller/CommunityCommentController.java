@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@Tag(name = "커뮤니티 댓글 API", description = "인증된 사용자를 기반으로 커뮤니티 댓글을 CRUD 관리")
+@Tag(name = "커뮤니티 댓글 API", description = "커뮤니티 게시물 '댓글' 관련 API")
 @RequestMapping("/api/community/{communityId}/comments")
 @RestController
 public class CommunityCommentController {
