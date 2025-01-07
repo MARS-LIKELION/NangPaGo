@@ -4,8 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record UserInfoRequestDto(
-    String nickname,
-    boolean duplicateCheck
+    String nickname
 ) {
 
 }

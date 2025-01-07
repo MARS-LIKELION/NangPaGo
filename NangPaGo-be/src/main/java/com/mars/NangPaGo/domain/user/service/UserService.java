@@ -61,8 +61,6 @@ public class UserService {
 
     @Transactional
     public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
-        duplicateCheck(requestDto);
-
         usableNickname(requestDto);
 
         return UserInfoResponseDto.from(updateNickname(requestDto, email));
@@ -74,11 +72,7 @@ public class UserService {
         }
     }
 
-    private void duplicateCheck(UserInfoRequestDto requestDto) {
-        if (!requestDto.duplicateCheck()) {
-            throw NPGExceptionType.BAD_REQUSET_CHECK_NICKNAME.of();
-        }
-    }
+
 
     private User updateNickname(UserInfoRequestDto requestDto, String email) {
         User user = userRepository.findByEmail(email)
