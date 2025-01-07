@@ -62,7 +62,7 @@ const UserInfoModify = () => {
 
     try {
       const userInfoRequestDto = {
-      nickname: nickname, // nickname 상태에서 가져옴
+      nickname: nickname, 
     };
       await axiosInstance.put('/api/user/profile', userInfoRequestDto);
       setIsModalOpen(true);

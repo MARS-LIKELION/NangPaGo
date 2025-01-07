@@ -28,7 +28,6 @@ function Header() {
 
   const getUsername = (email) => email.split('@')[0];
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,7 +41,7 @@ function Header() {
   }, []);
 
   if (!loginState.isInitialized) {
-    return null; // 초기화 중에는 렌더링하지 않음
+    return null; 
   }
 
   return (
@@ -79,7 +78,7 @@ function Header() {
                   {getUsername(loginState.email)}
                 </div>
                 <Link
-                  to="/api/user/profile"
+                  to="/profile"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-[13px]"
                 >
                   마이페이지
