@@ -19,11 +19,6 @@ spring:
     username: ${ELASTICSEARCH_USERNAME}
     password: ${ELASTICSEARCH_PASSWORD}
 
-  # Firebase 관련 설정
-  firebase:
-    configuration-file: ${FIREBASE_CONFIGURATION_FILE}
-    bucket: ${FIREBASE_BUCKET}
-
   # 환경변수에서 불러오도록 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -113,6 +108,12 @@ springdoc:
     display-request-duration: true
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+# Firebase 관련 설정
+firebase:
+  config:
+    path: ${FIREBASE_CONFIGURATION_FILE}
+    bucket: ${FIREBASE_BUCKET}
 
 # 개발(로컬) 환경: local / 배포 환경: prod
 ---
