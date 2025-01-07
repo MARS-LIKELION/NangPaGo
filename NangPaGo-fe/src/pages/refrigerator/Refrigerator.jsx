@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   getRefrigerator,
@@ -11,24 +11,61 @@ import IngredientList from '../../components/refrigerator/IngredientList';
 import AddIngredientForm from '../../components/refrigerator/AddIngredientForm';
 import RecipeCard from '../../components/recipe/RecipeCard';
 
-const Refrigerator = () => {
+function Refrigerator() {
   const [ingredients, setIngredients] = useState([]);
-  const [recipes, setRecipes] = useState([]);
-  const [page, setPage] = useState(0);
-  const [size] = useState(10);
+  const [recipes, setRecipes] = useState(
+    () => JSON.parse(localStorage.getItem('recipes')) || [],
+  );
+  const [recipePage, setRecipePage] = useState(
+    () => parseInt(localStorage.getItem('recipePage'), 10) || 1,
+  );
+  const [recipeSize] = useState(10);
+  const [totalRecipes, setTotalRecipes] = useState(
+    () => parseInt(localStorage.getItem('totalRecipes'), 10) || 0,
+  );
+  const [hasMoreRecipes, setHasMoreRecipes] = useState(
+    () => localStorage.getItem('hasMoreRecipes') === 'true',
+  );
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const observerRef = useRef(null);
 
   useEffect(() => {
-    fetchRefrigerator(page, size);
-  }, [page, size]);
+    fetchRefrigerator();
+  }, []);
 
-  const fetchRefrigerator = async (page, size) => {
+  useEffect(() => {
+    syncLocalStorage();
+  }, [recipes, recipePage, totalRecipes, hasMoreRecipes]);
+
+  useEffect(() => {
+    if (location.pathname === '/refrigerator/recipe') {
+      const observer = new IntersectionObserver(handleObserver, {
+        threshold: 1.0,
+      });
+      if (observerRef.current) observer.observe(observerRef.current);
+      return () => observer.disconnect();
+    }
+  }, [location.pathname, recipes, hasMoreRecipes]);
+
+  const syncLocalStorage = () => {
+    localStorage.setItem('recipes', JSON.stringify(recipes));
+    localStorage.setItem('recipePage', recipePage.toString());
+    localStorage.setItem('totalRecipes', totalRecipes.toString());
+    localStorage.setItem('hasMoreRecipes', hasMoreRecipes.toString());
+  };
+
+  const handleApiError = (message, error) => {
+    console.error(message, error);
+  };
+
+  const fetchRefrigerator = async () => {
     try {
-      const data = await getRefrigerator(page, size);
+      const data = await getRefrigerator();
       setIngredients(data);
     } catch (error) {
-      console.error('냉장고 데이터를 가져오는 데 실패했습니다.', error);
+      handleApiError('냉장고 데이터를 가져오는 데 실패했습니다.', error);
       setIngredients([]);
     }
   };
@@ -38,33 +75,80 @@ const Refrigerator = () => {
       const addedIngredient = await addIngredient(ingredientName);
       setIngredients((prev) => [...prev, addedIngredient]);
     } catch (error) {
-      console.error('재료 추가 중 오류가 발생했습니다.', error);
+      handleApiError('재료 추가 중 오류가 발생했습니다.', error);
     }
   };
 
   const handleDeleteIngredient = async (ingredientName) => {
     try {
-      const message = await deleteIngredient(ingredientName);
-      console.log(message);
+      await deleteIngredient(ingredientName);
       setIngredients((prev) =>
         prev.filter((item) => item.ingredientName !== ingredientName),
       );
     } catch (error) {
-      console.error('재료 삭제 중 오류가 발생했습니다.', error);
+      handleApiError('재료 삭제 중 오류가 발생했습니다.', error);
     }
   };
 
   const handleFindRecipes = async () => {
+    setRecipePage(1);
+    setHasMoreRecipes(true);
+
     try {
       const ingredientNames = ingredients
-        .filter((i) => i && i.ingredientName)
-        .map((i) => i.ingredientName);
-
-      const recipeData = await getRecipes(ingredientNames);
-      setRecipes(recipeData);
-      navigate('/refrigerator/recipes');
+        .map((i) => i.ingredientName)
+        .filter(Boolean);
+      const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
+      setRecipes(recipeData.content);
+      setTotalRecipes(recipeData.totalElements);
+      setHasMoreRecipes(!recipeData.last);
+      navigate('/refrigerator/recipe');
     } catch (error) {
-      console.error('레시피를 가져오는 중 오류가 발생했습니다:', error);
+      handleApiError('레시피를 가져오는 중 오류가 발생했습니다.', error);
+    }
+  };
+
+  const loadMoreRecipes = async () => {
+    if (!hasMoreRecipes || isLoading) return;
+
+    setIsLoading(true);
+    const nextPage = recipePage + 1;
+
+    try {
+      const ingredientNames = ingredients
+        .map((i) => i.ingredientName)
+        .filter(Boolean);
+      const recipeData = await getRecipes(
+        ingredientNames,
+        nextPage,
+        recipeSize,
+      );
+      setRecipes((prev) => [...prev, ...recipeData.content]);
+      setRecipePage(nextPage);
+      setHasMoreRecipes(!recipeData.last);
+    } catch (error) {
+      handleApiError('추가 레시피를 가져오는 중 오류가 발생했습니다.', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetAndGoBack = () => {
+    setRecipes([]);
+    setRecipePage(1);
+    setHasMoreRecipes(true);
+
+    localStorage.removeItem('recipes');
+    localStorage.removeItem('recipePage');
+    localStorage.removeItem('totalRecipes');
+    localStorage.removeItem('hasMoreRecipes');
+
+    navigate('/refrigerator');
+  };
+
+  const handleObserver = ([entry]) => {
+    if (entry.isIntersecting) {
+      loadMoreRecipes();
     }
   };
 
@@ -109,9 +193,15 @@ const Refrigerator = () => {
               </div>
             )}
           </div>
+          <div ref={observerRef} className="h-10"></div>
+          {!hasMoreRecipes && (
+            <div className="text-center py-4 text-gray-500">
+              더 이상 레시피가 없습니다.
+            </div>
+          )}
           <button
             className="bg-[var(--primary-color)] text-white w-full py-3 mt-4 mb-4 rounded-lg text-lg font-medium"
-            onClick={() => navigate('/refrigerator')}
+            onClick={resetAndGoBack}
           >
             돌아가기
           </button>
@@ -119,6 +209,6 @@ const Refrigerator = () => {
       )}
     </div>
   );
-};
+}
 
 export default Refrigerator;
