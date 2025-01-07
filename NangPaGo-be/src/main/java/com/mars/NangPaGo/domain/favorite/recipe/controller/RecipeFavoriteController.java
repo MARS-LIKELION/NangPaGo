@@ -39,7 +39,7 @@ public class RecipeFavoriteController {
 
     @AuthenticatedUser
     @GetMapping("/favorite/list")
-    public ResponseDto<List<RecipeFavoriteListResponseDto>> getFavoriteRecipes(Principal principal) {
+    public ResponseDto<List<RecipeFavoriteListResponseDto>> getFavoriteRecipes() {
         String email = AuthenticationHolder.getCurrentUserEmail();
         List<RecipeFavoriteListResponseDto> favoriteRecipes = recipeFavoriteService.getFavoriteRecipes(email);
         return ResponseDto.of(favoriteRecipes);

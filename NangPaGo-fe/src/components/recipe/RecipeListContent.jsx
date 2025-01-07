@@ -1,54 +1,52 @@
 import RecipeCard from './RecipeCard';
 import { useEffect, useState } from 'react';
-import axiosInstance from '../../api/axiosInstance.js';
+import {
+  fetchRecommendedRecipes,
+  fetchFavoriteRecipes,
+} from '../../api/recipe';
 
 function RecipeListContent({ activeTab, searchTerm = '' }) {
-  const [recipes, setRecipes] = useState([]); 
-  const [hasFetched, setHasFetched] = useState(false);
+  const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const pageNo = 1;
   const pageSize = 10;
 
   useEffect(() => {
-    if (activeTab === 'recommended') {
-      fetchRecipes();
-      setHasFetched(true);
-    }
-  }, [activeTab, searchTerm]);
+    const loadRecipes = async () => {
+      setLoading(true); // 로딩 시작
 
-  const fetchRecipes = async () => {
-    try {
-      const params = {
-        pageNo,
-        pageSize,
-      };
+      try {
+        if (activeTab === 'recommended') {
+          const data = await fetchRecommendedRecipes(
+            searchTerm,
+            pageNo,
+            pageSize,
+          );
+          setRecipes(data);
+        } else if (activeTab === 'favorites') {
+          const data = await fetchFavoriteRecipes();
 
-      if (searchTerm) {
-        params.keyword = searchTerm;
-        params.searchType = 'NAME';
+          setRecipes(data);
+        }
+      } finally {
+        setLoading(false); // 로딩 종료
       }
+    };
 
-      const response = await axiosInstance.get('/api/recipe/search', { params });
-      setRecipes(response.data.data.content);
-    } catch (error) {
-      console.error('레시피를 가져오는 중 오류가 발생했습니다:', error);
-    }
-  };
+    loadRecipes();
+  }, [activeTab, searchTerm]);
 
   return (
     <div className="grid grid-cols-1 gap-6 min-h-[400px]">
-      {activeTab === 'recommended' ? (
-        recipes.length > 0 ? (
-          recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            검색 결과가 없습니다.
-          </div>
-        )
+      {loading ? (
+        <div className="text-center py-8 text-gray-500">로딩 중...</div>
+      ) : recipes.length > 0 ? (
+        recipes.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
       ) : (
         <div className="text-center py-8 text-gray-500">
-          즐겨찾기한 레시피가 없습니다.
+          {activeTab === 'recommended'
+            ? '검색 결과가 없습니다.'
+            : '즐겨찾기한 레시피가 없습니다.'}
         </div>
       )}
     </div>

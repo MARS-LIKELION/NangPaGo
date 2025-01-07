@@ -16,3 +16,32 @@ export const getRecipes = async (ingredients, page, size) => {
     throw error;
   }
 };
+
+export const fetchRecommendedRecipes = async (
+  searchTerm,
+  pageNo = 1,
+  pageSize = 10,
+) => {
+  try {
+    const params = {
+      pageNo,
+      pageSize,
+      ...(searchTerm && { keyword: searchTerm, searchType: 'NAME' }),
+    };
+    const response = await axiosInstance.get('/api/recipe/search', { params });
+    return response.data.data.content || [];
+  } catch (error) {
+    console.error('Error fetching recommended recipes:', error);
+    return [];
+  }
+};
+
+export const fetchFavoriteRecipes = async () => {
+  try {
+    const response = await axiosInstance.get('/api/recipe/favorite/list');
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching favorite recipes:', error);
+    return [];
+  }
+};
