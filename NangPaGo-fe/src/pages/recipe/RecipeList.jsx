@@ -35,6 +35,7 @@ function RecipeList() {
         <RecipeListTab activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="flex justify-center">
           <SearchBar
+            searchPath={'/recipe/search'}
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
             className="w-[200px]"

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import RecipeList from '../pages/recipe/RecipeList.jsx';
 import Login from '../pages/login/Login.jsx';
-import Search from '../pages/search/Search.jsx';
+import RecipeSearch from '../pages/search/RecipeSearch.jsx';
 import RecipeDetail from '../pages/recipe/RecipeDetail';
 import UserInfoModify from '../components/mypage/UserInfoModify';
 import Refrigerator from '../pages/refrigerator/Refrigerator.jsx';
@@ -21,12 +21,17 @@ const router = createBrowserRouter([
     element: <UserInfoModify />,
   },
   {
-    path: '/search',
-    element: <Search />,
-  },
-  {
-    path: '/recipe/:id',
-    element: <RecipeDetail />,
+    path: '/recipe',
+    children: [
+      {
+        path: 'search',
+        element: <RecipeSearch />,
+      },
+      {
+        path: ':id',
+        element: <RecipeDetail />,
+      },
+    ]
   },
   {
     path: '/refrigerator',

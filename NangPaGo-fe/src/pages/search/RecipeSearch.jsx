@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BiSearch, BiArrowBack } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
-function Search() {
+function RecipeSearch() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -59,4 +59,4 @@ function EmptyState() {
   );
 }
 
-export default Search;
+export default RecipeSearch;
