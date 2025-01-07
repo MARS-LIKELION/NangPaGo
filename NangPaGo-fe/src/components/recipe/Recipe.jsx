@@ -28,7 +28,7 @@ function Recipe({ recipe }) {
         axiosInstance.get(`/api/recipe/${recipe.id}/like/status`),
         axiosInstance.get(`/api/recipe/${recipe.id}/favorite/status`),
       ]);
-      setIsHeartActive(likeResponse.data);
+      setIsHeartActive(likeResponse.data.data);
       setIsStarActive(favoriteResponse.data);
     } catch (error) {
       console.error('상태를 불러오는 중 오류가 발생했습니다.', error);
@@ -45,7 +45,6 @@ function Recipe({ recipe }) {
       const response = await axiosInstance.post(
         `/api/recipe/${recipe.id}/like/toggle`,
       );
-      console.log('Response:', response);
       setIsHeartActive(response.data.data.liked);
     } catch (error) {
       console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다.', error);
