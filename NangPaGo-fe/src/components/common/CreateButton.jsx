@@ -11,7 +11,6 @@ function CreateButton({
     useState(basePositionClass);
 
   useEffect(() => {
-    // 애니메이션 효과를 위해 isTopButtonVisible 값에 따라 class 변경
     setButtonPositionClass(
       isTopButtonVisible
         ? 'bottom-[95px] right-[calc((100vw-375px)/2+16px)]'
