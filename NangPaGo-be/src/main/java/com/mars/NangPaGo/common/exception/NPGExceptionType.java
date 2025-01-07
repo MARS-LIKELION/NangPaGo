@@ -14,6 +14,7 @@ public enum NPGExceptionType {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청"),
     BAD_REQUEST_INVALID(HttpStatus.BAD_REQUEST, "유효하지 않은 요청"),
     BAD_REQUEST_INVALID_COMMENT(HttpStatus.BAD_REQUEST, "댓글 내용은 비어 있을 수 없습니다."),
+    BAD_REQUEST_INVALID_PAGE_NO(HttpStatus.BAD_REQUEST, "pageNo 는 양수로 입력해야 합니다."),
     BAD_REQUSET_CHECK_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임 중복 검사를 해야합니다."),
     BAD_REQUEST_UNUSABLE_NICKNAME(HttpStatus.BAD_REQUEST, "사용할 수 없는 닉네임입니다."),
 

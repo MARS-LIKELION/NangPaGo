@@ -24,7 +24,7 @@ public class RecipeEsService {
     private final ElasticsearchClient elasticsearchClient;
 
     public Page<RecipeEsResponseDto> searchRecipes(int page, int size, String keyword, String searchType) {
-        Pageable pageable = PageRequest.of(Math.max(page - 1, 0), Math.max(size, 1));
+        Pageable pageable = PageRequest.of(Math.max(page, 0), Math.max(size, 1));
 
         EsRecipeSearchQueryBuilder queryBuilder = new EsRecipeSearchQueryBuilder();
         Query query = queryBuilder.buildSearchQuery(keyword, searchType);

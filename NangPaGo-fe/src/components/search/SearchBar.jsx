@@ -1,17 +1,33 @@
-import { BiSearch } from 'react-icons/bi';
+import { BiSearch, BiX } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 
-function SearchBar({ searchPath }) {
+function SearchBar({ searchPath, searchTerm = '', onClear }) {
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (searchTerm) {
+      onClear(); // searchTerm이 있을 때는 초기화
+    } else {
+      navigate(searchPath, { // searchTerm이 없을 때는 검색 페이지로 이동
+        state: { searchTerm }
+      });
+    }
+  };
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] px-4 py-2 rounded-lg">
       <div
         className="relative flex items-center cursor-pointer border border-[var(--primary-color)] rounded-lg bg-white"
-        onClick={() => navigate(searchPath)}
+        onClick={handleClick}
       >
-        <div className="w-full px-4 py-2 text-gray-500">레시피 검색...</div>
-        <BiSearch className="absolute right-3 text-[var(--secondary-color)] text-xl" />
+        <div className="w-full px-4 py-2 text-gray-500">
+          {searchTerm || "레시피 검색..."}
+        </div>
+        {searchTerm ? (
+          <BiX className="absolute right-3 text-[var(--secondary-color)] text-xl" />
+        ) : (
+          <BiSearch className="absolute right-3 text-[var(--secondary-color)] text-xl" />
+        )}
       </div>
     </div>
   );

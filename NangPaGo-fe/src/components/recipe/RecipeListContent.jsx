@@ -2,27 +2,33 @@ import RecipeCard from './RecipeCard';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../api/axiosInstance.js';
 
-function RecipeListContent({ activeTab, initialRecipes = [] }) {
-  const [recipes, setRecipes] = useState(initialRecipes); // Use initial recipes if provided
-  const [hasFetched, setHasFetched] = useState(false); // Track if recipes are fetched
+function RecipeListContent({ activeTab, searchTerm = '' }) {
+  const [recipes, setRecipes] = useState([]); 
+  const [hasFetched, setHasFetched] = useState(false);
   const pageNo = 1;
   const pageSize = 10;
-  const keyword = '';
 
   useEffect(() => {
-    if (activeTab === 'recommended' && !hasFetched) {
+    if (activeTab === 'recommended') {
       fetchRecipes();
+      setHasFetched(true);
     }
-  }, [activeTab, hasFetched]); // Only fetch recipes when activeTab is 'recommended'
+  }, [activeTab, searchTerm]);
 
   const fetchRecipes = async () => {
     try {
-      const response = await axiosInstance.get('/api/recipe/search', {
-        params: { pageNo, pageSize, keyword },
-      });
+      const params = {
+        pageNo,
+        pageSize,
+      };
 
+      if (searchTerm) {
+        params.keyword = searchTerm;
+        params.searchType = 'NAME';
+      }
+
+      const response = await axiosInstance.get('/api/recipe/search', { params });
       setRecipes(response.data.data.content);
-      setHasFetched(true); // Mark as fetched
     } catch (error) {
       console.error('레시피를 가져오는 중 오류가 발생했습니다:', error);
     }

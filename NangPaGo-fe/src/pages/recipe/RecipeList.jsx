@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
@@ -10,10 +10,13 @@ import CreateButton from '../../components/common/CreateButton';
 
 function RecipeList() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('recommended');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
-  const recipes = location.state?.recipes || [];
+  const [searchTerm, setSearchTerm] = useState(location.state?.searchTerm || '');
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,11 +40,11 @@ function RecipeList() {
           <SearchBar
             searchPath={'/recipe/search'}
             searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
+            onClear={handleClearSearch}
             className="w-[200px]"
           />
         </div>
-        <RecipeListContent activeTab={activeTab} recipes={recipes} />
+        <RecipeListContent activeTab={activeTab} searchTerm={searchTerm} />
       </div>
       <Footer />
       <CreateButton

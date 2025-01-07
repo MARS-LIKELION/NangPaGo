@@ -1,10 +1,51 @@
 import { useState } from 'react';
 import { BiSearch, BiArrowBack } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import NoResult from '../../components/search/NoResult';
+import EmptyState from '../../components/search/EmptyState';
 
 function RecipeSearch() {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
+  const location = useLocation();
+  const [keyword, setKeyword] = useState(location.state?.searchTerm || '');
+  const [results, setResults] = useState([]);
+
+  const handleChange = async (e) => {
+    const newKeyword = e.target.value;
+    setKeyword(newKeyword);
+
+    if (!newKeyword.trim()) {
+      setResults([]);
+      return;
+    }
+
+    try {
+      const response = await axios.get('/api/recipe/search', {
+        params: { 
+          pageNo: 1,
+          pageSize: 10,
+          keyword: newKeyword,
+          searchType: 'NAME',
+        },
+      });
+      setResults(response.data.data.content);
+    } catch (error) {
+      console.error('레시피 검색 요청 실패:', error);
+      setResults([]);
+    }
+  };
+
+  const handleResultClick = (recipe) => {
+    navigate(`/recipe/${recipe.id}`);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/', {
+      state: { searchTerm: keyword }
+    });
+  };
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen">
@@ -16,45 +57,47 @@ function RecipeSearch() {
           <BiArrowBack className="text-2xl text-[var(--secondary-color)]" />
         </button>
 
-        <div className="relative flex-1">
+        <form onSubmit={handleSubmit} className="relative flex-1">
           <input
             type="text"
             placeholder="레시피 검색..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={keyword}
+            onChange={handleChange}
             autoFocus
-            className="w-full px-4 py-2 border border-[var(--primary-color)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:border-transparent placeholder-gray-500"
+            className="w-full px-4 py-2 border border-[var(--primary-color)] rounded-lg 
+                     focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] 
+                     focus:border-transparent placeholder-gray-500"
           />
-          <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-xl" />
-        </div>
+          <button
+            type="submit"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2"
+          >
+            <BiSearch className="text-[var(--secondary-color)] text-xl" />
+          </button>
+        </form>
       </div>
 
-      <div className="px-4 py-6">
-        {searchTerm ? (
-          <SearchResults searchTerm={searchTerm} />
+      <div className="px-4 py-2">
+        {keyword ? (
+          results.length > 0 ? (
+            <div className="space-y-2">
+              {results.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  onClick={() => handleResultClick(recipe)}
+                  className="p-3 rounded-lg cursor-pointer hover:bg-gray-50"
+                >
+                  <span className="text-black">{recipe.name}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <NoResult searchTerm={keyword} />
+          )
         ) : (
           <EmptyState />
         )}
       </div>
-    </div>
-  );
-}
-
-function SearchResults({ searchTerm }) {
-  return (
-    <div>
-      <p className="text-[var(--secondary-color)] text-sm mb-4">
-        "{searchTerm}" 검색 결과
-      </p>
-      <div className="text-center text-gray-500">검색 결과가 없습니다.</div>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="text-gray-500 text-center">
-      <p>검색어를 입력해주세요</p>
     </div>
   );
 }
