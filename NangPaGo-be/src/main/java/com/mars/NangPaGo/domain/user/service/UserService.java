@@ -65,11 +65,11 @@ public class UserService {
 
         usableNickname(requestDto);
 
-        return UserInfoResponseDto.from(updateUser(requestDto, email));
+        return UserInfoResponseDto.from(updateNickname(requestDto, email));
     }
 
     private void usableNickname(UserInfoRequestDto requestDto){
-        if (!usableNickname(requestDto.nickName())) {
+        if (!usableNickname(requestDto.nickname())) {
             throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of();
         }
     }
@@ -80,10 +80,10 @@ public class UserService {
         }
     }
 
-    private User updateUser(UserInfoRequestDto requestDto, String email) {
+    private User updateNickname(UserInfoRequestDto requestDto, String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
-        user.updateUser(requestDto);
+        user.updateNickname(requestDto);
 
         return user;
     }

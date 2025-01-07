@@ -57,8 +57,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeFavorite> favorites;
 
-    public User updateUser(UserInfoRequestDto requestDto) {
-        this.nickname = requestDto.nickName();
+    public User updateNickname(UserInfoRequestDto requestDto) {
+        this.nickname = requestDto.nickname();
         return this;
     }
 }
