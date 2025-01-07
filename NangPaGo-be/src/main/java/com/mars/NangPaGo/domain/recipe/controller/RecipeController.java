@@ -53,7 +53,7 @@ public class RecipeController {
 
     @GetMapping("/search")
     public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
-        @RequestParam(name = "pageNo", defaultValue = "0") int page,
+        @RequestParam(name = "pageNo", defaultValue = "1") int page,
         @RequestParam(name = "pageSize", defaultValue = "10") int size,
         @RequestParam(name = "keyword", required = false) String keyword) {
         return ResponseDto.of(recipeEsService.searchRecipes(page, size, keyword));
