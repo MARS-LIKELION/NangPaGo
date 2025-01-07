@@ -79,7 +79,7 @@ function Header() {
                   {getUsername(loginState.email)}
                 </div>
                 <Link
-                  to="/profile"
+                  to="/api/user/profile"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-[13px]"
                 >
                   마이페이지

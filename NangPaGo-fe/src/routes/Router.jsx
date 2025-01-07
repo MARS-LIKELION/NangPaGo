@@ -17,7 +17,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: '/my-page/modify',
+    path: '/api/user/profile',
     element: <UserInfoModify />,
   },
   {
