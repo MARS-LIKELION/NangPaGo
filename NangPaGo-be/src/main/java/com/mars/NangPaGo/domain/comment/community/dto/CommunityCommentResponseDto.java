@@ -13,7 +13,7 @@ public record CommunityCommentResponseDto(
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
-    public static CommunityCommentResponseDto from(CommunityComment communityComment, String email) {
+    public static CommunityCommentResponseDto of(CommunityComment communityComment, String email) {
         return CommunityCommentResponseDto.builder()
             .id(communityComment.getId())
             .content(communityComment.getContent())

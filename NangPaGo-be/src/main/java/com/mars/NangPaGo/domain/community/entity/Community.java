@@ -1,7 +1,6 @@
 package com.mars.NangPaGo.domain.community.entity;
 
 import com.mars.NangPaGo.common.jpa.BaseEntity;
-//import com.mars.NangPaGo.domain.comment.community.entity.CommunityComment;
 import com.mars.NangPaGo.domain.comment.community.entity.CommunityComment;
 import com.mars.NangPaGo.domain.user.entity.User;
 import jakarta.persistence.CascadeType;
@@ -34,7 +33,7 @@ public class Community extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)

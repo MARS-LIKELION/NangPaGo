@@ -1,6 +1,5 @@
 package com.mars.NangPaGo.domain.comment.community.service;
 
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_COMMENT;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY_COMMENT;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
@@ -32,20 +31,20 @@ public class CommunityCommentService {
 
     @Transactional(readOnly = true)
     public PageDto<CommunityCommentResponseDto> pagedCommentsByCommunity(Long communityId,
-                                                                   String email,
-                                                                   int pageNo,
-                                                                   int pageSize) {
+        String email,
+        int pageNo,
+        int pageSize) {
         validateCommunity(communityId);
         return PageDto.of(
             communityCommentRepository.findByCommunityId(communityId, createPageRequest(pageNo, pageSize))
-                .map(comment -> CommunityCommentResponseDto.from(comment, email))
+                .map(comment -> CommunityCommentResponseDto.of(comment, email))
         );
     }
 
     @Transactional
     public CommunityCommentResponseDto create(CommunityCommentRequestDto requestDto, String email, Long communityId) {
         User user = findUserByEmail(email);
-        return CommunityCommentResponseDto.from(communityCommentRepository.save(
+        return CommunityCommentResponseDto.of(communityCommentRepository.save(
             CommunityComment.create(validateCommunity(communityId), user, requestDto.content())), user.getEmail());
     }
 
@@ -54,7 +53,7 @@ public class CommunityCommentService {
         CommunityComment comment = validateComment(commentId);
         validateOwnership(comment, email);
         comment.updateText(requestDto.content());
-        return CommunityCommentResponseDto.from(comment, email);
+        return CommunityCommentResponseDto.of(comment, email);
     }
 
     @Transactional
