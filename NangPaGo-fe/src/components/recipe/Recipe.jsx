@@ -7,6 +7,7 @@ import { FaHeart, FaStar } from 'react-icons/fa';
 import RecipeComment from './comment/RecipeComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
+import TopButton from '../common/TopButton.jsx';
 
 function Recipe({ recipe }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);
@@ -165,6 +166,10 @@ function Recipe({ recipe }) {
         <RecipeComment recipeId={recipe.id} />
       </div>
       <Footer />
+      <TopButton
+        offset={100}
+        positionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
+      />
     </div>
   );
 }
