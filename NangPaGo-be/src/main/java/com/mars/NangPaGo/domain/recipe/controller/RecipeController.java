@@ -13,7 +13,6 @@ import com.mars.NangPaGo.domain.recipe.service.RecipeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,14 +38,14 @@ public class RecipeController {
 
     @AuthenticatedUser
     @GetMapping("/{id}/like/status")
-    public ResponseEntity<Boolean> checkLikeStatus(@PathVariable("id") Long id) {
+    public ResponseDto<Boolean> getRecipeLikeStatus(@PathVariable Long id) {
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseEntity.ok(recipeLikeService.isLikedByRecipe(id, email));
+        return ResponseDto.of(recipeLikeService.isLiked(id, email));
     }
 
     @AuthenticatedUser
     @PostMapping("/{id}/like/toggle")
-    public ResponseDto<RecipeLikeResponseDto> toggleLike(@PathVariable("id") Long id) {
+    public ResponseDto<RecipeLikeResponseDto> toggleRecipeLike(@PathVariable Long id) {
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(recipeLikeService.toggleLike(id, email));
     }

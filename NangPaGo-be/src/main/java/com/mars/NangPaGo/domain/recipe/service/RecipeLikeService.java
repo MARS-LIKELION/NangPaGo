@@ -24,16 +24,16 @@ public class RecipeLikeService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public boolean isLikedByRecipe(Long recipeId, String email) {
+    public boolean isLiked(Long recipeId, String email) {
         return recipeLikeRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
 
     public RecipeLikeResponseDto toggleLike(Long recipeId, String email) {
-        boolean isLiked = toggleLike(email, recipeId);
-        return RecipeLikeResponseDto.of(recipeId, isLiked);
+        boolean isLikedAfterToggle = toggleLikeStatus(recipeId, email);
+        return RecipeLikeResponseDto.of(recipeId, isLikedAfterToggle);
     }
 
-    private boolean toggleLike(String email, Long recipeId) {
+    private boolean toggleLikeStatus(Long recipeId, String email) {
         User user = getUserByEmail(email);
         Recipe recipe = getRecipeById(recipeId);
 
