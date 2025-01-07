@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Builder
 public record UserInfoRequestDto(
     String nickName,
-    boolean DuplicateCheck
+    boolean duplicateCheck
 ) {
 
 }

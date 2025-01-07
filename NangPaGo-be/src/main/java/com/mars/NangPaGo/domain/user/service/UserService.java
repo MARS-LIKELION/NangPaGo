@@ -66,18 +66,19 @@ public class UserService {
         if (!usableNickname(requestDto.nickName())) {
             throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of();
         }
-        
+
         return UserInfoResponseDto.from(updateUser(requestDto, email));
     }
 
-    private void duplicateCheck(UserInfoRequestDto requestDto){
-        if (!requestDto.DuplicateCheck()) {
+    private void duplicateCheck(UserInfoRequestDto requestDto) {
+        if (!requestDto.duplicateCheck()) {
             throw NPGExceptionType.BAD_REQUSET_CHECK_NICKNAME.of();
         }
     }
+
     private User updateUser(UserInfoRequestDto requestDto, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
+            .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
         user.updateUser(requestDto);
 
         return user;
