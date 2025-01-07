@@ -40,7 +40,7 @@ public class CommunityLike extends BaseEntity {
     public static CommunityLike of(User user, Community community) {
         return CommunityLike.builder()
             .user(user)
-            .community(builder().community)
+            .community(community)
             .build();
     }
 }
