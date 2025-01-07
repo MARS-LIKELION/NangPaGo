@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@Tag(name = "커뮤니티 API", description = "커뮤니티 게시물 & 좋아요 관련 API")
+@Tag(name = "커뮤니티 API", description = "커뮤니티 게시물 '좋아요' 관련 API")
 @RequestMapping("/api/community")
 @RestController
 public class CommunityLikeController {
