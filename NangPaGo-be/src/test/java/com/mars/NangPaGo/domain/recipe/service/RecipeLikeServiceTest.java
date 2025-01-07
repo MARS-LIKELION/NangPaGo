@@ -1,7 +1,9 @@
 package com.mars.NangPaGo.domain.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.mars.NangPaGo.common.exception.NPGException;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
@@ -90,21 +92,24 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
             .isEqualTo(false);
     }
 
-//    @DisplayName("유저가 레시피에 좋아요를 클릭할때 SecurityContext의 email과 DB의 유저 email이 일치하지 않을 경우 예외처리")
-//    @Test
-//    void NotCorrectUserException() {
-//        // given
-//        setUp();
-//
-//        // mocking
-//        when(userRepository.findByEmail(anyString())).thenThrow(new NPGException(NOT_FOUND_USER));
-//
-//        // then
-//        assertThatThrownBy(() -> recipeLikeService.toggleLike(recipeId, email))
-//            .isInstanceOf(NPGException.class)
-//            .hasMessage("사용자를 찾을 수 없습니다.");
-//    }
-//
+    @DisplayName("좋아요를 클릭한 유저의 이메일을 찾을 수 없을 때 예외를 발생시킬 수 있다.")
+    @Test
+    void notFoundUserException() {
+        // given
+        String email = "nonExistent@nangpago.com";
+        Recipe recipe = createRecipe("파스타");
+        recipeRepository.save(recipe);
+
+        setAuthenticationAsUserWithToken(email);
+
+        Long recipeId = recipe.getId();
+
+        // when & then
+        assertThatThrownBy(() -> recipeLikeService.toggleLike(recipeId, email))
+            .isInstanceOf(NPGException.class)
+            .hasMessage("사용자를 찾을 수 없습니다.");
+    }
+
 //    @DisplayName("유저가 레시피에 좋아요를 클릭할때 레시피 ID를 못받는 경우 예외처리")
 //    @Test
 //    void NotFoundRecipeException() {
