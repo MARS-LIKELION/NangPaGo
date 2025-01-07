@@ -459,6 +459,9 @@ pip-selfcheck.json
 
 ### DB 폴더 ###
 NangPaGo-data/datasets
+NangPaGo-data/**/*.json
+NangPaGo-data/**/*.csv
+NangPaGo-data/**/*.sql
 
 ### 가상환경 폴더 ###
 NangPaGo-data/py310
