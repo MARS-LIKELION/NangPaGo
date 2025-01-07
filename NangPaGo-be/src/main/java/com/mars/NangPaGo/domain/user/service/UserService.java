@@ -63,11 +63,15 @@ public class UserService {
     public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
         duplicateCheck(requestDto);
 
+        usableNickname(requestDto);
+
+        return UserInfoResponseDto.from(updateUser(requestDto, email));
+    }
+
+    private void usableNickname(UserInfoRequestDto requestDto){
         if (!usableNickname(requestDto.nickName())) {
             throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of();
         }
-
-        return UserInfoResponseDto.from(updateUser(requestDto, email));
     }
 
     private void duplicateCheck(UserInfoRequestDto requestDto) {
