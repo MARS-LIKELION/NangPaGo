@@ -6,15 +6,13 @@ import lombok.Builder;
 @Builder
 public record UserInfoResponseDto(
     String nickname,
-    String email,
-    String provider
+    String email
 ) {
 
     public static UserInfoResponseDto from(User user) {
         return UserInfoResponseDto.builder()
             .nickname(user.getNickname())
             .email(user.getEmail())
-            .provider(user.getOauth2Provider().name())
             .build();
     }
 }
