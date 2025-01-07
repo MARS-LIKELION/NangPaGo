@@ -12,6 +12,7 @@ function RecipeList() {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('recommended');
+  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState(location.state?.searchTerm || '');
 
   const handleClearSearch = () => {
