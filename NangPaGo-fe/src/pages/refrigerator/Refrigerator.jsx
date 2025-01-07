@@ -10,6 +10,7 @@ import Header from '../../components/common/Header';
 import IngredientList from '../../components/refrigerator/IngredientList';
 import AddIngredientForm from '../../components/refrigerator/AddIngredientForm';
 import RecipeCard from '../../components/recipe/RecipeCard';
+import TopButton from '../../components/common/TopButton.jsx';
 
 function Refrigerator() {
   const [ingredients, setIngredients] = useState([]);
@@ -205,6 +206,10 @@ function Refrigerator() {
           >
             돌아가기
           </button>
+          <TopButton
+            offset={100}
+            positionClass="bottom-20 right-[calc((100vw-375px)/2+16px)]"
+          />
         </div>
       )}
     </div>
