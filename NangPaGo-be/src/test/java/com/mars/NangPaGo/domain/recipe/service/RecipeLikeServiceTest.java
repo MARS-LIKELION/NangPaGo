@@ -51,7 +51,7 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("유저가 레시피에 좋아요를 클릭하여 RecipeLike 추가")
+    @DisplayName("레시피 좋아요를 클릭할 수 있다.")
     @Test
     void addRecipeLike() {
         // given
@@ -71,7 +71,8 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
         assertThat(recipeLikeResponseDto.recipeId()).isEqualTo(recipe.getId());
     }
 
-    @DisplayName("이미 좋아요를 누른 레시피에서 유저가 레시피에 좋아요를 클릭하여 RecipeLike 삭제")
+    @Transactional
+    @DisplayName("레시피 좋아요를 취소할 수 있다.")
     @Test
     void cancelRecipeLike() {
         // given
