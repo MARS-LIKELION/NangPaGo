@@ -9,20 +9,18 @@ let isRefreshing = false;
 let refreshSubscribers = [];
 
 const hasRefreshToken = () => {
-  return document.cookie
-    .split('; ')
-    .some(row => row.startsWith('refresh'));
+  return document.cookie.split('; ').some((row) => row.startsWith('refresh'));
 };
 
 // 토큰 재발급이 완료된 후 기존 요청들을 재시도
 const onRefreshed = () => {
-  refreshSubscribers.forEach(callback => callback());
+  refreshSubscribers.forEach((callback) => callback());
   refreshSubscribers = [];
 };
 
 // 토큰 재발급 실패 시 대기 중인 요청들을 reject
 const onRefreshError = (error) => {
-  refreshSubscribers.forEach(callback => callback(error));
+  refreshSubscribers.forEach((callback) => callback(error));
   refreshSubscribers = [];
 };
 
@@ -30,11 +28,11 @@ const onRefreshError = (error) => {
 axiosInstance.interceptors.request.use(
   async (config) => {
     if (!config.url?.includes('/api/auth/reissue')) {
-        const token = document.cookie
+      const token = document.cookie
         .split('; ')
-        .find(row => row.startsWith('access'))
+        .find((row) => row.startsWith('access'))
         ?.split('=')[1];
-      
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -43,7 +41,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // 응답 인터셉터
@@ -52,7 +50,11 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry && hasRefreshToken()) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      hasRefreshToken()
+    ) {
       originalRequest._retry = true;
 
       if (!isRefreshing) {
@@ -82,9 +84,8 @@ axiosInstance.interceptors.response.use(
         });
       });
     }
-    
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

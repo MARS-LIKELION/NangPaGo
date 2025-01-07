@@ -36,12 +36,24 @@ export const fetchRecommendedRecipes = async (
   }
 };
 
-export const fetchFavoriteRecipes = async () => {
+export const fetchFavoriteRecipes = async (
+  page = 0,
+  size = 10,
+  sort = 'createdAt,desc',
+) => {
   try {
-    const response = await axiosInstance.get('/api/recipe/favorite/list');
+    const response = await axiosInstance.get('/api/recipe/favorite/list', {
+      params: { page, size, sort },
+    });
     return response.data.data;
   } catch (error) {
     console.error('Error fetching favorite recipes:', error);
-    return [];
+    return {
+      content: [],
+      currentPage: 0,
+      totalPages: 0,
+      totalItems: 0,
+      isLast: true,
+    };
   }
 };

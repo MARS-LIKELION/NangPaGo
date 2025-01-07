@@ -21,9 +21,6 @@ function Refrigerator() {
     () => parseInt(localStorage.getItem('recipePage'), 10) || 1,
   );
   const [recipeSize] = useState(10);
-  const [totalRecipes, setTotalRecipes] = useState(
-    () => parseInt(localStorage.getItem('totalRecipes'), 10) || 0,
-  );
   const [hasMoreRecipes, setHasMoreRecipes] = useState(
     () => localStorage.getItem('hasMoreRecipes') === 'true',
   );
@@ -38,10 +35,10 @@ function Refrigerator() {
 
   useEffect(() => {
     syncLocalStorage();
-  }, [recipes, recipePage, totalRecipes, hasMoreRecipes]);
+  }, [recipes, recipePage, hasMoreRecipes]);
 
   useEffect(() => {
-    if (location.pathname === '/refrigerator/recipe') {
+    if (location.pathname === '/refrigerator/recipe' && hasMoreRecipes) {
       const observer = new IntersectionObserver(handleObserver, {
         threshold: 1.0,
       });
@@ -53,7 +50,6 @@ function Refrigerator() {
   const syncLocalStorage = () => {
     localStorage.setItem('recipes', JSON.stringify(recipes));
     localStorage.setItem('recipePage', recipePage.toString());
-    localStorage.setItem('totalRecipes', totalRecipes.toString());
     localStorage.setItem('hasMoreRecipes', hasMoreRecipes.toString());
   };
 
@@ -101,7 +97,6 @@ function Refrigerator() {
         .filter(Boolean);
       const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
       setRecipes(recipeData.content);
-      setTotalRecipes(recipeData.totalElements);
       setHasMoreRecipes(!recipeData.last);
       navigate('/refrigerator/recipe');
     } catch (error) {
@@ -141,14 +136,13 @@ function Refrigerator() {
 
     localStorage.removeItem('recipes');
     localStorage.removeItem('recipePage');
-    localStorage.removeItem('totalRecipes');
     localStorage.removeItem('hasMoreRecipes');
 
     navigate('/refrigerator');
   };
 
   const handleObserver = ([entry]) => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && hasMoreRecipes) {
       loadMoreRecipes();
     }
   };
@@ -184,22 +178,12 @@ function Refrigerator() {
         <div className="w-full px-4 mt-6">
           <h2 className="text-lg font-medium mb-4">추천 레시피</h2>
           <div className="grid grid-cols-1 gap-6 min-h-[400px]">
-            {recipes.length > 0 ? (
+            {recipes.length > 0 &&
               recipes.map((recipe) => (
                 <RecipeCard key={recipe.id} recipe={recipe} />
-              ))
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                추천할 레시피가 없습니다.
-              </div>
-            )}
+              ))}
           </div>
-          <div ref={observerRef} className="h-10"></div>
-          {!hasMoreRecipes && (
-            <div className="text-center py-4 text-gray-500">
-              더 이상 레시피가 없습니다.
-            </div>
-          )}
+          {hasMoreRecipes && <div ref={observerRef} className="h-10"></div>}
           <button
             className="bg-[var(--primary-color)] text-white w-full py-3 mt-4 mb-4 rounded-lg text-lg font-medium"
             onClick={resetAndGoBack}

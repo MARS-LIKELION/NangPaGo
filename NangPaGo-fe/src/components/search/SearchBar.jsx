@@ -6,10 +6,10 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
 
   const handleClick = () => {
     if (searchTerm) {
-      onClear(); // searchTerm이 있을 때는 초기화
+      onClear();
     } else {
-      navigate(searchPath, { // searchTerm이 없을 때는 검색 페이지로 이동
-        state: { searchTerm }
+      navigate(searchPath, {
+        state: { searchTerm },
       });
     }
   };
@@ -21,7 +21,7 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
         onClick={handleClick}
       >
         <div className="w-full px-4 py-2 text-gray-500">
-          {searchTerm || "레시피 검색..."}
+          {searchTerm || '레시피 검색...'}
         </div>
         {searchTerm ? (
           <BiX className="absolute right-3 text-[var(--secondary-color)] text-xl" />

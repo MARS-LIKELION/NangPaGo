@@ -43,7 +43,7 @@ function RefrigeratorSearch() {
   const handleResultClick = async (highlightedName) => {
     const rawName = stripHtmlTags(highlightedName);
     try {
-      const ingredient = await addIngredient(rawName); // 변수명 변경
+      const ingredient = await addIngredient(rawName);
       navigate('/refrigerator');
     } catch (error) {
       setExistingIngredientMessage(`${rawName} 이미 추가되어 있습니다.`);

@@ -22,7 +22,7 @@ function RecipeSearch() {
 
     try {
       const response = await axios.get('/api/recipe/search', {
-        params: { 
+        params: {
           pageNo: 1,
           pageSize: 10,
           keyword: newKeyword,
@@ -43,7 +43,7 @@ function RecipeSearch() {
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate('/', {
-      state: { searchTerm: keyword }
+      state: { searchTerm: keyword },
     });
   };
 

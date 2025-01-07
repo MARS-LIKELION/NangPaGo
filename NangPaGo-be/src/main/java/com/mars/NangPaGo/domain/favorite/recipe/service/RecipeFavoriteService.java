@@ -1,8 +1,6 @@
 package com.mars.NangPaGo.domain.favorite.recipe.service;
 
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
-
+import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
@@ -13,13 +11,13 @@ import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class RecipeFavoriteService {
 
@@ -32,25 +30,15 @@ public class RecipeFavoriteService {
         return RecipeFavoriteResponseDto.of(recipeId, isFavorite);
     }
 
-    @Transactional(readOnly = true)
     public boolean isFavorite(Long recipeId, String email) {
         return recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
 
-    @Transactional(readOnly = true)
-    public List<RecipeFavoriteListResponseDto> getFavoriteRecipes(String email) {
-
-        User user = findUserByEmail(email);
-
-        List<RecipeFavorite> favorites = recipeFavoriteRepository.findAllByUser(user);
-
-        if (favorites.isEmpty()) {
-            throw NPGExceptionType.NOT_FOUND_RECIPE_FAVORITE.of();
-        }
-
-        return favorites.stream()
-            .map(favorite -> RecipeFavoriteListResponseDto.of(favorite.getRecipe()))
-            .toList();
+    public PageDto<RecipeFavoriteListResponseDto> getFavoriteRecipes(String email, Pageable pageable) {
+        Page<RecipeFavorite> favorites = recipeFavoriteRepository.findAllByUser(findUserByEmail(email), pageable);
+        return PageDto.of(
+            favorites.map(favorite -> RecipeFavoriteListResponseDto.of(favorite.getRecipe()))
+        );
     }
 
     private boolean toggleFavoriteStatus(String email, Long recipeId) {
@@ -64,21 +52,21 @@ public class RecipeFavoriteService {
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> NPGExceptionType.NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
     }
 
     private Recipe findRecipeById(Long recipeId) {
         return recipeRepository.findById(recipeId)
-            .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
-    }
-
-    private boolean removeFavorite(RecipeFavorite recipeFavorite) {
-        recipeFavoriteRepository.delete(recipeFavorite);
-        return false;
+            .orElseThrow(() -> NPGExceptionType.NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
     }
 
     private boolean addFavorite(User user, Recipe recipe) {
         recipeFavoriteRepository.save(RecipeFavorite.of(user, recipe));
         return true;
+    }
+
+    private boolean removeFavorite(RecipeFavorite recipeFavorite) {
+        recipeFavoriteRepository.delete(recipeFavorite);
+        return false;
     }
 }
