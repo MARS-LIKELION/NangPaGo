@@ -166,10 +166,6 @@ function Recipe({ recipe }) {
         <RecipeComment recipeId={recipe.id} />
       </div>
       <Footer />
-      <TopButton
-        offset={100}
-        positionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-      />
     </div>
   );
 }
