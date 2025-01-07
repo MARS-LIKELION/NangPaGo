@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
+    public static final int MIN_NICKNAME_LENGTH = 1;
+
     private final UserRepository userRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeFavoriteRepository recipeFavoriteRepository;
@@ -50,13 +52,11 @@ public class UserService {
     }
 
     public UserInfoResponseDto getUserInfo(String email) {
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
-        return UserInfoResponseDto.from(user);
+        return UserInfoResponseDto.from(findUserByEmail(email));
     }
 
     public boolean usableNickname(String nickname) {
-        return !userRepository.existsByNickname(nickname) && nickname.length() > 1;
+        return !userRepository.existsByNickname(nickname) && nickname.length() > MIN_NICKNAME_LENGTH;
     }
 
     @Transactional
@@ -72,13 +72,15 @@ public class UserService {
         }
     }
 
-
-
     private User updateNickname(UserInfoRequestDto requestDto, String email) {
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
+        User user = findUserByEmail(email);
         user.updateNickname(requestDto);
 
         return user;
+    }
+
+    private User findUserByEmail(String email){
+        return userRepository.findByEmail(email)
+            .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
     }
 }
