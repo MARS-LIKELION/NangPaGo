@@ -7,7 +7,6 @@ import { FaHeart, FaStar } from 'react-icons/fa';
 import RecipeComment from './comment/RecipeComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
-import { AiFillHeart } from 'react-icons/ai';
 import { getLikeCount } from '../../api/recipe.js';
 
 function Recipe({ recipe }) {
@@ -116,12 +115,11 @@ function Recipe({ recipe }) {
             </button>
           </div>
         </div>
-        {/* 좋아요 개수 표시 */}
-        <div className="text-sm text-gray-600 flex items-center gap-1 my-1">
-          <AiFillHeart className="text-red-500 text-xl" />
-          {likeCount !== null ? likeCount : '0'}
-        </div>
-        <div className="flex gap-2">
+
+        <h1 className="text-xl font-bold mt-2 px-4">{recipe.name}</h1>
+
+        {/* 태그들 */}
+        <div className="flex gap-2 mt-2 px-4">
           {recipe.mainIngredient && (
             <p className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded">
               {recipe.mainIngredient}
