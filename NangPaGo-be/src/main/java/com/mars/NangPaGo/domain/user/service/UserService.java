@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     public static final int MIN_NICKNAME_LENGTH = 1;
+    public static final int MAX_NICKNAME_LENGTH = 20;
 
     private final UserRepository userRepository;
     private final RecipeLikeRepository recipeLikeRepository;
@@ -56,27 +57,35 @@ public class UserService {
     }
 
     public boolean isNicknameAvailable(String targetNickname) {
-        return validateNickname(targetNickname);
+        validateNickname(targetNickname);
+        return true;
     }
 
     @Transactional
     public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
-        String targetNickname = requestDto.nickname();
-        if (!validateNickname(targetNickname)) {
-            throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of();
-        }
+        String targetNickname = requestDto.nickname().trim();
+        validateNickname(targetNickname);
 
         User updatedUser = updateNickname(requestDto, email);
         return UserInfoResponseDto.from(updatedUser);
     }
 
-    private boolean validateNickname(String targetNickname) {
-        return isNotDuplicatedNickname(targetNickname)
-            && targetNickname.length() > MIN_NICKNAME_LENGTH;
+    private void validateNickname(String targetNickname) {
+        if (isDuplicatedNickname(targetNickname)) {
+            throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of("이미 사용중인 닉네임입니다.");
+        }
+
+        if (targetNickname.length() <= MIN_NICKNAME_LENGTH) {
+            throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of("두글자 이상 입력해주세요.");
+        }
+
+        if (targetNickname.length() > MAX_NICKNAME_LENGTH) {
+            throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of("20글자 이하로 입력해주세요.");
+        }
     }
 
-    private boolean isNotDuplicatedNickname(String nickname) {
-        return !userRepository.existsByNickname(nickname);
+    private boolean isDuplicatedNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 
     private User updateNickname(UserInfoRequestDto requestDto, String email) {

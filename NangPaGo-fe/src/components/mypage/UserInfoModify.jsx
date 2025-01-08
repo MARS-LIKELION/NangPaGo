@@ -38,45 +38,24 @@ const UserInfoModify = () => {
   }, [isLoggedIn]);
 
   const handleNicknameCheck = async () => {
+    const trimmedNickname = nickname.trim();
+    setNickname(trimmedNickname);
+
     try {
-      const response = await axiosInstance.get(
-        `/api/user/profile/check?nickname=${nickname}`,
-      );
+      const response = await axiosInstance.get(`/api/user/profile/check?nickname=${trimmedNickname}`);
       console.log('닉네임 중복 확인 응답:', response);
 
-      const validations = [
-        {
-          condition: !nickname || nickname.trim().length === 0,
-          message: '빈 값은 닉네임으로 사용할 수 없습니다.',
-        },
-        {
-          condition: nickname.includes(' '),
-          message: '닉네임에 공백이 포함될 수 없습니다.',
-        },
-        {
-          condition: nickname.length <= 1,
-          message: '닉네임은 두글자 이상이여야 합니다.',
-        },
-      ];
-
-      for (const validation of validations) {
-        if (validation.condition) {
-          setIsNicknameAvailable(false);
-          setIsNicknameAvailableMessage(validation.message);
-          return;
-        }
-      }
-
-      if (response.data.data) {
-        setIsNicknameAvailable(true);
-        setIsNicknameAvailableMessage('사용 가능한 닉네임입니다.');
-      } else {
-        setIsNicknameAvailable(false);
-        setIsNicknameAvailableMessage('이미 사용중인 닉네임입니다.');
-      }
+      setIsNicknameAvailable(true);
+      setIsNicknameAvailableMessage('사용 가능한 닉네임입니다.');
     } catch (error) {
       console.error('닉네임 중복 확인 실패:', error);
-      setIsNicknameAvailableMessage('닉네임 중복 확인에 실패했습니다.');
+      setIsNicknameAvailable(false);
+      
+      if (error.response?.status === 400) {
+        setIsNicknameAvailableMessage(error.response.data.message);
+      } else {
+        setIsNicknameAvailableMessage('닉네임 중복 확인에 실패했습니다.');
+      }
     }
   };
 
