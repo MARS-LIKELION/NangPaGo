@@ -41,7 +41,7 @@ public class CommunityController {
 
     @Operation(summary = "게시물 작성")
     @AuthenticatedUser
-    @PostMapping("/new")
+    @PostMapping
     public ResponseDto<CommunityResponseDto> create(
         @RequestBody @Valid CommunityRequestDto requestDto
         ) {

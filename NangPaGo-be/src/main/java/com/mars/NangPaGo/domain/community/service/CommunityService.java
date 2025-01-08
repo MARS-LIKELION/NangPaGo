@@ -19,7 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CommunityService {
@@ -29,18 +29,12 @@ public class CommunityService {
 
     public PageDto<CommunityResponseDto> pagesByCommunity(int pageNo, int pageSize, String email) {
         Pageable pageable = createPageRequest(pageNo, pageSize);
-
-        if (email == null) { // 비인증 사용자: 공개된 게시물만 반환
-            return PageDto.of(
-                communityRepository.findByIsPublicTrue(pageable)
-                    .map(community -> CommunityResponseDto.of(community, null))
-            );
-        }
-
-        // 인증 사용자: 공개된 게시물 + 본인 게시물 반환
+        boolean isAnonymous = "anonymous_user".equals(email);
         return PageDto.of(
-            communityRepository.findByIsPublicTrueOrUserEmail(email, pageable)
-                .map(community -> CommunityResponseDto.of(community, email))
+            communityRepository.findByIsPublicTrueOrUserEmail(
+                isAnonymous ? null : email,
+                pageable
+            ).map(community -> CommunityResponseDto.of(community, isAnonymous ? null : email))
         );
     }
 
@@ -60,6 +54,7 @@ public class CommunityService {
         return CommunityResponseDto.of(community, email);
     }
 
+    @Transactional
     public void deleteCommunity(Long id, String email) {
         Community community = validateCommunity(id);
         validateOwnership(community, email);
@@ -74,12 +69,12 @@ public class CommunityService {
 
     private Community validateCommunity(Long id) {
         return communityRepository.findById(id)
-            .orElseThrow(() -> NOT_FOUND_COMMUNITY.of("게시물을 찾을 수 없습니다."));
+            .orElseThrow(() -> NOT_FOUND_COMMUNITY.of());
     }
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> NOT_FOUND_USER.of());
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {
