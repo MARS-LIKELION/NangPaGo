@@ -48,12 +48,12 @@ const UserInfoModify = () => {
       setIsNicknameAvailable(true);
       setIsNicknameAvailableMessage('사용 가능한 닉네임입니다.');
     } catch (error) {
-      console.error('닉네임 중복 확인 실패:', error);
       setIsNicknameAvailable(false);
       
       if (error.response?.status === 400) {
         setIsNicknameAvailableMessage(error.response.data.message);
       } else {
+        console.error('닉네임 중복 확인 실패:', error);
         setIsNicknameAvailableMessage('닉네임 중복 확인에 실패했습니다.');
       }
     }
