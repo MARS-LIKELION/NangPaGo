@@ -8,6 +8,16 @@ export const fetchCommunityList = (pageNo = 0, pageSize = 10) => {
     .then((response) => response.data);
 };
 
+export const getCommunityDetail = async (id) => {
+  return axiosInstance
+    .get(`/api/community/${id}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error('Error fetching community details:', error);
+      throw error;
+    });
+};
+
 export const createCommunity = (data, file) => {
   const formData = new FormData();
   formData.append('title', data.title);

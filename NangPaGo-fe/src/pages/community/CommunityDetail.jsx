@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // Redux 상태 가져오기
+import { useSelector } from 'react-redux';
 import axiosInstance from '../../api/axiosInstance';
 import Community from '../../components/community/Community';
 
