@@ -10,16 +10,10 @@ import com.mars.NangPaGo.domain.community.service.CommunityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Tag(name = "커뮤니티 API", description = "커뮤니티 '게시물' 관련 API")
@@ -43,22 +37,24 @@ public class CommunityController {
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<CommunityResponseDto> create(
-        @RequestBody @Valid CommunityRequestDto requestDto
+        @ModelAttribute @Valid CommunityRequestDto requestDto,
+        @RequestParam(value = "file", required = false) MultipartFile file
         ) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.createCommunity(requestDto, email), "게시물이 성공적으로 생성되었습니다.");
+        return ResponseDto.of(communityService.createCommunity(requestDto, file, email), "게시물이 성공적으로 생성되었습니다.");
     }
 
     @Operation(summary = "게시물 수정")
     @AuthenticatedUser
     @PutMapping("/{id}")
     public ResponseDto<CommunityResponseDto> update(
-        @RequestBody @Valid CommunityRequestDto requestDto,
+        @ModelAttribute @Valid CommunityRequestDto requestDto,
+        @RequestParam(value = "file", required = false) MultipartFile file,
         @PathVariable("id") Long id) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.updateCommunity(id, requestDto, email), "게시물이 성공적으로 수정되었습니다.");
+        return ResponseDto.of(communityService.updateCommunity(id, requestDto, file, email), "게시물이 성공적으로 수정되었습니다.");
     }
 
     @Operation(summary = "게시물 삭제")
@@ -68,5 +64,19 @@ public class CommunityController {
         String email = AuthenticationHolder.getCurrentUserEmail();
         communityService.deleteCommunity(id, email);
         return ResponseDto.of(null, "게시물이 성공적으로 삭제되었습니다.");
+    }
+
+    @Operation(summary = "게시물 단일 조회")
+    @GetMapping("/{id}")
+    public ResponseDto<CommunityResponseDto> getCommunityById(@PathVariable Long id) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(communityService.getCommunityById(id, email));
+    }
+
+    @Operation(summary = "수정 페이지용 게시물 조회")
+    @GetMapping("/edit/{id}")
+    public ResponseDto<CommunityResponseDto> getPostForEdit(@PathVariable Long id) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(communityService.getPostForEdit(id, email), "게시물을 성공적으로 가져왔습니다.");
     }
 }

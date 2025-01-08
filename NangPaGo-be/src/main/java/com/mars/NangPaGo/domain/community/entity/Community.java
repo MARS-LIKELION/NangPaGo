@@ -53,18 +53,20 @@ public class Community extends BaseEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityLike> likes;
 
-    public static Community of(User user, String title, String content, boolean isPublic) {
+    public static Community of(User user, String title, String content, String imageUrl, boolean isPublic) {
         return Community.builder()
             .user(user)
             .title(title)
             .content(content)
+            .imageUrl(imageUrl)
             .isPublic(isPublic)
             .build();
     }
 
-    public void update(String title, String content, boolean isPublic) {
+    public void update(String title, String content, boolean isPublic, String imageUrl) {
         this.title = title;
         this.content = content;
         this.isPublic = isPublic;
+        this.imageUrl = imageUrl;
     }
 }
