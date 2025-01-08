@@ -38,6 +38,8 @@ public class SecurityConfig {
         "/api/recipe/{id}/comments",
         "/api/ingredient/search",
         "/api/recipe/search",
+        "/api/community/{id}",
+        "/api/community/{id}/comments",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/api-docs/**",
@@ -78,7 +80,9 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/recipe/{id}/comments/**",
                     "/api/recipe/{id}/like/**",
-                    "/api/recipe/{id}/favorite/**"
+                    "/api/recipe/{id}/favorite/**",
+                    "/api/community/{id}/comments/**",
+                    "/api/community/{id}/like/**"
                 )
                 .hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()

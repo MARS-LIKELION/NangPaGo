@@ -71,17 +71,17 @@ public class CommunityCommentService {
 
     private Community validateCommunity(Long communityId) {
         return communityRepository.findById(communityId)
-            .orElseThrow(() -> NOT_FOUND_COMMUNITY.of("게시물를 찾을 수 없습니다."));
+            .orElseThrow(() -> NOT_FOUND_COMMUNITY.of());
     }
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> NOT_FOUND_USER.of());
     }
 
     private CommunityComment validateComment(Long commentId) {
         return communityCommentRepository.findById(commentId)
-            .orElseThrow(() -> NOT_FOUND_COMMUNITY_COMMENT.of("게시물 내 댓글을 찾을 수 없습니다."));
+            .orElseThrow(() -> NOT_FOUND_COMMUNITY_COMMENT.of());
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {

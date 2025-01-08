@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @Tag(name = "커뮤니티 댓글 API", description = "커뮤니티 게시물 '댓글' 관련 API")
-@RequestMapping("/api/community/{communityId}/comments")
+@RequestMapping("/api/community/{id}/comments")
 @RestController
 public class CommunityCommentController {
 
@@ -31,13 +31,13 @@ public class CommunityCommentController {
     @Operation(summary = "댓글 목록 조회")
     @GetMapping
     public ResponseDto<PageDto<CommunityCommentResponseDto>> list(
-        @PathVariable("communityId") Long communityId,
+        @PathVariable("id") Long id,
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "5") int pageSize) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
 
-        return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(communityId, email, pageNo, pageSize));
+        return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(id, email, pageNo, pageSize));
     }
 
     @Operation(summary = "댓글 작성")
@@ -45,10 +45,10 @@ public class CommunityCommentController {
     @PostMapping
     public ResponseDto<CommunityCommentResponseDto> create(
         @RequestBody CommunityCommentRequestDto requestDto,
-        @PathVariable("communityId") Long communityId) {
+        @PathVariable("id") Long id) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityCommentService.create(requestDto, email, communityId));
+        return ResponseDto.of(communityCommentService.create(requestDto, email, id), "댓글이 성공적으로 추가되었습니다.");
     }
 
     @Operation(summary = "댓글 수정")
@@ -57,10 +57,10 @@ public class CommunityCommentController {
     public ResponseDto<CommunityCommentResponseDto> update(
         @RequestBody CommunityCommentRequestDto requestDto,
         @PathVariable("commentId") Long commentId,
-        @PathVariable String communityId) {
+        @PathVariable String id) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityCommentService.update(commentId, email, requestDto));
+        return ResponseDto.of(communityCommentService.update(commentId, email, requestDto), "댓글이 성공적으로 수정되었습니다.");
     }
 
     @Operation(summary = "댓글 삭제")
@@ -68,10 +68,10 @@ public class CommunityCommentController {
     @DeleteMapping("/{commentId}")
     public ResponseDto<Void> delete(
         @PathVariable("commentId") Long commentId,
-        @PathVariable String communityId) {
+        @PathVariable String id) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
         communityCommentService.delete(commentId, email);
-        return ResponseDto.of(null);
+        return ResponseDto.of(null, "댓글이 성공적으로 삭제되었습니다.");
     }
 }
