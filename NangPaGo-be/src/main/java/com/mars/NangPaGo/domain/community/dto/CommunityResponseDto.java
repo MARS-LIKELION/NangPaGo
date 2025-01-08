@@ -18,7 +18,7 @@ public record CommunityResponseDto(
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
-    private static final String DEFAULT_IMAGE_URL =
+    public static final String DEFAULT_IMAGE_URL =
         "https://storage.googleapis.com/nangpago-9d371.firebasestorage.app/dc137676-6240-4920-97d3-727c4b7d6d8d_360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg";
 
     public static CommunityResponseDto of(Community community, String email) {
