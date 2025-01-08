@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import NoResult from '../../components/search/NoResult';
 import EmptyState from '../../components/search/EmptyState';
+import { parseHighlightedName } from '../../components/util/stringUtil';
 
 function RecipeSearch() {
   const navigate = useNavigate();
@@ -87,7 +88,9 @@ function RecipeSearch() {
                   onClick={() => handleResultClick(recipe)}
                   className="p-3 rounded-lg cursor-pointer hover:bg-gray-50"
                 >
-                  <span className="text-black">{recipe.name}</span>
+                  <span className="text-black">
+                    {parseHighlightedName(recipe.highlightedName)}
+                  </span>
                 </div>
               ))}
             </div>

@@ -30,20 +30,13 @@ public class RecipeEsService {
         Query query = queryBuilder.buildSearchQuery(keyword, searchType);
 
         SearchResponse<RecipeEs> response = getRecipeEsSearchResponse(query, pageable);
-        List<RecipeEsResponseDto> results = response.hits().hits().stream()
-            .filter(hit -> hit.source() != null)
-            .map(hit -> RecipeEsResponseDto.of(
-                hit.source(),
-                hit.score() != null ? hit.score().floatValue() : 0.0f
-            ))
-            .toList();
+        List<RecipeEsResponseDto> results = getResponseDtos(response);
 
         long total = Optional.ofNullable(response.hits().total())
             .map(totalHits -> Optional.of(totalHits.value()).orElse(0L))
             .orElse(0L);
 
         return new PageImpl<>(results, pageable, total);
-
     }
 
     private SearchResponse<RecipeEs> getRecipeEsSearchResponse(Query query, Pageable pageable) {
@@ -51,10 +44,34 @@ public class RecipeEsService {
             return elasticsearchClient.search(s -> s
                 .index("recipes")
                 .query(query)
+                .highlight(h -> h
+                    .fields("name.ngram", f -> f)
+                    .preTags("<em>").postTags("</em>")
+                )
                 .from((int) pageable.getOffset())
                 .size(pageable.getPageSize()), RecipeEs.class);
         } catch (Exception e) {
             throw NPGExceptionType.SERVER_ERROR_ELASTICSEARCH.of("레시피 검색 오류 " + e.getMessage());
         }
+    }
+
+    private List<RecipeEsResponseDto> getResponseDtos(SearchResponse<RecipeEs> response) {
+        return response.hits().hits().stream()
+            .filter(hit -> hit.source() != null)
+            .map(hit -> {
+                RecipeEs source = hit.source();
+                String highlightedName = Optional.ofNullable(hit.highlight())
+                    .map(highlight -> highlight.get("name.ngram"))
+                    .filter(highlights -> !highlights.isEmpty())
+                    .map(highlights -> highlights.get(0))
+                    .orElse(source.getName());
+
+                return RecipeEsResponseDto.of(
+                    source,
+                    highlightedName,
+                    hit.score() != null ? hit.score().floatValue() : 0.0f
+                );
+            })
+            .toList();
     }
 }
