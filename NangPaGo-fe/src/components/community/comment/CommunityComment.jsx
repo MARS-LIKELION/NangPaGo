@@ -5,7 +5,7 @@ import {
   createComment,
   deleteComment,
   updateComment,
-} from '../../../api/CommunityComment.js';
+} from '../../../api/communityComment.js';
 import LoginModal from '../../../common/modal/LoginModal';
 import DeleteModal from '../../../common/modal/DeleteModal';
 import {
