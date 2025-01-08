@@ -25,7 +25,7 @@ public record UserRequestDto(
     public static UserRequestDto fromOAuth2UserInfo(OAuth2UserInfo userInfo) {
         String phone = "";
         String birthday = "";
-        String nickname = "";
+        String nickname;
         String gender = "";
 
         if (userInfo instanceof NaverUserInfo naverUserInfo) {
@@ -38,6 +38,10 @@ public record UserRequestDto(
             birthday = kakaoUserInfo.getBirthday();
             nickname = kakaoUserInfo.getName();
             gender = kakaoUserInfo.getGender();
+        } else {
+            String email = userInfo.getEmail();
+            int atIndex = email.indexOf('@');
+            nickname = email.substring(0, atIndex);
         }
 
         return UserRequestDto.builder()
