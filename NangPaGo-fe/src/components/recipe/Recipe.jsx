@@ -7,7 +7,6 @@ import { FaHeart, FaStar } from 'react-icons/fa';
 import RecipeComment from './comment/RecipeComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
-import { AiFillHeart } from 'react-icons/ai';
 import { getLikeCount } from '../../api/recipe.js';
 
 function Recipe({ recipe }) {
@@ -85,41 +84,44 @@ function Recipe({ recipe }) {
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
       <Header />
-      <div className="px-4">
-        <div className="mt-4">
+      <div>
+        <div className="mt-4 px-4">
           <img
             src={recipe.mainImage}
             alt={recipe.name}
             className="w-full h-48 object-cover rounded-md"
           />
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold">{recipe.name}</h1>
-          <div className="flex gap-2">
+
+        <div className="mt-2 flex items-center justify-between px-4">
+          {/* 왼쪽: 좋아요 버튼과 개수 */}
+          <div className="flex items-center gap-2">
             <button
-              className={`bg-white ${
+              className={`flex items-center ${
                 isHeartActive ? 'text-red-500' : 'text-gray-500'
               }`}
               onClick={toggleHeart}
             >
-              <FaHeart className="bg-white text-2xl" />
+              <FaHeart className="text-2xl" />
+              <span className="text-sm ml-1">{likeCount}</span>
             </button>
+          </div>
+
+          {/* 오른쪽: 즐겨찾기 버튼 */}
+          <div>
             <button
-              className={`bg-white ${
-                isStarActive ? 'text-yellow-500' : 'text-gray-500'
-              }`}
+              className={` ${isStarActive ? 'text-[var(--primary-color)]' : 'text-gray-500'}`}
               onClick={toggleStar}
             >
-              <FaStar className="bg-white text-2xl" />
+              <FaStar className="text-2xl" />
             </button>
           </div>
         </div>
-        {/* 좋아요 개수 표시 */}
-        <div className="text-sm text-gray-600 flex items-center gap-1 my-1">
-          <AiFillHeart className="text-red-500 text-xl" />
-          {likeCount !== null ? likeCount : '0'}
-        </div>
-        <div className="flex gap-2">
+
+        <h1 className="text-xl font-bold mt-2 px-4">{recipe.name}</h1>
+
+        {/* 태그들 */}
+        <div className="flex gap-2 mt-2 px-4">
           {recipe.mainIngredient && (
             <p className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded">
               {recipe.mainIngredient}
@@ -136,7 +138,9 @@ function Recipe({ recipe }) {
             </p>
           )}
         </div>
-        <div className="mt-7">
+
+        {/* 기타 섹션 */}
+        <div className="mt-7 px-4">
           <h2 className="text-lg font-semibold mb-3">재료</h2>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-gray-700 text-sm">
             {recipe.ingredients
@@ -164,7 +168,7 @@ function Recipe({ recipe }) {
             </ul>
           </div>
         )}
-        <div className="mt-7">
+        <div className="mt-7 px-4">
           <h2 className="text-lg font-semibold">요리 과정</h2>
           {recipe.manuals.map((step, index) => (
             <div key={index} className="mt-4">
@@ -175,7 +179,7 @@ function Recipe({ recipe }) {
             </div>
           ))}
         </div>
-        <div className="mt-7">
+        <div className="mt-7 px-4">
           <NutritionInfo
             calories={recipe.calorie}
             fat={recipe.fat}

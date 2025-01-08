@@ -29,11 +29,11 @@ function RecipeCard({ recipe }) {
         className="w-full h-48 object-cover"
       />
       <div className="p-4 flex flex-col gap-2">
-        <h3 className="text-lg font-semibold">{recipe.name}</h3>
-        <div className="text-sm text-gray-600 flex items-center gap-1 mt-[-5px]">
+        <div className="text-sm text-gray-600 flex items-center gap-1">
           <AiFillHeart className="text-red-500 text-xl" />
           {likeCount !== null ? likeCount : '0'}
         </div>
+        <h3 className="text-lg font-semibold">{recipe.name}</h3>
         <div className="flex flex-wrap gap-2">
           {recipe.ingredientsDisplayTag.map((tag, index) => (
             <span

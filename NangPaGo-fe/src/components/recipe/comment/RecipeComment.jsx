@@ -131,7 +131,7 @@ function RecipeComment({ recipeId }) {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 px-4">
       <div className="mt-10 flex justify-center items-center border-t-2 border-b-2 border-gray-300 p-4 mx-auto">
         <h1 className="text-18px font-bold md:text-30px">
           댓글 ({totalItems})
@@ -266,7 +266,7 @@ function RecipeComment({ recipeId }) {
         />
         <button
           type="submit"
-          className={`block w-full text-white px-4 py-2 rounded-md bg-[var(--primary-color)] ${
+          className={`block w-full text-white mb-4 px-4 py-2 rounded-md bg-[var(--primary-color)] ${
             isSubmitting ? 'cursor-not-allowed' : ''
           }`}
           disabled={isSubmitting}
