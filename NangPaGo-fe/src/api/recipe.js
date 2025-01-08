@@ -29,10 +29,12 @@ export const fetchRecommendedRecipes = async (
       ...(searchTerm && { keyword: searchTerm, searchType: 'NAME' }),
     };
     const response = await axiosInstance.get('/api/recipe/search', { params });
-    return response.data.data.content || [];
+
+    const { content, last, number } = response.data.data;
+    return { content: content || [], last, number };
   } catch (error) {
     console.error('Error fetching recommended recipes:', error);
-    return [];
+    return { content: [], last: true, number: pageNo };
   }
 };
 
