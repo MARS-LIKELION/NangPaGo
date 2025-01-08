@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class RecipeLikeService {
@@ -23,11 +23,15 @@ public class RecipeLikeService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
     public boolean isLiked(Long recipeId, String email) {
         return recipeLikeRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
     }
 
+    public int getLikeCount(Long recipeId) {
+        return recipeLikeRepository.countByRecipeId(recipeId);
+    }
+
+    @Transactional
     public RecipeLikeResponseDto toggleLike(Long recipeId, String email) {
         boolean isLikedAfterToggle = toggleLikeStatus(recipeId, email);
         return RecipeLikeResponseDto.of(recipeId, isLikedAfterToggle);

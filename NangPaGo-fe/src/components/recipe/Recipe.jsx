@@ -7,6 +7,8 @@ import { FaHeart, FaStar } from 'react-icons/fa';
 import RecipeComment from './comment/RecipeComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
+import { AiFillHeart } from 'react-icons/ai';
+import { getLikeCount } from '../../api/recipe.js';
 
 function Recipe({ recipe }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);
@@ -15,12 +17,23 @@ function Recipe({ recipe }) {
   const [isHeartActive, setIsHeartActive] = useState(false);
   const [isStarActive, setIsStarActive] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   useEffect(() => {
+    fetchLikeCount();
     if (isLoggedIn) {
       fetchStatuses();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, recipe.id]);
+
+  const fetchLikeCount = async () => {
+    try {
+      const count = await getLikeCount(recipe.id);
+      setLikeCount(count);
+    } catch (error) {
+      console.error('좋아요 수를 가져오는 중 오류가 발생했습니다:', error);
+    }
+  };
 
   const fetchStatuses = async () => {
     try {
@@ -45,9 +58,11 @@ function Recipe({ recipe }) {
       const response = await axiosInstance.post(
         `/api/recipe/${recipe.id}/like/toggle`,
       );
-      setIsHeartActive(response.data.data.liked);
+      const isLiked = response.data.data.liked;
+      setIsHeartActive(isLiked);
+      setLikeCount((prev) => (isLiked ? prev + 1 : prev - 1));
     } catch (error) {
-      console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다.', error);
+      console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다:', error);
     }
   };
 
@@ -61,7 +76,6 @@ function Recipe({ recipe }) {
       const response = await axiosInstance.post(
         `/api/recipe/${recipe.id}/favorite/toggle`,
       );
-      console.log('Response:', response);
       setIsStarActive(response.data.data.favorited);
     } catch (error) {
       console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다.', error);
@@ -79,22 +93,31 @@ function Recipe({ recipe }) {
             className="w-full h-48 object-cover rounded-md"
           />
         </div>
-        <div className="mt-4 flex items-center pb-3 justify-between">
+        <div className="mt-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">{recipe.name}</h1>
           <div className="flex gap-2">
             <button
-              className={`bg-white ${isHeartActive ? 'text-red-500' : 'text-gray-500'}`}
+              className={`bg-white ${
+                isHeartActive ? 'text-red-500' : 'text-gray-500'
+              }`}
               onClick={toggleHeart}
             >
               <FaHeart className="bg-white text-2xl" />
             </button>
             <button
-              className={`bg-white ${isStarActive ? 'text-yellow-500' : 'text-gray-500'}`}
+              className={`bg-white ${
+                isStarActive ? 'text-yellow-500' : 'text-gray-500'
+              }`}
               onClick={toggleStar}
             >
               <FaStar className="bg-white text-2xl" />
             </button>
           </div>
+        </div>
+        {/* 좋아요 개수 표시 */}
+        <div className="text-sm text-gray-600 flex items-center gap-1 my-1">
+          <AiFillHeart className="text-red-500 text-xl" />
+          {likeCount !== null ? likeCount : '0'}
         </div>
         <div className="flex gap-2">
           {recipe.mainIngredient && (

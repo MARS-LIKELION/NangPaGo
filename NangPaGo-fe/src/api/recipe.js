@@ -57,3 +57,15 @@ export const fetchFavoriteRecipes = async (
     };
   }
 };
+
+export const getLikeCount = async (recipeId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/recipe/${recipeId}/like/count`,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('좋아요 수를 가져오는 중 오류가 발생했습니다:', error);
+    throw error;
+  }
+};
