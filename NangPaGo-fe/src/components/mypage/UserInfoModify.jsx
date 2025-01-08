@@ -112,7 +112,11 @@ const UserInfoModify = () => {
                 <input
                   type="text"
                   value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
+                  onChange={(e) => {
+                    setNickname(e.target.value);
+                    setIsNicknameAvailable(false);
+                    setIsNicknameAvailableMessage('');
+                  }}
                   className="flex-1 p-2 border border-gray-300 rounded"
                 />
                 <button
