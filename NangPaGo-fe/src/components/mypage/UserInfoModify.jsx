@@ -34,7 +34,7 @@ const UserInfoModify = () => {
     if (isLoggedIn) {
       fetchUserInfo();
     }
-  }, []);
+  }, [isLoggedIn]);
 
   const handleNicknameCheck = async () => {
     try {
