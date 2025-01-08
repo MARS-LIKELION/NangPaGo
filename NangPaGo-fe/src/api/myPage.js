@@ -45,12 +45,9 @@ export async function getComments(page, size) {
 
 export async function getLikes(page, size) {
   try {
-    const response = await axiosInstance.get(
-      '/api/user/my-page/likes/recipes',
-      {
-        params: { page, size },
-      },
-    );
+    const response = await axiosInstance.get('/api/user/likes/recipes', {
+      params: { pageNo: page, pageSize: size },
+    });
     console.log('좋아요한 레시피 목록:', response.data.data);
     return response.data.data;
   } catch (error) {

@@ -1,8 +1,10 @@
 package com.mars.NangPaGo.domain.user.service;
 
+import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.NangPaGo.domain.favorite.recipe.repository.RecipeFavoriteRepository;
+import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.NangPaGo.domain.refrigerator.repository.RefrigeratorRepository;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
@@ -12,6 +14,8 @@ import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +53,13 @@ public class UserService {
             favoriteCount,
             commentCount,
             refrigeratorCount
+        );
+    }
+
+    public PageDto<RecipeResponseDto> getMyLikedRecipes(String email, int pageNo, int pageSize) {
+        return PageDto.of(
+            recipeLikeRepository.findRecipeLikeByUser(findUserByEmail(email), PageRequest.of(pageNo, pageSize))
+                .map(recipeLike -> RecipeResponseDto.from(recipeLike.getRecipe()))
         );
     }
 
