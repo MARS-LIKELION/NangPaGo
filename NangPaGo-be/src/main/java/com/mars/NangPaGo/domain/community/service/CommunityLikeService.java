@@ -27,7 +27,7 @@ public class CommunityLikeService {
         return communityLikeRepository.findByEmailAndCommunityId(email, id).isPresent();
     }
 
-    public long countLikes(Long id) {
+    public long getLikeCount(Long id) {
         return communityLikeRepository.countByCommunityId(id);
     }
 

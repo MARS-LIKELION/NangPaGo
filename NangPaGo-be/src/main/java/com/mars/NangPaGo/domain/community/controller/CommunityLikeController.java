@@ -41,7 +41,7 @@ public class CommunityLikeController {
     @Operation(summary = "게시물 좋아요 개수 조회")
     @GetMapping("/{id}/like/count")
     public ResponseDto<Long> getCommunityLikeCount(@PathVariable Long id) {
-        long likeCount = communityLikeService.countLikes(id);
+        long likeCount = communityLikeService.getLikeCount(id);
         return ResponseDto.of(likeCount);
     }
 }
