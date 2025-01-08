@@ -10,8 +10,8 @@ function CommunityDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const email = useSelector((state) => state.loginSlice.email);
-  const isLoggedIn = Boolean(email);
+  const nickname = useSelector((state) => state.loginSlice.nickname);
+  const isLoggedIn = Boolean(nickname);
 
   useEffect(() => {
     const fetchCommunity = async () => {

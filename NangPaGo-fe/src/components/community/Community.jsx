@@ -1,26 +1,36 @@
 import axiosInstance from '../../api/axiosInstance.js';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { FaHeart, FaStar } from 'react-icons/fa';
+import { FaHeart } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; // useNavigate 추가
 import CommunityComment from './comment/CommunityComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { getLikeCount } from '../../api/community.js';
+import CreateButton from '../common/CreateButton.jsx';
+import TopButton from '../common/TopButton.jsx';
 
 function Community({ community }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);
   const isLoggedIn = Boolean(userEmail);
+  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
 
   const [isHeartActive, setIsHeartActive] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
+  const navigate = useNavigate(); // useNavigate 호출
+
   useEffect(() => {
-      fetchLikeCount();
-      if (isLoggedIn) {
-        fetchLikeStatus();
-      }
-    }, [isLoggedIn, community.id]);
+    fetchLikeCount();
+    if (isLoggedIn) {
+      fetchLikeStatus();
+    }
+  }, [isLoggedIn, community.id]);
+
+  const handleCreateClick = () => {
+    navigate('/community/new'); // 페이지 이동
+  };
 
   const fetchLikeCount = async () => {
     try {
@@ -33,7 +43,9 @@ function Community({ community }) {
 
   const fetchLikeStatus = async () => {
     try {
-      const response = await axiosInstance.get(`/api/community/${community.id}/like/status`);
+      const response = await axiosInstance.get(
+        `/api/community/${community.id}/like/status`,
+      );
       setIsHeartActive(response.data.data);
     } catch (error) {
       console.error('좋아요 상태를 불러오는 중 오류가 발생했습니다.', error);
@@ -66,10 +78,11 @@ function Community({ community }) {
           <h1 className="text-xl font-bold">{community.title}</h1>
           <div className="mt-2 flex flex-col text-gray-500 text-xs">
             <span>{community.email}</span>
-            <span>{new Intl.DateTimeFormat('ko-KR', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
+            <span>
+              {new Intl.DateTimeFormat('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
               }).format(new Date(community.updatedAt))}
             </span>
           </div>
@@ -102,6 +115,17 @@ function Community({ community }) {
         <CommunityComment communityId={community.id} />
       </div>
       <Footer />
+      <CreateButton
+        onClick={handleCreateClick}
+        isTopButtonVisible={isTopButtonVisible}
+        basePositionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
+      />
+      {isTopButtonVisible && (
+        <TopButton
+          offset={100}
+          positionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
+        />
+      )}
     </div>
   );
 }
