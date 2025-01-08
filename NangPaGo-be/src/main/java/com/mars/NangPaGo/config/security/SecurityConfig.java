@@ -39,7 +39,6 @@ public class SecurityConfig {
         "/api/ingredient/search",
         "/api/recipe/search",
         "/api/community/{id}",
-        "/api/community/{id}/comments",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/api-docs/**",
