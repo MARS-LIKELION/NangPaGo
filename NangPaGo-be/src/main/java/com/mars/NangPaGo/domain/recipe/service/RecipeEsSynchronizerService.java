@@ -23,6 +23,8 @@ public class RecipeEsSynchronizerService {
     @Transactional
     public String insertRecipeFromMysql() {
         try {
+            recipeEsRepository.deleteAll();
+
             List<Recipe> recipeList = recipeRepository.findAll();
 
             if (recipeList.isEmpty()) {
