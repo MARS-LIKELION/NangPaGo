@@ -16,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +48,9 @@ public class User extends BaseEntity {
     @Column(name = "provider")
     private OAuth2Provider oauth2Provider;
     private String providerId;
+
+    private boolean isAvailable;
+    private LocalDate leftAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeComment> comments;
