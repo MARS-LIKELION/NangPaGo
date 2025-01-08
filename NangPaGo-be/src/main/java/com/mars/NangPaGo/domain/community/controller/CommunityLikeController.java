@@ -37,4 +37,11 @@ public class CommunityLikeController {
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(communityLikeService.toggleLike(id, email));
     }
+
+    @Operation(summary = "게시물 좋아요 개수 조회")
+    @GetMapping("/{id}/like/count")
+    public ResponseDto<Long> getCommunityLikeCount(@PathVariable Long id) {
+        long likeCount = communityLikeService.countLikes(id);
+        return ResponseDto.of(likeCount);
+    }
 }

@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CommunityLikeService {
@@ -23,16 +23,22 @@ public class CommunityLikeService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean isLiked(Long id, String email) {
         return communityLikeRepository.findByEmailAndCommunityId(email, id).isPresent();
     }
 
+    public long countLikes(Long id) {
+        return communityLikeRepository.countByCommunityId(id);
+    }
+
+    @Transactional
     public CommunityLikeResponseDto toggleLike(Long id, String email) {
         boolean isLikedAfterToggle = toggleLikeStatus(id, email);
         return CommunityLikeResponseDto.of(id, isLikedAfterToggle);
     }
 
+    @Transactional
     private boolean toggleLikeStatus(Long id, String email) {
         User user = getUserByEmail(email);
         Community community = communityRepository.findById(id)
@@ -47,11 +53,13 @@ public class CommunityLikeService {
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
     }
 
+    @Transactional
     private boolean removeLike(CommunityLike communityLike) {
         communityLikeRepository.delete(communityLike);
         return false;
     }
 
+    @Transactional
     private boolean addLike(User user, Community community) {
         communityLikeRepository.save(CommunityLike.of(user, community));
         return true;
