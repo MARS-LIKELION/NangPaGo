@@ -1,6 +1,23 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getLikeCount } from '../../api/recipe';
+import { AiFillHeart } from 'react-icons/ai';
 
 function RecipeCard({ recipe }) {
+  const [likeCount, setLikeCount] = useState(null);
+
+  useEffect(() => {
+    const fetchLikeCount = async () => {
+      try {
+        const count = await getLikeCount(recipe.id);
+        setLikeCount(count);
+      } catch (error) {
+        console.error('좋아요 개수를 가져오는 중 오류 발생:', error);
+      }
+    };
+    fetchLikeCount();
+  }, [recipe.id]);
+
   return (
     <Link
       to={`/recipe/${recipe.id}`}
@@ -13,6 +30,10 @@ function RecipeCard({ recipe }) {
       />
       <div className="p-4 flex flex-col gap-2">
         <h3 className="text-lg font-semibold">{recipe.name}</h3>
+        <div className="text-sm text-gray-600 flex items-center gap-1 mt-[-5px]">
+          <AiFillHeart className="text-red-500 text-xl" />
+          {likeCount !== null ? likeCount : '0'}
+        </div>
         <div className="flex flex-wrap gap-2">
           {recipe.ingredientsDisplayTag.map((tag, index) => (
             <span
