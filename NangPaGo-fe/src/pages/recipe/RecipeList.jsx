@@ -6,7 +6,6 @@ import SearchBar from '../../components/search/SearchBar';
 import Header from '../../components/common/Header.jsx';
 import Footer from '../../components/common/Footer.jsx';
 import TopButton from '../../components/common/TopButton';
-import CreateButton from '../../components/common/CreateButton.jsx';
 import axiosInstance from '../../api/axiosInstance';
 
 function RecipeList() {
@@ -49,11 +48,6 @@ function RecipeList() {
     }
   }, [activeTab]);
 
-  const handleCreateClick = () => {
-    alert('글 생성 버튼이 클릭되었습니다!');
-    // 실제로는 navigate('/recipe/create') 등으로 이동할 수도 있음
-  };
-
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
       <Header />
@@ -88,14 +82,6 @@ function RecipeList() {
       </div>
 
       <Footer />
-
-      {activeTab === 'recommended' && (
-        <CreateButton
-          onClick={handleCreateClick}
-          isTopButtonVisible={isTopButtonVisible}
-          basePositionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-        />
-      )}
 
       {isTopButtonVisible && (
         <TopButton

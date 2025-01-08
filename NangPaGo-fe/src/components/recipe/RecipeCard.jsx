@@ -53,12 +53,6 @@ function RecipeCard({ recipe }) {
         </div>
 
         <h3 className="text-lg font-semibold">{recipe.name}</h3>
-        <div className="text-sm text-gray-600 flex items-center gap-1 mt-[-5px]">
-          <AiFillHeart className="text-red-500 text-xl" />
-          {likeCount !== null ? likeCount : '0'}
-        </div>
-
-        <h3 className="text-lg font-semibold">{recipe.name}</h3>
         <div className="flex flex-wrap gap-2">
           {recipe.ingredientsDisplayTag.map((tag, index) => (
             <span
