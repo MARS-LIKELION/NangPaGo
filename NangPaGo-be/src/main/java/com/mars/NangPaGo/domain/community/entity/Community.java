@@ -35,18 +35,36 @@ public class Community extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 100)
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", length = 1000)
     private String content;
+
+    @Column(nullable = false)
+    private boolean isPublic;
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityComment> comments;
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommunityLike> likes;
+
+    public static Community of(User user, String title, String content, boolean isPublic) {
+        return Community.builder()
+            .user(user)
+            .title(title)
+            .content(content)
+            .isPublic(isPublic)
+            .build();
+    }
+
+    public void update(String title, String content, boolean isPublic) {
+        this.title = title;
+        this.content = content;
+        this.isPublic = isPublic;
+    }
 }
