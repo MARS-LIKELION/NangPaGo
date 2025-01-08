@@ -2,6 +2,8 @@ package com.mars.NangPaGo.domain.user.service;
 
 import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
+import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
+import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
 import com.mars.NangPaGo.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.NangPaGo.domain.favorite.recipe.repository.RecipeFavoriteRepository;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
@@ -14,6 +16,7 @@ import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -62,6 +65,14 @@ public class UserService {
                 .map(recipeLike -> RecipeResponseDto.from(recipeLike.getRecipe()))
         );
     }
+
+    public PageDto<RecipeCommentResponseDto> getMyComments(String email, int pageNo, int pageSize) {
+        return PageDto.of(
+            recipeCommentRepository.findByUserEmail(email, PageRequest.of(pageNo, pageSize))
+                .map(recipeComment -> RecipeCommentResponseDto.from(recipeComment, email))
+        );
+    }
+
 
     public UserInfoResponseDto getUserInfo(String email) {
         return UserInfoResponseDto.from(findUserByEmail(email));

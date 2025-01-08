@@ -11,9 +11,9 @@ export async function getMyPageInfo() {
   }
 }
 
-export async function getRefrigeratorPosts(page, size) {
+export async function getRefrigerator(page, size) {
   try {
-    const response = await axiosInstance.get('/api/user/my-page/refrigerator', {
+    const response = await axiosInstance.get('/api/refrigerator', {
       params: {
         pageNo: page,
         pageSize: size,
@@ -29,12 +29,9 @@ export async function getRefrigeratorPosts(page, size) {
 
 export async function getComments(page, size) {
   try {
-    const response = await axiosInstance.get(
-      '/api/user/my-page/comments/recipes',
-      {
-        params: { page, size },
-      },
-    );
+    const response = await axiosInstance.get('/api/user/comments', {
+      params: { pageNo: page, pageSize: size },
+    });
     console.log('댓글 단 레시피 목록:', response.data.data);
     return response.data.data;
   } catch (error) {
