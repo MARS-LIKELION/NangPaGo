@@ -57,6 +57,7 @@ public class EsRecipeSearchQueryBuilder {
             .functions(f -> f
                 .randomScore(rs -> rs
                     .seed(String.valueOf(System.currentTimeMillis()))
+                    .field("_seq_no")
                 )
             )
         );
