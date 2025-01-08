@@ -16,7 +16,6 @@ export async function getComments(page, size) {
     const response = await axiosInstance.get('/api/user/comments', {
       params: { pageNo: page, pageSize: size },
     });
-    console.log('댓글 단 레시피 목록:', response.data.data);
     return response.data.data;
   } catch (error) {
     console.error('댓글 단 레시피 목록 조회 실패:', error);
@@ -29,7 +28,6 @@ export async function getLikes(page, size) {
     const response = await axiosInstance.get('/api/user/likes/recipes', {
       params: { pageNo: page, pageSize: size },
     });
-    console.log('좋아요한 레시피 목록:', response.data.data);
     return response.data.data;
   } catch (error) {
     console.error('좋아요한 레시피 목록 조회 실패:', error);
@@ -39,12 +37,9 @@ export async function getLikes(page, size) {
 
 export async function getFavorites(page, size) {
   try {
-    const response = await axiosInstance.get(
-      '/api/user/my-page/favorites/recipes',
-      {
-        params: { page, size },
-      },
-    );
+    const response = await axiosInstance.get('/api/user/favorites/recipes', {
+      params: { pageNo: page, pageSize: size },
+    });
     console.log('즐겨찾기한 레시피 목록:', response.data.data);
     return response.data.data;
   } catch (error) {

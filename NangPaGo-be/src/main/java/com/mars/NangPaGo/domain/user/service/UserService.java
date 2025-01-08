@@ -5,6 +5,7 @@ import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
 import com.mars.NangPaGo.domain.comment.recipe.repository.RecipeCommentRepository;
+import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.repository.RecipeFavoriteRepository;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeLikeRepository;
@@ -61,6 +62,13 @@ public class UserService {
         return PageDto.of(
             recipeLikeRepository.findRecipeLikeByUser(findUserByEmail(email), PageRequest.of(pageNo, pageSize))
                 .map(recipeLike -> RecipeResponseDto.from(recipeLike.getRecipe()))
+        );
+    }
+
+    public PageDto<RecipeFavoriteListResponseDto> getMyFavorites(String email, int pageNo, int pageSize) {
+        return PageDto.of(
+            recipeFavoriteRepository.findAllByUser(findUserByEmail(email), PageRequest.of(pageNo, pageSize))
+                .map(recipeFavorite -> RecipeFavoriteListResponseDto.of(recipeFavorite.getRecipe()))
         );
     }
 

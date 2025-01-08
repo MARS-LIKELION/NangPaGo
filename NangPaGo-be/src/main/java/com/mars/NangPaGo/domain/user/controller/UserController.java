@@ -6,6 +6,7 @@ import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.dto.ResponseDto;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
+import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
 import com.mars.NangPaGo.domain.user.dto.UserInfoRequestDto;
@@ -66,6 +67,16 @@ public class UserController {
     ) {
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(userService.getMyLikedRecipes(email, pageNo, pageSize));
+    }
+
+    @AuthenticatedUser
+    @GetMapping("/favorites/recipes")
+    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getMyFavorites(
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "7") int pageSize
+    ) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(userService.getMyFavorites(email, pageNo, pageSize));
     }
 
     @AuthenticatedUser

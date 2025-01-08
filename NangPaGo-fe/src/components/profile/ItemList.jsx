@@ -59,7 +59,7 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
             <div className="flex h-[90px]">
               <div className="w-[90px] h-[90px] flex-shrink-0 bg-gray-100 overflow-hidden">
                 <img
-                  src={item.mainImage || ''}
+                  src={item.recipeImageUrl || item.mainImage || ''}
                   alt={item.name || item.content}
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -91,6 +91,17 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
                       {item.mainIngredient}
                     </span>
                   )}
+
+                  <div className="text-sm text-black flex flex-wrap gap-2 overflow-hidden max-h-[30px]">
+                    {item.ingredientsDisplayTag?.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="py-1 px-2 bg-[var(--secondary-color)] rounded inline-block max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

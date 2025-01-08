@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  getLikes,
-  getComments,
-  getFavorites,
   getMyPageInfo,
+  getLikes,
+  getFavorites,
+  getComments,
 } from '../../api/myPage.js';
 
 import Header from '../../components/common/Header';
@@ -21,8 +21,8 @@ function Profile() {
   const [hasMore, setHasMore] = useState(true);
   const [totalCounts, setTotalCounts] = useState({
     likes: 0,
-    comments: 0,
     favorites: 0,
+    comments: 0,
   });
   const isFetchingRef = useRef(false);
   const navigate = useNavigate();
@@ -33,14 +33,13 @@ function Profile() {
         setMyPageInfo(info);
         setTotalCounts({
           likes: info.likeCount || 0,
-          comments: info.commentCount || 0,
           favorites: info.favoriteCount || 0,
+          comments: info.commentCount || 0,
         });
       })
       .catch(console.error);
   }, []);
 
-  // 활성 탭의 데이터를 가져오는 함수
   const fetchTabData = async (currentPage) => {
     if (isFetchingRef.current || !hasMore) return;
 
@@ -49,14 +48,14 @@ function Profile() {
     try {
       let data = { content: [], last: true };
       switch (activeTab) {
-        case 'comments':
-          data = await getComments(currentPage, 7);
-          break;
         case 'likes':
           data = await getLikes(currentPage, 7);
           break;
         case 'favorites':
           data = await getFavorites(currentPage, 7);
+          break;
+        case 'comments':
+          data = await getComments(currentPage, 7);
           break;
         default:
           data = { content: [], last: true };
@@ -82,14 +81,12 @@ function Profile() {
     fetchTabData(page);
   }, [page]);
 
-  // 탭 변경 시 상태 초기화
   useEffect(() => {
     setItems([]);
     setPage(0);
     setHasMore(true);
   }, [activeTab]);
 
-  // 아이템 클릭 이벤트
   const handleItemClick = (id) => {
     if (activeTab !== 'comments') {
       navigate(`/recipe/${id}`);
