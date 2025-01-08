@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BiSearch, BiArrowBack } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import { addIngredient } from '../../api/refrigerator';
 import SearchResult from '../../components/search/SearchResult';
 import NoResult from '../../components/search/NoResult';
 import EmptyState from '../../components/search/EmptyState';
+import useDebounce from '../../hooks/useDebounce';
 
 function RefrigeratorSearch() {
   const navigate = useNavigate();
@@ -17,28 +18,35 @@ function RefrigeratorSearch() {
   const [results, setResults] = useState([]);
   const [existingIngredientMessage, setExistingIngredientMessage] =
     useState('');
+  const debouncedKeyword = useDebounce(keyword, 500);
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const newKeyword = e.target.value;
     setKeyword(newKeyword);
     setExistingIngredientMessage('');
-
-    if (!newKeyword.trim()) {
-      setResults([]);
-      return;
-    }
-
-    try {
-      const response = await axios.get('/api/ingredient/search', {
-        params: { keyword: newKeyword },
-      });
-      const { data } = response.data;
-      setResults(data);
-    } catch (error) {
-      console.error('검색 요청 실패:', error);
-      setResults([]);
-    }
   };
+
+  useEffect(() => {
+    const searchIngredients = async () => {
+      if (!debouncedKeyword.trim()) {
+        setResults([]);
+        return;
+      }
+
+      try {
+        const response = await axios.get('/api/ingredient/search', {
+          params: { keyword: debouncedKeyword },
+        });
+        const { data } = response.data;
+        setResults(data);
+      } catch (error) {
+        console.error('검색 요청 실패:', error);
+        setResults([]);
+      }
+    };
+
+    searchIngredients();
+  }, [debouncedKeyword]);
 
   const handleResultClick = async (highlightedName) => {
     const rawName = stripHtmlTags(highlightedName);
