@@ -19,7 +19,7 @@ function CommunityDetail() {
         const response = await axiosInstance.get(`/api/community/${id}`);
         setCommunity(response.data.data);
       } catch (err) {
-        setError('레시피를 불러오는데 실패했습니다.');
+        setError('게시물을 불러오는데 실패했습니다.');
         console.error(err);
       } finally {
         setLoading(false);
