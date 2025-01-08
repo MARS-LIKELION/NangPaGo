@@ -1,41 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BiSearch, BiArrowBack } from 'react-icons/bi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import NoResult from '../../components/search/NoResult';
 import EmptyState from '../../components/search/EmptyState';
 import { parseHighlightedName } from '../../components/util/stringUtil';
+import useDebounce from '../../hooks/useDebounce';
 
 function RecipeSearch() {
   const navigate = useNavigate();
   const location = useLocation();
   const [keyword, setKeyword] = useState(location.state?.searchTerm || '');
   const [results, setResults] = useState([]);
+  const debouncedKeyword = useDebounce(keyword, 500);
 
-  const handleChange = async (e) => {
-    const newKeyword = e.target.value;
-    setKeyword(newKeyword);
-
-    if (!newKeyword.trim()) {
-      setResults([]);
-      return;
-    }
-
-    try {
-      const response = await axios.get('/api/recipe/search', {
-        params: {
-          pageNo: 1,
-          pageSize: 10,
-          keyword: newKeyword,
-          searchType: 'NAME',
-        },
-      });
-      setResults(response.data.data.content);
-    } catch (error) {
-      console.error('레시피 검색 요청 실패:', error);
-      setResults([]);
-    }
+  const handleChange = (e) => {
+    setKeyword(e.target.value);
   };
+
+  useEffect(() => {
+    const searchRecipes = async () => {
+      if (!debouncedKeyword.trim()) {
+        setResults([]);
+        return;
+      }
+
+      try {
+        const response = await axios.get('/api/recipe/search', {
+          params: {
+            pageNo: 1,
+            pageSize: 10,
+            keyword: debouncedKeyword,
+            searchType: 'NAME',
+          },
+        });
+        setResults(response.data.data.content);
+      } catch (error) {
+        console.error('레시피 검색 요청 실패:', error);
+        setResults([]);
+      }
+    };
+
+    searchRecipes();
+  }, [debouncedKeyword]);
 
   const handleResultClick = (recipe) => {
     navigate(`/recipe/${recipe.id}`);
