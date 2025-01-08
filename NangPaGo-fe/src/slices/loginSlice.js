@@ -35,6 +35,7 @@ const loadState = () => {
 const initialState = {
   ...loadState(),
   email: '',
+  nickname: '',
   status: 'idle',
   error: null,
   isInitialized: false,
@@ -46,6 +47,7 @@ const loginSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.email = '';
+      state.nickname = '';
       state.isLoggedIn = false;
       state.status = 'idle';
       state.error = null;
@@ -60,6 +62,7 @@ const loginSlice = createSlice({
       })
       .addCase(fetchUserStatus.fulfilled, (state, action) => {
         state.email = action.payload.email;
+        state.nickname = action.payload.nickname;
         state.isLoggedIn = true;
         state.status = 'succeeded';
         state.isInitialized = true;

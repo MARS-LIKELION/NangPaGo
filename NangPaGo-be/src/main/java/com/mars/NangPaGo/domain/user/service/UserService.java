@@ -55,21 +55,28 @@ public class UserService {
         return UserInfoResponseDto.from(findUserByEmail(email));
     }
 
-    public boolean usableNickname(String nickname) {
-        return !userRepository.existsByNickname(nickname) && nickname.length() > MIN_NICKNAME_LENGTH;
+    public boolean isNicknameAvailable(String targetNickname) {
+        return validateNickname(targetNickname);
     }
 
     @Transactional
     public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
-        usableNickname(requestDto);
-
-        return UserInfoResponseDto.from(updateNickname(requestDto, email));
-    }
-
-    private void usableNickname(UserInfoRequestDto requestDto){
-        if (!usableNickname(requestDto.nickname())) {
+        String targetNickname = requestDto.nickname();
+        if (!validateNickname(targetNickname)) {
             throw NPGExceptionType.BAD_REQUEST_UNUSABLE_NICKNAME.of();
         }
+
+        User updatedUser = updateNickname(requestDto, email);
+        return UserInfoResponseDto.from(updatedUser);
+    }
+
+    private boolean validateNickname(String targetNickname) {
+        return isNotDuplicatedNickname(targetNickname)
+            && targetNickname.length() > MIN_NICKNAME_LENGTH;
+    }
+
+    private boolean isNotDuplicatedNickname(String nickname) {
+        return !userRepository.existsByNickname(nickname);
     }
 
     private User updateNickname(UserInfoRequestDto requestDto, String email) {
