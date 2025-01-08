@@ -9,7 +9,7 @@ const UserInfoModify = () => {
   const [userInfo, setUserInfo] = useState({});
   const [nickname, setNickname] = useState('');
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
-  const [isNicknameAvailableMessage, setisNicknameAvailableMessage] = useState('');
+  const [isNicknameAvailableMessage, setIsNicknameAvailableMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loginState = useSelector((state) => state.loginSlice);
@@ -25,7 +25,7 @@ const UserInfoModify = () => {
         const response = await axiosInstance.get('/api/user/profile');
         setUserInfo(response.data.data);
         setNickname(response.data.data.nickname);
-        setisNicknameAvailableMessage('');
+        setIsNicknameAvailableMessage('');
         console.log('사용자 정보:', response.data.data);
       } catch (error) {
         console.error('Failed to fetch user info:', error);
@@ -41,22 +41,36 @@ const UserInfoModify = () => {
       const response = await axiosInstance.get(`/api/user/profile/check?nickname=${nickname}`);
       console.log('닉네임 중복 확인 응답:', response);
 
+      const validations = [
+        { condition: !nickname || nickname.trim().length === 0, message: '빈 값은 닉네임으로 사용할 수 없습니다.' },
+        { condition: nickname.includes(" "), message: '닉네임에 공백이 포함될 수 없습니다.' },
+        { condition: nickname.length <= 1, message: '닉네임은 두글자 이상이여야 합니다.' },
+      ];
+
+      for (const validation of validations) {
+        if (validation.condition) {
+            setIsNicknameAvailable(false);
+            setIsNicknameAvailableMessage(validation.message);
+            return;
+        }
+      }
+
       if (response.data.data) {
         setIsNicknameAvailable(true);
-        setisNicknameAvailableMessage('사용 가능한 닉네임입니다.');
+        setIsNicknameAvailableMessage('사용 가능한 닉네임입니다.');
       } else {
         setIsNicknameAvailable(false);
-        setisNicknameAvailableMessage('사용할 수 없는 닉네임입니다.');
+        setIsNicknameAvailableMessage('이미 사용중인 닉네임입니다.');
       }
     } catch (error) {
       console.error('닉네임 중복 확인 실패:', error);
-      setisNicknameAvailableMessage('닉네임 중복 확인에 실패했습니다.');
+      setIsNicknameAvailableMessage('닉네임 중복 확인에 실패했습니다.');
     }
   };
 
   const handleSubmit = async () => {
     if (!isNicknameAvailable) {
-      setisNicknameAvailableMessage('닉네임 중복 확인을 해주세요.');
+      setIsNicknameAvailableMessage('닉네임 중복 확인을 해주세요.');
       return;
     }
 
@@ -81,7 +95,7 @@ const UserInfoModify = () => {
           </h3>
           <div>
             <div className="mb-4">
-              <label className="block text-gray-500 mb-2">닉네임 (필수)</label>
+              <label className="block text-gray-500 mb-2">닉네임</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -103,7 +117,7 @@ const UserInfoModify = () => {
               )}
             </div>
             <div className="mb-4">
-              <label className="block text-gray-500 mb-2">이메일 (필수)</label>
+              <label className="block text-gray-500 mb-2">이메일</label>
               <input
                 type="email"
                 value={userInfo.email}
