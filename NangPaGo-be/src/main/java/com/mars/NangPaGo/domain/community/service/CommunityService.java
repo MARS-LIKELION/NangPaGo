@@ -128,7 +128,7 @@ public class CommunityService {
     public CommunityResponseDto getPostForEdit(Long id, String email) {
         Community community = validateCommunity(id);
 
-        if ("anonymous_user".equals(email) || !community.getUser().getEmail().equals(email)) {
+        if (!community.getUser().getEmail().equals(email)) {
             throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("이 게시물을 수정할 권한이 없습니다.");
         }
 

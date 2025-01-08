@@ -74,6 +74,7 @@ public class CommunityController {
     }
 
     @Operation(summary = "수정 페이지용 게시물 조회")
+    @AuthenticatedUser
     @GetMapping("/edit/{id}")
     public ResponseDto<CommunityResponseDto> getPostForEdit(@PathVariable Long id) {
         String email = AuthenticationHolder.getCurrentUserEmail();
