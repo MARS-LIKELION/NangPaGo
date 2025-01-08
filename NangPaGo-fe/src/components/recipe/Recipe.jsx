@@ -118,7 +118,6 @@ function Recipe({ recipe }) {
 
         <h1 className="text-xl font-bold mt-2 px-4">{recipe.name}</h1>
 
-        {/* 태그들 */}
         <div className="flex gap-2 mt-2 px-4">
           {recipe.mainIngredient && (
             <p className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded">
