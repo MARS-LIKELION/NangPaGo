@@ -29,12 +29,11 @@ public class CommunityService {
 
     public PageDto<CommunityResponseDto> pagesByCommunity(int pageNo, int pageSize, String email) {
         Pageable pageable = createPageRequest(pageNo, pageSize);
-        boolean isAnonymous = "anonymous_user".equals(email);
         return PageDto.of(
-            communityRepository.findByIsPublicTrueOrUserEmail(
-                isAnonymous ? null : email,
-                pageable
-            ).map(community -> CommunityResponseDto.of(community, isAnonymous ? null : email))
+            ("anonymous_user".equals(email) ?
+                communityRepository.findByIsPublicTrue(pageable) :
+                communityRepository.findByIsPublicTrueOrUserEmail(email, pageable))
+                .map(community -> CommunityResponseDto.of(community, email))
         );
     }
 
