@@ -11,9 +11,9 @@ export async function getMyPageInfo() {
   }
 }
 
-export async function getCommunityPosts(page, size) {
+export async function getRefrigeratorPosts(page, size) {
   try {
-    const response = await axiosInstance.get('/api/user/my-page/posts', {
+    const response = await axiosInstance.get('/api/user/my-page/refrigerator', {
       params: {
         pageNo: page,
         pageSize: size,

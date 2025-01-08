@@ -8,7 +8,9 @@ import {
 } from '../../api/myPage.js';
 import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
-import { FaHeart, FaStar, FaComment, FaClipboard } from 'react-icons/fa';
+import { FaHeart, FaStar, FaComment } from 'react-icons/fa';
+import { MdKitchen } from 'react-icons/md';
+import { getRefrigerator } from '../../api/refrigerator.js';
 
 function Profile() {
   const [myPageInfo, setMyPageInfo] = useState({});
@@ -20,7 +22,7 @@ function Profile() {
     likes: 0,
     comments: 0,
     favorites: 0,
-    community: 0,
+    refrigerator: 0,
   });
   const isFetchingRef = useRef(false);
   const observerRef = useRef(null);
@@ -36,7 +38,7 @@ function Profile() {
           likes: info.likeCount || 0,
           comments: info.commentCount || 0,
           favorites: info.favoriteCount || 0,
-          community: info.refrigeratorCount || 0,
+          refrigerator: info.refrigeratorCount || 0,
         });
       })
       .catch(console.error);
@@ -51,6 +53,9 @@ function Profile() {
       try {
         let data = { content: [], last: true };
         switch (activeTab) {
+          case 'refrigerator':
+            data = await getRefrigerator(page, 5);
+            break;
           case 'comments':
             data = await getComments(page, 5);
             break;
@@ -193,16 +198,16 @@ function Profile() {
 
           <div className="grid grid-cols-4 border-b">
             <button
-              onClick={() => setActiveTab('community')}
+              onClick={() => setActiveTab('refrigerator')}
               className={`flex flex-col items-center py-3 ${
-                activeTab === 'community'
+                activeTab === 'refrigerator'
                   ? 'text-black border-b-2 border-[var(--secondary-color)]'
                   : 'text-gray-400'
               }`}
             >
-              <FaClipboard className="mb-1 text-orange-400" />
-              <span className="text-sm">게시글</span>
-              <span className="text-xs">{totalCounts.community}</span>
+              <MdKitchen className="mb-1 text-orange-400" />
+              <span className="text-sm">냉장고</span>
+              <span className="text-xs">{totalCounts.refrigerator}</span>
             </button>
             <button
               onClick={() => setActiveTab('comments')}
