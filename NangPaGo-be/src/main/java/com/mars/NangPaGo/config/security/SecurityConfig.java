@@ -41,7 +41,6 @@ public class SecurityConfig {
         "/api/recipe/{id}/like/count",
         "/api/ingredient/search",
         "/api/community/{id}",
-        "/api/community/edit/{id}",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/api-docs/**",
