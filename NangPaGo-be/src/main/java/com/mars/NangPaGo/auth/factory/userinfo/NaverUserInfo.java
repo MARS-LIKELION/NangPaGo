@@ -28,10 +28,6 @@ public class NaverUserInfo implements OAuth2UserInfo {
         return getAttribute("name");
     }
 
-    public String getNickname() {
-        return getAttribute("nickname");
-    }
-
     public String getPhoneNumber() {
         return formatPhoneNumber(getAttribute("mobile"));
     }

@@ -23,26 +23,24 @@ public record UserRequestDto(
         String updatedAt
 ) {
     public static UserRequestDto fromOAuth2UserInfo(OAuth2UserInfo userInfo) {
+        String nickname;
         String phone = "";
         String birthday = "";
-        String nickname;
         String gender = "";
 
         if (userInfo instanceof NaverUserInfo naverUserInfo) {
             phone = naverUserInfo.getPhoneNumber();
             birthday = naverUserInfo.getBirthDay();
-            nickname = naverUserInfo.getNickname();
             gender = naverUserInfo.getGender();
         } else if (userInfo instanceof KakaoUserInfo kakaoUserInfo) {
             phone = kakaoUserInfo.getPhoneNumber();
             birthday = kakaoUserInfo.getBirthday();
-            nickname = kakaoUserInfo.getName();
             gender = kakaoUserInfo.getGender();
-        } else {
-            String email = userInfo.getEmail();
-            int atIndex = email.indexOf('@');
-            nickname = email.substring(0, atIndex);
         }
+        String email = userInfo.getEmail();
+        int atIndex = email.indexOf('@');
+        nickname = email.substring(0, atIndex);
+
 
         return UserRequestDto.builder()
                 .name(userInfo.getName())
