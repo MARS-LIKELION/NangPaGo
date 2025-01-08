@@ -23,7 +23,6 @@ public class CommunityLikeService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     public boolean isLiked(Long id, String email) {
         return communityLikeRepository.findByEmailAndCommunityId(email, id).isPresent();
     }
