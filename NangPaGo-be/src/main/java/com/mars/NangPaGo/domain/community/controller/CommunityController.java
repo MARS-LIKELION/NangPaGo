@@ -33,7 +33,7 @@ public class CommunityController {
     @GetMapping("/list")
     public ResponseDto<PageDto<CommunityResponseDto>> list(
         @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "5") int pageSize) {
+        @RequestParam(defaultValue = "10") int pageSize) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(communityService.pagesByCommunity(pageNo, pageSize, email));

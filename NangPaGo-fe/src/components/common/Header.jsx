@@ -39,7 +39,7 @@ function Header() {
   }, []);
 
   if (!loginState.isInitialized) {
-    return null; 
+    return null;
   }
 
   return (
@@ -51,7 +51,7 @@ function Header() {
 
         {loginState.isLoggedIn ? (
           <div className="flex items-center space-x-7">
-            <Link to="/recipes" className="text-[var(--primary-color)]">
+            <Link to="/community" className="text-[var(--primary-color)]">
               <IoReceiptOutline size={26} />
             </Link>
             <Link to="/refrigerator" className="text-[var(--primary-color)]">

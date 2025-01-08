@@ -6,6 +6,7 @@ import RecipeDetail from '../pages/recipe/RecipeDetail';
 import UserInfoModify from '../components/mypage/UserInfoModify';
 import Refrigerator from '../pages/refrigerator/Refrigerator.jsx';
 import RefrigeratorSearch from '../pages/search/RefrigeratorSearch.jsx';
+import CommunityList from '../pages/community/CommunityList.jsx';
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
         path: ':id',
         element: <RecipeDetail />,
       },
-    ]
+    ],
   },
   {
     path: '/refrigerator',
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
         element: <RefrigeratorSearch />,
       },
     ],
+  },
+  {
+    path: '/community',
+    element: <CommunityList />,
   },
 ]);
 
