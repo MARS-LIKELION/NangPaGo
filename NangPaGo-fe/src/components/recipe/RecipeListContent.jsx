@@ -157,6 +157,7 @@ function RecipeListContent({ activeTab, searchTerm = '' }) {
             : '즐겨찾기한 레시피가 없습니다.'}
         </div>
       )}
+      <div ref={observerRef} />
     </div>
   );
 }

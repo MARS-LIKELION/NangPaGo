@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="bg-gray-100 p-4 mt-6 flex flex-col items-center text-center">
+    <footer className="bg-gray-100 p-4 flex flex-col items-center text-center">
       <div className="flex gap-4 mb-2">
         <a
           href="https://github.com/MARS-LIKELION/NangPaGo"
