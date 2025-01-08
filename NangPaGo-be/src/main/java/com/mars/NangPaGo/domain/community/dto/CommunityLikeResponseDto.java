@@ -4,12 +4,12 @@ import lombok.Builder;
 
 @Builder
 public record CommunityLikeResponseDto(
-    Long communityId,
+    Long id,
     boolean liked
 ) {
-    public static CommunityLikeResponseDto of(Long communityId, boolean liked) {
+    public static CommunityLikeResponseDto of(Long id, boolean liked) {
         return CommunityLikeResponseDto.builder()
-            .communityId(communityId)
+            .id(id)
             .liked(liked)
             .build();
     }

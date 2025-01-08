@@ -41,7 +41,7 @@ public class Community extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
-    @Column(columnDefinition = "TEXT", length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)

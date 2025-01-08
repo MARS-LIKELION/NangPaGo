@@ -9,6 +9,7 @@ import com.mars.NangPaGo.domain.community.dto.CommunityResponseDto;
 import com.mars.NangPaGo.domain.community.service.CommunityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +43,7 @@ public class CommunityController {
     @AuthenticatedUser
     @PostMapping("/new")
     public ResponseDto<CommunityResponseDto> create(
-        @RequestBody CommunityRequestDto requestDto
+        @RequestBody @Valid CommunityRequestDto requestDto
         ) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
@@ -53,7 +54,7 @@ public class CommunityController {
     @AuthenticatedUser
     @PutMapping("/{id}")
     public ResponseDto<CommunityResponseDto> update(
-        @RequestBody CommunityRequestDto requestDto,
+        @RequestBody @Valid CommunityRequestDto requestDto,
         @PathVariable("id") Long id) {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
