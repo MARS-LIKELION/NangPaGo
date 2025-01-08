@@ -116,7 +116,7 @@ public class CommunityService {
     public CommunityResponseDto getCommunityById(Long id, String email) {
         Community community = validateCommunity(id);
 
-        if ("anonymous_user".equals(email) && !community.isPublic()) {
+        if (!community.isPublic() && community.getUser().getEmail().equals(email)) {
             throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("이 게시물을 조회할 권한이 없습니다.");
         }
 
