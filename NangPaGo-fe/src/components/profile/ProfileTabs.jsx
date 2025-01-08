@@ -1,21 +1,8 @@
-import { MdKitchen } from 'react-icons/md';
 import { FaComment, FaHeart, FaStar } from 'react-icons/fa';
 
 const ProfileTabs = ({ activeTab, totalCounts, onTabChange }) => (
-  <div className="grid grid-cols-4 border-b">
+  <div className="grid grid-cols-3 border-b">
     {[
-      {
-        key: 'refrigerator',
-        label: '냉장고',
-        icon: <MdKitchen className="mb-1 text-orange-400" />,
-        count: totalCounts.refrigerator,
-      },
-      {
-        key: 'comments',
-        label: '댓글',
-        icon: <FaComment className="mb-1 text-red-400" />,
-        count: totalCounts.comments,
-      },
       {
         key: 'likes',
         label: '좋아요',
@@ -27,6 +14,12 @@ const ProfileTabs = ({ activeTab, totalCounts, onTabChange }) => (
         label: '즐겨찾기',
         icon: <FaStar className="mb-1 text-yellow-400" />,
         count: totalCounts.favorites,
+      },
+      {
+        key: 'comments',
+        label: '댓글',
+        icon: <FaComment className="mb-1 text-red-400" />,
+        count: totalCounts.comments,
       },
     ].map((tab) => (
       <button

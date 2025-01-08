@@ -48,14 +48,12 @@ public class UserService {
         int likeCount = recipeLikeRepository.countByUser(user);
         int favoriteCount = recipeFavoriteRepository.countByUser(user);
         int commentCount = recipeCommentRepository.countByUser(user);
-        int refrigeratorCount = refrigeratorRepository.countByUser(user);
 
         return MyPageDto.of(
             user,
             likeCount,
             favoriteCount,
-            commentCount,
-            refrigeratorCount
+            commentCount
         );
     }
 
@@ -72,7 +70,6 @@ public class UserService {
                 .map(recipeComment -> RecipeCommentResponseDto.from(recipeComment, email))
         );
     }
-
 
     public UserInfoResponseDto getUserInfo(String email) {
         return UserInfoResponseDto.from(findUserByEmail(email));

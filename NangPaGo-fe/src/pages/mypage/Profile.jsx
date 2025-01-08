@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  getRefrigerator,
   getLikes,
   getComments,
   getFavorites,
@@ -18,18 +17,16 @@ function Profile() {
   const [myPageInfo, setMyPageInfo] = useState({});
   const [activeTab, setActiveTab] = useState('likes');
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(0); // 페이지 상태
+  const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [totalCounts, setTotalCounts] = useState({
     likes: 0,
     comments: 0,
     favorites: 0,
-    refrigerator: 0,
   });
   const isFetchingRef = useRef(false);
   const navigate = useNavigate();
 
-  // 사용자 프로필 정보 가져오기
   useEffect(() => {
     getMyPageInfo()
       .then((info) => {
@@ -38,7 +35,6 @@ function Profile() {
           likes: info.likeCount || 0,
           comments: info.commentCount || 0,
           favorites: info.favoriteCount || 0,
-          refrigerator: info.refrigeratorCount || 0,
         });
       })
       .catch(console.error);
@@ -53,9 +49,6 @@ function Profile() {
     try {
       let data = { content: [], last: true };
       switch (activeTab) {
-        case 'refrigerator':
-          data = await getRefrigerator(currentPage, 7);
-          break;
         case 'comments':
           data = await getComments(currentPage, 7);
           break;

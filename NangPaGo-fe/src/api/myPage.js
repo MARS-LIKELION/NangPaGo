@@ -11,22 +11,6 @@ export async function getMyPageInfo() {
   }
 }
 
-export async function getRefrigerator(page, size) {
-  try {
-    const response = await axiosInstance.get('/api/refrigerator', {
-      params: {
-        pageNo: page,
-        pageSize: size,
-      },
-    });
-    console.log('내 게시글 목록:', response.data.data);
-    return response.data.data;
-  } catch (error) {
-    console.error('내 게시글 목록 조회 실패:', error);
-    throw error;
-  }
-}
-
 export async function getComments(page, size) {
   try {
     const response = await axiosInstance.get('/api/user/comments', {

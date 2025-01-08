@@ -38,8 +38,8 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
           className={clsx(
             'flex flex-col h-auto overflow-hidden border rounded-lg shadow-sm',
             {
-              'p-4 bg-gray-100': activeTab === 'comments', // 댓글: 회색 배경과 커서 기본값
-              'p-0 cursor-pointer': activeTab !== 'comments', // 다른 탭: 커서 포인터
+              'p-4 bg-gray-100': activeTab === 'comments',
+              'p-0 cursor-pointer': activeTab !== 'comments',
             },
           )}
           onClick={() => {

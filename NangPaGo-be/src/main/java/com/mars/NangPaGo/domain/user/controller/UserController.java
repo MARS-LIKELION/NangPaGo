@@ -74,7 +74,6 @@ public class UserController {
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "7") int pageSize
     ) {
-        // 현재 인증된 사용자의 이메일 가져오기
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(userService.getMyComments(email, pageNo, pageSize));
     }
