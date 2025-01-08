@@ -20,3 +20,8 @@ export const updateComment = (recipeId, commentId, commentData) =>
 
 export const deleteComment = (recipeId, commentId) =>
   axiosInstance.delete(`/api/recipe/${recipeId}/comments/${commentId}`);
+
+export const fetchCommentCount = (recipeId) =>
+  axiosInstance
+    .get(`/api/recipe/${recipeId}/comments/count`)
+    .then((response) => response.data.data);

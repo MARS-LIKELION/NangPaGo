@@ -2,20 +2,32 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getLikeCount } from '../../api/recipe';
 import { AiFillHeart } from 'react-icons/ai';
+import { FaCommentAlt } from 'react-icons/fa';
+import { fetchCommentCount } from '../../api/commentService';
 
 function RecipeCard({ recipe }) {
-  const [likeCount, setLikeCount] = useState(null);
+  const [likeCount, setLikeCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
-    const fetchLikeCount = async () => {
+    const fetchCounts = async () => {
       try {
-        const count = await getLikeCount(recipe.id);
-        setLikeCount(count);
+        const [likeCountData, commentCountData] = await Promise.all([
+          getLikeCount(recipe.id),
+          fetchCommentCount(recipe.id),
+        ]);
+
+        setLikeCount(likeCountData || 0);
+        setCommentCount(commentCountData || 0);
       } catch (error) {
-        console.error('좋아요 개수를 가져오는 중 오류 발생:', error);
+        console.error(
+          '좋아요 또는 댓글 데이터를 가져오는 중 오류 발생:',
+          error,
+        );
       }
     };
-    fetchLikeCount();
+
+    fetchCounts();
   }, [recipe.id]);
 
   return (
@@ -29,10 +41,17 @@ function RecipeCard({ recipe }) {
         className="w-full h-48 object-cover"
       />
       <div className="p-4 flex flex-col gap-2">
-        <div className="text-sm text-gray-600 flex items-center gap-1">
-          <AiFillHeart className="text-red-500 text-xl" />
-          {likeCount !== null ? likeCount : '0'}
+        <div className="text-sm text-gray-600 flex items-center gap-4">
+          <div className="flex items-center gap-1">
+            <AiFillHeart className="text-red-500 text-xl" />
+            {likeCount}
+          </div>
+          <div className="flex items-center gap-1">
+            <FaCommentAlt className="text-gray-300 text-xl" />
+            {commentCount}
+          </div>
         </div>
+
         <h3 className="text-lg font-semibold">{recipe.name}</h3>
         <div className="flex flex-wrap gap-2">
           {recipe.ingredientsDisplayTag.map((tag, index) => (

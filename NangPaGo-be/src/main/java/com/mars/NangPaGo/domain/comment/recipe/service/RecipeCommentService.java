@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class RecipeCommentService {
@@ -29,11 +30,7 @@ public class RecipeCommentService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
-    public PageDto<RecipeCommentResponseDto> pagedCommentsByRecipe(Long recipeId,
-                                                                   String email,
-                                                                   int pageNo,
-                                                                   int pageSize) {
+    public PageDto<RecipeCommentResponseDto> pagedCommentsByRecipe(Long recipeId, String email, int pageNo, int pageSize) {
         validateRecipe(recipeId);
         return PageDto.of(
             recipeCommentRepository.findByRecipeId(recipeId, createPageRequest(pageNo, pageSize))
@@ -61,6 +58,11 @@ public class RecipeCommentService {
         RecipeComment comment = validateComment(commentId);
         validateOwnership(comment, email);
         recipeCommentRepository.delete(comment);
+    }
+
+    public int countCommentsByRecipe(Long recipeId) {
+        validateRecipe(recipeId);
+        return recipeCommentRepository.countByRecipeId(recipeId);
     }
 
     private void validateOwnership(RecipeComment comment, String email) {

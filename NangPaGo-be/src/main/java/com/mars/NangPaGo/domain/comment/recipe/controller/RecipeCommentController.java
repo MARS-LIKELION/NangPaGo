@@ -61,4 +61,9 @@ public class RecipeCommentController {
         recipeCommentService.delete(commentId, email);
         return ResponseDto.of(null);
     }
+
+    @GetMapping("/count")
+    public ResponseDto<Integer> count(@PathVariable("recipeId") Long recipeId) {
+        return ResponseDto.of(recipeCommentService.countCommentsByRecipe(recipeId));
+    }
 }

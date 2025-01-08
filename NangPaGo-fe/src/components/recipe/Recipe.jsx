@@ -94,7 +94,6 @@ function Recipe({ recipe }) {
         </div>
 
         <div className="mt-2 flex items-center justify-between px-4">
-          {/* 왼쪽: 좋아요 버튼과 개수 */}
           <div className="flex items-center gap-2">
             <button
               className={`flex items-center ${
@@ -107,7 +106,6 @@ function Recipe({ recipe }) {
             </button>
           </div>
 
-          {/* 오른쪽: 즐겨찾기 버튼 */}
           <div>
             <button
               className={` ${isStarActive ? 'text-[var(--primary-color)]' : 'text-gray-500'}`}
@@ -120,7 +118,6 @@ function Recipe({ recipe }) {
 
         <h1 className="text-xl font-bold mt-2 px-4">{recipe.name}</h1>
 
-        {/* 태그들 */}
         <div className="flex gap-2 mt-2 px-4">
           {recipe.mainIngredient && (
             <p className="bg-[var(--secondary-color)] text-black text-sm font-medium px-2 py-1 rounded">
@@ -139,7 +136,6 @@ function Recipe({ recipe }) {
           )}
         </div>
 
-        {/* 기타 섹션 */}
         <div className="mt-7 px-4">
           <h2 className="text-lg font-semibold mb-3">재료</h2>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-gray-700 text-sm">

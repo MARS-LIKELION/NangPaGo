@@ -12,5 +12,7 @@ public interface RecipeCommentRepository extends JpaRepository<RecipeComment, Lo
 
     Page<RecipeComment> findByRecipeId(Long recipeId, Pageable pageable);
 
+    int countByRecipeId(Long recipeId);
+
     int countByUser(User user);
 }

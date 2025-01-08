@@ -9,7 +9,8 @@ const UserInfoModify = () => {
   const [userInfo, setUserInfo] = useState({});
   const [nickname, setNickname] = useState('');
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
-  const [isNicknameAvailableMessage, setIsNicknameAvailableMessage] = useState('');
+  const [isNicknameAvailableMessage, setIsNicknameAvailableMessage] =
+    useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loginState = useSelector((state) => state.loginSlice);
@@ -38,20 +39,31 @@ const UserInfoModify = () => {
 
   const handleNicknameCheck = async () => {
     try {
-      const response = await axiosInstance.get(`/api/user/profile/check?nickname=${nickname}`);
+      const response = await axiosInstance.get(
+        `/api/user/profile/check?nickname=${nickname}`,
+      );
       console.log('닉네임 중복 확인 응답:', response);
 
       const validations = [
-        { condition: !nickname || nickname.trim().length === 0, message: '빈 값은 닉네임으로 사용할 수 없습니다.' },
-        { condition: nickname.includes(" "), message: '닉네임에 공백이 포함될 수 없습니다.' },
-        { condition: nickname.length <= 1, message: '닉네임은 두글자 이상이여야 합니다.' },
+        {
+          condition: !nickname || nickname.trim().length === 0,
+          message: '빈 값은 닉네임으로 사용할 수 없습니다.',
+        },
+        {
+          condition: nickname.includes(' '),
+          message: '닉네임에 공백이 포함될 수 없습니다.',
+        },
+        {
+          condition: nickname.length <= 1,
+          message: '닉네임은 두글자 이상이여야 합니다.',
+        },
       ];
 
       for (const validation of validations) {
         if (validation.condition) {
-            setIsNicknameAvailable(false);
-            setIsNicknameAvailableMessage(validation.message);
-            return;
+          setIsNicknameAvailable(false);
+          setIsNicknameAvailableMessage(validation.message);
+          return;
         }
       }
 
@@ -76,8 +88,8 @@ const UserInfoModify = () => {
 
     try {
       const userInfoRequestDto = {
-      nickname: nickname, 
-    };
+        nickname: nickname,
+      };
       await axiosInstance.put('/api/user/profile', userInfoRequestDto);
       setIsModalOpen(true);
     } catch (error) {
@@ -111,7 +123,9 @@ const UserInfoModify = () => {
                 </button>
               </div>
               {isNicknameAvailableMessage && (
-                <p className={`mt-2 ${isNicknameAvailable ? 'text-green-600' : 'text-red-600'}`}>
+                <p
+                  className={`mt-2 ${isNicknameAvailable ? 'text-green-600' : 'text-red-600'}`}
+                >
                   {isNicknameAvailableMessage}
                 </p>
               )}
