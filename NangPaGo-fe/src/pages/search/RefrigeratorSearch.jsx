@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BiSearch, BiArrowBack } from 'react-icons/bi';
+import { BiSearch, BiArrowBack, BiX } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -59,6 +59,12 @@ function RefrigeratorSearch() {
     }
   };
 
+  const clearKeyword = (e) => {
+    e.stopPropagation();
+    setKeyword('');
+    setExistingIngredientMessage('');
+  };
+
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen">
       <div className="sticky top-0 bg-white px-4 py-2 flex items-center gap-2 border-b">
@@ -80,7 +86,20 @@ function RefrigeratorSearch() {
                        focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]
                        focus:border-transparent placeholder-gray-500"
           />
-          <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-xl" />
+          {keyword ? (
+            <BiX
+              className="absolute right-3 top-1/2
+                        transform -translate-y-1/2
+                        text-[var(--secondary-color)]
+                        cursor-pointer text-3xl"
+              onClick={clearKeyword}
+            />
+          ) : (
+            <BiSearch
+              className="absolute right-3 top-1/2 transform
+                         -translate-y-1/2 cursor-pointer
+                         text-[var(--secondary-color)] text-2xl" />
+          )}
         </div>
       </div>
 

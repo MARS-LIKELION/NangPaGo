@@ -5,11 +5,18 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    navigate(searchPath, {
+      state: { searchTerm },
+    });
+  };
+
+  const clearSearchTerm = (e) => {
+    e.stopPropagation();
     if (searchTerm) {
       onClear();
-    } else {
-      navigate(searchPath, {
-        state: { searchTerm },
+      navigate('/', {
+        state: { searchTerm: '' },
+        replace: true
       });
     }
   };
@@ -24,9 +31,12 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
           {searchTerm || '레시피 검색...'}
         </div>
         {searchTerm ? (
-          <BiX className="absolute right-3 text-[var(--secondary-color)] text-xl" />
+          <BiX
+            className="absolute right-3 text-[var(--secondary-color)] text-3xl"
+            onClick={clearSearchTerm}
+          />
         ) : (
-          <BiSearch className="absolute right-3 text-[var(--secondary-color)] text-xl" />
+          <BiSearch className="absolute right-3 text-[var(--secondary-color)] text-2xl" />
         )}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
@@ -10,7 +10,6 @@ import axiosInstance from '../../api/axiosInstance';
 
 function RecipeList() {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('recommended');
   const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
@@ -48,6 +47,10 @@ function RecipeList() {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    setSearchTerm(location.state?.searchTerm || '');
+  }, [location.state?.searchTerm]);
+
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
       <Header />
@@ -67,7 +70,11 @@ function RecipeList() {
         )}
 
         {activeTab !== 'favorites' && (
-          <RecipeListContent activeTab={activeTab} searchTerm={searchTerm} />
+          <RecipeListContent 
+            key={searchTerm}
+            activeTab={activeTab} 
+            searchTerm={searchTerm} 
+          />
         )}
 
         {activeTab === 'favorites' && recipes.length === 0 ? (

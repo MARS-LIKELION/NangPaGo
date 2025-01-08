@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BiSearch, BiArrowBack } from 'react-icons/bi';
+import { BiSearch, BiArrowBack, BiX } from 'react-icons/bi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import NoResult from '../../components/search/NoResult';
@@ -16,6 +16,11 @@ function RecipeSearch() {
 
   const handleChange = (e) => {
     setKeyword(e.target.value);
+  };
+
+  const clearKeyword = (e) => {
+    e.stopPropagation();
+    setKeyword('');
   };
 
   useEffect(() => {
@@ -45,7 +50,10 @@ function RecipeSearch() {
   }, [debouncedKeyword]);
 
   const handleResultClick = (recipe) => {
-    navigate(`/recipe/${recipe.id}`);
+    setKeyword(recipe.name);
+    navigate('/', {
+      state: { searchTerm: recipe.name },
+    });
   };
 
   const handleSubmit = (e) => {
@@ -76,12 +84,14 @@ function RecipeSearch() {
                      focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] 
                      focus:border-transparent placeholder-gray-500"
           />
-          <button
-            type="submit"
-            className="absolute right-3 top-1/2 transform -translate-y-1/2"
-          >
-            <BiSearch className="text-[var(--secondary-color)] text-xl" />
-          </button>
+          {keyword ? (
+            <BiX
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-3xl cursor-pointer"
+              onClick={clearKeyword}
+            />
+          ) : (
+            <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-2xl" />
+          )}
         </form>
       </div>
 
