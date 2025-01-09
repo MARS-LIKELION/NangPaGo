@@ -83,9 +83,6 @@ const Modify = () => {
       <div className="flex-grow">
         <Header />
         <div className="px-6 bg-white">
-          <h3 className="text-xl font-bold mb-6 text-gray-800 text-center">
-            회원정보 수정
-          </h3>
           <div>
             <div className="mb-4">
               <label className="block text-gray-500 mb-2">닉네임</label>
