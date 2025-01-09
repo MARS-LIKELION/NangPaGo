@@ -3,9 +3,10 @@ import RecipeList from '../pages/recipe/RecipeList.jsx';
 import Login from '../pages/login/Login.jsx';
 import RecipeSearch from '../pages/search/RecipeSearch.jsx';
 import RecipeDetail from '../pages/recipe/RecipeDetail';
-import UserInfoModify from '../components/mypage/UserInfoModify';
+import Modify from '../pages/mypage/Modify.jsx';
 import Refrigerator from '../pages/refrigerator/Refrigerator.jsx';
 import RefrigeratorSearch from '../pages/search/RefrigeratorSearch.jsx';
+import Profile from '../pages/mypage/Profile.jsx';
 import CommunityList from '../pages/community/CommunityList.jsx';
 import CommunityDetail from '../pages/community/CommunityDetail';
 import CreateCommunity from '../pages/community/CreateCommunity.jsx';
@@ -21,8 +22,12 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: '/profile',
-    element: <UserInfoModify />,
+    path: '/my-page',
+    element: <Profile />,
+  },
+  {
+    path: '/my-page/modify',
+    element: <Modify />,
   },
   {
     path: '/recipe',
