@@ -4,9 +4,11 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
+import com.mars.NangPaGo.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.NangPaGo.domain.recipe.builder.EsRecipeSearchQueryBuilder;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeEsResponseDto;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeEs;
+import com.mars.NangPaGo.domain.recipe.repository.RecipeLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class RecipeEsService {
 
     private final ElasticsearchClient elasticsearchClient;
+    private final RecipeLikeRepository recipeLikeRepository;
+    private final RecipeCommentRepository recipeCommentRepository;
 
     public Page<RecipeEsResponseDto> searchRecipes(int page, int size, String keyword, String searchType) {
         Pageable pageable = PageRequest.of(Math.max(page, 0), Math.max(size, 1));
@@ -66,12 +70,33 @@ public class RecipeEsService {
                     .map(highlights -> highlights.get(0))
                     .orElse(source.getName());
 
+                int likeCount = getRecipeLikeCountBy(source.getId());
+                int commentCount = getRecipeCommentCountBy(source.getId());
+
                 return RecipeEsResponseDto.of(
                     source,
                     highlightedName,
+                    likeCount,
+                    commentCount,
                     hit.score() != null ? hit.score().floatValue() : 0.0f
                 );
             })
             .toList();
+    }
+
+    private int getRecipeLikeCountBy(String recipeId) {
+        try {
+            return recipeLikeRepository.countByRecipeId(Long.parseLong(recipeId));
+        } catch (Exception e) {
+            throw NPGExceptionType.SERVER_ERROR.of("String type recipeId parse to Long is failed (recipeLike)");
+        }
+    }
+
+    private int getRecipeCommentCountBy(String recipeId) {
+        try {
+            return recipeCommentRepository.countByRecipeId(Long.parseLong(recipeId));
+        } catch (Exception e) {
+            throw NPGExceptionType.SERVER_ERROR.of("String type recipeId parse to Long is failed (recipeComment)");
+        }
     }
 }
