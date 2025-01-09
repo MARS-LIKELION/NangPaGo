@@ -1,36 +1,29 @@
 import axiosInstance from '../../api/axiosInstance.js';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { FaHeart } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // useNavigate 추가
+import { Fragment, useEffect, useState } from 'react';
+import { FaHeart, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import CommunityComment from './comment/CommunityComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { getLikeCount } from '../../api/community.js';
-import CreateButton from '../common/CreateButton.jsx';
-import TopButton from '../common/TopButton.jsx';
+import CreateButton from '../common/CreateButton';
+
+const maskEmail = (email) => {
+  if (!email) return '';
+  const visiblePart = email.slice(0, 3);
+  return `${visiblePart}***`;
+};
 
 function Community({ community }) {
-  const { email: userEmail } = useSelector((state) => state.loginSlice);
-  const isLoggedIn = Boolean(userEmail);
-  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
-
   const [isHeartActive, setIsHeartActive] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navigate = useNavigate(); // useNavigate 호출
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchLikeCount();
-    if (isLoggedIn) {
-      fetchLikeStatus();
-    }
-  }, [isLoggedIn, community.id]);
-
-  const handleCreateClick = () => {
-    navigate('/community/new'); // 페이지 이동
-  };
+  }, [community.id]);
 
   const fetchLikeCount = async () => {
     try {
@@ -41,23 +34,7 @@ function Community({ community }) {
     }
   };
 
-  const fetchLikeStatus = async () => {
-    try {
-      const response = await axiosInstance.get(
-        `/api/community/${community.id}/like/status`,
-      );
-      setIsHeartActive(response.data.data);
-    } catch (error) {
-      console.error('좋아요 상태를 불러오는 중 오류가 발생했습니다.', error);
-    }
-  };
-
   const toggleHeart = async () => {
-    if (!isLoggedIn) {
-      setShowLoginModal(true);
-      return;
-    }
-
     try {
       const response = await axiosInstance.post(
         `/api/community/${community.id}/like/toggle`,
@@ -70,9 +47,28 @@ function Community({ community }) {
     }
   };
 
-  const maskEmail = (email) => {
-    const visiblePart = email.slice(0, 3);
-    return `${visiblePart}***`;
+  const handleCreateClick = () => {
+    navigate('/community/new');
+  };
+
+  const handleEditClick = () => {
+    navigate(`/community/${community.id}/modify`);
+  };
+
+  const handleDeleteClick = async () => {
+    if (window.confirm('정말로 글을 삭제하시겠습니까?')) {
+      try {
+        await axiosInstance.delete(`/api/community/${community.id}`);
+        navigate('/community');
+      } catch (error) {
+        console.error('글 삭제 중 오류가 발생했습니다:', error);
+        alert('글 삭제에 실패했습니다.');
+      }
+    }
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
   };
 
   return (
@@ -82,7 +78,9 @@ function Community({ community }) {
         <div className="mt-6 px-4">
           <h1 className="text-xl font-bold">{community.title}</h1>
           <div className="mt-2 flex flex-col text-gray-500 text-xs">
-            <span><strong>{maskEmail(community.email)}</strong></span>
+            <span>
+              <strong>{maskEmail(community.email)}</strong>
+            </span>
             <span>
               {new Intl.DateTimeFormat('ko-KR', {
                 year: 'numeric',
@@ -115,22 +113,79 @@ function Community({ community }) {
         </div>
 
         <div className="mt-4 px-4 min-h-[10rem]">
-          <p className="text-gray-700 text-sm">{community.content}</p>
+          <p className="text-gray-700 text-sm">
+            {community.content.split(/\r?\n/).map((line, index) => (
+              <Fragment key={index}>
+                {line}
+                <br />
+              </Fragment>
+            ))}
+          </p>
         </div>
         <CommunityComment communityId={community.id} />
       </div>
       <Footer />
-      <CreateButton
-        onClick={handleCreateClick}
-        isTopButtonVisible={isTopButtonVisible}
-        basePositionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-      />
-      {isTopButtonVisible && (
-        <TopButton
-          offset={100}
-          positionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-        />
-      )}
+
+      <div className="fixed bottom-10 right-[calc((100vw-375px)/2+16px)] z-9999">
+        <div className="relative">
+          {community.isOwnedByUser ? (
+            <>
+              <CreateButton
+                onClick={toggleMenu}
+                basePositionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
+                icon={
+                  isMenuOpen ? <FaTimes className="text-xl text-white" /> : null
+                }
+              />
+              <ul
+                className={`absolute bottom-1 right-16 flex flex-col items-end gap-3 ${
+                  isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+                } transition-opacity duration-300`}
+              >
+                <li
+                  className={`bg-[var(--secondary-color)] text-white px-4 py-2 rounded-md shadow-md hover:bg-opacity-90 transform ${
+                    isMenuOpen
+                      ? 'translate-x-0 opacity-100 delay-[200ms]'
+                      : 'translate-x-[50px] opacity-0'
+                  } transition-all duration-300`}
+                >
+                  <button onClick={handleCreateClick} className="text-white ">
+                    글작성
+                  </button>
+                </li>
+                <li
+                  className={`bg-[var(--secondary-color)] text-white px-4 py-2 rounded-md shadow-md hover:bg-opacity-90 transform ${
+                    isMenuOpen
+                      ? 'translate-x-0 opacity-100 delay-[100ms]'
+                      : 'translate-x-[50px] opacity-0'
+                  } transition-all duration-300`}
+                >
+                  <button onClick={handleEditClick} className="text-white ">
+                    글수정
+                  </button>
+                </li>
+                <li
+                  className={`bg-[var(--secondary-color)] text-white px-4 py-2 rounded-md shadow-md hover:bg-opacity-90 transform ${
+                    isMenuOpen
+                      ? 'translate-x-0 opacity-100 delay-[0ms]'
+                      : 'translate-x-[50px] opacity-0'
+                  } transition-all duration-300`}
+                >
+                  <button onClick={handleDeleteClick} className="text-white ">
+                    글삭제
+                  </button>
+                </li>
+              </ul>
+            </>
+          ) : (
+            <CreateButton
+              onClick={handleCreateClick}
+              basePositionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
+              ariaLabel="글쓰기 버튼"
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -24,9 +24,9 @@ function ModifyCommunity() {
     const fetchCommunity = async () => {
       try {
         const { data } = await getCommunityDetail(id);
+        console.log(data);
         if (!data.isOwnedByUser) {
-          alert('접근 권한이 없습니다.');
-          navigate('/community');
+          navigate(`/community/${id}`, { replace: true });
           return;
         }
         setTitle(data.title);
@@ -41,7 +41,6 @@ function ModifyCommunity() {
     fetchCommunity();
   }, [id, navigate]);
 
-  // Handle file preview
   useEffect(() => {
     if (file) {
       const objectUrl = URL.createObjectURL(file);
@@ -62,7 +61,8 @@ function ModifyCommunity() {
     try {
       const formData = new FormData();
       formData.append('title', title);
-      formData.append('content', content);
+      formData.append('content', content); // 줄바꿈 데이터
+      console.log('전송할 content 데이터:', content); // 전송 전 content 확인
       formData.append('isPublic', isPublic);
       if (file) formData.append('file', file);
       await updateCommunity(id, formData);
@@ -91,7 +91,7 @@ function ModifyCommunity() {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="내용을 입력해 주세요."
-          rows={6}
+          rows={11}
         />
         <div className="flex items-center mb-4">
           <input
@@ -106,9 +106,12 @@ function ModifyCommunity() {
           </label>
         </div>
         <ErrorMessage error={error} />
-        <SubmitButton onClick={handleSubmit} label="수정 완료" />
+        <div className="mt-4">
+          {' '}
+          <SubmitButton onClick={handleSubmit} label="수정 완료" />
+        </div>
       </div>
-      <Footer />
+      <Footer className="mt-4" />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../api/axiosInstance';
 import Community from '../../components/community/Community';
@@ -9,6 +9,7 @@ function CommunityDetail() {
   const [community, setCommunity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const nickname = useSelector((state) => state.loginSlice.nickname);
   const isLoggedIn = Boolean(nickname);
@@ -17,9 +18,10 @@ function CommunityDetail() {
     const fetchCommunity = async () => {
       try {
         const response = await axiosInstance.get(`/api/community/${id}`);
+        console.log(response);
         setCommunity(response.data.data);
       } catch (err) {
-        setError('게시물을 불러오는데 실패했습니다.');
+        navigate('/community');
         console.error(err);
       } finally {
         setLoading(false);

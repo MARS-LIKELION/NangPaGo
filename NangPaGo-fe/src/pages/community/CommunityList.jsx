@@ -60,7 +60,7 @@ function CommunityList() {
 
     observerInstance.current = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        loadCommunityList(currentPage + 1); // 다음 페이지 로드
+        loadCommunityList(currentPage + 1);
       }
     });
 
@@ -72,7 +72,7 @@ function CommunityList() {
   }, [hasMore, currentPage, isInitialLoad]);
 
   const handleCreateClick = () => {
-    alert('글 생성 버튼이 클릭되었습니다!');
+    navigate('/community/new');
   };
 
   const handleCardClick = (id) => {

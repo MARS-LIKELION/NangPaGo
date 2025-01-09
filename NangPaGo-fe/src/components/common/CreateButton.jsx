@@ -1,11 +1,12 @@
-import { FaPen } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
+import { FaPen } from 'react-icons/fa';
 
 function CreateButton({
   onClick,
   isTopButtonVisible,
   containerClass = '',
   basePositionClass = '',
+  icon, // 추가된 icon prop
 }) {
   const [buttonPositionClass, setButtonPositionClass] =
     useState(basePositionClass);
@@ -26,7 +27,7 @@ function CreateButton({
         ${containerClass} ${buttonPositionClass}`}
       aria-label="Create new post"
     >
-      <FaPen className="text-lg" />
+      {icon || <FaPen className="text-lg" />}
     </button>
   );
 }
