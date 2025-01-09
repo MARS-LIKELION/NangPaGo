@@ -13,6 +13,8 @@ public record CommunityResponseDto(
     String content,
     String imageUrl,
     String email,
+    int likeCount,
+    int commentCount,
     boolean isOwnedByUser,
     boolean isPublic,
     LocalDateTime createdAt,
@@ -28,6 +30,22 @@ public record CommunityResponseDto(
             .content(community.getContent())
             .imageUrl(getImageUrlOrDefault(community.getImageUrl()))
             .email(maskEmail(community.getUser().getEmail()))
+            .isOwnedByUser(community.getUser().getEmail().equals(email))
+            .isPublic(community.isPublic())
+            .createdAt(community.getCreatedAt())
+            .updatedAt(community.getUpdatedAt())
+            .build();
+    }
+
+    public static CommunityResponseDto of(Community community, int likeCount, int commentCount, String email) {
+        return CommunityResponseDto.builder()
+            .id(community.getId())
+            .title(community.getTitle())
+            .content(community.getContent())
+            .imageUrl(getImageUrlOrDefault(community.getImageUrl()))
+            .email(maskEmail(community.getUser().getEmail()))
+            .likeCount(likeCount)
+            .commentCount(commentCount)
             .isOwnedByUser(community.getUser().getEmail().equals(email))
             .isPublic(community.isPublic())
             .createdAt(community.getCreatedAt())

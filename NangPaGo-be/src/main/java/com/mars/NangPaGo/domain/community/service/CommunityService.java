@@ -6,9 +6,11 @@ import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_N
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.mars.NangPaGo.common.dto.PageDto;
+import com.mars.NangPaGo.domain.comment.community.repository.CommunityCommentRepository;
 import com.mars.NangPaGo.domain.community.dto.CommunityRequestDto;
 import com.mars.NangPaGo.domain.community.dto.CommunityResponseDto;
 import com.mars.NangPaGo.domain.community.entity.Community;
+import com.mars.NangPaGo.domain.community.repository.CommunityLikeRepository;
 import com.mars.NangPaGo.domain.community.repository.CommunityRepository;
 import com.mars.NangPaGo.domain.firebase.service.FirebaseStorageService;
 import com.mars.NangPaGo.domain.user.entity.User;
@@ -27,18 +29,26 @@ import org.springframework.web.multipart.MultipartFile;
 public class CommunityService {
 
     private final CommunityRepository communityRepository;
+    private final CommunityLikeRepository communityLikeRepository;
+    private final CommunityCommentRepository communityCommentRepository;
     private final UserRepository userRepository;
     private final FirebaseStorageService firebaseStorageService;
 
     public PageDto<CommunityResponseDto> pagesByCommunity(int pageNo, int pageSize, String email) {
         Pageable pageable = createPageRequest(pageNo, pageSize);
+
         return PageDto.of(
             ("anonymous_user".equals(email) ?
                 communityRepository.findByIsPublicTrue(pageable) :
                 communityRepository.findByIsPublicTrueOrUserEmail(email, pageable))
-                .map(community -> CommunityResponseDto.of(community, email))
+                .map(community -> {
+                    int likeCount = communityLikeRepository.countByCommunityId(community.getId());
+                    int commentCount = communityCommentRepository.countByCommunityId(community.getId());
+                    return CommunityResponseDto.of(community, likeCount, commentCount, email);
+                })
         );
     }
+
 
     @Transactional
     public CommunityResponseDto createCommunity(CommunityRequestDto requestDto, MultipartFile file, String email) {

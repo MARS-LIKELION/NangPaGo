@@ -12,5 +12,5 @@ public interface CommunityCommentRepository extends JpaRepository<CommunityComme
 
     Page<CommunityComment> findByCommunityId(Long comunityId, Pageable pageable);
 
-    int countByUser(User user);
+    int countByCommunityId(Long communityId);
 }
