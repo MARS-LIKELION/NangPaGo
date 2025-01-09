@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../slices/loginSlice';
 import axiosInstance from '../../api/axiosInstance';
@@ -16,6 +16,7 @@ function Header() {
   const handleLogout = async () => {
     try {
       await axiosInstance.post('/api/logout');
+      window.location.href = '/';
       dispatch(logout());
     } catch (error) {
       console.error('로그아웃 실패:', error.response?.data || error.message);

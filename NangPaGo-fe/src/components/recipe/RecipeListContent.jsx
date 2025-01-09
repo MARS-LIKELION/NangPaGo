@@ -5,7 +5,7 @@ import {
   fetchFavoriteRecipes,
 } from '../../api/recipe';
 
-function RecipeListContent({ activeTab, searchTerm = '' }) {
+function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   const [recipes, setRecipes] = useState({
     recommended: [],
     favorites: [],
@@ -171,7 +171,9 @@ function RecipeListContent({ activeTab, searchTerm = '' }) {
         <div className="text-center py-8 text-gray-500">
           {activeTab === 'recommended'
             ? '검색 결과가 없습니다.'
-            : '즐겨찾기한 레시피가 없습니다.'}
+            : isLoggedIn
+              ? '즐겨찾기한 레시피가 없습니다.'
+              : '로그인 후 이용 가능합니다.'}
         </div>
       )}
       <div ref={observerRef} />

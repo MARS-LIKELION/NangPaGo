@@ -1,22 +1,25 @@
 import { useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
 import Header from '../../components/common/Header.jsx';
 import Footer from '../../components/common/Footer.jsx';
 import TopButton from '../../components/common/TopButton';
-import axiosInstance from '../../api/axiosInstance';
 
 function RecipeList() {
   const location = useLocation();
 
+  const isLoggedIn = useMemo(
+    () => localStorage.getItem('isLoggedIn') === 'true',
+    [],
+  );
+
   const [activeTab, setActiveTab] = useState('recommended');
-  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState(
     location.state?.searchTerm || '',
   );
-  const [recipes, setRecipes] = useState([]);
+  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
 
   const handleClearSearch = () => {
     setSearchTerm('');
@@ -30,34 +33,19 @@ function RecipeList() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (activeTab === 'favorites') {
-      const fetchFavoriteRecipes = async () => {
-        try {
-          const response = await axiosInstance.get('/api/recipe/favorite/list');
-          console.log(response);
-          setRecipes(response.data.data || []);
-        } catch (error) {
-          console.error(error);
-          setRecipes([]);
-        }
-      };
-
-      fetchFavoriteRecipes();
-    }
-  }, [activeTab]);
-
-  useEffect(() => {
-    setSearchTerm(location.state?.searchTerm || '');
-  }, [location.state?.searchTerm]);
-
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
       <Header />
 
       <div className="flex-grow px-4 space-y-4">
-        <RecipeListTab activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* 탭 컴포넌트 */}
+        <RecipeListTab
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          isLoggedIn={isLoggedIn} // 로그인 상태 전달
+        />
 
+        {/* 검색 바 */}
         {activeTab !== 'favorites' && (
           <div className="flex justify-center">
             <SearchBar
@@ -69,23 +57,12 @@ function RecipeList() {
           </div>
         )}
 
-        {activeTab !== 'favorites' && (
-          <RecipeListContent 
-            key={searchTerm}
-            activeTab={activeTab} 
-            searchTerm={searchTerm} 
-          />
-        )}
-
-        {activeTab === 'favorites' && recipes.length === 0 ? (
-          <div className="flex items-center justify-center text-gray-500 text-center py-10">
-            즐겨찾기한 레시피가 없습니다.
-          </div>
-        ) : (
-          activeTab === 'favorites' && (
-            <RecipeListContent activeTab={activeTab} recipes={recipes} />
-          )
-        )}
+        {/* 레시피 콘텐츠 */}
+        <RecipeListContent
+          activeTab={activeTab}
+          searchTerm={searchTerm}
+          isLoggedIn={isLoggedIn} // 로그인 상태 전달
+        />
       </div>
 
       <Footer />
