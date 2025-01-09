@@ -26,7 +26,6 @@ function Profile() {
   });
   const isFetchingRef = useRef(false);
   const navigate = useNavigate();
-  const debounceTimeoutRef = useRef(null);
 
   useEffect(() => {
     getMyPageInfo()
@@ -77,7 +76,6 @@ function Profile() {
     }
   };
 
-  // 페이지 변경 감지하여 데이터 가져오기
   useEffect(() => {
     fetchTabData(page);
   }, [page]);
@@ -87,10 +85,6 @@ function Profile() {
     setPage(1);
     setHasMore(true);
     isFetchingRef.current = false;
-    
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
 
     // 탭 변경 시 초기 데이터 로드
     fetchTabData(1);
@@ -103,29 +97,9 @@ function Profile() {
   };
 
   const handleLoadMore = useCallback(() => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
-
-    debounceTimeoutRef.current = setTimeout(() => {
-      // 현재 페이지가 1이고 새로운 요청이 시작되지 않았을 때만 실행
-      if (page === 1) {
-        isFetchingRef.current = false;
-        fetchTabData(1);
-      } else if (!isFetchingRef.current && hasMore) {
-        setPage((prev) => prev + 1);
-      }
-    }, 300);
-  }, [page, hasMore]);
-
-  // cleanup effect 추가
-  useEffect(() => {
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-    };
-  }, []);
+    if (isFetchingRef.current || !hasMore) return;
+    setPage((prev) => prev + 1);
+  }, [hasMore]);
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
@@ -143,7 +117,10 @@ function Profile() {
           />
           <div className="py-4">
             <ItemList
-              items={items}
+              items={items.map((item, index) => ({
+                ...item,
+                key: `${item.id}-${index}`,
+              }))}
               activeTab={activeTab}
               hasMore={hasMore}
               onLoadMore={handleLoadMore}
