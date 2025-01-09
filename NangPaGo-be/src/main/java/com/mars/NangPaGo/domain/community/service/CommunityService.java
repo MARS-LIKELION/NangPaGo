@@ -73,8 +73,6 @@ public class CommunityService {
         String imageUrl = null;
         if (file != null && !file.isEmpty()) {
             imageUrl = firebaseStorageService.uploadFile(file);
-        } else {
-            imageUrl = CommunityResponseDto.DEFAULT_IMAGE_URL;
         }
 
         Community community = Community.of(
