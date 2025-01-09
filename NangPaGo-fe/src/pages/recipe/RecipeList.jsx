@@ -38,14 +38,12 @@ function RecipeList() {
       <Header />
 
       <div className="flex-grow px-4 space-y-4">
-        {/* 탭 컴포넌트 */}
         <RecipeListTab
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          isLoggedIn={isLoggedIn} // 로그인 상태 전달
+          isLoggedIn={isLoggedIn}
         />
 
-        {/* 검색 바 */}
         {activeTab !== 'favorites' && (
           <div className="flex justify-center">
             <SearchBar
@@ -57,11 +55,10 @@ function RecipeList() {
           </div>
         )}
 
-        {/* 레시피 콘텐츠 */}
         <RecipeListContent
           activeTab={activeTab}
           searchTerm={searchTerm}
-          isLoggedIn={isLoggedIn} // 로그인 상태 전달
+          isLoggedIn={isLoggedIn}
         />
       </div>
 
