@@ -81,13 +81,18 @@ function Profile() {
   }, [page]);
 
   useEffect(() => {
-    setItems([]);
-    setPage(1);
-    setHasMore(true);
-    isFetchingRef.current = false;
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
 
-    // 탭 변경 시 초기 데이터 로드
-    fetchTabData(1);
+    debounceTimeoutRef.current = setTimeout(() => {
+      setItems([]);
+      setPage(1);
+      setHasMore(true);
+      isFetchingRef.current = false;
+
+      fetchTabData(1);
+    }, 300);
   }, [activeTab]);
 
   const handleItemClick = (id) => {
@@ -97,9 +102,24 @@ function Profile() {
   };
 
   const handleLoadMore = useCallback(() => {
-    if (isFetchingRef.current || !hasMore) return;
-    setPage((prev) => prev + 1);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      if (!isFetchingRef.current && hasMore) {
+        setPage((prev) => prev + 1);
+      }
+    }, 300);
   }, [hasMore]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
