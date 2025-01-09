@@ -103,11 +103,11 @@ function CommunityList() {
                   <div className="flex items-center gap-4 text-gray-600">
                     <div className="flex items-center gap-1">
                       <AiFillHeart className="text-red-500 text-lg" />
-                      <span>0</span>
+                      <span>{item.likeCount}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <FaCommentAlt className="text-gray-500 text-lg" />
-                      <span>0</span>
+                      <span>{item.commentCount}</span>
                     </div>
                   </div>
                   <h2 className="text-lg font-semibold truncate">
