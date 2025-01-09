@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../slices/loginSlice';
 import axiosInstance from '../../api/axiosInstance';
 import { FaRegUser } from 'react-icons/fa';
-import { IoReceiptOutline } from 'react-icons/io5';
 import { CgSmartHomeRefrigerator } from 'react-icons/cg';
 import { useState, useRef, useEffect } from 'react';
+import { BsFilePost } from 'react-icons/bs';
 
 function Header() {
   const loginState = useSelector((state) => state.loginSlice);
@@ -52,7 +52,7 @@ function Header() {
         {loginState.isLoggedIn ? (
           <div className="flex items-center space-x-7">
             <Link to="/community" className="text-[var(--primary-color)]">
-              <IoReceiptOutline size={26} />
+              <BsFilePost size={26} />
             </Link>
             <Link to="/refrigerator" className="text-[var(--primary-color)]">
               <CgSmartHomeRefrigerator size={28} />
