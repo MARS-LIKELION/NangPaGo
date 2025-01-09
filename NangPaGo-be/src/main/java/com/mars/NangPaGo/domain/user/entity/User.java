@@ -65,4 +65,9 @@ public class User extends BaseEntity {
         this.nickname = requestDto.nickname();
         return this;
     }
+
+    public void softDeleteUser(){
+        this.isAvailable = false;
+        this.leftAt = LocalDate.now();
+    }
 }

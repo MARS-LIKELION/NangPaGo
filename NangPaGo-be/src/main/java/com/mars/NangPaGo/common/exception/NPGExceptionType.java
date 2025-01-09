@@ -18,12 +18,14 @@ public enum NPGExceptionType {
     BAD_REQUEST_INVALID_PAGE_SIZE(HttpStatus.BAD_REQUEST, "pageSize 는 양수로 입력해야 합니다."),
     BAD_REQUSET_CHECK_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임 중복 검사를 해야합니다."),
     BAD_REQUEST_UNUSABLE_NICKNAME(HttpStatus.BAD_REQUEST, "사용할 수 없는 닉네임입니다."),
+    BAD_REQUEST_DISCONNECT_THIRD_PARTY(HttpStatus.BAD_REQUEST, "서드 파티 연결에 실패했습니다."),
 
     // UNAUTHORIZED(401)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
     UNAUTHORIZED_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰"),
     UNAUTHORIZED_TOKEN_MISSING(HttpStatus.UNAUTHORIZED, "JWT 토큰이 없습니다."),
     UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT(HttpStatus.UNAUTHORIZED, "인증 정보가 존재하지 않습니다."),
+    UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN(HttpStatus.UNAUTHORIZED, "Oauth2 프로바이더의 토큰을 발급 받을 수 없습니다."),
 
     // Forbidden(403)
     FORBIDDEN(HttpStatus.FORBIDDEN, "권한이 없습니다."),
@@ -39,9 +41,13 @@ public enum NPGExceptionType {
     NOT_FOUND_INGREDIENT(HttpStatus.NOT_FOUND, "등록된 식재료 정보를 찾을 수 없습니다."),
     NOT_FOUND_COMMUNITY(HttpStatus.NOT_FOUND, "게시물을 찾을 수 없습니다."),
     NOT_FOUND_COMMUNITY_COMMENT(HttpStatus.NOT_FOUND, "게시물 내 댓글을 찾을 수 없습니다."),
+    NOT_FOUND_OAUTH2_PROVIDER_TOKEN(HttpStatus.NOT_FOUND, "Oauth2 프로바이더의 토큰을 찾을 수 없습니다."),
 
     // Conflict(409)
     DUPLICATE_INGREDIENT(HttpStatus.CONFLICT, "이미 등록되어있는 정보입니다."),
+
+    // Unprocessable Entity(422)
+    UNPROCESSABLE_JSON(HttpStatus.UNPROCESSABLE_ENTITY, "JSON 객체 변환에 실패했습니다."),
 
     // Internal Server Error(500)
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"),
