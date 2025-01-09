@@ -8,9 +8,14 @@ function Footer() {
         >
           팀 소개
         </a>
-        <button className="text-[var(--secondary-color)] text-sm">
+        <a
+          href="https://naver.me/IgJx1Jmu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[var(--secondary-color)] text-sm"
+        >
           서비스 피드백
-        </button>
+        </a>
       </div>
       <p className="text-gray-600 text-sm">
         © 2024 NANGPAGO. ALL RIGHTS RESERVED.
