@@ -3,7 +3,11 @@ package com.mars.NangPaGo.domain.user.controller;
 
 import com.mars.NangPaGo.common.aop.auth.AuthenticatedUser;
 import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
+import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.dto.ResponseDto;
+import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
+import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
+import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
 import com.mars.NangPaGo.domain.user.dto.UserInfoRequestDto;
 import com.mars.NangPaGo.domain.user.dto.UserInfoResponseDto;
@@ -54,5 +58,34 @@ public class UserController {
     public ResponseDto<UserInfoResponseDto> updateUserInfo(@RequestBody UserInfoRequestDto requestDto) {
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(userService.updateUserInfo(requestDto, email));
+    }
+
+    @GetMapping("/likes/recipes")
+    public ResponseDto<PageDto<RecipeResponseDto>> getMyLikedRecipes(
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "7") int pageSize
+    ) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(userService.getMyLikedRecipes(email, pageNo, pageSize));
+    }
+
+    @AuthenticatedUser
+    @GetMapping("/favorites/recipes")
+    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getMyFavorites(
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "7") int pageSize
+    ) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(userService.getMyFavorites(email, pageNo, pageSize));
+    }
+
+    @AuthenticatedUser
+    @GetMapping("/comments")
+    public ResponseDto<PageDto<RecipeCommentResponseDto>> getMyComments(
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "7") int pageSize
+    ) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(userService.getMyComments(email, pageNo, pageSize));
     }
 }

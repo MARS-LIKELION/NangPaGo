@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import axiosInstance from '../../api/axiosInstance';
-import Header from '../common/Header';
-import Footer from '../common/Footer';
-import UpdateUserInfoModal from '../../common/modal/UpdateUserInfoModal';
+import axiosInstance from '../../api/axiosInstance.js';
+import Header from '../../components/common/Header.jsx';
+import Footer from '../../components/common/Footer.jsx';
+import UpdateUserInfoModal from '../../common/modal/UpdateUserInfoModal.jsx';
 
-const UserInfoModify = () => {
+const Modify = () => {
   const [userInfo, setUserInfo] = useState({});
   const [nickname, setNickname] = useState('');
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
@@ -42,14 +42,16 @@ const UserInfoModify = () => {
     setNickname(trimmedNickname);
 
     try {
-      const response = await axiosInstance.get(`/api/user/profile/check?nickname=${trimmedNickname}`);
+      const response = await axiosInstance.get(
+        `/api/user/profile/check?nickname=${trimmedNickname}`,
+      );
       console.log('닉네임 중복 확인 응답:', response);
 
       setIsNicknameAvailable(true);
       setIsNicknameAvailableMessage('사용 가능한 닉네임입니다.');
     } catch (error) {
       setIsNicknameAvailable(false);
-      
+
       if (error.response?.status === 400) {
         setIsNicknameAvailableMessage(error.response.data.message);
       } else {
@@ -140,4 +142,4 @@ const UserInfoModify = () => {
   );
 };
 
-export default UserInfoModify;
+export default Modify;
