@@ -70,6 +70,11 @@ function Community({ community }) {
     }
   };
 
+  const maskEmail = (email) => {
+    const visiblePart = email.slice(0, 3);
+    return `${visiblePart}***`;
+  };
+
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
       <Header />
@@ -77,7 +82,7 @@ function Community({ community }) {
         <div className="mt-6 px-4">
           <h1 className="text-xl font-bold">{community.title}</h1>
           <div className="mt-2 flex flex-col text-gray-500 text-xs">
-            <span>{community.email}</span>
+            <span><strong>{maskEmail(community.email)}</strong></span>
             <span>
               {new Intl.DateTimeFormat('ko-KR', {
                 year: 'numeric',
