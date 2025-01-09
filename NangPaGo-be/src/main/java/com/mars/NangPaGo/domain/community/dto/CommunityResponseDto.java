@@ -1,8 +1,6 @@
 package com.mars.NangPaGo.domain.community.dto;
 
 import com.mars.NangPaGo.domain.community.entity.Community;
-import com.mars.NangPaGo.domain.user.entity.User;
-import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import lombok.Builder;
 
