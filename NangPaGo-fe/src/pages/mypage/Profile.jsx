@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getMyPageInfo,
@@ -17,7 +17,7 @@ function Profile() {
   const [myPageInfo, setMyPageInfo] = useState({});
   const [activeTab, setActiveTab] = useState('likes');
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [totalCounts, setTotalCounts] = useState({
     likes: 0,
@@ -26,6 +26,7 @@ function Profile() {
   });
   const isFetchingRef = useRef(false);
   const navigate = useNavigate();
+  const debounceTimeoutRef = useRef(null);
 
   useEffect(() => {
     getMyPageInfo()
@@ -83,8 +84,16 @@ function Profile() {
 
   useEffect(() => {
     setItems([]);
-    setPage(0);
+    setPage(1);
     setHasMore(true);
+    isFetchingRef.current = false;
+    
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    // 탭 변경 시 초기 데이터 로드
+    fetchTabData(1);
   }, [activeTab]);
 
   const handleItemClick = (id) => {
@@ -93,11 +102,30 @@ function Profile() {
     }
   };
 
-  const handleLoadMore = () => {
-    if (!isFetchingRef.current) {
-      setPage((prev) => prev + 1);
+  const handleLoadMore = useCallback(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
-  };
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      // 현재 페이지가 1이고 새로운 요청이 시작되지 않았을 때만 실행
+      if (page === 1) {
+        isFetchingRef.current = false;
+        fetchTabData(1);
+      } else if (!isFetchingRef.current && hasMore) {
+        setPage((prev) => prev + 1);
+      }
+    }, 300);
+  }, [page, hasMore]);
+
+  // cleanup effect 추가
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">

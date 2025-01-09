@@ -5,6 +5,7 @@ import com.mars.NangPaGo.common.aop.auth.AuthenticatedUser;
 import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.common.dto.PageDto;
 import com.mars.NangPaGo.common.dto.ResponseDto;
+import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
@@ -65,8 +66,15 @@ public class UserController {
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "7") int pageSize
     ) {
+        if (pageNo < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
+        }
+        if (pageSize < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
+        }
+
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.getMyLikedRecipes(email, pageNo, pageSize));
+        return ResponseDto.of(userService.getMyLikedRecipes(email, pageNo - 1, pageSize));
     }
 
     @AuthenticatedUser
@@ -75,8 +83,15 @@ public class UserController {
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "7") int pageSize
     ) {
+        if (pageNo < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
+        }
+        if (pageSize < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
+        }
+
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.getMyFavorites(email, pageNo, pageSize));
+        return ResponseDto.of(userService.getMyFavorites(email, pageNo - 1, pageSize));
     }
 
     @AuthenticatedUser
@@ -85,7 +100,14 @@ public class UserController {
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "7") int pageSize
     ) {
+        if (pageNo < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
+        }
+        if (pageSize < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
+        }
+
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.getMyComments(email, pageNo, pageSize));
+        return ResponseDto.of(userService.getMyComments(email, pageNo - 1, pageSize));
     }
 }

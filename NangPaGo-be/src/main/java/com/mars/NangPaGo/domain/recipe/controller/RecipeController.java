@@ -59,16 +59,19 @@ public class RecipeController {
 
     @GetMapping("/search")
     public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
-        @RequestParam(name = "pageNo", defaultValue = "1") int page,
-        @RequestParam(name = "pageSize", defaultValue = "10") int size,
+        @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
+        @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
         @RequestParam(name = "keyword", required = false) String keyword,
         @RequestParam(name = "searchType", defaultValue = "INGREDIENTS") String searchType) {
 
-        if (page < 1) {
-            throw NPGExceptionType.BAD_REQUEST_INVALID_COMMENT.of();
+        if (pageNo < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
+        }
+        if (pageSize < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
 
-        return ResponseDto.of(recipeEsService.searchRecipes(page - 1, size, keyword, searchType));
+        return ResponseDto.of(recipeEsService.searchRecipes(pageNo - 1, pageSize, keyword, searchType));
     }
 
     @PostMapping("/bulk-upload/mysql")
