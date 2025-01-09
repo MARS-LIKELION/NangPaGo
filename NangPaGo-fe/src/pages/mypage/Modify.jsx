@@ -98,11 +98,11 @@ const Modify = () => {
                     setIsNicknameAvailable(false);
                     setIsNicknameAvailableMessage('');
                   }}
-                  className="flex-1 p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 rounded"
                 />
                 <button
                   onClick={handleNicknameCheck}
-                  className="bg-yellow-400 text-white px-4 py-2 rounded whitespace-nowrap"
+                  className="bg-yellow-400 text-white px-3 py-2 rounded whitespace-nowrap flex-shrink-0"
                 >
                   중복 확인
                 </button>
