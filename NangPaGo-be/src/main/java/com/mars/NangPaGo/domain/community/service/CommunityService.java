@@ -30,6 +30,16 @@ public class CommunityService {
     private final UserRepository userRepository;
     private final FirebaseStorageService firebaseStorageService;
 
+    public CommunityResponseDto getCommunityById(Long id, String email) {
+        Community community = getCommunity(id);
+
+        if (community.isPrivate()) {
+            validateOwnership(community, email);
+        }
+
+        return CommunityResponseDto.of(community, email);
+    }
+
     public PageDto<CommunityResponseDto> pagesByCommunity(int pageNo, int pageSize, String email) {
         Pageable pageable = createPageRequest(pageNo, pageSize);
         return PageDto.of(
@@ -38,6 +48,13 @@ public class CommunityService {
                 communityRepository.findByIsPublicTrueOrUserEmail(email, pageable))
                 .map(community -> CommunityResponseDto.of(community, email))
         );
+    }
+
+    public CommunityResponseDto getPostForEdit(Long id, String email) {
+        Community community = getCommunity(id);
+        validateOwnership(community, email);
+
+        return CommunityResponseDto.of(community, email);
     }
 
     @Transactional
@@ -63,7 +80,7 @@ public class CommunityService {
 
     @Transactional
     public CommunityResponseDto updateCommunity(Long id, CommunityRequestDto requestDto, MultipartFile file, String email) {
-        Community community = validateCommunity(id);
+        Community community = getCommunity(id);
         validateOwnership(community, email);
 
         String imageUrl = community.getImageUrl();
@@ -87,9 +104,14 @@ public class CommunityService {
 
     @Transactional
     public void deleteCommunity(Long id, String email) {
-        Community community = validateCommunity(id);
+        Community community = getCommunity(id);
         validateOwnership(community, email);
         communityRepository.deleteById(id);
+    }
+
+    private Community getCommunity(Long id) {
+        return communityRepository.findById(id)
+            .orElseThrow(NOT_FOUND_COMMUNITY::of);
     }
 
     private void validateOwnership(Community community, String email) {
@@ -98,40 +120,12 @@ public class CommunityService {
         }
     }
 
-    private Community validateCommunity(Long id) {
-        return communityRepository.findById(id)
-            .orElseThrow(() -> NOT_FOUND_COMMUNITY.of());
-    }
-
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of());
+            .orElseThrow(NOT_FOUND_USER::of);
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {
         return PageRequest.of(pageNo, pageSize, Sort.by(DESC, "createdAt"));
-    }
-
-    @Transactional(readOnly = true)
-    public CommunityResponseDto getCommunityById(Long id, String email) {
-        Community community = validateCommunity(id);
-
-        if (!community.isPublic() && community.getUser().getEmail().equals(email)) {
-            throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("이 게시물을 조회할 권한이 없습니다.");
-        }
-
-        return CommunityResponseDto.of(community, email);
-    }
-
-
-    @Transactional(readOnly = true)
-    public CommunityResponseDto getPostForEdit(Long id, String email) {
-        Community community = validateCommunity(id);
-
-        if (!community.getUser().getEmail().equals(email)) {
-            throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("이 게시물을 수정할 권한이 없습니다.");
-        }
-
-        return CommunityResponseDto.of(community, email);
     }
 }

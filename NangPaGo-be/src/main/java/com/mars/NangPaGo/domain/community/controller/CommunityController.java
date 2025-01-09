@@ -10,7 +10,6 @@ import com.mars.NangPaGo.domain.community.service.CommunityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +22,13 @@ public class CommunityController {
 
     private final CommunityService communityService;
 
+    @Operation(summary = "게시물 단일 조회")
+    @GetMapping("/{id}")
+    public ResponseDto<CommunityResponseDto> getCommunityById(@PathVariable Long id) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(communityService.getCommunityById(id, email));
+    }
+
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
     public ResponseDto<PageDto<CommunityResponseDto>> list(
@@ -31,6 +37,14 @@ public class CommunityController {
 
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(communityService.pagesByCommunity(pageNo, pageSize, email));
+    }
+
+    @Operation(summary = "수정 페이지용 게시물 조회")
+    @AuthenticatedUser
+    @GetMapping("/edit/{id}")
+    public ResponseDto<CommunityResponseDto> getPostForEdit(@PathVariable Long id) {
+        String email = AuthenticationHolder.getCurrentUserEmail();
+        return ResponseDto.of(communityService.getPostForEdit(id, email), "게시물을 성공적으로 가져왔습니다.");
     }
 
     @Operation(summary = "게시물 작성")
@@ -64,20 +78,5 @@ public class CommunityController {
         String email = AuthenticationHolder.getCurrentUserEmail();
         communityService.deleteCommunity(id, email);
         return ResponseDto.of(null, "게시물이 성공적으로 삭제되었습니다.");
-    }
-
-    @Operation(summary = "게시물 단일 조회")
-    @GetMapping("/{id}")
-    public ResponseDto<CommunityResponseDto> getCommunityById(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.getCommunityById(id, email));
-    }
-
-    @Operation(summary = "수정 페이지용 게시물 조회")
-    @AuthenticatedUser
-    @GetMapping("/edit/{id}")
-    public ResponseDto<CommunityResponseDto> getPostForEdit(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.getPostForEdit(id, email), "게시물을 성공적으로 가져왔습니다.");
     }
 }

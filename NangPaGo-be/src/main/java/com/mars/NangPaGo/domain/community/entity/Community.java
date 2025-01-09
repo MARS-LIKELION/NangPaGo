@@ -69,4 +69,8 @@ public class Community extends BaseEntity {
         this.isPublic = isPublic;
         this.imageUrl = imageUrl;
     }
+
+    public boolean isPrivate() {
+        return !this.isPublic;
+    }
 }
