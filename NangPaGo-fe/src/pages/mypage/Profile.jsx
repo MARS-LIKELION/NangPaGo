@@ -19,6 +19,8 @@ function Profile() {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const debounceTimeoutRef = useRef(null);
+
   const [totalCounts, setTotalCounts] = useState({
     likes: 0,
     favorites: 0,

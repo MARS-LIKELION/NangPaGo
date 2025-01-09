@@ -3,7 +3,6 @@ import axiosInstance from './axiosInstance';
 export async function getMyPageInfo() {
   try {
     const response = await axiosInstance.get('/api/user/my-page');
-    console.log('마이페이지 정보:', response.data.data);
     return response.data.data;
   } catch (error) {
     console.error('마이페이지 정보 조회 실패:', error);
@@ -40,7 +39,6 @@ export async function getFavorites(page, size) {
     const response = await axiosInstance.get('/api/user/favorites/recipes', {
       params: { pageNo: page, pageSize: size },
     });
-    console.log('즐겨찾기한 레시피 목록:', response.data.data);
     return response.data.data;
   } catch (error) {
     console.error('즐겨찾기한 레시피 목록 조회 실패:', error);
