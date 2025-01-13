@@ -76,9 +76,8 @@ public class OAuth2ProviderTokenService {
             JsonNode jsonNode = objectMapper.readTree(response.body());
 
             return jsonNode.get("access_token").asText(); // 성공적으로 엑세스 토큰을 재발급받음
-        } else {
-            throw UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN.of();
         }
+        throw UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN.of();
     }
 
 
