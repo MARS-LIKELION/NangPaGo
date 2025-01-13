@@ -85,7 +85,7 @@ function CreateCommunity() {
             className="mr-2 w-4 h-4 appearance-none border border-gray-400 rounded-sm checked:bg-yellow-500 checked:border-yellow-500"
           />
           <label htmlFor="is-public" className="text-sm text-gray-500">
-            비공개 (체크 시 로그인한 사용자만 볼 수 있습니다.)
+            비공개
           </label>
         </div>
         <ErrorMessage error={error} />
