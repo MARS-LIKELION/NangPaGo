@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Oauth2ProviderTokenService {
 
+    public static final int RESPONSE_SUCCESS_STATUSCODE = 200;
     private final OauthProviderTokenRepository oauthProviderTokenRepository;
     private final UserRepository userRepository;
 
@@ -120,13 +121,11 @@ public class Oauth2ProviderTokenService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() == 200) {
+        if (response.statusCode() == RESPONSE_SUCCESS_STATUSCODE) {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.body());
 
-            String accessToken = jsonNode.get("access_token").asText();
-
-            return accessToken; // 성공적으로 엑세스 토큰을 재발급받음
+            return jsonNode.get("access_token").asText(); // 성공적으로 엑세스 토큰을 재발급받음
         } else {
             throw UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN.of();
         }
@@ -168,7 +167,7 @@ public class Oauth2ProviderTokenService {
 
         HttpResponse<String> response = client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
-        if (!(response.statusCode() == 200)) {
+        if (response.statusCode() != RESPONSE_SUCCESS_STATUSCODE) {
             throw BAD_REQUEST_DISCONNECT_THIRD_PARTY.of();
         }
         softDeleteUser(user);
@@ -198,11 +197,8 @@ public class Oauth2ProviderTokenService {
     }
 
     private String findProviderRefreshToken(String providerName, String email) {
-        Optional<OauthProviderToken> token = oauthProviderTokenRepository.findByProviderNameAndEmail(providerName,
-            email);
-        if (token.isEmpty()) {
-            throw NOT_FOUND_OAUTH2_PROVIDER_TOKEN.of();
-        }
-        return token.get().getProviderRefreshToken();
+        return oauthProviderTokenRepository.findByProviderNameAndEmail(providerName, email)
+            .map(OauthProviderToken::getProviderRefreshToken)
+            .orElseThrow(NOT_FOUND_OAUTH2_PROVIDER_TOKEN::of);
     }
 }
