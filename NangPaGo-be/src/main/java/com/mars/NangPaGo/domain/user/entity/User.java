@@ -7,6 +7,7 @@ import com.mars.NangPaGo.domain.favorite.recipe.entity.RecipeFavorite;
 import com.mars.NangPaGo.domain.recipe.entity.RecipeLike;
 import com.mars.NangPaGo.domain.user.dto.UserInfoRequestDto;
 import com.mars.NangPaGo.domain.user.enums.Gender;
+import com.mars.NangPaGo.domain.user.enums.UserStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,7 +50,9 @@ public class User extends BaseEntity {
     private OAuth2Provider oauth2Provider;
     private String providerId;
 
-    private boolean isAvailable;
+    @Enumerated(EnumType.STRING)
+    @Column(name="user_status")
+    private UserStatus userStatus;
     private LocalDate leftAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -67,7 +70,7 @@ public class User extends BaseEntity {
     }
 
     public void softDelete(){
-        this.isAvailable = false;
+        this.userStatus = UserStatus.from("탈퇴");
         this.leftAt = LocalDate.now();
     }
 }

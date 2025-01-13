@@ -6,6 +6,7 @@ import com.mars.NangPaGo.auth.enums.OAuth2Provider;
 import com.mars.NangPaGo.auth.factory.userinfo.OAuth2UserInfo;
 import com.mars.NangPaGo.auth.factory.userinfo.KakaoUserInfo;
 import com.mars.NangPaGo.auth.factory.userinfo.NaverUserInfo;
+import com.mars.NangPaGo.domain.user.enums.UserStatus;
 import lombok.Builder;
 
 @Builder
@@ -62,6 +63,7 @@ public record UserRequestDto(
         }
 
         Gender genderEnum = Gender.fromProvider(this.provider, this.gender);
+        UserStatus userStatus = UserStatus.ACTIVE;
 
         return User.builder()
             .name(this.name)
@@ -74,6 +76,7 @@ public record UserRequestDto(
             .oauth2Provider(OAuth2Provider.from(this.provider))
             .providerId(this.providerId)
             .profileImageUrl(this.profileImageUrl)
+            .userStatus(userStatus)
             .build();
     }
 }
