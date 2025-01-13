@@ -87,7 +87,7 @@ function Header() {
                 <CgSmartHomeRefrigerator size={30} />
               </Link>
               <span
-                className={`text-[10px] mt-1 font-medium ${
+                className={`text-[10px] mt-1 font-medium pb-[2.5px] ${
                   location.pathname === '/refrigerator'
                     ? 'text-[var(--primary-color)]'
                     : 'text-gray-400'
