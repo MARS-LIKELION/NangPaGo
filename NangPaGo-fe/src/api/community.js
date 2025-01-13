@@ -44,6 +44,22 @@ export const deleteCommunity = (id) => {
     .then((response) => response.data);
 };
 
+export const getLikeStatus = async (id) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/community/${id}/like/status`,
+    );
+    console.log(response.data.message);
+    return response.data.data;
+  } catch (error) {
+    console.error(
+      error.response?.data?.message ||
+        'An error occurred while fetching the like status.',
+    );
+    throw error;
+  }
+};
+
 export const getLikeCount = async (id) => {
   try {
     const response = await axiosInstance.get(`/api/community/${id}/like/count`);

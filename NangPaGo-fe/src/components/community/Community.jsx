@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import CommunityComment from './comment/CommunityComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
-import { getLikeCount } from '../../api/community.js';
+import { getLikeCount, getLikeStatus } from '../../api/community.js';
 import CreateButton from '../common/CreateButton';
 
 const maskEmail = (email) => {
@@ -28,7 +28,9 @@ function Community({ community }) {
   const fetchLikeCount = async () => {
     try {
       const count = await getLikeCount(community.id);
+      const status = await getLikeStatus(community.id);
       setLikeCount(count);
+      setIsHeartActive(status);
     } catch (error) {
       console.error('좋아요 수를 가져오는 중 오류가 발생했습니다:', error);
     }
