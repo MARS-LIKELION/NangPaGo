@@ -1,12 +1,16 @@
-import axiosInstance from '../../api/axiosInstance.js';
 import { Fragment, useEffect, useState } from 'react';
 import { FaHeart, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import CommunityComment from './comment/CommunityComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
-import { getLikeCount, getLikeStatus } from '../../api/community.js';
 import CreateButton from '../common/CreateButton';
+import {
+  getLikeCount,
+  getLikeStatus,
+  deleteCommunity,
+  toggleLike,
+} from '../../api/community';
 
 const maskEmail = (email) => {
   if (!email) return '';
@@ -22,56 +26,45 @@ function Community({ community }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchLikeCount();
+    fetchLikeData();
   }, [community.id]);
 
-  const fetchLikeCount = async () => {
+  const fetchLikeData = async () => {
     try {
       const count = await getLikeCount(community.id);
       const status = await getLikeStatus(community.id);
       setLikeCount(count);
       setIsHeartActive(status);
     } catch (error) {
-      console.error('좋아요 수를 가져오는 중 오류가 발생했습니다:', error);
+      console.error(error.message);
     }
   };
 
   const toggleHeart = async () => {
     try {
-      const response = await axiosInstance.post(
-        `/api/community/${community.id}/like/toggle`,
-      );
-      const isLiked = response.data.data.liked;
+      const isLiked = await toggleLike(community.id);
       setIsHeartActive(isLiked);
       setLikeCount((prev) => (isLiked ? prev + 1 : prev - 1));
     } catch (error) {
-      console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다:', error);
+      console.error(error.message);
     }
-  };
-
-  const handleCreateClick = () => {
-    navigate('/community/new');
-  };
-
-  const handleEditClick = () => {
-    navigate(`/community/${community.id}/modify`);
   };
 
   const handleDeleteClick = async () => {
     if (window.confirm('정말로 글을 삭제하시겠습니까?')) {
       try {
-        await axiosInstance.delete(`/api/community/${community.id}`);
+        await deleteCommunity(community.id);
         navigate('/community');
       } catch (error) {
-        console.error('글 삭제 중 오류가 발생했습니다:', error);
+        console.error(error.message);
         alert('글 삭제에 실패했습니다.');
       }
     }
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
+  const handleCreateClick = () => navigate('/community/new');
+  const handleEditClick = () => navigate(`/community/${community.id}/modify`);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
