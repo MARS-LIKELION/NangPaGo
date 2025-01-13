@@ -42,14 +42,17 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     private static User validateOrThrow(User user, String provider) {
         OAuth2Provider userProvider = user.getOauth2Provider();
 
-        if (userProvider == OAuth2Provider.from(provider)) {
+        // 동일한 Provider가 아니라면 예외를 던진다.
+        if (userProvider != OAuth2Provider.from(provider)) {
             throw NPGExceptionType.CONFLICT_DUPLICATE_PROVIDER.of(
                 String.format("%s로 가입된 동일한 이메일이 존재합니다.", userProvider.name())
             );
         }
 
+        // 동일한 Provider라면 사용자 정보를 반환
         return user;
     }
+
 
 
     private User registerUser(OAuth2UserInfo userInfo) {
