@@ -16,7 +16,7 @@ services:
   frontend:
     build:
       context: ./NangPaGo-fe
-      dockerfile: Dockerfile
+      dockerfile: NangPaGo-fe/Dockerfile-fe
     container_name: react-front
     ports:
       - "${VITE_FRONT_SERVER_PORT}:${VITE_FRONT_SERVER_PORT}"

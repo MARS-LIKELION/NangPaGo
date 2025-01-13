@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile-be
+    container_name: nangpago-backend-blue
+    ports:
+      - "9174:${API_SERVER_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Seoul
+    networks:
+      - nangpago-network
+    volumes:
+      - ~/nangpago-logs:/logs
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-fe
+    container_name: nangpago-front-blue
+    ports:
+      - "7429:${VITE_FRONT_SERVER_PORT}"
+    networks:
+      - nangpago-network
+
+networks:
+  nangpago-network:
+    external: true
+    driver: bridge
