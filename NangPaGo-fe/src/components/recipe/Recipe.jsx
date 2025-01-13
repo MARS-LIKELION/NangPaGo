@@ -8,6 +8,7 @@ import RecipeComment from './comment/RecipeComment';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { getLikeCount } from '../../api/recipe.js';
+import { styles } from '../common/Image'
 
 function Recipe({ recipe }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);
@@ -89,7 +90,7 @@ function Recipe({ recipe }) {
           <img
             src={recipe.mainImage}
             alt={recipe.name}
-            className="w-full h-48 object-cover rounded-md"
+            className={styles.mainImage}
           />
         </div>
 

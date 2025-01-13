@@ -1,3 +1,5 @@
+import { styles } from '../common/Image'
+
 function FileUpload({ file, onChange, imagePreview }) {
   return (
     <div className="flex flex-col items-center mb-4">
@@ -9,7 +11,7 @@ function FileUpload({ file, onChange, imagePreview }) {
           <img
             src={imagePreview}
             alt="Uploaded Preview"
-            className="w-full h-full object-cover"
+            className={styles.mainImage}
           />
         ) : (
           <span className="text-gray-400">사진 업로드</span>

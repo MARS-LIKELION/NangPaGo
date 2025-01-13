@@ -7,6 +7,7 @@ import TopButton from '../../components/common/TopButton';
 import CreateButton from '../../components/common/CreateButton';
 import Header from '../../components/common/Header';
 import Footer from '../../components/common/Footer';
+import CommunityCard from '../../components/community/CommunityCard';
 
 function CommunityList() {
   const [communityList, setCommunityList] = useState([]);
@@ -86,38 +87,12 @@ function CommunityList() {
       <div className="flex-grow px-4 space-y-4">
         {
           <ul className="space-y-4">
-            {communityList.map((item) => (
-              <li
-                key={item.id}
-                className="border rounded-lg overflow-hidden shadow-md flex flex-col cursor-pointer"
-                onClick={() => handleCardClick(item.id)}
-              >
-                {/* 이미지 */}
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full h-48 object-cover"
-                />
-                {/* 텍스트 */}
-                <div className="p-4 space-y-2">
-                  <div className="flex items-center gap-4 text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <AiFillHeart className="text-red-500 text-lg" />
-                      <span>{item.likeCount}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <FaCommentAlt className="text-gray-500 text-lg" />
-                      <span>{item.commentCount}</span>
-                    </div>
-                  </div>
-                  <h2 className="text-lg font-semibold truncate">
-                    {item.title}
-                  </h2>
-                  <p className="text-sm text-gray-500 line-clamp-2">
-                    {item.content}
-                  </p>
-                </div>
-              </li>
+            {communityList.map((community) => (
+              <CommunityCard
+                key={community.id}
+                item={community}
+                onClick={handleCardClick}
+              />
             ))}
             <div ref={observerRef} className="h-4"></div>
           </ul>

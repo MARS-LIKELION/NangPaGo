@@ -7,6 +7,7 @@ import Header from '../common/Header';
 import Footer from '../common/Footer';
 import { getLikeCount } from '../../api/community.js';
 import CreateButton from '../common/CreateButton';
+import { styles } from '../common/Image'
 
 const maskEmail = (email) => {
   if (!email) return '';
@@ -94,7 +95,7 @@ function Community({ community }) {
           <img
             src={community.imageUrl}
             alt={community.title}
-            className="w-full h-48 object-cover rounded-md"
+            className={styles.mainImage}
           />
         </div>
 

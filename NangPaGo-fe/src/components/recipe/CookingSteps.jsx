@@ -1,3 +1,5 @@
+import { styles } from '../common/Image'
+
 function CookingSteps({ steps, stepImages }) {
   return (
     <div className="cooking-steps mt-1">
@@ -8,7 +10,7 @@ function CookingSteps({ steps, stepImages }) {
             <img
               src={stepImages[index].imageUrl}
               alt={`Step ${index + 1}`}
-              className="w-full h-40 object-cover mt-2 rounded-md"
+              className={styles.detailImage}
             />
           )}
         </div>

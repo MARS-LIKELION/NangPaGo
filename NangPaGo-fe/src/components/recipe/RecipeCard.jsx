@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AiFillHeart } from 'react-icons/ai';
 import { FaCommentAlt } from 'react-icons/fa';
+import { styles } from '../common/Image'
 
 function RecipeCard({ recipe }) {
   return (
@@ -11,7 +12,7 @@ function RecipeCard({ recipe }) {
       <img
         src={recipe.recipeImageUrl}
         alt={recipe.name}
-        className="w-full h-48 object-cover"
+        className={styles.imageList}
       />
       <div className="p-4 flex flex-col gap-2">
         <div className="text-sm text-gray-600 flex items-center gap-4">
