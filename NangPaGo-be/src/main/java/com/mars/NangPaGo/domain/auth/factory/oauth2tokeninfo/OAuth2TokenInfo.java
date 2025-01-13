@@ -1,6 +1,6 @@
 package com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo;
 
-public interface Oauth2TokenInfo {
+public interface OAuth2TokenInfo {
     String getTokenUri();
 
     String getDisconnectUri(String accessToken);

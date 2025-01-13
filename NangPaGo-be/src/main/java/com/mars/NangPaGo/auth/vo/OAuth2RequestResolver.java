@@ -6,11 +6,11 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2Authorization
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
-public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
+public class OAuth2RequestResolver implements OAuth2AuthorizationRequestResolver {
 
     private final DefaultOAuth2AuthorizationRequestResolver defaultResolver;
 
-    public CustomAuthorizationRequestResolver(ClientRegistrationRepository clientRegistrationRepository,
+    public OAuth2RequestResolver(ClientRegistrationRepository clientRegistrationRepository,
         String authorizationRequestBaseUri) {
         this.defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository,
             authorizationRequestBaseUri);

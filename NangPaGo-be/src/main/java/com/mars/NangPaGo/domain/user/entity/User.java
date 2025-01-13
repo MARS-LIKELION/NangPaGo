@@ -66,7 +66,7 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public void softDeleteUser(){
+    public void softDelete(){
         this.isAvailable = false;
         this.leftAt = LocalDate.now();
     }

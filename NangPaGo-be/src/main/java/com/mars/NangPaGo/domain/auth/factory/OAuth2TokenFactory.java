@@ -4,17 +4,17 @@ import com.mars.NangPaGo.auth.enums.OAuth2Provider;
 import com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo.GoogleTokenInfo;
 import com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo.KakaoTokenInfo;
 import com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo.NaverTokenInfo;
-import com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo.Oauth2TokenInfo;
+import com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo.OAuth2TokenInfo;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class Oauth2TokenFactory {
+public class OAuth2TokenFactory {
 
-    private final Map<OAuth2Provider, Oauth2TokenInfo> TOKEN_INFO_CREATORS;
+    private final Map<OAuth2Provider, OAuth2TokenInfo> TOKEN_INFO_CREATORS;
 
-    public Oauth2TokenFactory(GoogleTokenInfo googleTokenInfo, KakaoTokenInfo kakaoTokenInfo,
+    public OAuth2TokenFactory(GoogleTokenInfo googleTokenInfo, KakaoTokenInfo kakaoTokenInfo,
         NaverTokenInfo naverTokenInfo) {
         this.TOKEN_INFO_CREATORS = Map.of(
             OAuth2Provider.GOOGLE, googleTokenInfo,
@@ -23,7 +23,7 @@ public class Oauth2TokenFactory {
         );
     }
 
-    public Oauth2TokenInfo create(String providerName) {
+    public OAuth2TokenInfo create(String providerName) {
         return TOKEN_INFO_CREATORS.get(OAuth2Provider.from(providerName));
     }
 

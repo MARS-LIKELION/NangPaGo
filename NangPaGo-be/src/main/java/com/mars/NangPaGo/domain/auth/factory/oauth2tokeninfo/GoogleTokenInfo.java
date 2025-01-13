@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoogleTokenInfo implements Oauth2TokenInfo {
+public class GoogleTokenInfo implements OAuth2TokenInfo {
 
     @Value("${spring.security.oauth2.client.provider.google.token-uri}")
     private String googleTokenUri;
@@ -12,7 +12,7 @@ public class GoogleTokenInfo implements Oauth2TokenInfo {
     private String googleClientId;
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String googleClientSecret;
-    @Value("${spring.security.oauth2.client.provider.google.dis-connect-uri}")
+    @Value("${spring.security.oauth2.client.provider.google.disconnect-uri}")
     private String googleDisConnectUri;
 
     @Override

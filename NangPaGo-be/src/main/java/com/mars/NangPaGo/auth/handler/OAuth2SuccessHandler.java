@@ -1,11 +1,8 @@
 package com.mars.NangPaGo.auth.handler;
 
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.BAD_REQUEST;
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNPROCESSABLE_JSON;
-
-import com.mars.NangPaGo.auth.vo.CustomOAuth2User;
+import com.mars.NangPaGo.auth.vo.OAuth2UserImpl;
 import com.mars.NangPaGo.common.util.JwtUtil;
-import com.mars.NangPaGo.domain.auth.service.Oauth2ProviderTokenService;
+import com.mars.NangPaGo.domain.auth.service.OAuth2ProviderTokenService;
 import com.mars.NangPaGo.domain.auth.service.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,14 +31,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final JwtUtil jwtUtil;
     private final TokenService tokenService;
-    private final Oauth2ProviderTokenService checkOauth2ProviderToken;
+    private final OAuth2ProviderTokenService oauth2ProviderTokenService;
     private final OAuth2AuthorizedClientManager OAuth2AuthorizedClientManager;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication)
         throws IOException {
-        String email = ((CustomOAuth2User) authentication.getPrincipal()).getName();
+        String email = ((OAuth2UserImpl) authentication.getPrincipal()).getName();
 
         OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
         String clientRegistrationId = oauth2Token.getAuthorizedClientRegistrationId();
@@ -57,9 +54,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             String refreshToken = authorizedClient.getRefreshToken().getTokenValue();
             String clientName = authorizedClient.getClientRegistration().getClientName();
 
-            checkOauth2ProviderToken.checkOauth2ProviderToken(clientName, refreshToken, email);
-
-            System.out.println("Refresh Token: " + refreshToken);
+            oauth2ProviderTokenService.checkOauth2ProviderToken(clientName, refreshToken, email);
         }
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();

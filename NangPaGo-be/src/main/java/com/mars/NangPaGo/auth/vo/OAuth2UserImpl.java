@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Slf4j
 @AllArgsConstructor
-public class CustomOAuth2User implements OAuth2User {
+public class OAuth2UserImpl implements OAuth2User {
 
     private final UserResponseDto userResponseDto;
     private final Map<String, Object> attributes;

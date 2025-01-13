@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KakaoTokenInfo implements Oauth2TokenInfo {
+public class KakaoTokenInfo implements OAuth2TokenInfo {
 
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String kakaoTokenUri;
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
-    @Value("${spring.security.oauth2.client.provider.kakao.dis-connect-uri}")
+    @Value("${spring.security.oauth2.client.provider.kakao.disconnect-uri}")
     private String kakaoDisConnectUri;
 
     @Override

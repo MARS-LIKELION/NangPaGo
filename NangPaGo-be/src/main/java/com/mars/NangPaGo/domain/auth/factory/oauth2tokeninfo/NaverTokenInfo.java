@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NaverTokenInfo implements Oauth2TokenInfo {
+public class NaverTokenInfo implements OAuth2TokenInfo {
 
     @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
     private String naverTokenUri;
@@ -12,7 +12,7 @@ public class NaverTokenInfo implements Oauth2TokenInfo {
     private String naverClientId;
     @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
     private String naverClientSecret;
-    @Value("${spring.security.oauth2.client.provider.naver.dis-connect-uri}")
+    @Value("${spring.security.oauth2.client.provider.naver.disconnect-uri}")
     private String naverDisConnectUri;
 
     @Override

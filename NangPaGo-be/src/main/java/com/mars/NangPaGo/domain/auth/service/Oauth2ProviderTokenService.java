@@ -7,10 +7,10 @@ import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_O
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
-import com.mars.NangPaGo.domain.auth.entity.OauthProviderToken;
-import com.mars.NangPaGo.domain.auth.factory.Oauth2TokenFactory;
-import com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo.Oauth2TokenInfo;
-import com.mars.NangPaGo.domain.auth.repository.OauthProviderTokenRepository;
+import com.mars.NangPaGo.domain.auth.entity.OAuthProviderToken;
+import com.mars.NangPaGo.domain.auth.factory.OAuth2TokenFactory;
+import com.mars.NangPaGo.domain.auth.factory.oauth2tokeninfo.OAuth2TokenInfo;
+import com.mars.NangPaGo.domain.auth.repository.OAuthProviderTokenRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -22,21 +22,20 @@ import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class Oauth2ProviderTokenService {
+public class OAuth2ProviderTokenService {
 
-    private final Oauth2TokenFactory oauth2TokenFactory;
-    private final OauthProviderTokenRepository oauthProviderTokenRepository;
+    private final OAuth2TokenFactory oauth2TokenFactory;
+    private final OAuthProviderTokenRepository oauthProviderTokenRepository;
     private final UserRepository userRepository;
-
-    public static final int RESPONSE_SUCCESS_STATUSCODE = 200;
 
     @Transactional
     public void checkOauth2ProviderToken(String providerName, String refreshToken, String email) {
-        Optional<OauthProviderToken> token = oauthProviderTokenRepository.findByProviderNameAndEmail(providerName,
+        Optional<OAuthProviderToken> token = oauthProviderTokenRepository.findByProviderNameAndEmail(providerName,
             email);
 
         if (token.isEmpty()) {
@@ -48,7 +47,7 @@ public class Oauth2ProviderTokenService {
     }
 
     @Transactional
-    public void leaveNangpago(String email)
+    public void deactivateUser(String email)
         throws IOException, InterruptedException {
         User user = findUserByEmail(email);
         String providerName = user.getOauth2Provider().name();
@@ -61,7 +60,7 @@ public class Oauth2ProviderTokenService {
     private String Oauth2refreshToAccessToken(String providerName, String refreshToken)
         throws IOException, InterruptedException {
 
-        Oauth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.create(providerName);
+        OAuth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.create(providerName);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -72,7 +71,7 @@ public class Oauth2ProviderTokenService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() == RESPONSE_SUCCESS_STATUSCODE) {
+        if (response.statusCode() == HttpStatus.SC_OK) {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.body());
 
@@ -86,7 +85,7 @@ public class Oauth2ProviderTokenService {
     private void disconnectThirdPartyService(User user, String providerName, String accessToken)
         throws IOException, InterruptedException {
 
-        Oauth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.create(providerName);
+        OAuth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.create(providerName);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
@@ -102,7 +101,7 @@ public class Oauth2ProviderTokenService {
 
         HttpResponse<String> response = client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() != RESPONSE_SUCCESS_STATUSCODE) {
+        if (response.statusCode() != HttpStatus.SC_OK) {
             throw BAD_REQUEST_DISCONNECT_THIRD_PARTY.of();
         }
         softDeleteUser(user);
@@ -110,7 +109,7 @@ public class Oauth2ProviderTokenService {
     }
 
     private void softDeleteUser(User user) {
-        user.softDeleteUser();
+        user.softDelete();
     }
 
     private void deleteProviderToken(String providerName, String email) {
@@ -118,11 +117,11 @@ public class Oauth2ProviderTokenService {
     }
 
     private void saveOauth2ProviderToken(String providerName, String refreshToken, String email) {
-        OauthProviderToken token = OauthProviderToken.of(providerName, refreshToken, email);
+        OAuthProviderToken token = OAuthProviderToken.of(providerName, refreshToken, email);
         oauthProviderTokenRepository.save(token);
     }
 
-    private void updateOauth2ProviderToken(OauthProviderToken token, String refreshToken) {
+    private void updateOauth2ProviderToken(OAuthProviderToken token, String refreshToken) {
         token.updateRefreshToken(refreshToken);
     }
 
@@ -133,7 +132,7 @@ public class Oauth2ProviderTokenService {
 
     private String findProviderRefreshToken(String providerName, String email) {
         return oauthProviderTokenRepository.findByProviderNameAndEmail(providerName, email)
-            .map(OauthProviderToken::getProviderRefreshToken)
+            .map(OAuthProviderToken::getProviderRefreshToken)
             .orElseThrow(NOT_FOUND_OAUTH2_PROVIDER_TOKEN::of);
     }
 }

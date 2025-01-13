@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class OauthProviderToken {
+public class OAuthProviderToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class OauthProviderToken {
     private String email;
 
     @Builder
-    private OauthProviderToken(String providerName, String providerRefreshToken, String email) {
+    private OAuthProviderToken(String providerName, String providerRefreshToken, String email) {
         this.providerName = providerName;
         this.providerRefreshToken = providerRefreshToken;
         this.email = email;
@@ -37,8 +37,8 @@ public class OauthProviderToken {
         this.providerRefreshToken = providerRefreshToken;
     }
 
-    public static OauthProviderToken of(String providerName, String providerRefreshToken, String email) {
-        return OauthProviderToken.builder()
+    public static OAuthProviderToken of(String providerName, String providerRefreshToken, String email) {
+        return OAuthProviderToken.builder()
             .providerName(providerName)
             .providerRefreshToken(providerRefreshToken)
             .email(email).build();
