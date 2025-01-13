@@ -5,6 +5,8 @@ import static com.mars.NangPaGo.common.exception.NPGExceptionType.BAD_REQUEST_DI
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_OAUTH2_PROVIDER_TOKEN;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.auth.entity.OauthProviderToken;
 import com.mars.NangPaGo.domain.auth.repository.OauthProviderTokenRepository;
@@ -19,8 +21,6 @@ import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +80,7 @@ public class Oauth2ProviderTokenService {
     }
 
     private String Oauth2refreshToAccessToken(String providerName, String refreshToken)
-        throws JSONException, IOException, InterruptedException {
+        throws IOException, InterruptedException {
         String tokenUri = "";
         String requestBody = "";
         String clientId = "";
@@ -120,11 +120,12 @@ public class Oauth2ProviderTokenService {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() == 200) {
-            JSONObject jsonObject = new JSONObject(response.body());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response.body());
 
-            System.out.println("accessToken = "  + jsonObject.getString("access_token"));
+            String accessToken = jsonNode.get("access_token").asText();
 
-            return jsonObject.getString("access_token"); // 성공적으로 엑세스 토큰을 재발급받음
+            return accessToken; // 성공적으로 엑세스 토큰을 재발급받음
         } else {
             throw UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN.of();
         }
@@ -132,7 +133,7 @@ public class Oauth2ProviderTokenService {
 
 
     private void disconnectThirdPartyService(User user, String providerName, String accessToken)
-        throws JSONException, IOException, InterruptedException {
+        throws IOException, InterruptedException {
         String disconnectUri = "";
 
         switch (providerName.toLowerCase()) {

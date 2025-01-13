@@ -72,9 +72,6 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
 
-    // Transfer Json
-    implementation 'org.json:json:20210307'
-
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
