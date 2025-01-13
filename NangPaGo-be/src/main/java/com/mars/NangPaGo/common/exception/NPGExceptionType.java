@@ -42,6 +42,7 @@ public enum NPGExceptionType {
 
     // Conflict(409)
     DUPLICATE_INGREDIENT(HttpStatus.CONFLICT, "이미 등록되어있는 정보입니다."),
+    CONFLICT_DUPLICATE_PROVIDER(HttpStatus.CONFLICT, "{{provider}}로 가입된 동일한 아이디가 있습니다."),
 
     // Internal Server Error(500)
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"),

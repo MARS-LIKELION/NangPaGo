@@ -1,5 +1,7 @@
 package com.mars.NangPaGo.auth.service;
 
+import com.mars.NangPaGo.auth.enums.OAuth2Provider;
+import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.user.dto.UserRequestDto;
 import com.mars.NangPaGo.domain.user.dto.UserResponseDto;
 import com.mars.NangPaGo.domain.user.entity.User;
@@ -31,10 +33,24 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         return new CustomOAuth2User(UserResponseDto.from(findOrRegisterUser(userInfo)), oAuth2User.getAttributes());
     }
 
-    private User findOrRegisterUser(OAuth2UserInfo userInfo) {
+    public User findOrRegisterUser(OAuth2UserInfo userInfo) {
         return userRepository.findByEmail(userInfo.getEmail())
+            .map(user -> validateOrThrow(user, userInfo.getProvider()))
             .orElseGet(() -> registerUser(userInfo));
     }
+
+    private static User validateOrThrow(User user, String provider) {
+        OAuth2Provider userProvider = user.getOauth2Provider();
+
+        if (userProvider == OAuth2Provider.from(provider)) {
+            throw NPGExceptionType.CONFLICT_DUPLICATE_PROVIDER.of(
+                String.format("%s로 가입된 동일한 이메일이 존재합니다.", userProvider.name())
+            );
+        }
+
+        return user;
+    }
+
 
     private User registerUser(OAuth2UserInfo userInfo) {
         return userRepository.save(UserRequestDto.fromOAuth2UserInfo(userInfo).toEntity());
