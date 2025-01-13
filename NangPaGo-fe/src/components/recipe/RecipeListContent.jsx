@@ -44,13 +44,13 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
         }));
         setHasMoreRecipes((prev) => ({
           ...prev,
-          recommended: !last, // 마지막 페이지 여부 업데이트
+          recommended: !last,
         }));
         setCurrentPage((prev) => ({
           ...prev,
           recommended: nextPage,
         }));
-      } else if (activeTab === 'favorites') {
+      } else if (activeTab === 'favorites' && isLoggedIn) {
         const { content, last } = await fetchFavoriteRecipes(
           nextPage,
           pageSize,
@@ -109,7 +109,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
           ...prev,
           recommended: 1,
         }));
-      } else if (activeTab === 'favorites') {
+      } else if (activeTab === 'favorites' && isLoggedIn) {
         const { content, last } = await fetchFavoriteRecipes(0, pageSize);
 
         setRecipes((prev) => ({
@@ -124,6 +124,15 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
           ...prev,
           favorites: 0,
         }));
+      } else if (!isLoggedIn && activeTab === 'favorites') {
+        setRecipes((prev) => ({
+          ...prev,
+          favorites: [],
+        }));
+        setHasMoreRecipes((prev) => ({
+          ...prev,
+          favorites: false,
+        }));
       }
     } catch (error) {
       console.error('Error loading initial recipes:', error);
@@ -135,6 +144,12 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   useEffect(() => {
     loadInitialRecipes();
   }, [activeTab, searchTerm]);
+
+  useEffect(() => {
+    if (activeTab === 'favorites') {
+      loadInitialRecipes();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (observerInstance.current) {
@@ -171,9 +186,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
         <div className="text-center py-8 text-gray-500">
           {activeTab === 'recommended'
             ? '검색 결과가 없습니다.'
-            : isLoggedIn
-              ? '즐겨찾기한 레시피가 없습니다.'
-              : '로그인 후 이용 가능합니다.'}
+            : '즐겨찾기한 레시피가 없습니다.'}
         </div>
       )}
       <div ref={observerRef} />

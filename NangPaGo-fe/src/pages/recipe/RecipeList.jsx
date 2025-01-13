@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
@@ -9,11 +10,7 @@ import TopButton from '../../components/common/TopButton';
 
 function RecipeList() {
   const location = useLocation();
-
-  const isLoggedIn = useMemo(
-    () => localStorage.getItem('isLoggedIn') === 'true',
-    [],
-  );
+  const isLoggedIn = useSelector((state) => state.loginSlice.isLoggedIn);
 
   const [activeTab, setActiveTab] = useState('recommended');
   const [searchTerm, setSearchTerm] = useState(
