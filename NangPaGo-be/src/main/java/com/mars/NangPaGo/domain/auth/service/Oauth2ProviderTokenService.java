@@ -63,7 +63,8 @@ public class Oauth2ProviderTokenService {
 
         if (token.isEmpty()) {
             saveOauth2ProviderToken(providerName, refreshToken, email);
-        } else if (!Objects.equals(token.get().getProviderRefreshToken(), refreshToken)) {
+        }
+        if (!Objects.equals(token.get().getProviderRefreshToken(), refreshToken)) {
             updateOauth2ProviderToken(token.get(), refreshToken);
         }
     }
@@ -86,22 +87,22 @@ public class Oauth2ProviderTokenService {
         String clientId = "";
         String clientSecret = "";
 
-        switch (providerName.toLowerCase()) {
-            case "google":
+        switch (providerName) {
+            case "GOOGLE":
                 tokenUri = googleTokenUri;
                 clientId = googleClientId;
                 clientSecret = googleClientSecret;
                 requestBody = "grant_type=refresh_token&refresh_token=" + refreshToken + "&client_id=" + clientId
                     + "&client_secret=" + clientSecret;
                 break;
-            case "naver":
+            case "NAVER":
                 tokenUri = naverTokenUri;
                 clientId = naverClientId;
                 clientSecret = naverClientSecret;
                 requestBody = "grant_type=refresh_token&refresh_token=" + refreshToken + "&client_id=" + clientId
                     + "&client_secret=" + clientSecret;
                 break;
-            case "kakao":
+            case "KAKAO":
                 tokenUri = kakaoTokenUri;
                 clientId = kakaoClientId;
                 requestBody = "grant_type=refresh_token&refresh_token=" + refreshToken + "&client_id=" + clientId;
@@ -136,14 +137,14 @@ public class Oauth2ProviderTokenService {
         throws IOException, InterruptedException {
         String disconnectUri = "";
 
-        switch (providerName.toLowerCase()) {
-            case "google":
+        switch (providerName) {
+            case "GOOGLE":
                 disconnectUri = googleDisConnectUri + accessToken;
                 break;
-            case "naver":
+            case "NAVER":
                 disconnectUri = naverDisConnectUri + accessToken;
                 break;
-            case "kakao":
+            case "KAKAO":
                 disconnectUri = kakaoDisConnectUri;
                 break;
             default:
@@ -157,7 +158,7 @@ public class Oauth2ProviderTokenService {
             .uri(URI.create(disconnectUri))
             .header("Authorization", "Bearer " + accessToken);
 
-        if (providerName.equalsIgnoreCase("kakao")) {
+        if (providerName.equalsIgnoreCase("KAKAO")) {
             // Kakao의 경우 POST 요청
             requestBuilder.POST(HttpRequest.BodyPublishers.noBody());
         } else {
@@ -169,13 +170,12 @@ public class Oauth2ProviderTokenService {
 
         if (!(response.statusCode() == 200)) {
             throw BAD_REQUEST_DISCONNECT_THIRD_PARTY.of();
-        } else {
-            softDeleteUser(user);
-            deleteProviderToken(providerName, user.getEmail());
         }
+        softDeleteUser(user);
+        deleteProviderToken(providerName, user.getEmail());
     }
 
-    private void softDeleteUser(User user) {
+    private void softDeleteUser(User user) {    
         user.softDeleteUser();
     }
 
