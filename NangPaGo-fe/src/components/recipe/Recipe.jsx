@@ -140,8 +140,7 @@ function Recipe({ recipe }) {
           <h2 className="text-lg font-semibold mb-3">재료</h2>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-gray-700 text-sm">
             {recipe.ingredients
-              .split('소스')[0]
-              .split(/,|\n/)
+              .split(',')
               .map((ingredient, index) => (
                 <li key={`ingredient-${index}`} className="font-medium">
                   {ingredient.replace(/[^가-힣a-zA-Z0-9()./×\s]/gi, '').trim()}
@@ -149,21 +148,6 @@ function Recipe({ recipe }) {
               ))}
           </ul>
         </div>
-        {recipe.ingredients.includes('소스') && (
-          <div className="mt-7">
-            <h2 className="text-lg font-semibold mb-3">소스</h2>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-gray-700 text-sm">
-              {recipe.ingredients
-                .split('소스')[1]
-                .split(/,|\n/)
-                .map((sauce, index) => (
-                  <li key={`sauce-${index}`} className="font-medium">
-                    {sauce.replace(/[^가-힣a-zA-Z0-9()./×\s]/gi, '').trim()}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        )}
         <div className="mt-7 px-4">
           <h2 className="text-lg font-semibold">요리 과정</h2>
           {recipe.manuals.map((step, index) => (
