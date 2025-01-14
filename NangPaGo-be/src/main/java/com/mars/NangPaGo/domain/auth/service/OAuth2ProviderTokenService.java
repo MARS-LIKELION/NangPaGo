@@ -18,9 +18,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -80,7 +84,6 @@ public class OAuth2ProviderTokenService {
         throw UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN.of();
     }
 
-
     private void disconnectThirdPartyService(User user, String providerName, String accessToken)
         throws IOException, InterruptedException {
 
@@ -91,20 +94,23 @@ public class OAuth2ProviderTokenService {
             .uri(URI.create(oauth2TokenInfo.getDisconnectUri(accessToken)))
             .header("Authorization", "Bearer " + accessToken);
 
-        if (Objects.equals(providerName, "KAKAO")) {
-            // Kakao의 경우 POST 요청
-            requestBuilder.POST(HttpRequest.BodyPublishers.noBody());
-        } else {
-            requestBuilder.GET();
-        }
+        requestProvider(providerName).accept(requestBuilder);
 
         HttpResponse<String> response = client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != HttpStatus.SC_OK) {
             throw BAD_REQUEST_DISCONNECT_THIRD_PARTY.of();
         }
+
         softDeleteUser(user);
         deleteProviderToken(providerName, user.getEmail());
+    }
+
+   private static Consumer<HttpRequest.Builder> requestProvider(String providerName){
+        Map<String, Consumer<HttpRequest.Builder>> requestMap = Map.of(
+            "KAKAO", builder -> builder.POST(HttpRequest.BodyPublishers.noBody())
+        );
+        return requestMap.getOrDefault(providerName, HttpRequest.Builder::GET);
     }
 
     private void softDeleteUser(User user) {
