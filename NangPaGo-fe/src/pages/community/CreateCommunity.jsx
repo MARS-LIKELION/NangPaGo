@@ -30,10 +30,14 @@ function CreateCommunity() {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile) {
+    if (selectedFile && selectedFile !== file) {
       setFile(selectedFile);
-      setImagePreview(URL.createObjectURL(selectedFile));
     }
+  };
+
+  const handleCancel = () => {
+    setFile(null);
+    setImagePreview(null);
   };
 
   const handleSubmit = async () => {
@@ -71,6 +75,7 @@ function CreateCommunity() {
           file={file}
           onChange={handleFileChange}
           imagePreview={imagePreview}
+          onCancel={handleCancel}
         />
         <TextArea
           value={content}

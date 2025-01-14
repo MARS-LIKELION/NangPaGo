@@ -9,6 +9,8 @@ import FileUpload from '../../components/community/FileUpload';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
 
+const DEFAULT_IMAGE_URL = "https://storage.googleapis.com/nangpago-9d371.firebasestorage.app/dc137676-6240-4920-97d3-727c4b7d6d8d_360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg";
+
 function ModifyCommunity() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -32,7 +34,11 @@ function ModifyCommunity() {
         setTitle(data.title);
         setContent(data.content);
         setIsPublic(data.isPublic);
-        if (data.imageUrl) setImagePreview(data.imageUrl);
+        if (data.imageUrl && data.imageUrl !== DEFAULT_IMAGE_URL) {
+          setImagePreview(data.imageUrl);
+        } else {
+          setImagePreview(null);
+        }
       } catch (err) {
         console.error('게시글 데이터를 가져오는 중 오류 발생:', err);
         setError('게시글 데이터를 불러오는 중 문제가 발생했습니다.');
@@ -51,10 +57,14 @@ function ModifyCommunity() {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile) {
+    if (selectedFile && selectedFile !== file) {
       setFile(selectedFile);
-      setImagePreview(URL.createObjectURL(selectedFile));
     }
+  };
+
+  const handleCancel = () => {
+    setFile(null);
+    setImagePreview(null);
   };
 
   const handleSubmit = async () => {
@@ -90,6 +100,7 @@ function ModifyCommunity() {
           file={file}
           onChange={handleFileChange}
           imagePreview={imagePreview}
+          onCancel={handleCancel}
         />
         <TextArea
           value={content}
