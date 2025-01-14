@@ -44,11 +44,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         if (userProvider != OAuth2Provider.from(provider)) {
             throw NPGExceptionType.CONFLICT_DUPLICATE_PROVIDER.of(
-                String.format("%s로 가입된 동일한 이메일이 존재합니다.", userProvider.name())
+                String.format("이미 %s로 가입된 이메일입니다.", userProvider.name())
             );
         }
         return user;
     }
+
 
     private User registerUser(OAuth2UserInfo userInfo) {
         return userRepository.save(UserRequestDto.fromOAuth2UserInfo(userInfo).toEntity());

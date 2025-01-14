@@ -21,8 +21,8 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
         throws IOException, ServletException {
-        log.error("OAuth2 로그인 실패: {}", exception.getMessage());
-        setDefaultFailureUrl(clientHost + "/login");
-        super.onAuthenticationFailure(request, response, exception);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"" + exception.getMessage() + "\"}");
     }
 }
