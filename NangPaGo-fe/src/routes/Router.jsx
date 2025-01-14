@@ -11,7 +11,7 @@ import CommunityList from '../pages/community/CommunityList.jsx';
 import CommunityDetail from '../pages/community/CommunityDetail';
 import CreateCommunity from '../pages/community/CreateCommunity.jsx';
 import ModifyCommunity from '../pages/community/ModifyCommunity.jsx';
-
+import OAuthError from '../pages/error/OAuthError.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -79,6 +79,10 @@ const router = createBrowserRouter([
         element: <ModifyCommunity />,
       },
     ],
+  },
+  {
+    path: '/oauth/error',
+    element: <OAuthError />,
   },
 ]);
 

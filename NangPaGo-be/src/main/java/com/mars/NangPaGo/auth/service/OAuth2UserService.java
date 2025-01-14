@@ -15,6 +15,9 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -28,7 +31,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.create(
             userRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes()
         );
-        return new OAuth2UserImpl(UserResponseDto.from(findOrRegisterUser(userInfo)), oAuth2User.getAttributes());
+        
+        Map<String, Object> attributes = new HashMap<>(oAuth2User.getAttributes());
+        attributes.put("provider", userInfo.getProvider().toUpperCase());
+        
+        return new OAuth2UserImpl(UserResponseDto.from(findOrRegisterUser(userInfo)), attributes);
     }
 
     private User findOrRegisterUser(OAuth2UserInfo userInfo) {
