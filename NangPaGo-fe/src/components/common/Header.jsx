@@ -84,10 +84,10 @@ function Header() {
                     : 'text-gray-400'
                 }`}
               >
-                <CgSmartHomeRefrigerator size={30} />
+                <CgSmartHomeRefrigerator size={28} />
               </Link>
               <span
-                className={`text-[10px] mt-1 font-medium pb-[2.5px] ${
+                className={`text-[10px] mt-1 font-medium pb-[1px] ${
                   location.pathname === '/refrigerator'
                     ? 'text-[var(--primary-color)]'
                     : 'text-gray-400'
@@ -106,7 +106,7 @@ function Header() {
                     : 'text-gray-400'
                 }`}
               >
-                <FaRegUser size={27} />
+                <FaRegUser size={28} />
               </button>
               <span
                 className={`text-[10px] mt-1 font-medium ${
