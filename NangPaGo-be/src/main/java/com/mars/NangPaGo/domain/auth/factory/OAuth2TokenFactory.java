@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class OAuth2TokenFactory {
 
-    private final Map<OAuth2Provider, OAuth2TokenInfo> TOKEN_INFO_CREATORS;
+    private final Map<OAuth2Provider, OAuth2TokenInfo> tokenInfo;
 
     public OAuth2TokenFactory(GoogleTokenInfo googleTokenInfo, KakaoTokenInfo kakaoTokenInfo,
         NaverTokenInfo naverTokenInfo) {
-        this.TOKEN_INFO_CREATORS = Map.of(
+        this.tokenInfo = Map.of(
             OAuth2Provider.GOOGLE, googleTokenInfo,
             OAuth2Provider.KAKAO, kakaoTokenInfo,
             OAuth2Provider.NAVER, naverTokenInfo
@@ -24,7 +24,7 @@ public class OAuth2TokenFactory {
     }
 
     public OAuth2TokenInfo from(String providerName) {
-        return TOKEN_INFO_CREATORS.get(OAuth2Provider.from(providerName));
+        return tokenInfo.get(OAuth2Provider.from(providerName));
     }
 
 }

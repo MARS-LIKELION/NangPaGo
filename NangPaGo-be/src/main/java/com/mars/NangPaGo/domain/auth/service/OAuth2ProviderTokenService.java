@@ -116,7 +116,7 @@ public class OAuth2ProviderTokenService {
         }
     }
 
-   private static Consumer<HttpRequest.Builder> requestProvider(String providerName){
+   private Consumer<HttpRequest.Builder> requestProvider(String providerName){
         Map<String, Consumer<HttpRequest.Builder>> requestMap = Map.of(
             "KAKAO", builder -> builder.POST(HttpRequest.BodyPublishers.noBody())
         );
