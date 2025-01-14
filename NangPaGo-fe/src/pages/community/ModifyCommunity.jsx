@@ -50,7 +50,11 @@ function ModifyCommunity() {
   }, [file]);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setImagePreview(URL.createObjectURL(selectedFile));
+    }
   };
 
   const handleSubmit = async () => {

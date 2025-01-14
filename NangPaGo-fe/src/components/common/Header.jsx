@@ -1,17 +1,18 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../slices/loginSlice';
 import axiosInstance from '../../api/axiosInstance';
 import { FaRegUser } from 'react-icons/fa';
 import { CgSmartHomeRefrigerator } from 'react-icons/cg';
-import { useState, useRef, useEffect } from 'react';
 import { BsFilePost } from 'react-icons/bs';
+import { useState, useRef, useEffect } from 'react';
 
 function Header() {
   const loginState = useSelector((state) => state.loginSlice);
   const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -51,20 +52,71 @@ function Header() {
         </Link>
 
         {loginState.isLoggedIn ? (
-          <div className="flex items-center space-x-7">
-            <Link to="/community" className="text-[var(--primary-color)]">
-              <BsFilePost size={26} />
-            </Link>
-            <Link to="/refrigerator" className="text-[var(--primary-color)]">
-              <CgSmartHomeRefrigerator size={28} />
-            </Link>
-            <div className="relative" ref={dropdownRef}>
+          <div className="flex items-center space-x-8">
+            <div className="flex flex-col items-center">
+              <Link
+                to="/community"
+                className={`text-[10px] mt-1 font-medium ${
+                  location.pathname === '/community'
+                    ? 'text-[var(--primary-color)]'
+                    : 'text-gray-400'
+                }`}
+              >
+                <BsFilePost size={28} />
+              </Link>
+              <span
+                className={`text-[10px] mt-1 font-medium ${
+                  location.pathname === '/community'
+                    ? 'text-[var(--primary-color)]'
+                    : 'text-gray-400'
+                }`}
+              >
+                커뮤니티
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <Link
+                to="/refrigerator"
+                className={`text-[10px] mt-1 font-medium ${
+                  location.pathname === '/refrigerator'
+                    ? 'text-[var(--primary-color)]'
+                    : 'text-gray-400'
+                }`}
+              >
+                <CgSmartHomeRefrigerator size={28} />
+              </Link>
+              <span
+                className={`text-[10px] mt-1 font-medium pb-[1px] ${
+                  location.pathname === '/refrigerator'
+                    ? 'text-[var(--primary-color)]'
+                    : 'text-gray-400'
+                }`}
+              >
+                내 냉장고
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center" ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
-                className="text-[var(--primary-color)] text-[16px]"
+                className={`text-[10px] mt-1 font-medium ${
+                  location.pathname.startsWith('/my-page')
+                    ? 'text-[var(--primary-color)]'
+                    : 'text-gray-400'
+                }`}
               >
-                <FaRegUser size={26} />
+                <FaRegUser size={28} />
               </button>
+              <span
+                className={`text-[10px] mt-1 font-medium ${
+                  location.pathname.startsWith('/my-page')
+                    ? 'text-[var(--primary-color)]'
+                    : 'text-gray-400'
+                }`}
+              >
+                내 프로필
+              </span>
               <div
                 className={`dropdown-menu absolute top-[25px] right-0 mt-2 w-40 bg-white border border-[var(--secondary-color)] rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
                   dropdownOpen

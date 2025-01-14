@@ -20,121 +20,43 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   });
 
   const observerRef = useRef(null);
-  const isFetchingRef = useRef(false);
   const observerInstance = useRef(null);
   const pageSize = 10;
+  const isFetching = useRef(false);
 
-  const loadMoreRecipes = async () => {
-    if (!hasMoreRecipes[activeTab] || isFetchingRef.current) return;
-
-    isFetchingRef.current = true;
-    const nextPage = currentPage[activeTab] + 1;
-
-    try {
-      if (activeTab === 'recommended') {
-        const { content, last } = await fetchRecommendedRecipes(
-          searchTerm,
-          nextPage,
-          pageSize,
-        );
-
-        setRecipes((prev) => ({
-          ...prev,
-          recommended: [...prev.recommended, ...content],
-        }));
-        setHasMoreRecipes((prev) => ({
-          ...prev,
-          recommended: !last, // 마지막 페이지 여부 업데이트
-        }));
-        setCurrentPage((prev) => ({
-          ...prev,
-          recommended: nextPage,
-        }));
-      } else if (activeTab === 'favorites') {
-        const { content, last } = await fetchFavoriteRecipes(
-          nextPage,
-          pageSize,
-        );
-
-        setRecipes((prev) => ({
-          ...prev,
-          favorites: [
-            ...prev.favorites,
-            ...content.filter(
-              (newRecipe) =>
-                !prev.favorites.some(
-                  (existingRecipe) => existingRecipe.id === newRecipe.id,
-                ),
-            ),
-          ],
-        }));
-        setHasMoreRecipes((prev) => ({
-          ...prev,
-          favorites: !last,
-        }));
-        setCurrentPage((prev) => ({
-          ...prev,
-          favorites: nextPage,
-        }));
-      }
-    } catch (error) {
-      console.error('Error loading more recipes:', error);
-    } finally {
-      isFetchingRef.current = false;
-    }
+  const fetchFunctions = {
+    recommended: (page) => fetchRecommendedRecipes(searchTerm, page, pageSize),
+    favorites: (page) => fetchFavoriteRecipes(page, pageSize),
   };
 
-  const loadInitialRecipes = async () => {
-    if (isFetchingRef.current || recipes[activeTab]?.length > 0) return;
+  const loadRecipes = async (type, page = 1, isInitial = false) => {
+    if (isFetching.current || !hasMoreRecipes[type]) return;
 
-    isFetchingRef.current = true;
-
+    isFetching.current = true;
     try {
-      if (activeTab === 'recommended') {
-        const { content, last } = await fetchRecommendedRecipes(
-          searchTerm,
-          1,
-          pageSize,
-        );
+      const { content, last } = await fetchFunctions[type](page);
 
-        setRecipes((prev) => ({
-          ...prev,
-          recommended: content,
-        }));
-        setHasMoreRecipes((prev) => ({
-          ...prev,
-          recommended: !last,
-        }));
-        setCurrentPage((prev) => ({
-          ...prev,
-          recommended: 1,
-        }));
-      } else if (activeTab === 'favorites') {
-        const { content, last } = await fetchFavoriteRecipes(0, pageSize);
-
-        setRecipes((prev) => ({
-          ...prev,
-          favorites: content,
-        }));
-        setHasMoreRecipes((prev) => ({
-          ...prev,
-          favorites: !last,
-        }));
-        setCurrentPage((prev) => ({
-          ...prev,
-          favorites: 0,
-        }));
-      }
+      setRecipes((prev) => ({
+        ...prev,
+        [type]: isInitial ? content : [...prev[type], ...content],
+      }));
+      setHasMoreRecipes((prev) => ({ ...prev, [type]: !last }));
+      setCurrentPage((prev) => ({ ...prev, [type]: page }));
     } catch (error) {
-      console.error('Error loading initial recipes:', error);
+      console.error(`Error loading ${type} recipes:`, error);
     } finally {
-      isFetchingRef.current = false;
+      isFetching.current = false;
     }
   };
 
   useEffect(() => {
-    loadInitialRecipes();
-  }, [activeTab, searchTerm]);
+    if (activeTab === 'favorites' && !isLoggedIn) {
+      setRecipes((prev) => ({ ...prev, favorites: [] }));
+      setHasMoreRecipes((prev) => ({ ...prev, favorites: false }));
+    } else {
+      loadRecipes(activeTab, 1, true);
+    }
+  }, [activeTab, searchTerm, isLoggedIn]);
 
   useEffect(() => {
     if (observerInstance.current) {
@@ -145,7 +67,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
       observerInstance.current = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            loadMoreRecipes();
+            loadRecipes(activeTab, currentPage[activeTab] + 1);
           }
         },
         { threshold: 1.0 },
@@ -159,7 +81,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
     return () => {
       if (observerInstance.current) observerInstance.current.disconnect();
     };
-  }, [activeTab, hasMoreRecipes]);
+  }, [activeTab, hasMoreRecipes, currentPage]);
 
   return (
     <div className="grid grid-cols-1 gap-6 min-h-[400px]">
@@ -171,9 +93,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
         <div className="text-center py-8 text-gray-500">
           {activeTab === 'recommended'
             ? '검색 결과가 없습니다.'
-            : isLoggedIn
-              ? '즐겨찾기한 레시피가 없습니다.'
-              : '로그인 후 이용 가능합니다.'}
+            : '즐겨찾기한 레시피가 없습니다.'}
         </div>
       )}
       <div ref={observerRef} />
