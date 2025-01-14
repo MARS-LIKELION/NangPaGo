@@ -1,5 +1,7 @@
 package com.mars.NangPaGo.domain.community.controller;
 
+import static com.mars.NangPaGo.common.exception.NPGExceptionType.BAD_REQUEST;
+
 import com.mars.NangPaGo.common.aop.auth.AuthenticatedUser;
 import com.mars.NangPaGo.common.component.auth.AuthenticationHolder;
 import com.mars.NangPaGo.common.dto.PageDto;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -51,9 +54,16 @@ public class CommunityController {
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<CommunityResponseDto> create(
-        @ModelAttribute @Valid CommunityRequestDto requestDto,
+        @ModelAttribute @Valid CommunityRequestDto requestDto, BindingResult bindingResult,
         @RequestParam(value = "file", required = false) MultipartFile file
-        ) {
+    ) {
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                String message = error.getDefaultMessage();
+                throw BAD_REQUEST.of(message);
+            });
+        }
 
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(communityService.createCommunity(requestDto, file, email), "게시물이 성공적으로 생성되었습니다.");
@@ -63,9 +73,17 @@ public class CommunityController {
     @AuthenticatedUser
     @PutMapping("/{id}")
     public ResponseDto<CommunityResponseDto> update(
-        @ModelAttribute @Valid CommunityRequestDto requestDto,
+        @ModelAttribute @Valid CommunityRequestDto requestDto,BindingResult bindingResult,
         @RequestParam(value = "file", required = false) MultipartFile file,
         @PathVariable("id") Long id) {
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                //Dto의 유효성 검증을 하면서 에러 발생 시 validation 관련 어노테이션에 작성한 message를 담아 반환합니다.
+                String message = error.getDefaultMessage();
+                throw BAD_REQUEST.of(message);
+            });
+        }
 
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(communityService.updateCommunity(id, requestDto, file, email), "게시물이 성공적으로 수정되었습니다.");

@@ -37,6 +37,10 @@ export const createCommunity = async (data, file) => {
     });
     return response.data;
   } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(`${error.response.data.message}`);
+    }
+
     throw new Error(
       `커뮤니티를 생성하는 중 오류가 발생했습니다: ${error.message}`,
     );
@@ -48,6 +52,9 @@ export const updateCommunity = async (id, data) => {
     const response = await axiosInstance.put(`/api/community/${id}`, data);
     return response.data;
   } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(`${error.response.data.message}`);
+    }
     throw new Error(
       `커뮤니티를 수정하는 중 오류가 발생했습니다: ${error.message}`,
     );

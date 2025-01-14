@@ -73,7 +73,7 @@ function ModifyCommunity() {
       navigate(`/community/${id}`);
     } catch (err) {
       console.error('게시글 수정 중 오류 발생:', err);
-      setError('게시글 수정 중 문제가 발생했습니다.');
+      setError(err.message);
     }
   };
 

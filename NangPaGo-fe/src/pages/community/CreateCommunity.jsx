@@ -54,7 +54,7 @@ function CreateCommunity() {
       }
     } catch (err) {
       console.error('게시글 등록 중 오류 발생:', err);
-      setError('게시글 등록 중 문제가 발생했습니다.');
+      setError(err.message);
     }
   };
 
