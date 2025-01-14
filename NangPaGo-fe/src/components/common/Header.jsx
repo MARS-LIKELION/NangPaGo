@@ -52,73 +52,69 @@ function Header() {
         </Link>
 
         {loginState.isLoggedIn ? (
-          <div className="flex items-center space-x-8">
-            <div className="flex flex-col items-center">
+          <div className="flex items-center space-x-7 m-1">
               <Link
                 to="/community"
-                className={`text-[10px] mt-1 font-medium ${
-                  location.pathname === '/community'
+                className={`flex flex-col items-center text-[10px] mt-1 font-medium ${
+                  location.pathname.startsWith('/community')
                     ? 'text-[var(--primary-color)]'
-                    : 'text-gray-400'
+                    : 'text-[var(--secondary-color)]'
                 }`}
               >
                 <BsFilePost size={28} />
-              </Link>
-              <span
-                className={`text-[10px] mt-1 font-medium ${
-                  location.pathname === '/community'
-                    ? 'text-[var(--primary-color)]'
-                    : 'text-gray-400'
-                }`}
-              >
+                <span
+                  className={`text-[10px] mt-1 font-medium ${
+                    location.pathname.startsWith('/community')
+                      ? 'text-[var(--primary-color)]'
+                      : 'text-[var(--secondary-color)]'
+                  }`}
+                >
                 커뮤니티
               </span>
-            </div>
+              </Link>
 
-            <div className="flex flex-col items-center">
               <Link
                 to="/refrigerator"
-                className={`text-[10px] mt-1 font-medium ${
-                  location.pathname === '/refrigerator'
+                className={`flex flex-col items-center text-[10px] mt-1 font-medium ${
+                  location.pathname.startsWith('/refrigerator')
                     ? 'text-[var(--primary-color)]'
-                    : 'text-gray-400'
-                }`}
-              >
-                <CgSmartHomeRefrigerator size={28} />
-              </Link>
-              <span
-                className={`text-[10px] mt-1 font-medium pb-[1px] ${
-                  location.pathname === '/refrigerator'
-                    ? 'text-[var(--primary-color)]'
-                    : 'text-gray-400'
-                }`}
-              >
-                내 냉장고
-              </span>
-            </div>
+                    : 'text-[var(--secondary-color)]'
+                  }`}
+                >
+                  <CgSmartHomeRefrigerator size={28} />
+                  <span
+                    className={`text-[10px] mt-1 font-medium ${
+                      location.pathname.startsWith('/refrigerator')
+                        ? 'text-[var(--primary-color)]'
+                        : 'text-[var(--secondary-color)]'
+                    }`}
+                  >
+                  내 냉장고
+                </span>
+                </Link>
 
-            <div className="flex flex-col items-center" ref={dropdownRef}>
+            <div ref={dropdownRef}>
               <button
                 onClick={toggleDropdown}
-                className={`text-[10px] mt-1 font-medium ${
+                className={`flex flex-col items-center text-[10px] mt-1 font-medium ${
                   location.pathname.startsWith('/my-page')
                     ? 'text-[var(--primary-color)]'
-                    : 'text-gray-400'
+                    : 'text-[var(--secondary-color)]'
                 }`}
               >
                 <FaRegUser size={28} />
-              </button>
-              <span
-                className={`text-[10px] mt-1 font-medium ${
-                  location.pathname.startsWith('/my-page')
-                    ? 'text-[var(--primary-color)]'
-                    : 'text-gray-400'
-                }`}
-              >
+                <span
+                  className={`text-[10px] mt-1 font-medium ${
+                    location.pathname.startsWith('/my-page')
+                      ? 'text-[var(--primary-color)]'
+                      : 'text-[var(--secondary-color)]'
+                  }`}
+                >
                 내 프로필
-              </span>
+                </span>
+              </button>
               <div
-                className={`dropdown-menu absolute top-[25px] right-0 mt-2 w-40 bg-white border border-[var(--secondary-color)] rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
+                className={`dropdown-menu absolute top-[55px] right-4 mt-3 w-40 bg-white border border-[var(--secondary-color)] rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
                   dropdownOpen
                     ? 'opacity-100 max-h-60 visible'
                     : 'opacity-0 max-h-0 invisible'
