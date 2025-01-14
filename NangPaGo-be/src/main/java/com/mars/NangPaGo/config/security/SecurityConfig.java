@@ -2,6 +2,7 @@ package com.mars.NangPaGo.config.security;
 
 import com.mars.NangPaGo.auth.entrypoint.UnauthorizedEntryPoint;
 import com.mars.NangPaGo.auth.filter.OAuth2LogoutFilter;
+import com.mars.NangPaGo.auth.handler.OAuth2FailureHandler;
 import com.mars.NangPaGo.auth.handler.OAuth2SuccessHandler;
 import com.mars.NangPaGo.auth.service.OAuth2LogoutService;
 import com.mars.NangPaGo.auth.service.OAuth2UserService;
@@ -51,6 +52,7 @@ public class SecurityConfig {
     private final OAuth2UserService oauth2UserService;
     private final OAuth2SuccessHandler oauth2SuccessHandler;
     private final OAuth2LogoutService oauth2LogoutService;
+    private final OAuth2FailureHandler oauth2FailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -75,6 +77,7 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfoEndpointConfig ->
                     userInfoEndpointConfig.userService(oauth2UserService))
                 .successHandler(oauth2SuccessHandler)
+                .failureHandler(oauth2FailureHandler)
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST).permitAll()
