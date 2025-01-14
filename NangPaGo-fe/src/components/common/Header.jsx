@@ -58,7 +58,7 @@ function Header() {
                 className={`flex flex-col items-center text-[10px] mt-1 font-medium ${
                   location.pathname.startsWith('/community')
                     ? 'text-[var(--primary-color)]'
-                    : 'text-[var(--secondary-color)]'
+                    : 'text-gray-400'
                 }`}
               >
                 <BsFilePost size={28} />
@@ -66,7 +66,7 @@ function Header() {
                   className={`text-[10px] mt-1 font-medium ${
                     location.pathname.startsWith('/community')
                       ? 'text-[var(--primary-color)]'
-                      : 'text-[var(--secondary-color)]'
+                      : 'text-gray-400'
                   }`}
                 >
                 커뮤니티
@@ -78,7 +78,7 @@ function Header() {
                 className={`flex flex-col items-center text-[10px] mt-1 font-medium ${
                   location.pathname.startsWith('/refrigerator')
                     ? 'text-[var(--primary-color)]'
-                    : 'text-[var(--secondary-color)]'
+                    : 'text-gray-400'
                   }`}
                 >
                   <CgSmartHomeRefrigerator size={28} />
@@ -86,7 +86,7 @@ function Header() {
                     className={`text-[10px] mt-1 font-medium ${
                       location.pathname.startsWith('/refrigerator')
                         ? 'text-[var(--primary-color)]'
-                        : 'text-[var(--secondary-color)]'
+                        : 'text-gray-400'
                     }`}
                   >
                   내 냉장고
@@ -99,7 +99,7 @@ function Header() {
                 className={`flex flex-col items-center text-[10px] mt-1 font-medium ${
                   location.pathname.startsWith('/my-page')
                     ? 'text-[var(--primary-color)]'
-                    : 'text-[var(--secondary-color)]'
+                    : 'text-gray-400'
                 }`}
               >
                 <FaRegUser size={28} />
@@ -107,7 +107,7 @@ function Header() {
                   className={`text-[10px] mt-1 font-medium ${
                     location.pathname.startsWith('/my-page')
                       ? 'text-[var(--primary-color)]'
-                      : 'text-[var(--secondary-color)]'
+                      : 'text-gray-400'
                   }`}
                 >
                 내 프로필
