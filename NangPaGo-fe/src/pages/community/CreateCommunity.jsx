@@ -10,6 +10,8 @@ import ErrorMessage from '../../components/common/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
 import FileSizeErrorModal from '../../common/modal/FileSizeErrorModal';
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
 function CreateCommunity() {
   const navigate = useNavigate();
 
@@ -20,8 +22,6 @@ function CreateCommunity() {
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [showFileSizeError, setShowFileSizeError] = useState(false);
-
-  const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
   useEffect(() => {
     if (file) {

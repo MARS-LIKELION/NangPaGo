@@ -8,8 +8,10 @@ import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
+import FileSizeErrorModal from '../../common/modal/FileSizeErrorModal';
 
 const DEFAULT_IMAGE_URL = "https://storage.googleapis.com/nangpago-9d371.firebasestorage.app/dc137676-6240-4920-97d3-727c4b7d6d8d_360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 function ModifyCommunity() {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ function ModifyCommunity() {
   const [isPublic, setIsPublic] = useState(true);
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [showFileSizeError, setShowFileSizeError] = useState(false);
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -49,9 +52,14 @@ function ModifyCommunity() {
 
   useEffect(() => {
     if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setImagePreview(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
+      if (file.size > MAX_FILE_SIZE) {
+        setShowFileSizeError(true);
+      } else {
+        const objectUrl = URL.createObjectURL(file);
+        setImagePreview(objectUrl);
+
+        return () => URL.revokeObjectURL(objectUrl);
+      }
     }
   }, [file]);
 
@@ -127,6 +135,10 @@ function ModifyCommunity() {
         </div>
       </div>
       <Footer className="mt-4" />
+      <FileSizeErrorModal
+        isOpen={showFileSizeError}
+        onClose={() => setShowFileSizeError(false)}
+      />
     </div>
   );
 }
