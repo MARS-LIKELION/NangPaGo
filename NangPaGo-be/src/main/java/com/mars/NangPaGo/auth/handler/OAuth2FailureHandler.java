@@ -24,7 +24,8 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
         log.error("OAuth2 로그인 실패: {}", exception.getMessage());
 
         String redirectUrl = clientHost + "/login";
-        response.setStatus(HttpServletResponse.SC_FOUND);
+        response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
         response.setHeader("Location", redirectUrl);
     }
+
 }
