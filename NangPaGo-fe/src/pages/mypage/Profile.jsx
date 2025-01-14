@@ -36,26 +36,19 @@ function Profile() {
             totalCounts={totalCounts}
             onTabChange={(newTab) => {
               if (activeTab !== newTab) {
-                setActiveTab(newTab); // 탭 변경
+                setActiveTab(newTab);
               }
             }}
           />
           <div className="py-4">
-            {isLoading && items.length === 0 ? (
-              // 로딩 중일 때 중앙에 로딩 UI 표시
-              <div className="flex justify-center items-center h-96 bg-gray-50">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary-color)]"></div>
-              </div>
-            ) : (
-              // 데이터가 있을 때만 ItemList 표시
-              <ItemList
-                items={items}
-                activeTab={activeTab}
-                hasMore={hasMore}
-                onLoadMore={handleLoadMore}
-                onItemClick={handleItemClick}
-              />
-            )}
+            <ItemList
+              items={items}
+              activeTab={activeTab}
+              hasMore={hasMore}
+              onLoadMore={handleLoadMore}
+              onItemClick={handleItemClick}
+              isLoading={isLoading} // 로딩 상태 전달
+            />
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ const ItemList = ({
   hasMore,
   onLoadMore,
   onItemClick,
-  loading,
+  isLoading,
 }) => {
   const observerRef = useRef(null);
   const observerInstance = useRef(null);
@@ -17,7 +17,7 @@ const ItemList = ({
 
     observerInstance.current = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && hasMore) {
+        if (entry.isIntersecting && hasMore && !isLoading) {
           onLoadMore();
         }
       },
@@ -31,12 +31,12 @@ const ItemList = ({
     return () => {
       if (observerInstance.current) observerInstance.current.disconnect();
     };
-  }, [hasMore, onLoadMore, activeTab]);
+  }, [hasMore, onLoadMore, activeTab, isLoading]);
 
-  if (loading) {
-    // 로딩 상태일 때 로딩 UI를 중앙에 표시
+  // 로딩 상태 처리
+  if (isLoading && items.length === 0) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
+      <div className="flex justify-center items-center h-96">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary-color)]"></div>
       </div>
     );
