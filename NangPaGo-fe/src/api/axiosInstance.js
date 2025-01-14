@@ -84,8 +84,14 @@ axiosInstance.interceptors.response.use(
         });
       });
     }
+
+    if (error.response?.status === 409) {
+      const message = error.response.data.message || '중복된 이메일이 있습니다.';
+      return Promise.reject({ status: 409, message });
+    }
+
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;

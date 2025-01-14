@@ -50,8 +50,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         return user;
     }
 
-
-
     private User registerUser(OAuth2UserInfo userInfo) {
         return userRepository.save(UserRequestDto.fromOAuth2UserInfo(userInfo).toEntity());
     }
