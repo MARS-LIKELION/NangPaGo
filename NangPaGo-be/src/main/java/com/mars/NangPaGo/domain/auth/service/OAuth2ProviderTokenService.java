@@ -4,6 +4,7 @@ import static com.mars.NangPaGo.common.exception.NPGExceptionType.BAD_REQUEST_DI
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_OAUTH2_PROVIDER_TOKEN;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
@@ -18,13 +19,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,12 +41,10 @@ public class OAuth2ProviderTokenService {
         Optional<OAuthProviderToken> token = oauthProviderTokenRepository.findByProviderNameAndEmail(providerName,
             email);
 
-        if (token.isEmpty()) {
-            saveOauth2ProviderToken(providerName, refreshToken, email);
-        }
-        if (token.isPresent() && !Objects.equals(token.get().getProviderRefreshToken(), refreshToken)) {
-            updateOauth2ProviderToken(token.get(), refreshToken);
-        }
+        token.ifPresentOrElse(
+            existingToken -> updateTokenIfNeeded(existingToken, refreshToken),
+            () -> saveOauth2ProviderToken(providerName, refreshToken, email)
+        );
     }
 
     @Transactional
@@ -61,10 +58,16 @@ public class OAuth2ProviderTokenService {
         disconnectThirdPartyService(user, providerName, accessToken);
     }
 
+    private void updateTokenIfNeeded(OAuthProviderToken existingToken, String refreshToken) {
+        if (!existingToken.getProviderRefreshToken().equals(refreshToken)) {
+            updateOauth2ProviderToken(existingToken, refreshToken);
+        }
+    }
+
     private String Oauth2refreshToAccessToken(String providerName, String refreshToken)
         throws IOException, InterruptedException {
 
-        OAuth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.create(providerName);
+        OAuth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.from(providerName);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -75,19 +78,13 @@ public class OAuth2ProviderTokenService {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() == HttpStatus.SC_OK) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response.body());
-
-            return jsonNode.get("access_token").asText(); // 성공적으로 엑세스 토큰을 재발급받음
-        }
-        throw UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN.of();
+        return getAccessToken(response);
     }
 
     private void disconnectThirdPartyService(User user, String providerName, String accessToken)
         throws IOException, InterruptedException {
 
-        OAuth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.create(providerName);
+        OAuth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.from(providerName);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
@@ -98,12 +95,25 @@ public class OAuth2ProviderTokenService {
 
         HttpResponse<String> response = client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() != HttpStatus.SC_OK) {
-            throw BAD_REQUEST_DISCONNECT_THIRD_PARTY.of();
-        }
+        checkHttpStatusOk(response);
 
         softDeleteUser(user);
         deleteProviderToken(providerName, user.getEmail());
+    }
+
+    private String getAccessToken(HttpResponse<String> response) throws JsonProcessingException {
+        checkHttpStatusOk(response);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(response.body());
+
+        return jsonNode.get("access_token").asText();
+    }
+
+    private void checkHttpStatusOk(HttpResponse<String> response){
+        if (response.statusCode() != HttpStatus.SC_OK) {
+            throw UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN.of();
+        }
     }
 
    private static Consumer<HttpRequest.Builder> requestProvider(String providerName){

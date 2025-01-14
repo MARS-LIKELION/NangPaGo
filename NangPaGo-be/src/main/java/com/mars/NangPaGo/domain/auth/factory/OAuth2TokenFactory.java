@@ -23,7 +23,7 @@ public class OAuth2TokenFactory {
         );
     }
 
-    public OAuth2TokenInfo create(String providerName) {
+    public OAuth2TokenInfo from(String providerName) {
         return TOKEN_INFO_CREATORS.get(OAuth2Provider.from(providerName));
     }
 
