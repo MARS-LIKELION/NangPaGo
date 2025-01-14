@@ -7,6 +7,7 @@ function useTabData(activeTab) {
   const [hasMore, setHasMore] = useState(true);
   const abortControllers = useRef({});
   const currentTab = useRef(activeTab);
+  const pendingRequest = useRef(false); // 중복 요청 방지 플래그
 
   const fetchTabDataByType = {
     likes: getLikes,
@@ -15,10 +16,12 @@ function useTabData(activeTab) {
   };
 
   async function fetchTabData({ page = 1, reset = false } = {}) {
-    if (isLoading || (!hasMore && !reset)) return;
+    if (pendingRequest.current || (!hasMore && !reset)) return;
 
     setIsLoading(true);
+    pendingRequest.current = true; // 요청 시작
 
+    // 이전 요청 중단
     if (abortControllers.current[activeTab]) {
       abortControllers.current[activeTab].abort();
     }
@@ -32,12 +35,12 @@ function useTabData(activeTab) {
       });
 
       if (currentTab.current !== activeTab) {
-        return;
+        return; // 탭 변경된 경우 결과 무시
       }
 
       setItems((prev) => {
         if (reset) {
-          return data.content; // 초기화 시 새로운 데이터만 추가
+          return data.content;
         }
         return [
           ...prev,
@@ -59,21 +62,30 @@ function useTabData(activeTab) {
       }
     } finally {
       setIsLoading(false);
+      pendingRequest.current = false; // 요청 종료 또는 중단
     }
   }
 
   useEffect(() => {
     currentTab.current = activeTab;
 
+    // 상태 초기화 및 이전 요청 중단
     setItems([]);
     setHasMore(true);
     setIsLoading(false);
 
+    if (abortControllers.current[activeTab]) {
+      abortControllers.current[activeTab].abort();
+      pendingRequest.current = false; // 이전 요청 중단 후 초기화
+    }
+
+    // 새로운 API 요청 시작
     fetchTabData({ page: 1, reset: true });
 
     return () => {
       if (abortControllers.current[activeTab]) {
         abortControllers.current[activeTab].abort();
+        pendingRequest.current = false; // 정리 단계에서 초기화
       }
     };
   }, [activeTab]);
