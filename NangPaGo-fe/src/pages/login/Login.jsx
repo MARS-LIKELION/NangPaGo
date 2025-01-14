@@ -11,19 +11,23 @@ function Login() {
 
   const handleLoginClick = async (provider) => {
     try {
+      // OAuth2 로그인 요청
       window.location.href = `${API_HOST}/api/oauth2/authorization/${provider}`;
     } catch (error) {
+      // 서버에서 401 응답을 받은 경우
       if (error.response?.status === 401) {
         const errorMessage = error.response?.data?.error || '로그인 실패: 권한이 없습니다.';
-        setErrorMessage(errorMessage);
-        setModalOpen(true);
+        console.error('로그인 실패:', errorMessage);
+  
+        // 로그인 페이지로 리다이렉트
+        window.location.href = '/login';
       } else {
-        console.error('로그인 요청 실패:', error);
+        console.error('로그인 요청 중 문제가 발생했습니다:', error);
         alert('로그인 요청 중 문제가 발생했습니다.');
       }
     }
   };
-  
+    
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col items-center justify-center">
       <img src="/logo.png" alt="Logo" className="w-32 h-auto mb-6" />
