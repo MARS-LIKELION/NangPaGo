@@ -1,6 +1,8 @@
 services:
   backend:
-    build: ../NangPaGo-be/Dockerfile-be
+    build:
+      context: ./NangPaGo-be
+      dockerfile: Dockerfile-be
     container_name: nangpago-backend-green
     ports:
       - "9173:${API_SERVER_PORT}"
@@ -10,10 +12,12 @@ services:
     networks:
       - nangpago-network
     volumes:
-      - ~/nangpago-logs:/logs
+      - /Users/muncheolhyun/home-server/server-logs:/logs
 
   frontend:
-    build: ../NangPaGo-fe/Dockerfile-fe
+    build:
+      context: ./NangPaGo-fe
+      dockerfile: Dockerfile-fe
     container_name: nangpago-front-green
     ports:
       - "7428:${VITE_FRONT_SERVER_PORT}"

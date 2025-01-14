@@ -30,8 +30,8 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'FIREBASE_KEY_FILE', variable: 'FIREBASE_KEY_PATH')]) {
                     sh '''
-                        mkdir -p ./src/main/resources/firebase
-                        cp $FIREBASE_KEY_PATH ./src/main/resources/firebase/nangpago.json
+                        mkdir -p ./${SPRING_DIR}/src/main/resources/firebase
+                        cp $FIREBASE_KEY_PATH ./${SPRING_DIR}/src/main/resources/firebase/nangpago.json
                     '''
                 }
             }
@@ -56,39 +56,31 @@ pipeline {
                 }
             }
         }
-//         stage('Test') {
-//             steps {
-//                 dir(SPRING_DIR) {
-//                     sh 'gradle test'
-//                 }
-//                 dir(REACT_DIR) {
-//                     sh 'npm test -- --watchAll=false' // React 테스트
-//                 }
-//             }
-//         }
         stage('Deploy') {
             steps {
                 sh '''
-                    mkdir -p ${SCRIPT_PATH}
+                    mkdir -p ${SCRIPT_PATH}/NangPaGo-fe
+                    mkdir -p ${SCRIPT_PATH}/NangPaGo-be
 
-                    # 도커 관련 파일들 복사
+                    # 도커 파일 복사
                     cp ./docker/docker-compose.blue.yml ${SCRIPT_PATH}/
                     cp ./docker/docker-compose.green.yml ${SCRIPT_PATH}/
-                    cp ./${SPRING_DIR}/Dockerfile-be ${SCRIPT_PATH}/
-                    cp ./${REACT_DIR}/Dockerfile-fe ${SCRIPT_PATH}/
 
-                    # 배포 스크립트와 빌드 결과물 복사
+                    # 프론트엔드 파일 복사
+                    cp -r ./${REACT_DIR}/* ${SCRIPT_PATH}/NangPaGo-fe/
+
+                    # 백엔드 파일 복사
+                    cp ./${SPRING_DIR}/build/libs/*.jar ${SCRIPT_PATH}/NangPaGo-be/
+                    cp ./${SPRING_DIR}/Dockerfile-be ${SCRIPT_PATH}/NangPaGo-be/
+
                     cp ./scripts/deploy.sh ${SCRIPT_PATH}/
-                    cp ./${SPRING_DIR}/build/libs/*.jar ${SCRIPT_PATH}/
-                    cp -r ./${REACT_DIR}/dist ${SCRIPT_PATH}/
-
                     chmod +x ${SCRIPT_PATH}/deploy.sh
-                    ${SCRIPT_PATH}/deploy.sh
                 '''
 
                 withCredentials([file(credentialsId: 'env-file', variable: 'ENV_FILE')]) {
                     sh '''
                         cp $ENV_FILE ${SCRIPT_PATH}/.env
+                        cp $ENV_FILE ${SCRIPT_PATH}/NangPaGo-fe/.env
                         ${SCRIPT_PATH}/deploy.sh
                     '''
                 }

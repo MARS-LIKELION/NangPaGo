@@ -1,7 +1,7 @@
 services:
   backend:
     build:
-      context: .
+      context: ./NangPaGo-be
       dockerfile: Dockerfile-be
     container_name: nangpago-backend-blue
     ports:
@@ -12,11 +12,11 @@ services:
     networks:
       - nangpago-network
     volumes:
-      - ~/nangpago-logs:/logs
+      - /Users/muncheolhyun/home-server/server-logs:/logs
 
   frontend:
     build:
-      context: .
+      context: ./NangPaGo-fe
       dockerfile: Dockerfile-fe
     container_name: nangpago-front-blue
     ports:
