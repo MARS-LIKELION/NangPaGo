@@ -1,7 +1,14 @@
 import { useRef, useEffect } from 'react';
 import clsx from 'clsx';
 
-const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
+const ItemList = ({
+  items,
+  activeTab,
+  hasMore,
+  onLoadMore,
+  onItemClick,
+  loading,
+}) => {
   const observerRef = useRef(null);
   const observerInstance = useRef(null);
 
@@ -14,7 +21,7 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
           onLoadMore();
         }
       },
-      { threshold: 0.1 },
+      { threshold: 1.0 },
     );
 
     if (observerRef.current) {
@@ -24,7 +31,16 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
     return () => {
       if (observerInstance.current) observerInstance.current.disconnect();
     };
-  }, [hasMore, onLoadMore]);
+  }, [hasMore, onLoadMore, activeTab]);
+
+  if (loading) {
+    // 로딩 상태일 때 로딩 UI를 중앙에 표시
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary-color)]"></div>
+      </div>
+    );
+  }
 
   if (!items.length && !hasMore) {
     return <div>항목이 없습니다.</div>;
@@ -32,9 +48,9 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
 
   return (
     <div className="grid grid-cols-1 gap-4">
-      {items.map((item) => (
+      {items.map((item, index) => (
         <div
-          key={item.id}
+          key={item.id || `item-${index}`}
           className={clsx(
             'flex flex-col h-auto overflow-hidden border rounded-lg shadow-sm',
             {
