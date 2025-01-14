@@ -8,6 +8,7 @@ import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
+import FileSizeErrorModal from '../../common/modal/FileSizeErrorModal';
 
 function CreateCommunity() {
   const navigate = useNavigate();
@@ -18,13 +19,20 @@ function CreateCommunity() {
   const [isPublic, setIsPublic] = useState(true);
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [showFileSizeError, setShowFileSizeError] = useState(false);
+
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
   useEffect(() => {
     if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setImagePreview(objectUrl);
+      if (file.size > MAX_FILE_SIZE) {
+        setShowFileSizeError(true);
+      } else {
+        const objectUrl = URL.createObjectURL(file);
+        setImagePreview(objectUrl);
 
-      return () => URL.revokeObjectURL(objectUrl);
+        return () => URL.revokeObjectURL(objectUrl);
+      }
     }
   }, [file]);
 
@@ -99,6 +107,10 @@ function CreateCommunity() {
         <SubmitButton onClick={handleSubmit} label="게시글 등록" />
       </div>
       <Footer />
+      <FileSizeErrorModal
+        isOpen={showFileSizeError}
+        onClose={() => setShowFileSizeError(false)}
+      />
     </div>
   );
 }
