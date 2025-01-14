@@ -115,7 +115,7 @@ public class UserController {
     }
 
     @AuthenticatedUser
-    @GetMapping("/my-page/leave")
+    @GetMapping("/deactivate")
     public ResponseDto<String> deactivateUser() throws IOException, InterruptedException {
         String email = AuthenticationHolder.getCurrentUserEmail();
         oauth2ProviderTokenService.deactivateUser(email);

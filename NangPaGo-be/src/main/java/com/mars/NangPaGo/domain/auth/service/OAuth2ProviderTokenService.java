@@ -1,6 +1,5 @@
 package com.mars.NangPaGo.domain.auth.service;
 
-import static com.mars.NangPaGo.common.exception.NPGExceptionType.BAD_REQUEST_DISCONNECT_THIRD_PARTY;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_OAUTH2_PROVIDER_TOKEN;
 import static com.mars.NangPaGo.common.exception.NPGExceptionType.UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN;
 
@@ -21,7 +20,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +52,7 @@ public class OAuth2ProviderTokenService {
         String providerName = user.getOauth2Provider().name();
         String refreshToken = findProviderRefreshToken(providerName, email);
 
-        String accessToken = Oauth2refreshToAccessToken(providerName, refreshToken);
+        String accessToken = oAuth2GetAccessToken(providerName, refreshToken);
         disconnectThirdPartyService(user, providerName, accessToken);
     }
 
@@ -64,7 +62,7 @@ public class OAuth2ProviderTokenService {
         }
     }
 
-    private String Oauth2refreshToAccessToken(String providerName, String refreshToken)
+    private String oAuth2GetAccessToken(String providerName, String refreshToken)
         throws IOException, InterruptedException {
 
         OAuth2TokenInfo oauth2TokenInfo = oauth2TokenFactory.from(providerName);
