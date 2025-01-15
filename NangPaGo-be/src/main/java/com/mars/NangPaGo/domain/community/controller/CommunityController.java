@@ -54,11 +54,9 @@ public class CommunityController {
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<CommunityResponseDto> create(
-        @ModelAttribute @Valid CommunityRequestDto requestDto, BindingResult bindingResult,
+        @ModelAttribute @Valid CommunityRequestDto requestDto,
         @RequestParam(value = "file", required = false) MultipartFile file
     ) {
-
-        checkValidateError(bindingResult);
 
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(communityService.createCommunity(requestDto, file, email), "게시물이 성공적으로 생성되었습니다.");
@@ -68,11 +66,9 @@ public class CommunityController {
     @AuthenticatedUser
     @PutMapping("/{id}")
     public ResponseDto<CommunityResponseDto> update(
-        @ModelAttribute @Valid CommunityRequestDto requestDto,BindingResult bindingResult,
+        @ModelAttribute @Valid CommunityRequestDto requestDto,
         @RequestParam(value = "file", required = false) MultipartFile file,
         @PathVariable("id") Long id) {
-
-        checkValidateError(bindingResult);
 
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(communityService.updateCommunity(id, requestDto, file, email), "게시물이 성공적으로 수정되었습니다.");
@@ -85,15 +81,5 @@ public class CommunityController {
         String email = AuthenticationHolder.getCurrentUserEmail();
         communityService.deleteCommunity(id, email);
         return ResponseDto.of(null, "게시물이 성공적으로 삭제되었습니다.");
-    }
-
-    private void checkValidateError(BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> {
-                //Dto의 유효성 검증을 하면서 에러 발생 시 validation 관련 어노테이션에 작성한 message를 담아 반환합니다.
-                String message = error.getDefaultMessage();
-                throw BAD_REQUEST.of(message);
-            });
-        }
     }
 }
