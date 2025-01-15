@@ -52,34 +52,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String provider = (String) oauth2User.getAttributes().get("provider");
         String email = oauth2User.getName();
 
-        if (checkDuplicatedEmail(response, email, provider)) {
+        if (isDuplicatedEmail(response, email, provider)) {
             return;
         }
 
-        OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
-        String clientRegistrationId = oauth2Token.getAuthorizedClientRegistrationId();
+        renewOauth2ProviderToken(authentication, email);
 
-        OAuth2AuthorizedClient authorizedClient = OAuth2AuthorizedClientManager.authorize(
-            OAuth2AuthorizeRequest.withClientRegistrationId(clientRegistrationId)
-                .principal(authentication)
-                .build()
-        );
-
-        if (authorizedClient != null && authorizedClient.getRefreshToken() != null) {
-            // 구글은 최초 로그인에만 가져와짐
-            String refreshToken = authorizedClient.getRefreshToken().getTokenValue();
-            String clientName = authorizedClient.getClientRegistration().getClientName();
-
-            oauth2ProviderTokenService.checkOauth2ProviderToken(clientName, refreshToken, email);
-        }
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-        String role = authorities.stream()
-            .map(GrantedAuthority::getAuthority)
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("사용자 권한이 설정되지 않았습니다."));
-
+        String role = getRole(authentication);
         String access = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
         String refresh = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
 
@@ -90,7 +69,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.sendRedirect(clientHost);
     }
 
-    private boolean checkDuplicatedEmail(HttpServletResponse response, String email, String provider)
+    private boolean isDuplicatedEmail(HttpServletResponse response, String email, String provider)
         throws IOException {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> NPGExceptionType.NOT_FOUND_USER.of("사용자 검증 에러: " + email));
@@ -103,6 +82,37 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         return false;
+    }
+
+    private void renewOauth2ProviderToken(Authentication authentication, String email) {
+        OAuth2AuthorizedClient authorizedClient = getOAuth2AuthorizedClient(authentication);
+        if (authorizedClient != null && authorizedClient.getRefreshToken() != null) {
+            // 구글은 최초 로그인에만 가져와짐
+            String refreshToken = authorizedClient.getRefreshToken().getTokenValue();
+            String clientName = authorizedClient.getClientRegistration().getClientName();
+
+            oauth2ProviderTokenService.renewOauth2ProviderToken(clientName, refreshToken, email);
+        }
+    }
+
+    private String getRole(Authentication authentication) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        return authorities.stream()
+            .map(GrantedAuthority::getAuthority)
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("사용자 권한이 설정되지 않았습니다."));
+    }
+
+    private OAuth2AuthorizedClient getOAuth2AuthorizedClient(Authentication authentication) {
+        OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
+        String clientRegistrationId = oauth2Token.getAuthorizedClientRegistrationId();
+
+        OAuth2AuthorizedClient authorizedClient = OAuth2AuthorizedClientManager.authorize(
+            OAuth2AuthorizeRequest.withClientRegistrationId(clientRegistrationId)
+                .principal(authentication)
+                .build()
+        );
+        return authorizedClient;
     }
 
     private Cookie createCookie(String key, String value, long expireMillis, boolean httpOnly) {

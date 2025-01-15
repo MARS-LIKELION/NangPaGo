@@ -35,9 +35,9 @@ public class OAuth2ProviderTokenService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void checkOauth2ProviderToken(String providerName, String refreshToken, String email) {
-        Optional<OAuthProviderToken> token = oauthProviderTokenRepository.findByProviderNameAndEmail(providerName,
-            email);
+    public void renewOauth2ProviderToken(String providerName, String refreshToken, String email) {
+        Optional<OAuthProviderToken> token = oauthProviderTokenRepository
+            .findByProviderNameAndEmail(providerName, email);
 
         token.ifPresentOrElse(
             existingToken -> updateTokenIfNeeded(existingToken, refreshToken),
