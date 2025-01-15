@@ -30,7 +30,7 @@ function Refrigerator() {
   const location = useLocation();
   const observerRef = useRef(null);
 
-  // ★ 추가: "마운트 직후 첫 useEffect"를 스킵하기 위한 플래그
+  // 첫 useEffect(마운트 직후)에서 중복 호출을 막기 위한 ref
   const isMounted = useRef(false);
 
   /**
@@ -45,20 +45,19 @@ function Refrigerator() {
    *    - 단, "처음 마운트" 이후부터만 작동(중복 호출 방지)
    */
   useEffect(() => {
-    // 마운트 후 첫 렌더 시점이라면 → 스킵
     if (!isMounted.current) {
-      isMounted.current = true; // 이제 이후부터는 Effect 동작
+      // 첫 렌더는 스킵
+      isMounted.current = true;
       return;
     }
 
-    // 실제로는 두 번째 렌더부터 동작: 뒤로가기나 재료 변경 시
     if (location.pathname === '/refrigerator/recipe') {
       reFetchRefrigeratorRecipes();
     }
   }, [location.pathname, ingredients]);
 
   /**
-   * 3) recipes, recipePage 등이 변경될 때마다 로컬 스토리지 동기화
+   * 3) recipes, recipePage 등이 바뀔 때마다 로컬 스토리지 동기화
    */
   useEffect(() => {
     syncLocalStorage();
@@ -89,7 +88,7 @@ function Refrigerator() {
     console.error(message, error);
   };
 
-  /** 냉장고 재료 불러오기 */
+  /** 1) 냉장고 재료 불러오기 */
   const fetchRefrigerator = async () => {
     try {
       const data = await getRefrigerator();
@@ -101,9 +100,7 @@ function Refrigerator() {
   };
 
   /**
-   * 뒤로가기 시 재조회:
-   * - 재료가 없으면 getRecipes([]) → 서버에서 랜덤 레시피
-   * - 재료가 있으면 해당 재료로 검색
+   * 2) 뒤로가기 시 재조회 (마운트 후부터)
    */
   const reFetchRefrigeratorRecipes = async () => {
     setRecipePage(1);
@@ -114,7 +111,6 @@ function Refrigerator() {
         .map((i) => i.ingredientName)
         .filter(Boolean);
 
-      // ★ 재료가 없어도 조건문 없이 getRecipes([]) 호출 → 서버가 랜덤 레시피
       const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
       setRecipes(recipeData.content);
       setHasMoreRecipes(!recipeData.last);
@@ -124,7 +120,7 @@ function Refrigerator() {
   };
 
   /**
-   * "재료 추가"
+   * 재료 추가
    */
   const handleAddIngredient = async (ingredientName) => {
     try {
@@ -136,7 +132,7 @@ function Refrigerator() {
   };
 
   /**
-   * "재료 삭제"
+   * 재료 삭제
    */
   const handleDeleteIngredient = async (ingredientName) => {
     try {
@@ -150,23 +146,27 @@ function Refrigerator() {
   };
 
   /**
-   * "레시피 찾기" 버튼
-   * - 재료 없으면 빈 keyword로 → 서버가 랜덤
-   * - 재료 있으면 해당 재료로 검색
+   * 3) "레시피 찾기" 버튼 클릭
+   * - 여기서는 "재료가 없을 때는 버튼 자체가 disable"이므로 실제로 눌러도 함수가 안 불릴 수 있음
+   * - 그래도 혹시 몰라 안전 장치로 "재료 없으면 return" 추가
    */
   const handleFindRecipes = async () => {
+    const ingredientNames = ingredients
+      .map((i) => i.ingredientName)
+      .filter(Boolean);
+    if (ingredientNames.length === 0) {
+      return; // 안전장치
+    }
+
     setRecipePage(1);
     setHasMoreRecipes(true);
 
     try {
-      const ingredientNames = ingredients
-        .map((i) => i.ingredientName)
-        .filter(Boolean);
-
       const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
       setRecipes(recipeData.content);
       setHasMoreRecipes(!recipeData.last);
 
+      // 레시피 페이지로 이동
       navigate('/refrigerator/recipe');
     } catch (error) {
       handleApiError('레시피를 가져오는 중 오류가 발생했습니다.', error);
@@ -174,7 +174,7 @@ function Refrigerator() {
   };
 
   /**
-   * 무한 스크롤 콜백
+   * 무한 스크롤 로딩
    */
   const loadMoreRecipes = async () => {
     if (!hasMoreRecipes || isLoading) return;
@@ -198,8 +198,7 @@ function Refrigerator() {
   };
 
   /**
-   * "돌아가기" 버튼
-   * - 레시피 화면에서 냉장고 화면으로 복귀 시 상태 초기화
+   * "돌아가기" 버튼 → 냉장고 화면으로 복귀
    */
   const resetAndGoBack = () => {
     setRecipes([]);
@@ -214,13 +213,16 @@ function Refrigerator() {
   };
 
   /**
-   * IntersectionObserver 핸들러
+   * IntersectionObserver 콜백
    */
   const handleObserver = ([entry]) => {
     if (entry.isIntersecting && hasMoreRecipes) {
       loadMoreRecipes();
     }
   };
+
+  // 버튼 활성/비활성 조건
+  const hasIngredients = ingredients.length > 0;
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col items-center">
@@ -241,10 +243,23 @@ function Refrigerator() {
             />
           </div>
 
+          {/* 
+            ★ 재료가 없으면:
+              - bg-yellow-200 + cursor-not-allowed + disabled
+            ★ 재료가 있으면:
+              - bg-yellow-400 + clickable
+          */}
           <div className="w-full px-4 mt-auto mb-4">
             <button
-              className="bg-[var(--primary-color)] text-white w-full py-3 rounded-lg text-lg font-medium"
               onClick={handleFindRecipes}
+              disabled={!hasIngredients}
+              className={`w-full py-3 rounded-lg text-lg font-medium 
+                ${
+                  hasIngredients
+                    ? 'bg-yellow-400 text-white'
+                    : 'bg-yellow-200 text-white cursor-not-allowed'
+                }
+              `}
             >
               레시피 찾기
             </button>
