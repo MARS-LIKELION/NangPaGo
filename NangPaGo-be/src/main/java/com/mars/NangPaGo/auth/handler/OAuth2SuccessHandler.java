@@ -1,5 +1,7 @@
 package com.mars.NangPaGo.auth.handler;
 
+import static com.mars.NangPaGo.common.exception.NPGExceptionType.NOT_FOUND_USER;
+
 import com.mars.NangPaGo.common.exception.NPGExceptionType;
 import com.mars.NangPaGo.domain.auth.service.TokenService;
 import com.mars.NangPaGo.common.util.JwtUtil;
@@ -56,11 +58,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             return;
         }
 
+        User user = userRepository.findByEmail(email).orElseThrow(() -> NOT_FOUND_USER.of());
+        long userId = user.getId();
+
         renewOauth2ProviderToken(authentication, email);
 
         String role = getRole(authentication);
-        String access = jwtUtil.createJwt("access", email, role, jwtUtil.getAccessTokenExpireMillis());
-        String refresh = jwtUtil.createJwt("refresh", email, role, jwtUtil.getRefreshTokenExpireMillis());
+        String access = jwtUtil.createJwt("access", userId, email, role, jwtUtil.getAccessTokenExpireMillis());
+        String refresh = jwtUtil.createJwt("refresh", userId, email, role, jwtUtil.getRefreshTokenExpireMillis());
 
         tokenService.renewRefreshToken(email, refresh);
 
