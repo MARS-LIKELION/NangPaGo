@@ -82,7 +82,7 @@ function Header() {
         ) : (
           <Link
             to="/login"
-            className="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600"
+            className="bg-primary text-white px-4 py-2 mr-3 rounded-md text-sm shadow-md"
           >
             로그인
           </Link>
