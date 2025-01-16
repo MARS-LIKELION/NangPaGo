@@ -6,7 +6,7 @@ import {
   deleteIngredient,
 } from '../../api/refrigerator';
 import { getRecipes } from '../../api/recipe.js';
-import Header from '../../components/common/Header';
+import Header from '../../components/layout/header/Header.jsx';
 import IngredientList from '../../components/refrigerator/IngredientList';
 import AddIngredientForm from '../../components/refrigerator/AddIngredientForm';
 import RecipeCard from '../../components/recipe/RecipeCard';

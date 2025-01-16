@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
-import Header from '../../components/common/Header.jsx';
+import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/common/Footer.jsx';
 import TopButton from '../../components/common/TopButton';
 
@@ -31,7 +31,7 @@ function RecipeList() {
   }, []);
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
+    <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col min-w-80 max-w-screen-md md:max-w-screen-lg lg:max-w-screen-xl">
       <Header />
 
       <div className="flex-grow px-4 space-y-4">
@@ -42,12 +42,12 @@ function RecipeList() {
         />
 
         {activeTab !== 'favorites' && (
-          <div className="flex justify-center">
+          <div className="flex justify-center md:justify-start">
             <SearchBar
               searchPath={'/recipe/search'}
               searchTerm={searchTerm}
               onClear={handleClearSearch}
-              className="w-[200px]"
+              className="w-full max-w-xs md:max-w-md lg:max-w-lg"
             />
           </div>
         )}
@@ -58,15 +58,10 @@ function RecipeList() {
           isLoggedIn={isLoggedIn}
         />
       </div>
-
-      <Footer />
-
       {isTopButtonVisible && (
-        <TopButton
-          offset={100}
-          positionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-        />
+        <TopButton offset={100} positionClass="bottom-12 right-4" />
       )}
+      <Footer />
     </div>
   );
 }

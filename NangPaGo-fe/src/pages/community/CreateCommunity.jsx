@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createCommunity } from '../../api/community';
-import Header from '../../components/common/Header';
+import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/common/Footer';
 import TextInput from '../../components/community/TextInput';
 import TextArea from '../../components/community/TextArea';

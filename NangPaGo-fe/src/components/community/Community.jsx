@@ -2,10 +2,10 @@ import { Fragment, useEffect, useState } from 'react';
 import { FaHeart, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import CommunityComment from './comment/CommunityComment';
-import Header from '../common/Header';
+import Header from '../layout/header/Header.jsx';
 import Footer from '../common/Footer';
 import CreateButton from '../common/CreateButton';
-import { styles } from '../common/Image'
+import { styles } from '../common/Image';
 import {
   getLikeCount,
   getLikeStatus,

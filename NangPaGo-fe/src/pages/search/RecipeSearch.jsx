@@ -14,9 +14,7 @@ function RecipeSearch() {
   const [results, setResults] = useState([]);
   const debouncedKeyword = useDebounce(keyword, 500);
 
-  const handleChange = (e) => {
-    setKeyword(e.target.value);
-  };
+  const handleChange = (e) => setKeyword(e.target.value);
 
   const clearKeyword = (e) => {
     e.stopPropagation();
@@ -58,17 +56,20 @@ function RecipeSearch() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!keyword.trim()) return; // 빈 검색어 처리
     navigate('/', {
       state: { searchTerm: keyword },
     });
   };
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen">
+    <div className="bg-white shadow-md mx-auto min-h-screen">
+      {/* 헤더 */}
       <div className="sticky top-0 bg-white px-4 py-2 flex items-center gap-2 border-b">
         <button
           onClick={() => navigate(-1)}
           className="p-2 rounded-full hover:bg-gray-100 transition"
+          aria-label="뒤로가기"
         >
           <BiArrowBack className="text-2xl text-[var(--secondary-color)]" />
         </button>
@@ -80,21 +81,27 @@ function RecipeSearch() {
             value={keyword}
             onChange={handleChange}
             autoFocus
-            className="w-full px-4 py-2 border border-[var(--primary-color)] rounded-lg 
-                     focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] 
+            className="w-full px-4 py-2 border border-[var(--primary-color)] rounded-lg
+                     focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]
                      focus:border-transparent placeholder-gray-500"
+            aria-label="검색어 입력"
           />
           {keyword ? (
-            <BiX
+            <button
+              type="button"
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-3xl cursor-pointer"
               onClick={clearKeyword}
-            />
+              aria-label="검색어 삭제"
+            >
+              <BiX />
+            </button>
           ) : (
             <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-2xl" />
           )}
         </form>
       </div>
 
+      {/* 검색 결과 */}
       <div className="px-4 py-2">
         {keyword ? (
           results.length > 0 ? (
@@ -103,7 +110,7 @@ function RecipeSearch() {
                 <div
                   key={recipe.id}
                   onClick={() => handleResultClick(recipe)}
-                  className="p-3 rounded-lg cursor-pointer hover:bg-gray-50"
+                  className="p-3 rounded-lg cursor-pointer hover:bg-[var(--primary-color)] hover:text-white transition duration-200"
                 >
                   <span className="text-black">
                     {parseHighlightedName(recipe.highlightedName)}

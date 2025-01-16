@@ -60,7 +60,7 @@ public class RecipeController {
     @GetMapping("/search")
     public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
         @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
-        @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+        @RequestParam(name = "pageSize", defaultValue = "12") int pageSize,
         @RequestParam(name = "keyword", required = false) String keyword,
         @RequestParam(name = "searchType", defaultValue = "INGREDIENTS") String searchType) {
 

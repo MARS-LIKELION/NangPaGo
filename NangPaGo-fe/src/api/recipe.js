@@ -20,7 +20,7 @@ export const getRecipes = async (ingredients, page, size) => {
 export const fetchRecommendedRecipes = async (
   searchTerm,
   pageNo = 1,
-  pageSize = 10,
+  pageSize = 12,
 ) => {
   try {
     const params = {
