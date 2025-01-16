@@ -21,7 +21,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
 
   const observerRef = useRef(null);
   const observerInstance = useRef(null);
-  const pageSize = 10;
+  const pageSize = 12;
   const isFetching = useRef(false);
 
   const fetchFunctions = {
@@ -84,13 +84,13 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   }, [activeTab, hasMoreRecipes, currentPage]);
 
   return (
-    <div className="grid grid-cols-1 gap-6 min-h-[400px]">
+    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[400px]">
       {recipes[activeTab]?.length > 0 ? (
         recipes[activeTab].map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))
       ) : (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-text-600">
           {activeTab === 'recommended'
             ? '검색 결과가 없습니다.'
             : '즐겨찾기한 레시피가 없습니다.'}

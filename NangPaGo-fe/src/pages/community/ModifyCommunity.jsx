@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateCommunity, getCommunityDetail } from '../../api/community';
-import Header from '../../components/common/Header';
+import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/common/Footer';
 import TextInput from '../../components/community/TextInput';
 import TextArea from '../../components/community/TextArea';
@@ -10,7 +10,8 @@ import ErrorMessage from '../../components/common/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
 import FileSizeErrorModal from '../../common/modal/FileSizeErrorModal';
 
-const DEFAULT_IMAGE_URL = "https://storage.googleapis.com/nangpago-9d371.firebasestorage.app/dc137676-6240-4920-97d3-727c4b7d6d8d_360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg";
+const DEFAULT_IMAGE_URL =
+  'https://storage.googleapis.com/nangpago-9d371.firebasestorage.app/dc137676-6240-4920-97d3-727c4b7d6d8d_360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg';
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 function ModifyCommunity() {

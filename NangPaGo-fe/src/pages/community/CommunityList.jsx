@@ -5,7 +5,7 @@ import { AiFillHeart } from 'react-icons/ai';
 import { FaCommentAlt } from 'react-icons/fa';
 import TopButton from '../../components/common/TopButton';
 import CreateButton from '../../components/common/CreateButton';
-import Header from '../../components/common/Header';
+import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/common/Footer';
 import CommunityCard from '../../components/community/CommunityCard';
 

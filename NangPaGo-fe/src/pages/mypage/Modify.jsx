@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../api/axiosInstance.js';
-import Header from '../../components/common/Header.jsx';
+import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/common/Footer.jsx';
 import UpdateUserInfoModal from '../../common/modal/UpdateUserInfoModal.jsx';
 
