@@ -24,7 +24,7 @@ button {
 
 img {
   @apply max-w-full h-auto;
-}s
+}
 
 ol, ul {
   list-style: none;
