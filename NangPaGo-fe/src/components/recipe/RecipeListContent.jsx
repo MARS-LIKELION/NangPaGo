@@ -90,7 +90,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))
       ) : (
-        <div className="text-center py-8 text-text-600">
+        <div className="flex flex-col items-center justify-center col-span-full py-2 text-text-600">
           {activeTab === 'recommended'
             ? '검색 결과가 없습니다.'
             : '즐겨찾기한 레시피가 없습니다.'}
