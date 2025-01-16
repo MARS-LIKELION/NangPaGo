@@ -91,7 +91,6 @@ public class UserController {
         if (pageSize < 1) {
             throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
-        System.out.println("즐겨찾기 호출");
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(userService.getMyFavorites(email, pageNo - 1, pageSize));
     }
