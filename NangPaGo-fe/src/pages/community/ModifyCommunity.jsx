@@ -88,7 +88,7 @@ function ModifyCommunity() {
       formData.append('isPublic', isPublic);
       if (file) formData.append('file', file);
       await updateCommunity(id, formData);
-      navigate(`/community/${id}`);
+      navigate(`/community/${id}` , { state: { from: `/community/${id}/modify` } });
     } catch (err) {
       console.error('게시글 수정 중 오류 발생:', err);
       setError(err.message);

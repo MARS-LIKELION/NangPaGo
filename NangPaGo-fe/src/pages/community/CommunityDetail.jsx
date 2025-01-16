@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../api/axiosInstance';
 import Community from '../../components/community/Community';
@@ -10,6 +10,7 @@ function CommunityDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const nickname = useSelector((state) => state.loginSlice.nickname);
   const isLoggedIn = Boolean(nickname);
@@ -31,6 +32,22 @@ function CommunityDetail() {
     fetchCommunity();
   }, [id]);
 
+  useEffect(() => {
+    const handlePopState = () => {
+      const previousUrl = location.state?.from;
+
+      if (previousUrl && (previousUrl.includes('/community/new') || previousUrl.includes(`/modify`))) {
+        navigate('/community');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate, location.state]);
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
