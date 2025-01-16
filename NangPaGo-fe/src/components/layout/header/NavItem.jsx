@@ -1,17 +1,23 @@
-import { Link } from 'react-router-dom';
+import clsx from 'clsx';
 
-function NavItem({ to, isActive, label, Icon }) {
+function NavItem({ to, isActive, label, Icon, onClick, additionalProps = {} }) {
+  const baseClass = 'group flex-col items-center justify-center gap-1 text-sm font-medium bg-white';
+  const dropDownClass = 'flex rounded-md overflow-hidden sm:flex md:inline-flex';
+  const activeClass = isActive ? 'text-primary' : 'text-text-400';
+
   return (
-    <Link
-      to={to}
-      className={`group flex flex-col items-center justify-center gap-1 text-sm font-medium 
-        ${isActive ? 'text-primary' : 'text-text-400'}`}
+    <button
+      onClick={() => onClick(to)}
+      className={clsx(baseClass, dropDownClass, activeClass)}
+      {...additionalProps}
     >
-      <span className="inline-flex items-center justify-center">
-        <Icon size={24} />
-      </span>
+      {Icon && (
+        <span className="inline-flex items-center justify-center">
+          <Icon size={24} />
+        </span>
+      )}
       <span>{label}</span>
-    </Link>
+    </button>
   );
 }
 

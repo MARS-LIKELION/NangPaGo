@@ -1,28 +1,28 @@
-import { FaRegUser } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import NavItem from './NavItem.jsx';
 
 function ProfileDropdown({
   dropdownOpen,
   toggleDropdown,
   dropdownRef,
   handleLogout,
+  handleLinkClick,
   isActive,
+  icon,
   nickname,
 }) {
   return (
     <div ref={dropdownRef} className="relative">
-      <button
-        onClick={toggleDropdown}
-        className={`group inline-flex flex-col items-center justify-center gap-1 text-sm font-medium rounded-md overflow-hidden 
-          ${isActive ? 'text-primary' : 'text-text-400 bg-white'}`}
-        aria-haspopup="true"
-        aria-expanded={dropdownOpen}
-      >
-        <span className="inline-flex items-center justify-center">
-          <FaRegUser size={24} />
-        </span>
-        <span>프로필</span>
-      </button>
+      <NavItem
+        to="#"
+        isActive={isActive}
+        label="프로필"
+        Icon={icon}
+        onClick={toggleDropdown} // toggleDropdown 함수 전달
+        additionalProps={{
+          'aria-haspopup': true, // 추가 속성 전달
+          'aria-expanded': dropdownOpen,
+        }}
+      />
       {dropdownOpen && (
         <div className="absolute -bottom-1 right-6 z-10">
           <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-secondary"></div>
@@ -36,18 +36,19 @@ function ProfileDropdown({
       >
         <div className="px-4 py-2 text-text-900">{nickname}</div>
         <div className="max-h-30 overflow-hidden">
-          <Link
-            to="/my-page"
-            className="block px-4 py-2 text-text-900 hover:bg-secondary"
-          >
-            마이페이지
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
-          >
-            로그아웃
-          </button>
+        <button
+          to="/my-page"
+          onClick={() => handleLinkClick('/my-page')}
+          className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
+        >
+          마이페이지
+        </button>
+        <button
+          onClick={handleLogout}
+          className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
+        >
+          로그아웃
+        </button>
         </div>
       </div>
     </div>
