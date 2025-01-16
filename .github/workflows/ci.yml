@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release/*'
+
+jobs:
+  build: # CI (BE & FE Build)
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Firebase 설정 파일 생성
+      - name: Create Firebase config file
+        run: |
+          mkdir -p ./NangPaGo-be/src/main/resources/firebase
+          echo '${{ secrets.FIREBASE_SECRET_KEY }}' > ./NangPaGo-be/src/main/resources/firebase/nangpago.json
+
+      # Backend Build
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for Gradle Wrapper
+        run: chmod +x ./NangPaGo-be/gradlew
+
+      - name: Build with Gradle
+        run: cd NangPaGo-be && ./gradlew build testClasses -x test
+
+      # Frontend build
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+
+      - name: Install Frontend Dependencies
+        run: cd NangPaGo-fe && npm install
+
+      - name: Build Frontend
+        run: cd NangPaGo-fe && npm run build
