@@ -17,9 +17,9 @@ function ProfileDropdown({
         isActive={isActive}
         label="프로필"
         Icon={icon}
-        onClick={toggleDropdown} // toggleDropdown 함수 전달
+        onClick={toggleDropdown}
         additionalProps={{
-          'aria-haspopup': true, // 추가 속성 전달
+          'aria-haspopup': true,
           'aria-expanded': dropdownOpen,
         }}
       />
