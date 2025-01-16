@@ -63,8 +63,8 @@ function Community({ community }) {
     }
   };
 
-  const handleCreateClick = () => navigate('/community/new');
-  const handleEditClick = () => navigate(`/community/${community.id}/modify`);
+  const handleCreateClick = () => navigate('/community/new', { state: { from: window.location.pathname } });
+  const handleEditClick = () => navigate(`/community/${community.id}/modify`, { state: { from: window.location.pathname } });
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (

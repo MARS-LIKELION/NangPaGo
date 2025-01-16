@@ -73,7 +73,7 @@ function CommunityList() {
   }, [hasMore, currentPage, isInitialLoad]);
 
   const handleCreateClick = () => {
-    navigate('/community/new');
+    navigate('/community/new', { state: { from: window.location.pathname } });
   };
 
   const handleCardClick = (id) => {
