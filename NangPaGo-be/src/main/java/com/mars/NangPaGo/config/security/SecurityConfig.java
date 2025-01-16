@@ -39,8 +39,8 @@ public class SecurityConfig {
         "/api/auth/reissue",
         "/api/recipe/search",
         "/api/recipe/{id}",
-        "/api/recipe/{id}/comments",
-        "/api/recipe/{id}/comments/count",
+        "/api/recipe/{id}/comment",
+        "/api/recipe/{id}/comment/count",
         "/api/recipe/{id}/like/count",
         "/api/ingredient/search",
         "/api/community/{id}",
@@ -87,10 +87,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST).permitAll()
                 .requestMatchers(
-                    "/api/recipe/{id}/comments/**",
+                    "/api/recipe/{id}/comment/**",
                     "/api/recipe/{id}/like/**",
                     "/api/recipe/{id}/favorite/**",
-                    "/api/community/{id}/comments/**",
+                    "/api/community/{id}/comment/**",
                     "/api/community/{id}/like/**"
                 )
                 .hasAuthority("ROLE_USER")
