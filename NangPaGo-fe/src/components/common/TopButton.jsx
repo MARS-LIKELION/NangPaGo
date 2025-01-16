@@ -6,17 +6,10 @@ function TopButton({ offset = 100 }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      console.log(`Scroll Position: ${currentScroll}px`);
-      setIsVisible(currentScroll > offset);
+      setIsVisible(window.scrollY > offset);
     };
 
     window.addEventListener('scroll', handleScroll);
-
-    setTimeout(() => {
-      handleScroll();
-    }, 0);
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, [offset]);
 
