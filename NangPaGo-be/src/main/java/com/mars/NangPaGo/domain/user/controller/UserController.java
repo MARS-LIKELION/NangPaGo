@@ -64,7 +64,7 @@ public class UserController {
         return ResponseDto.of(userService.updateUserInfo(requestDto, email));
     }
 
-    @GetMapping("/likes/recipes")
+    @GetMapping("/recipes/likes")
     public ResponseDto<PageDto<RecipeResponseDto>> getMyLikedRecipes(
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "7") int pageSize
@@ -75,13 +75,13 @@ public class UserController {
         if (pageSize < 1) {
             throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
-
+        System.out.println("좋아요 호출");
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(userService.getMyLikedRecipes(email, pageNo - 1, pageSize));
     }
 
     @AuthenticatedUser
-    @GetMapping("/favorites/recipes")
+    @GetMapping("/recipes/favorites")
     public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getMyFavorites(
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "7") int pageSize
@@ -92,13 +92,13 @@ public class UserController {
         if (pageSize < 1) {
             throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
-
+        System.out.println("즐겨찾기 호출");
         String email = AuthenticationHolder.getCurrentUserEmail();
         return ResponseDto.of(userService.getMyFavorites(email, pageNo - 1, pageSize));
     }
 
     @AuthenticatedUser
-    @GetMapping("/comments")
+    @GetMapping("/recipes/comments")
     public ResponseDto<PageDto<RecipeCommentResponseDto>> getMyComments(
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "7") int pageSize

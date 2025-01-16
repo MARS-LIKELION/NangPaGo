@@ -1,7 +1,14 @@
 import { useRef, useEffect } from 'react';
 import clsx from 'clsx';
 
-const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
+const ItemList = ({
+  items,
+  activeTab,
+  hasMore,
+  onLoadMore,
+  onItemClick,
+  isLoading,
+}) => {
   const observerRef = useRef(null);
   const observerInstance = useRef(null);
 
@@ -10,11 +17,11 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
 
     observerInstance.current = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && hasMore) {
+        if (entry.isIntersecting && hasMore && !isLoading) {
           onLoadMore();
         }
       },
-      { threshold: 0.1 },
+      { threshold: 1.0 },
     );
 
     if (observerRef.current) {
@@ -24,7 +31,16 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
     return () => {
       if (observerInstance.current) observerInstance.current.disconnect();
     };
-  }, [hasMore, onLoadMore]);
+  }, [hasMore, onLoadMore, activeTab, isLoading]);
+
+  // 로딩 상태 처리
+  if (isLoading && items.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary-color)]"></div>
+      </div>
+    );
+  }
 
   if (!items.length && !hasMore) {
     return <div>항목이 없습니다.</div>;
@@ -32,9 +48,9 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, onItemClick }) => {
 
   return (
     <div className="grid grid-cols-1 gap-4">
-      {items.map((item) => (
+      {items.map((item, index) => (
         <div
-          key={item.id}
+          key={item.id || `item-${index}`}
           className={clsx(
             'flex flex-col h-auto overflow-hidden border rounded-lg shadow-sm',
             {
