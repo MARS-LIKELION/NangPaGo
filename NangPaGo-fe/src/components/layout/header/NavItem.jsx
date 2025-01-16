@@ -5,7 +5,7 @@ function NavItem({ to, isActive, label, Icon }) {
     <Link
       to={to}
       className={`group flex flex-col items-center justify-center gap-1 text-sm font-medium 
-        ${isActive ? 'text-primary' : 'text-text-300'}`}
+        ${isActive ? 'text-primary' : 'text-text-400'}`}
     >
       <span className="inline-flex items-center justify-center">
         <Icon size={24} />

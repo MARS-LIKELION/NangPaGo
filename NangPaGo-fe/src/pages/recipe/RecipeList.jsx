@@ -58,9 +58,7 @@ function RecipeList() {
           isLoggedIn={isLoggedIn}
         />
       </div>
-      {isTopButtonVisible && (
-        <TopButton offset={100} positionClass="bottom-12 right-4" />
-      )}
+      {isTopButtonVisible && <TopButton />}
       <Footer />
     </div>
   );

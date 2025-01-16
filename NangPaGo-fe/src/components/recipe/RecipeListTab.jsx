@@ -11,7 +11,7 @@ function RecipeListTab({ activeTab, setActiveTab, isLoggedIn }) {
           key={tab.key}
           className={`flex-1 py-3 text-center font-medium border-b-2 transition-colors duration-200 ${
             activeTab === tab.key
-              ? 'border-primary rounded-b-none'
+              ? 'border-primary rounded-b-none bg-white text-primary'
               : 'bg-white border-transparent text-text-400 rounded-b-none'
           }`}
           onClick={() => setActiveTab(tab.key)}

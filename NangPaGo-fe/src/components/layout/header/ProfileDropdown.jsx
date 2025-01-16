@@ -13,8 +13,8 @@ function ProfileDropdown({
     <div ref={dropdownRef} className="relative">
       <button
         onClick={toggleDropdown}
-        className={`group inline-flex flex-col items-center justify-center gap-1 text-sm font-medium 
-          ${isActive ? 'text-primary' : 'text-text-300 bg-white'}`}
+        className={`group inline-flex flex-col items-center justify-center gap-1 text-sm font-medium rounded-md overflow-hidden 
+          ${isActive ? 'text-primary' : 'text-text-400 bg-white'}`}
         aria-haspopup="true"
         aria-expanded={dropdownOpen}
       >
@@ -23,29 +23,28 @@ function ProfileDropdown({
         </span>
         <span>프로필</span>
       </button>
+      {dropdownOpen && (
+        <div className="absolute -bottom-1 right-6 z-10">
+          <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-secondary"></div>
+          <div className="absolute top-[1px] w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-white"></div>
+        </div>
+      )}
       <div
-        className={`absolute right-3 mt-1 w-40 bg-white border border-secondary rounded-md shadow-md transition-all ${
+        className={`absolute right-3 mt-1 w-40 bg-white border border-secondary rounded-md shadow-md overflow-hidden transition-all ${
           dropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
-        style={{ overflow: 'visible' }}
       >
-        <div className="absolute -top-2 right-3">
-          <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-secondary"></div>
-          <div className="absolute top-[1px] left-[1px] w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-white"></div>
-        </div>
-
-        <div className="px-4 py-2 text-gray-700">{nickname || '로그인'}</div>
-
-        <div className="max-h-32 overflow-hidden hover:overflow-auto">
+        <div className="px-4 py-2 text-text-900">{nickname}</div>
+        <div className="max-h-30 overflow-hidden">
           <Link
             to="/my-page"
-            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className="block px-4 py-2 text-text-900 hover:bg-secondary"
           >
             마이페이지
           </Link>
           <button
             onClick={handleLogout}
-            className="w-full text-left px-4 py-2 text-gray-700 rounded-t-none bg-white hover:bg-gray-100"
+            className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
           >
             로그아웃
           </button>

@@ -19,7 +19,7 @@ a {
 }
 
 button {
-  @apply cursor-pointer rounded bg-primary text-text-100;
+  @apply cursor-pointer rounded-md bg-primary text-text-100;
   }
 
 img {
