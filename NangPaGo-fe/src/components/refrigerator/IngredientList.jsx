@@ -6,15 +6,14 @@ const IngredientList = ({ ingredients, onDelete }) => {
   }
 
   return (
-    <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3">
+    <ul className="grid grid-cols-1 gap-4 mt-3">
       {ingredients.map((ingredient) => {
         const isLongText = ingredient.ingredientName.length >= 5;
 
         return (
           <li
             key={ingredient.ingredientName}
-            className={`border border-[var(--primary-color)] p-2 rounded flex justify-between items-center 
-              ${isLongText ? 'col-span-2 sm:col-span-2' : ''}`}
+            className={`border border-[var(--primary-color)] p-2 rounded flex justify-between items-center`}
           >
             <span className="flex-grow whitespace-normal break-words">
               {ingredient.ingredientName}
