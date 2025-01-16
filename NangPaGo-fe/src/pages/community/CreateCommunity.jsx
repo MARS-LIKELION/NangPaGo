@@ -60,7 +60,7 @@ function CreateCommunity() {
         file,
       );
       if (responseData.data && responseData.data.id) {
-        navigate(`/community/${responseData.data.id}`);
+        navigate(`/community/${responseData.data.id}`, { state: { from: '/community/new' } });
       } else {
         setError('게시글 등록 후 ID를 가져올 수 없습니다.');
       }
