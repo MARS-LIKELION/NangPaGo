@@ -31,10 +31,10 @@ function RecipeList() {
   }, []);
 
   return (
-    <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col min-w-80 max-w-screen-md md:max-w-screen-lg lg:max-w-screen-xl">
+    <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col min-w-80 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <Header />
 
-      <div className="flex-grow px-4 space-y-4">
+      <main className="flex-grow px-4 space-y-4">
         <RecipeListTab
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -57,8 +57,12 @@ function RecipeList() {
           searchTerm={searchTerm}
           isLoggedIn={isLoggedIn}
         />
-      </div>
-      {isTopButtonVisible && <TopButton />}
+      </main>
+      <aside className="w-full my-0 mx-auto fixed z-50 left-0 right-0 bottom-0 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
+        <div className="relative h-[300px]">
+          {isTopButtonVisible && <TopButton />}
+        </div>
+      </aside>
       <Footer />
     </div>
   );
