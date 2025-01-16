@@ -58,6 +58,12 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                script {
+                    def version = sh(script: "cd ${SPRING_DIR} && ./gradlew properties -q | grep 'version:' | awk '{print \$2}'", returnStdout: true).trim()
+
+                    // 환경변수로 버전 설정
+                    env.APP_VERSION = version
+                }
                 sh '''
                     mkdir -p ${SCRIPT_PATH}/NangPaGo-fe
                     mkdir -p ${SCRIPT_PATH}/NangPaGo-be

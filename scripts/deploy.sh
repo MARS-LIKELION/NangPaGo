@@ -13,17 +13,19 @@ cd /var/jenkins_home/nangpago
 # 환경변수 설정
 APP_NAME=nangpago
 LOG_FILE=./deploy.log
+VERSION=${APP_VERSION:-latest}  # APP_VERSION이 없으면 latest 사용
 
 # 블루 그린 상태 확인
 EXIST_BLUE=$(docker compose -p "${APP_NAME}-blue" -f docker-compose.blue.yml ps | grep -E "Up|running")
 
 echo "배포 시작일자 : $(date '+%Y-%m-%d %H:%M:%S')" >> $LOG_FILE
+echo "배포 버전 : ${VERSION}" >> $LOG_FILE
 
 if [ -z "$EXIST_BLUE" ]; then
   echo "blue 배포 시작 : $(date '+%Y-%m-%d %H:%M:%S')" >> $LOG_FILE
 
   # Blue 환경 배포
-  docker compose -p ${APP_NAME}-blue -f docker-compose.blue.yml up -d --build
+  VERSION=${VERSION} docker compose -p ${APP_NAME}-blue -f docker-compose.blue.yml up -d --build
 
   sleep 30
 
@@ -39,7 +41,7 @@ else
   echo "green 배포 시작 : $(date '+%Y-%m-%d %H:%M:%S')" >> $LOG_FILE
 
   # Green 환경 배포
-  docker compose -p ${APP_NAME}-green -f docker-compose.green.yml up -d --build
+  VERSION=${VERSION} docker compose -p ${APP_NAME}-green -f docker-compose.green.yml up -d --build
 
   sleep 30
 
