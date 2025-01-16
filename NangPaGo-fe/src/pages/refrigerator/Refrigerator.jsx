@@ -114,12 +114,38 @@ function Refrigerator() {
     }
   };
 
+  const handleToggleChecked = (name) => {
+    setIngredients(prev =>
+      prev.map(item =>
+        item.ingredientName === name
+          ? { ...item, checked: !item.checked }
+          : item
+      )
+    );
+  };
+
+  // 전체 선택
+  const handleSelectAll = () => {
+    setIngredients(prev =>
+      prev.map(item => ({ ...item, checked: true }))
+    );
+  };
+
+  // 전체 해제
+  const handleDeselectAll = () => {
+    setIngredients(prev =>
+      prev.map(item => ({ ...item, checked: false }))
+    );
+  };
+
   const handleFindRecipes = async () => {
-    const ingredientNames = ingredients.map(i => i.ingredientName).filter(Boolean);
-    if (ingredientNames.length === 0) return;
+    const checkedItems = ingredients.filter(i => i.checked);
+    if (checkedItems.length === 0) return;
+
     setRecipePage(1);
     setHasMoreRecipes(true);
     try {
+      const ingredientNames = checkedItems.map(i => i.ingredientName);
       const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
       setRecipes(recipeData.content);
       setHasMoreRecipes(!recipeData.last);
@@ -134,7 +160,8 @@ function Refrigerator() {
     setIsLoading(true);
     const nextPage = recipePage + 1;
     try {
-      const ingredientNames = ingredients.map(i => i.ingredientName).filter(Boolean);
+      const checkedItems = ingredients.filter(i => i.checked);
+      const ingredientNames = checkedItems.map(i => i.ingredientName);
       const recipeData = await getRecipes(ingredientNames, nextPage, recipeSize);
       setRecipes(prev => [...prev, ...recipeData.content]);
       setRecipePage(nextPage);
@@ -156,7 +183,7 @@ function Refrigerator() {
     navigate('/refrigerator');
   };
 
-  const hasIngredients = ingredients.length > 0;
+  const hasChecked = ingredients.some(i => i.checked);
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col items-center">
@@ -166,24 +193,29 @@ function Refrigerator() {
           <div className="w-full px-4 mt-4">
             <AddIngredientForm onAdd={handleAddIngredient} />
           </div>
+
           <div className="w-full px-4 mt-6 mb-4">
             <h2 className="text-lg font-medium mb-2">내 냉장고</h2>
             <IngredientList
               ingredients={ingredients}
               onDelete={handleDeleteIngredient}
+              onToggle={handleToggleChecked}
+              onSelectAll={handleSelectAll}
+              onDeselectAll={handleDeselectAll}
             />
           </div>
+
           <div className="w-full px-4 mt-auto mb-4">
             <button
               onClick={handleFindRecipes}
-              disabled={!hasIngredients}
+              disabled={!hasChecked}
               className={`w-full py-3 rounded-lg text-lg font-medium ${
-                hasIngredients
+                hasChecked
                   ? 'bg-yellow-400 text-white'
                   : 'bg-yellow-200 text-white cursor-not-allowed'
               }`}
             >
-              레시피 찾기
+              선택한 재료로 레시피 찾기
             </button>
           </div>
         </>
@@ -193,7 +225,7 @@ function Refrigerator() {
             <h2 className="text-lg font-medium mb-4">추천 레시피</h2>
             <div className="grid grid-cols-1 gap-6 min-h-[400px]">
               {recipes.length > 0 &&
-                recipes.map(recipe => (
+                recipes.map((recipe) => (
                   <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}
             </div>
