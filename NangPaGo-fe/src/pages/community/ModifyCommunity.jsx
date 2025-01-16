@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { updateCommunity, getCommunityDetail } from '../../api/community';
-import Header from '../../components/layout/header/Header.jsx';
+import Header from '../../components/common/Header.jsx';
 import Footer from '../../components/common/Footer';
 import TextInput from '../../components/community/TextInput';
 import TextArea from '../../components/community/TextArea';
@@ -16,6 +16,8 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 function ModifyCommunity() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const prevPath = sessionStorage.getItem('prevPath') || '/community';
   const { id } = useParams();
 
   const [title, setTitle] = useState('');
@@ -25,6 +27,14 @@ function ModifyCommunity() {
   const [error, setError] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [showFileSizeError, setShowFileSizeError] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.from) {
+      sessionStorage.setItem('prevPath', location.state.from);
+    }
+    return () => sessionStorage.removeItem('prevPath');
+  }, [location.state?.from]);
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -64,12 +74,44 @@ function ModifyCommunity() {
     }
   }, [file]);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = useCallback((e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile !== file) {
       setFile(selectedFile);
+      setIsBlocked(true);
     }
-  };
+  }, [file]);
+
+  useEffect(() => {
+    const handleRefreshUnload = (e) => {
+      if (isBlocked) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    const handleBackNavigation = (e) => {
+      if (isBlocked) {
+        const confirmed = window.confirm('작성 중인 내용을 저장하지 않고 이동하시겠습니까?');
+        if (confirmed) {
+          setIsBlocked(false);
+          navigate(prevPath);
+        } else {
+          history.pushState(null, '', window.location.href);
+        }
+      }
+    };
+
+    window.addEventListener('beforeunload', handleRefreshUnload);
+    window.addEventListener('popstate', handleBackNavigation);
+
+    history.pushState(null, '', window.location.href);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleRefreshUnload);
+      window.removeEventListener('popstate', handleBackNavigation);
+    };
+  }, [isBlocked]);
 
   const handleCancel = () => {
     setFile(null);
@@ -89,6 +131,7 @@ function ModifyCommunity() {
       formData.append('isPublic', isPublic);
       if (file) formData.append('file', file);
       await updateCommunity(id, formData);
+      setIsBlocked(false);
       navigate(`/community/${id}`);
     } catch (err) {
       console.error('게시글 수정 중 오류 발생:', err);
@@ -98,22 +141,32 @@ function ModifyCommunity() {
 
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
-      <Header />
+      <Header isBlocked={isBlocked} />
       <div className="flex-1 p-4">
         <TextInput
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            setIsBlocked(true);
+          }}
           placeholder="제목"
         />
         <FileUpload
           file={file}
           onChange={handleFileChange}
           imagePreview={imagePreview}
-          onCancel={handleCancel}
+          onCancel={() => {
+            setFile(null);
+            setImagePreview(null);
+            setIsBlocked(true);
+          }}
         />
         <TextArea
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => {
+            setContent(e.target.value);
+            setIsBlocked(true);
+          }}
           placeholder="내용을 입력해 주세요."
           rows={11}
         />
@@ -122,7 +175,10 @@ function ModifyCommunity() {
             type="checkbox"
             id="is-public"
             checked={!isPublic}
-            onChange={() => setIsPublic((prev) => !prev)}
+            onChange={(e) => {
+              setIsPublic(!e.target.checked);
+              setIsBlocked(true);
+            }}
             className="mr-2 w-4 h-4 appearance-none border border-gray-400 rounded-sm checked:bg-yellow-500 checked:border-yellow-500"
           />
           <label htmlFor="is-public" className="text-sm text-gray-500">
