@@ -19,9 +19,11 @@ import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
+import com.mars.NangPaGo.support.IntegrationTestSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,50 +31,30 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@ExtendWith(MockitoExtension.class)
-class RecipeCommentServiceTest {
+class RecipeCommentServiceTest extends IntegrationTestSupport {
 
-    @Mock
+    @Autowired
     private RecipeCommentRepository recipeCommentRepository;
-    @Mock
+    @Autowired
     private RecipeRepository recipeRepository;
-    @Mock
+    @Autowired
     private UserRepository userRepository;
 
-    @InjectMocks
+    @Autowired
     private RecipeCommentService recipeCommentService;
 
-    private long recipeId;
-    private String email;
-    private String content;
-
-    private Recipe recipe;
-    private User user = User.builder()
-        .email(email)
-        .build();
-    private RecipeComment comment;
-
-    @BeforeEach
-    public void setUp() {
-        // given
-        recipeId = 1L;
-        email = "dummy@nangpago.com";
-        content = "이 요리는 끔찍해요. 최악이에요";
-
-        recipe = new Recipe();
-
-        user = User.builder()
-            .email(email)
-            .build();
-
-        comment = RecipeComment.create(recipe, user, content);
+    @AfterEach
+    void tearDown() {
+        recipeCommentRepository.deleteAllInBatch();
+        recipeRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
     }
 
     @DisplayName("레시피 댓글 Page 조회")
@@ -82,27 +64,18 @@ class RecipeCommentServiceTest {
         int pageNo = 0;
         int pageSize = 3;
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        List<RecipeComment> comments = new ArrayList<>();
 
-        RecipeComment comment1 = RecipeComment.create(recipe, user, "두번째 레시피 내용");
-        RecipeComment comment2 = RecipeComment.create(recipe, user, "세번째 레시피 내용");
-        RecipeComment comment3 = RecipeComment.create(recipe, user, "네번째 레시피 내용");
+        User user = createUser("dummy@nangpago.com");
+        Recipe recipe = createRecipe("파스타");
+        for(int i = 0; i<4; i++){
+            createRecipeComment(recipe, user, i +"번째 댓글");
+        }
 
-        comments.add(comment);
-        comments.add(comment1);
-        comments.add(comment2);
-        comments.add(comment3);
-
-        Page<RecipeComment> page = new PageImpl<>(comments.subList(0, 2), pageable, comments.size());
-
-        //mocking
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.ofNullable(recipe));
-        when(recipeCommentRepository.findByRecipeId(anyLong(),
-            any(PageRequest.class))).thenReturn(page);
+        Page<RecipeComment> comments = recipeCommentRepository.findByRecipeId(recipe.getId(), pageable);
 
         // when
-        PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipeId, email,
-            pageNo, pageSize);
+        PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipe.getId(),
+            user.getEmail(), pageNo, pageSize);
 
         //then
         System.out.println(pageDto.getContent());
@@ -111,41 +84,43 @@ class RecipeCommentServiceTest {
         assertThat(pageDto.getTotalItems()).isEqualTo(4);
     }
 
+    @Transactional
     @DisplayName("레시피에 댓글 작성")
     @Test
     void create() {
         // given
-        RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(content);
+        User user = createUser("dummy@nangpago.com");
+        Recipe recipe = createRecipe("파스타");
 
-        // mocking
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(recipeCommentRepository.save(any())).thenReturn(comment);
+        RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto("댓글 작성 예시");
 
         // when
-        RecipeCommentResponseDto responseDto = recipeCommentService.create(requestDto, email, recipeId);
+        RecipeCommentResponseDto responseDto = recipeCommentService.create(requestDto, user.getEmail(), recipe.getId());
 
         // then
-        assertThat(responseDto).isNotNull();
-        verify(recipeCommentRepository, times(1)).save(any(RecipeComment.class));
+        assertThat(responseDto)
+            .extracting("content")
+            .isEqualTo("댓글 작성 예시");
+        assertThat(responseDto)
+            .extracting("email")
+            .isEqualTo("dum**@nangpago.com");
     }
 
+    @Transactional
     @DisplayName("레시피 댓글 수정")
     @Test
     void update() {
         // given
-        long commentId = anyLong();
-        assertEquals(content, comment.getContent()); // 수정 전 텍스트 확인
+        User user = createUser("dummy@nangpago.com");
+        Recipe recipe = createRecipe("파스타");
+        RecipeComment comment = createRecipeComment(recipe, user, "변경 전 댓글입니다.");
 
-        String updateText = "변경된 텍스트 내용입니다.";
+        String updateText = "변경된 댓글입니다.";
         RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(updateText); // 텍스트 변경
-
-        // mocking
-        when(recipeCommentRepository.findById(commentId)).thenReturn(Optional.ofNullable(comment));
 
         // when
         comment.updateText(updateText);
-        RecipeCommentResponseDto responseDto = recipeCommentService.update(commentId, email, requestDto);
+        RecipeCommentResponseDto responseDto = recipeCommentService.update(comment.getId(), user.getEmail(), requestDto);
 
         // then
         assertThat(responseDto).isNotNull();
@@ -156,16 +131,33 @@ class RecipeCommentServiceTest {
     @Test
     void delete() {
         // given
-        long commentId = anyLong();
-
-        // mocking
-        when(recipeCommentRepository.findById(commentId)).thenReturn(Optional.ofNullable(comment));
+        User user = createUser("dummy@nangpago.com");
+        Recipe recipe = createRecipe("파스타");
+        RecipeComment comment = createRecipeComment(recipe, user, "댓글");
 
         // when
-        recipeCommentService.delete(commentId, email);
+        recipeCommentService.delete(comment.getId(), user.getEmail());
 
         // then
-        verify(recipeCommentRepository, times(1)).delete(any(RecipeComment.class));
-        assertFalse(recipeCommentRepository.existsById(commentId));
+        assertFalse(recipeCommentRepository.existsById(comment.getId()));
+    }
+    
+    private User createUser(String email) {
+        User user = User.builder()
+            .email(email)
+            .build();
+        return userRepository.save(user);
+    }
+
+    private Recipe createRecipe(String name) {
+        Recipe recipe =  Recipe.builder()
+            .name(name)
+            .build();
+        return recipeRepository.save(recipe);
+    }
+
+    private RecipeComment createRecipeComment(Recipe recipe, User user,String comment) {
+        RecipeComment recipeComment = RecipeComment.create(recipe, user, comment);
+        return recipeCommentRepository.save(recipeComment);
     }
 }
