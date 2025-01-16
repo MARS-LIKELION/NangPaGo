@@ -147,7 +147,8 @@ function Refrigerator() {
 
   /**
    * (3) "레시피 찾기" 버튼 클릭
-   * - 그래도 재료가 없으면 함수 초반에 return
+   * - 여기서는 "재료가 없을 때는 버튼 자체가 disable"이므로 실제로 눌러도 함수가 안 불릴 수 있음
+   * - 그래도 혹시 몰라 안전 장치로 "재료 없으면 return" 추가
    */
   const handleFindRecipes = async () => {
     const ingredientNames = ingredients
@@ -220,6 +221,9 @@ function Refrigerator() {
     }
   };
 
+  // 버튼 활성/비활성 조건
+  const hasIngredients = ingredients.length > 0;
+
   return (
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col items-center">
       <Header title="냉장고 파먹기" />
@@ -239,11 +243,23 @@ function Refrigerator() {
             />
           </div>
 
-          {/* 레시피 찾기 버튼 (옅은 노란색/비활성 로직 제거) */}
+          {/* 
+            ★ 재료가 없으면:
+              - bg-yellow-200 + cursor-not-allowed + disabled
+            ★ 재료가 있으면:
+              - bg-yellow-400 + clickable
+          */}
           <div className="w-full px-4 mt-auto mb-4">
             <button
               onClick={handleFindRecipes}
-              className="w-full py-3 rounded-lg text-lg font-medium bg-[var(--primary-color)] text-white"
+              disabled={!hasIngredients}
+              className={`w-full py-3 rounded-lg text-lg font-medium 
+                ${
+                  hasIngredients
+                    ? 'bg-yellow-400 text-white'
+                    : 'bg-yellow-200 text-white cursor-not-allowed'
+                }
+              `}
             >
               레시피 찾기
             </button>
