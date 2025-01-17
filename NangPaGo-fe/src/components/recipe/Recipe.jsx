@@ -11,7 +11,7 @@ import { getLikeCount } from '../../api/recipe.js';
 import { styles } from '../common/Image';
 
 import { useNavigate } from 'react-router-dom';
-import LoginPromptModal from '../../common/modal/LoginPromptModal';
+import LoginPromptModal from '../../common/modal/LoginModal';
 
 function Recipe({ recipe }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);

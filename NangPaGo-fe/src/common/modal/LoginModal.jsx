@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 
-function LoginModal({ isOpen, onClose }) {
+function LoginModal({ isOpen, onConfirm, onClose }) {
   if (!isOpen) return null;
 
   return (
@@ -13,12 +13,12 @@ function LoginModal({ isOpen, onClose }) {
         >
           <FaTimes className="w-6 h-6" />
         </button>
-        <p className="text-center">로그인 하시겠습니까?</p>
+        <p className="text-center mt-5 mb-5">로그인 하시겠습니까?</p>
         <button
-          onClick={() => (window.location.href = '/login')}
-          className="mt-4 bg-[var(--primary-color)] text-white px-5 py-3 rounded-lg"
-        >
-          로그인
+            onClick={onConfirm}
+            className="bg-yello-300 text-black px-5 py-2 rounded-md"
+          >
+            로그인
         </button>
       </div>
     </div>
