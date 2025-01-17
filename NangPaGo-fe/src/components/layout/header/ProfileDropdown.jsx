@@ -1,22 +1,16 @@
-import NavItem from './NavItem.jsx';
+import { FaRegUser } from 'react-icons/fa';
 
 function ProfileDropdown({
   dropdownOpen,
   toggleDropdown,
   dropdownRef,
   handleLogout,
-  handleLinkClick,
   isActive,
-  icon,
   nickname,
 }) {
   return (
     <div ref={dropdownRef} className="relative">
-      <NavItem
-        to="#"
-        isActive={isActive}
-        label="프로필"
-        Icon={icon}
+      <button
         onClick={toggleDropdown}
         className={`group inline-flex flex-col items-center justify-center gap-1 text-sm font-medium rounded-md overflow-hidden 
           ${isActive ? 'text-primary bg-white' : 'text-text-400 bg-white'}`}
@@ -43,19 +37,19 @@ function ProfileDropdown({
           {nickname}
         </div>
         <div className="max-h-30 overflow-hidden">
-        <button
-          to="/my-page"
-          onClick={() => handleLinkClick('/my-page')}
-          className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
-        >
-          마이페이지
-        </button>
-        <button
-          onClick={handleLogout}
-          className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
-        >
-          로그아웃
-        </button>
+          <button
+            to="/my-page"
+            onClick={() => handleLinkClick('/my-page')}
+            className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
+          >
+            마이페이지
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
+          >
+            로그아웃
+          </button>
         </div>
       </div>
     </div>
