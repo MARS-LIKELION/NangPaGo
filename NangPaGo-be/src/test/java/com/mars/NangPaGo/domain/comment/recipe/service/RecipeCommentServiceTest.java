@@ -21,9 +21,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 class RecipeCommentServiceTest extends IntegrationTestSupport {
 
@@ -50,7 +47,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         // given
         int pageNo = 0;
         int pageSize = 3;
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
 
         User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
@@ -65,15 +61,14 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         recipeRepository.save(recipe);
         recipeCommentRepository.saveAll(comments);
 
-        Page<RecipeComment> commentPage = recipeCommentRepository.findByRecipeId(recipe.getId(), pageable);
-
         // when
         PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipe.getId(),
             user.getEmail(), pageNo, pageSize);
 
         //then
-        assertThat(pageDto.getTotalPages()).isEqualTo(2);
-        assertThat(pageDto.getTotalItems()).isEqualTo(4);
+        assertThat(pageDto)
+            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .containsExactly(2, 4L);
     }
 
     @DisplayName("레시피에 댓글을 작성할 수 있다.")
