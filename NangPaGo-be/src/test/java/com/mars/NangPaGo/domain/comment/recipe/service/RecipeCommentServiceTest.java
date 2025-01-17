@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 class RecipeCommentServiceTest extends IntegrationTestSupport {
 
@@ -77,7 +76,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         assertThat(pageDto.getTotalItems()).isEqualTo(4);
     }
 
-    @Transactional
     @DisplayName("레시피에 댓글을 작성할 수 있다.")
     @Test
     void create() {
@@ -99,7 +97,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .containsExactly("댓글 작성 예시", "dum**@nangpago.com");
     }
 
-    @Transactional
     @DisplayName("레시피 댓글을 수정할 수 있다.")
     @Test
     void update() {
@@ -124,7 +121,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         assertThat(responseDto).extracting("content").isEqualTo(updateText);
     }
 
-    @Transactional
     @DisplayName("레시피 댓글을 삭제할 수 있다.")
     @Test
     void delete() {
@@ -144,7 +140,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         assertFalse(recipeCommentRepository.existsById(comment.getId()));
     }
 
-    @Transactional
     @DisplayName("다른 유저의 댓글을 삭제할 때 예외를 발생시킬 수 있다.")
     @Test
     void validateOwnershipException() {
@@ -195,7 +190,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
-    @Transactional
     @DisplayName("레시피 댓글을 수정할 때 댓글을 찾을 수 없을 때 예외를 발생시킬 수 있다.")
     @Test
     void validateCommentException() {
@@ -216,7 +210,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .isInstanceOf(NPGException.class)
             .hasMessage("댓글을 찾을 수 없습니다.");
     }
-
 
     private User createUser(String email) {
         return User.builder()
