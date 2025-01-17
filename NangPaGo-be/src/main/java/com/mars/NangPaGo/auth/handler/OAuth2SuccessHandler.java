@@ -55,7 +55,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         User user = validateUser(email);
 
-        if (!isProviderMatching(user, provider)) {
+        if (!isDuplicatedEmail(user, provider)) {
             redirectToErrorPage(response, user.getOauth2Provider().name());
             return;
         }
@@ -70,7 +70,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자 검증 에러: " + email));
     }
 
-    private boolean isProviderMatching(User user, String provider) {
+    private boolean isDuplicatedEmail(User user, String provider) {
         return user.getOauth2Provider().name().equals(provider);
     }
 
