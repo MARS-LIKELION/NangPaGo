@@ -12,10 +12,10 @@ public class TestJwtProvider {
     }
 
     public String createTestAccessToken(String email, String role) {
-        return jwtUtil.createJwt("access", "id", email, role, 3600000L); // 1시간
+        return jwtUtil.createJwt("access", 1L ,email, role, 3600000L); // 1시간
     }
 
     public String createTestRefreshToken(String email, String role) {
-        return jwtUtil.createJwt("refresh", "id", email, role, 86400000L); // 24시간
+        return jwtUtil.createJwt("refresh", 1L, email, role, 86400000L); // 24시간
     }
 }
