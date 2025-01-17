@@ -55,7 +55,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         User user = validateUser(email);
 
-        if (!isDuplicatedEmail(user, provider)) {
+        if (isDuplicatedEmail(user, provider)) {
             redirectToErrorPage(response, user.getOauth2Provider().name());
             return;
         }
