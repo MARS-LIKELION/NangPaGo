@@ -73,7 +73,7 @@ function Header({ isBlocked = false }) {
       <div className="flex flex-row items-center justify-between">
         <div className="flex items-center justify-center w-17 h-17">
           <img
-            src="/public/logo.png"
+            src="/logo.png"
             alt="냉파고"
             className="h-12 w-auto cursor-pointer"
             onClick={() => handleLinkClick('/')}
