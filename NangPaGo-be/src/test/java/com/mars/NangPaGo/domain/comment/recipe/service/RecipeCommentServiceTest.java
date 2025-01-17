@@ -73,14 +73,12 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             user.getEmail(), pageNo, pageSize);
 
         //then
-        System.out.println(pageDto.getContent());
-
         assertThat(pageDto.getTotalPages()).isEqualTo(2);
         assertThat(pageDto.getTotalItems()).isEqualTo(4);
     }
 
     @Transactional
-    @DisplayName("레시피에 댓글 작성한다.")
+    @DisplayName("레시피에 댓글을 작성할 수 있다.")
     @Test
     void create() {
         // given
@@ -97,15 +95,12 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(responseDto)
-            .extracting("content")
-            .isEqualTo("댓글 작성 예시");
-        assertThat(responseDto)
-            .extracting("email")
-            .isEqualTo("dum**@nangpago.com");
+            .extracting("content", "email")
+            .containsExactly("댓글 작성 예시", "dum**@nangpago.com");
     }
 
     @Transactional
-    @DisplayName("레시피 댓글 수정한다.")
+    @DisplayName("레시피 댓글을 수정할 수 있다.")
     @Test
     void update() {
         // given
@@ -130,7 +125,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("레시피 댓글 삭제한다.")
+    @DisplayName("레시피 댓글을 삭제할 수 있다.")
     @Test
     void delete() {
         // given
@@ -150,7 +145,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("다른 유저의 댓글 삭제, 예외를 발생한다.")
+    @DisplayName("다른 유저의 댓글을 삭제할 때 예외를 발생시킬 수 있다.")
     @Test
     void validateOwnershipException() {
         // given
@@ -170,7 +165,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("댓글을 수정/삭제할 권한이 없습니다.");
     }
 
-    @DisplayName("레시피 댓글 작성, 레시피의 ID가 없을 때 예외를 발생한다.")
+    @DisplayName("레시피를 찾을 수 없을 때 예외를 발생시킬 수 있다.")
     @Test
     void validateRecipeException() {
         // given
@@ -185,7 +180,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("레시피를 찾을 수 없습니다.");
     }
 
-    @DisplayName("레시피 댓글 작성, 유저의 ID가 없을 때 예외를 발생한다.")
+    @DisplayName("사용자를 찾을 수 없을 때 예외를 발생시킬 수 있다.")
     @Test
     void findUserByEmailException() {
         // given
@@ -201,7 +196,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("레시피 댓글 수정, 댓글의 ID가 없을 때 예외를 발생한다.")
+    @DisplayName("레시피 댓글을 수정할 때 댓글을 찾을 수 없을 때 예외를 발생시킬 수 있다.")
     @Test
     void validateCommentException() {
         // given
