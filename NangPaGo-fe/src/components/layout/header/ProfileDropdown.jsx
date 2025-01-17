@@ -1,27 +1,28 @@
-import { FaRegUser } from 'react-icons/fa';
+import NavItem from './NavItem.jsx';
 
 function ProfileDropdown({
   dropdownOpen,
   toggleDropdown,
   dropdownRef,
+  handleLinkClick,
   handleLogout,
   isActive,
+  icon,
   nickname,
 }) {
   return (
     <div ref={dropdownRef} className="relative">
-      <button
+      <NavItem
+        to="#"
+        isActive={isActive}
+        label="프로필"
+        Icon={icon}
         onClick={toggleDropdown}
-        className={`group inline-flex flex-col items-center justify-center gap-1 text-sm font-medium rounded-md overflow-hidden 
-          ${isActive ? 'text-primary bg-white' : 'text-text-400 bg-white'}`}
-        aria-haspopup="true"
-        aria-expanded={dropdownOpen}
-      >
-        <span className="inline-flex items-center justify-center">
-          <FaRegUser size={24} />
-        </span>
-        <span>프로필</span>
-      </button>
+        additionalProps={{
+          'aria-haspopup': true,
+          'aria-expanded': dropdownOpen,
+        }}
+      />
       {dropdownOpen && (
         <div className="absolute -bottom-1 right-6 z-10">
           <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-secondary"></div>
@@ -36,6 +37,7 @@ function ProfileDropdown({
         <div className="px-4 py-2 text-text-900 overflow-hidden text-ellipsis whitespace-nowrap">
           {nickname}
         </div>
+
         <div className="max-h-30 overflow-hidden">
           <button
             to="/my-page"
