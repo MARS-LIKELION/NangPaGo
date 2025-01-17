@@ -1,4 +1,10 @@
+import React, { useState } from 'react';
+import BuildVersionModal from '../../common/modal/BuildVersionModal';
+import versionFetcher from '../../api/footer';
+
 function Footer() {
+  const [showBuildVersionModal, setShowBuildVersionModal] = useState(false);
+  const { version, fetchVersion } = versionFetcher();
   const links = [
     {
       href: 'https://github.com/MARS-LIKELION/NangPaGo',
@@ -30,9 +36,22 @@ function Footer() {
           </a>
         ))}
       </div>
-      <p className="text-text-900 text-sm">
-        © 2024 NANGPAGO. ALL RIGHTS RESERVED.
+      <p
+        className="text-gray-900 text-sm cursor-pointer"
+        onClick={() => {
+          fetchVersion();
+          setShowBuildVersionModal(true);
+        }}
+      >
+        © 2025 NANGPAGO. ALL RIGHTS RESERVED.
       </p>
+      {showBuildVersionModal && (
+        <BuildVersionModal
+          isOpen={showBuildVersionModal}
+          onClose={() => setShowBuildVersionModal(false)}
+          version={version}
+        />
+      )}
     </footer>
   );
 }
