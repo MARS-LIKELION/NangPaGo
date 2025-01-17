@@ -17,7 +17,7 @@ function Footer() {
 
   return (
     <footer className={footerContainerClass}>
-      <div className="flex gap-4 mb-2 md:mb-0">
+      <div className="flex gap-4 mb-2 md:mb-0 z-10">
         {links.map((link, index) => (
           <a
             key={index}

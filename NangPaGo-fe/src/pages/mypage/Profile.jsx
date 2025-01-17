@@ -23,10 +23,10 @@ function Profile() {
   const { items, isLoading, hasMore, fetchTabData } = useTabData(activeTab);
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
+    <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col justify-between max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <div>
         <Header />
-        <div className="flex-1 px-6 bg-white">
+        <div className="flex-1 px-4 bg-white">
           <ProfileHeader
             nickName={myPageInfo.nickName}
             providerName={myPageInfo.providerName}
@@ -47,7 +47,7 @@ function Profile() {
               hasMore={hasMore}
               onLoadMore={handleLoadMore}
               onItemClick={handleItemClick}
-              isLoading={isLoading} // 로딩 상태 전달
+              isLoading={isLoading}
             />
           </div>
         </div>

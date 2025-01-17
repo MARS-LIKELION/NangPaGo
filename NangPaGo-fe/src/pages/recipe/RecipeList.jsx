@@ -51,7 +51,6 @@ function RecipeList() {
             />
           </div>
         )}
-
         <RecipeListContent
           activeTab={activeTab}
           searchTerm={searchTerm}
@@ -59,9 +58,7 @@ function RecipeList() {
         />
       </main>
       <aside className="w-full my-0 mx-auto fixed z-50 left-0 right-0 bottom-0 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
-        <div className="relative h-[300px]">
-          {isTopButtonVisible && <TopButton />}
-        </div>
+        <div>{isTopButtonVisible && <TopButton />}</div>
       </aside>
       <Footer />
     </div>

@@ -27,8 +27,8 @@ const ProfileTabs = ({ activeTab, totalCounts, onTabChange }) => (
         onClick={() => onTabChange(tab.key)}
         className={`flex flex-col items-center py-3 ${
           activeTab === tab.key
-            ? 'text-black border-b-2 border-[var(--secondary-color)]'
-            : 'text-gray-400'
+            ? 'text-primary border-b-2 border-primary bg-white rounded-b-none'
+            : 'text-text-400 bg-white '
         }`}
       >
         {tab.icon}

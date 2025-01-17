@@ -6,7 +6,7 @@ function CreateButton({
   isTopButtonVisible,
   containerClass = '',
   basePositionClass = '',
-  icon, // 추가된 icon prop
+  icon,
 }) {
   const [buttonPositionClass, setButtonPositionClass] =
     useState(basePositionClass);
@@ -22,7 +22,7 @@ function CreateButton({
   return (
     <button
       onClick={onClick}
-      className={`fixed bg-[var(--primary-color)] text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-9999 
+      className={`fixed bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-50 
         transition-all duration-300 ease-in-out transform 
         ${containerClass} ${buttonPositionClass}`}
       aria-label="Create new post"
