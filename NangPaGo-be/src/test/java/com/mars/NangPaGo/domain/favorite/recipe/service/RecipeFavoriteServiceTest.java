@@ -14,15 +14,12 @@ import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import com.mars.NangPaGo.support.IntegrationTestSupport;
-import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-
 
 class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
@@ -43,7 +40,6 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         userRepository.deleteAllInBatch();
     }
 
-    @Transactional
     @DisplayName("레시피를 즐겨찾기 할 수 있다.")
     @Test
     void addRecipeFavorite() {
@@ -60,12 +56,10 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(favoriteResponseDto)
-            .extracting("favorited")
-            .isEqualTo(true);
-        assertThat(favoriteResponseDto.recipeId()).isEqualTo(recipe.getId());
+            .extracting("favorited", "recipeId")
+            .containsExactly(true, recipe.getId());
     }
 
-    @Transactional
     @DisplayName("등록된 레시피 즐겨찾기를 취소한다.")
     @Test
     void cancelRecipeFavorite() {
@@ -84,11 +78,10 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(favoriteResponseDto)
-            .extracting("favorited")
-            .isEqualTo(false);
-        assertThat(favoriteResponseDto.recipeId()).isEqualTo(recipe.getId());
+            .extracting("favorited", "recipeId")
+            .containsExactly(false, recipe.getId());
     }
-    
+
     @DisplayName("즐겨찾기한 레시피의 즐겨찾기 상태는 true 이다.")
     @Test
     void isFavoriteByUser() {
@@ -112,18 +105,12 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     @Test
     void isNotFavoriteByUser() {
         // given
-        User user2 = createUser("anotherUser@another.com");
+        User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
-        RecipeFavorite recipeFavorite = createRecipeFavorite(user2, recipe);
-
-        userRepository.save(user2);
         recipeRepository.save(recipe);
-        recipeFavoriteRepository.save(recipeFavorite);
-
-        String email = "dummy@nangpago.com";
-
+        
         // when
-        boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), email);
+        boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), user.getEmail());
 
         // then
         assertThat(favoriteByUser1).isFalse();
@@ -154,8 +141,9 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
             user.getEmail(), null);
 
         //then
-        assertThat(recipeFavorites.getTotalPages()).isEqualTo(1);
-        assertThat(recipeFavorites.getTotalItems()).isEqualTo(4);
+        assertThat(recipeFavorites)
+            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .containsExactly(1, 4L);
         assertThat(recipeFavorites.getContent().get(1).name()).isEqualTo("순대국밥");
     }
 
