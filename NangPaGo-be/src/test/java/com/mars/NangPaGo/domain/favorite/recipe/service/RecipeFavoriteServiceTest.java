@@ -51,6 +51,9 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
 
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+
         // when
         RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipe.getId(),
             user.getEmail());
@@ -71,6 +74,10 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         Recipe recipe = createRecipe("파스타");
         RecipeFavorite recipeFavorite = createRecipeFavorite(user, recipe);
 
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeFavoriteRepository.save(recipeFavorite);
+
         // when
         RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipe.getId(),
             user.getEmail());
@@ -90,6 +97,10 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         Recipe recipe = createRecipe("파스타");
         RecipeFavorite recipeFavorite = createRecipeFavorite(user, recipe);
 
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeFavoriteRepository.save(recipeFavorite);
+
         // when
         boolean favorite = recipeFavoriteService.isFavorite(recipe.getId(), user.getEmail());
 
@@ -106,6 +117,10 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         Recipe recipe = createRecipe("파스타");
         RecipeFavorite recipeFavorite = createRecipeFavorite(user2, recipe);
 
+        userRepository.save(user1);
+        userRepository.save(user2);
+        recipeRepository.save(recipe);
+        recipeFavoriteRepository.save(recipeFavorite);
 
         // when
         boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), user1.getEmail());
@@ -128,15 +143,16 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
             createRecipeForPage("파스타")
         );
 
-        for (Recipe recipe : recipes) {
-            createRecipeFavorite(user, recipe);
-        }
+        List<RecipeFavorite> favorites = recipes.stream().map(
+            recipe -> createRecipeFavorite(user, recipe)).toList();
 
-        Pageable pageable = null;
+        userRepository.save(user);
+        recipeRepository.saveAll(recipes);
+        recipeFavoriteRepository.saveAll(favorites);
 
         // when
         PageDto<RecipeFavoriteListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
-            user.getEmail(), pageable);
+            user.getEmail(), null);
 
         //then
         assertThat(recipeFavorites.getTotalPages()).isEqualTo(1);
@@ -148,10 +164,14 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     @Test
     void NotCorrectUserException() {
         // given
-        User user = notSaveCreateUser("nonExistent@nangpago.com");
+        User user = createUser("nonExistent@nangpago.com");
         setAuthenticationAsUserWithToken(user.getEmail());
         Recipe recipe = createRecipe("파스타");
 
+        //현재 유저는 저장하지 않음
+        //userRepository.save(user);
+        recipeRepository.save(recipe);
+        
         // when, then
         assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipe.getId(), user.getEmail()))
             .isInstanceOf(NPGException.class)
@@ -164,37 +184,32 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         // given
         User user = createUser("dummy@nangpago.com");
 
+        userRepository.save(user);
+
         // when, then
         assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(1L, user.getEmail()))
             .isInstanceOf(NPGException.class)
             .hasMessage("레시피를 찾을 수 없습니다.");
     }
 
-    private User notSaveCreateUser(String email){
+    private User createUser(String email) {
         return User.builder()
             .email(email)
             .build();
     }
-    private User createUser(String email) {
-        User user = User.builder()
-            .email(email)
-            .build();
-        return userRepository.save(user);
-    }
 
     private Recipe createRecipe(String name) {
-        Recipe recipe = Recipe.builder()
+        return Recipe.builder()
             .name(name)
             .build();
-        return recipeRepository.save(recipe);
     }
 
     private RecipeFavorite createRecipeFavorite(User user, Recipe recipe) {
-        return recipeFavoriteRepository.save(RecipeFavorite.of(user, recipe));
+        return RecipeFavorite.of(user, recipe);
     }
 
     private Recipe createRecipeForPage(String name) {
-        Recipe recipe = Recipe.builder()
+        return Recipe.builder()
             .name(name)
             .mainImage("mainUrl")
             .ingredients("초콜릿, 파인애플, 두리안, 참기름")
@@ -203,6 +218,5 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
             .category("반찬")
             .cookingMethod("기타")
             .build();
-        return recipeRepository.save(recipe);
     }
 }
