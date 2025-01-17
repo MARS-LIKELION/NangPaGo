@@ -1,6 +1,7 @@
 package com.mars.NangPaGo.domain.comment.recipe.dto;
 
 import com.mars.NangPaGo.domain.comment.recipe.entity.RecipeComment;
+import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import java.time.LocalDateTime;
 import lombok.Builder;
 
@@ -8,15 +9,19 @@ import lombok.Builder;
 public record RecipeCommentResponseDto(
     Long id,
     String content,
+    String imageUrl,
+    String title,
     String email,
     boolean isOwnedByUser,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
-    public static RecipeCommentResponseDto from(RecipeComment recipeComment, String email) {
+    public static RecipeCommentResponseDto from(RecipeComment recipeComment, Recipe recipe, String email) {
         return RecipeCommentResponseDto.builder()
             .id(recipeComment.getId())
             .content(recipeComment.getContent())
+            .imageUrl(recipe.getMainImage())
+            .title(recipe.getName())
             .email(maskEmail(recipeComment.getUser().getEmail()))
             .isOwnedByUser(recipeComment.getUser().getEmail().equals(email))
             .createdAt(recipeComment.getCreatedAt())

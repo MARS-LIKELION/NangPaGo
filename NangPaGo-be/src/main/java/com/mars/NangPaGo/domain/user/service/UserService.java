@@ -8,6 +8,7 @@ import com.mars.NangPaGo.domain.comment.recipe.repository.RecipeCommentRepositor
 import com.mars.NangPaGo.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.NangPaGo.domain.favorite.recipe.repository.RecipeFavoriteRepository;
 import com.mars.NangPaGo.domain.recipe.dto.RecipeResponseDto;
+import com.mars.NangPaGo.domain.recipe.entity.Recipe;
 import com.mars.NangPaGo.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.NangPaGo.domain.refrigerator.repository.RefrigeratorRepository;
 import com.mars.NangPaGo.domain.user.dto.MyPageDto;
@@ -74,8 +75,10 @@ public class UserService {
 
     public PageDto<RecipeCommentResponseDto> getMyComments(String email, int pageNo, int pageSize) {
         return PageDto.of(
-            recipeCommentRepository.findByUserEmail(email, PageRequest.of(pageNo, pageSize))
-                .map(recipeComment -> RecipeCommentResponseDto.from(recipeComment, email))
+            recipeCommentRepository.findByUserEmailWithRecipe(email, PageRequest.of(pageNo, pageSize))
+                .map(recipeComment -> {
+                    return RecipeCommentResponseDto.from(recipeComment, recipeComment.getRecipe(), email);
+                })
         );
     }
 

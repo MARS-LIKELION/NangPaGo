@@ -31,37 +31,39 @@ public class RecipeCommentService {
     private final UserRepository userRepository;
 
     public PageDto<RecipeCommentResponseDto> pagedCommentsByRecipe(Long recipeId, String email, int pageNo, int pageSize) {
-        validateRecipe(recipeId);
+        Recipe recipe = findRecipeById(recipeId);
         return PageDto.of(
             recipeCommentRepository.findByRecipeId(recipeId, createPageRequest(pageNo, pageSize))
-                .map(comment -> RecipeCommentResponseDto.from(comment, email))
+                .map(comment -> RecipeCommentResponseDto.from(comment, recipe, email))
         );
     }
 
     @Transactional
     public RecipeCommentResponseDto create(RecipeCommentRequestDto requestDto, String email, Long recipeId) {
         User user = findUserByEmail(email);
-        return RecipeCommentResponseDto.from(recipeCommentRepository.save(
-            RecipeComment.create(validateRecipe(recipeId), user, requestDto.content())), user.getEmail());
+        Recipe recipe = findRecipeById(recipeId);
+        RecipeComment newComment = RecipeComment.create(recipe, user, requestDto.content());
+        RecipeComment savedComment = recipeCommentRepository.save(newComment);
+        return RecipeCommentResponseDto.from(savedComment, recipe, user.getEmail());
     }
 
     @Transactional
     public RecipeCommentResponseDto update(Long commentId, String email, RecipeCommentRequestDto requestDto) {
-        RecipeComment comment = validateComment(commentId);
+        RecipeComment comment = findCommentById(commentId);
         validateOwnership(comment, email);
         comment.updateText(requestDto.content());
-        return RecipeCommentResponseDto.from(comment, email);
+        return RecipeCommentResponseDto.from(comment, comment.getRecipe(), email);
     }
 
     @Transactional
     public void delete(Long commentId, String email) {
-        RecipeComment comment = validateComment(commentId);
+        RecipeComment comment = findCommentById(commentId);
         validateOwnership(comment, email);
         recipeCommentRepository.delete(comment);
     }
 
     public int countCommentsByRecipe(Long recipeId) {
-        validateRecipe(recipeId);
+        findRecipeById(recipeId);
         return recipeCommentRepository.countByRecipeId(recipeId);
     }
 
@@ -71,19 +73,19 @@ public class RecipeCommentService {
         }
     }
 
-    private Recipe validateRecipe(Long recipeId) {
+    private Recipe findRecipeById(Long recipeId) {
         return recipeRepository.findById(recipeId)
             .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
+    }
+
+    private RecipeComment findCommentById(Long commentId) {
+        return recipeCommentRepository.findById(commentId)
+            .orElseThrow(() -> NOT_FOUND_COMMENT.of("댓글을 찾을 수 없습니다."));
     }
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
-    }
-
-    private RecipeComment validateComment(Long commentId) {
-        return recipeCommentRepository.findById(commentId)
-            .orElseThrow(() -> NOT_FOUND_COMMENT.of("댓글을 찾을 수 없습니다."));
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {
