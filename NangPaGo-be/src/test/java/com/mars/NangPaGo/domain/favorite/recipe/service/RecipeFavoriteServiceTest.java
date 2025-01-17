@@ -112,18 +112,18 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     @Test
     void isNotFavoriteByUser() {
         // given
-        User user1 = createUser("dummy@nangpago.com");
         User user2 = createUser("anotherUser@another.com");
         Recipe recipe = createRecipe("파스타");
         RecipeFavorite recipeFavorite = createRecipeFavorite(user2, recipe);
 
-        userRepository.save(user1);
         userRepository.save(user2);
         recipeRepository.save(recipe);
         recipeFavoriteRepository.save(recipeFavorite);
 
+        String email = "dummy@nangpago.com";
+
         // when
-        boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), user1.getEmail());
+        boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), email);
 
         // then
         assertThat(favoriteByUser1).isFalse();
