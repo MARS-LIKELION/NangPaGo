@@ -10,6 +10,9 @@ import Footer from '../common/Footer';
 import { getLikeCount } from '../../api/recipe.js';
 import { styles } from '../common/Image';
 
+import { useNavigate } from 'react-router-dom';
+import LoginPromptModal from '../../common/modal/LoginPromptModal';
+
 function Recipe({ recipe }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);
   const isLoggedIn = Boolean(userEmail);
@@ -18,6 +21,8 @@ function Recipe({ recipe }) {
   const [isStarActive, setIsStarActive] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchLikeCount();
@@ -80,6 +85,17 @@ function Recipe({ recipe }) {
     } catch (error) {
       console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다.', error);
     }
+  };
+
+  // 모달: "확인" 누르면 로그인 페이지로 이동
+  const handleModalConfirm = () => {
+    setShowLoginModal(false);
+    navigate('/login');
+  };
+
+  // 모달: "취소" 누르면 모달 닫기
+  const handleModalClose = () => {
+    setShowLoginModal(false);
   };
 
   return (
@@ -170,6 +186,12 @@ function Recipe({ recipe }) {
         <RecipeComment recipeId={recipe.id} />
       </div>
       <Footer />
+
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onConfirm={handleModalConfirm}
+        onClose={handleModalClose}
+      />
     </div>
   );
 }
