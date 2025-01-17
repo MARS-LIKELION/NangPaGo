@@ -2,10 +2,10 @@ import { Fragment, useEffect, useState } from 'react';
 import { FaHeart, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import CommunityComment from './comment/CommunityComment';
-import Header from '../common/Header';
+import Header from '../layout/header/Header.jsx';
 import Footer from '../common/Footer';
 import CreateButton from '../common/CreateButton';
-import { styles } from '../common/Image'
+import { styles } from '../common/Image';
 import {
   getLikeCount,
   getLikeStatus,
@@ -63,8 +63,8 @@ function Community({ community }) {
     }
   };
 
-  const handleCreateClick = () => navigate('/community/new');
-  const handleEditClick = () => navigate(`/community/${community.id}/modify`);
+  const handleCreateClick = () => navigate('/community/new', { state: { from: window.location.pathname } });
+  const handleEditClick = () => navigate(`/community/${community.id}/modify`, { state: { from: window.location.pathname } });
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (

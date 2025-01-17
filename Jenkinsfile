@@ -4,6 +4,7 @@ pipeline {
         SCRIPT_PATH = '/var/jenkins_home/nangpago'
         SPRING_DIR = 'NangPaGo-be'
         REACT_DIR = 'NangPaGo-fe'
+        DISCORD_WEBHOOK = credentials('discord-webhook')
     }
     tools {
         gradle 'gradle-8.11'
@@ -58,6 +59,12 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                script {
+                    def version = sh(script: "cd ${SPRING_DIR} && ./gradlew properties -q | grep 'version:' | awk '{print \$2}'", returnStdout: true).trim()
+
+                    // 환경변수로 버전 설정
+                    env.APP_VERSION = version
+                }
                 sh '''
                     mkdir -p ${SCRIPT_PATH}/NangPaGo-fe
                     mkdir -p ${SCRIPT_PATH}/NangPaGo-be
@@ -85,6 +92,37 @@ pipeline {
                     '''
                 }
             }
+        }
+    }
+    post {
+        success {
+            discordSend description: """
+                🎉 **빌드 및 배포 성공**
+
+                **프로젝트**: ${env.JOB_NAME}
+                **빌드 번호**: #${env.BUILD_NUMBER}
+                **버전**: ${env.APP_VERSION}
+                **소요 시간**: ${currentBuild.durationString}
+                """,
+                link: env.BUILD_URL,
+                result: currentBuild.currentResult,
+                title: "NangPaGo 빌드/배포 성공",
+                webhookURL: DISCORD_WEBHOOK
+        }
+
+        failure {
+            discordSend description: """
+                ❌ **빌드 또는 배포 실패**
+
+                **프로젝트**: ${env.JOB_NAME}
+                **빌드 번호**: #${env.BUILD_NUMBER}
+                **버전**: ${env.APP_VERSION}
+                **소요 시간**: ${currentBuild.durationString}
+                """,
+                link: env.BUILD_URL,
+                result: currentBuild.currentResult,
+                title: "NangPaGo 빌드/배포 실패",
+                webhookURL: DISCORD_WEBHOOK
         }
     }
 }

@@ -3,6 +3,7 @@ services:
     build:
       context: ./NangPaGo-be
       dockerfile: Dockerfile-be
+    image: nangpago-backend:${APP_VERSION}
     container_name: nangpago-backend-blue
     ports:
       - "9174:${API_SERVER_PORT}"
@@ -18,6 +19,7 @@ services:
     build:
       context: ./NangPaGo-fe
       dockerfile: Dockerfile-fe
+    image: nangpago-frontend:${APP_VERSION}
     container_name: nangpago-front-blue
     ports:
       - "7429:${VITE_FRONT_SERVER_PORT}"

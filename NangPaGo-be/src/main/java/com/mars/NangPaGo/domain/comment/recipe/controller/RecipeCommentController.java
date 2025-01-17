@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Tag(name = "레시피 댓글 API", description = "레시피 댓글 관련 API")
-@RequestMapping("/api/recipe/{recipeId}/comments")
+@RequestMapping("/api/recipe/{recipeId}/comment")
 @RestController
 public class RecipeCommentController {
 

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
-import Header from '../../components/common/Header.jsx';
+import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/common/Footer.jsx';
 import TopButton from '../../components/common/TopButton';
 
@@ -31,10 +31,10 @@ function RecipeList() {
   }, []);
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
+    <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col min-w-80 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <Header />
 
-      <div className="flex-grow px-4 space-y-4">
+      <main className="flex-grow px-4 space-y-4">
         <RecipeListTab
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -42,12 +42,12 @@ function RecipeList() {
         />
 
         {activeTab !== 'favorites' && (
-          <div className="flex justify-center">
+          <div className="flex justify-center md:justify-start">
             <SearchBar
               searchPath={'/recipe/search'}
               searchTerm={searchTerm}
               onClear={handleClearSearch}
-              className="w-[200px]"
+              className="w-full max-w-xs md:max-w-md lg:max-w-lg"
             />
           </div>
         )}
@@ -57,16 +57,13 @@ function RecipeList() {
           searchTerm={searchTerm}
           isLoggedIn={isLoggedIn}
         />
-      </div>
-
+      </main>
+      <aside className="w-full my-0 mx-auto fixed z-50 left-0 right-0 bottom-0 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
+        <div className="relative h-[300px]">
+          {isTopButtonVisible && <TopButton />}
+        </div>
+      </aside>
       <Footer />
-
-      {isTopButtonVisible && (
-        <TopButton
-          offset={100}
-          positionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-        />
-      )}
     </div>
   );
 }

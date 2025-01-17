@@ -12,7 +12,7 @@ export async function getMyPageInfo() {
 
 export async function getComments(page, size) {
   try {
-    const response = await axiosInstance.get('/api/user/comments', {
+    const response = await axiosInstance.get('/api/user/recipe/comment', {
       params: { pageNo: page, pageSize: size },
     });
     return response.data.data;
@@ -24,7 +24,7 @@ export async function getComments(page, size) {
 
 export async function getLikes(page, size) {
   try {
-    const response = await axiosInstance.get('/api/user/likes/recipes', {
+    const response = await axiosInstance.get('/api/user/recipe/like', {
       params: { pageNo: page, pageSize: size },
     });
     return response.data.data;
@@ -36,7 +36,7 @@ export async function getLikes(page, size) {
 
 export async function getFavorites(page, size) {
   try {
-    const response = await axiosInstance.get('/api/user/favorites/recipes', {
+    const response = await axiosInstance.get('/api/user/recipe/favorite', {
       params: { pageNo: page, pageSize: size },
     });
     return response.data.data;

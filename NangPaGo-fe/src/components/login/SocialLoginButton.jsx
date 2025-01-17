@@ -6,7 +6,7 @@ function SocialLoginButton({ provider, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center w-full h-12 px-4 mx-5 rounded-lg shadow ${currentStyle.background} transition`}
+      className={`flex items-center justify-center w-72 h-12 px-3 mx-5 shadow-md ${currentStyle.background} transition`}
     >
       <img
         src={currentStyle.logo}

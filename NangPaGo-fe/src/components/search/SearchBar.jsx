@@ -12,32 +12,40 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
 
   const clearSearchTerm = (e) => {
     e.stopPropagation();
+    if (!searchTerm) return;
+
+    onClear();
+    navigate('/', {
+      state: { searchTerm: '' },
+      replace: true,
+    });
+  };
+
+  const getIcon = () => {
     if (searchTerm) {
-      onClear();
-      navigate('/', {
-        state: { searchTerm: '' },
-        replace: true
-      });
+      return (
+        <BiX
+          className="absolute right-3 text-secondary text-3xl cursor-pointer"
+          onClick={clearSearchTerm}
+        />
+      );
     }
+
+    return (
+      <BiSearch className="absolute right-3 text-secondary text-2xl cursor-pointer" />
+    );
   };
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] px-4 py-2 rounded-lg">
+    <div className="bg-white shadow-md mx-auto w-full px-4 py-2 rounded-md">
       <div
-        className="relative flex items-center cursor-pointer border border-[var(--primary-color)] rounded-lg bg-white"
+        className="relative flex items-center border border-primary rounded-md bg-white cursor-pointer"
         onClick={handleClick}
       >
-        <div className="w-full px-4 py-2 text-gray-500">
+        <div className="w-full px-4 py-2 text-text-400">
           {searchTerm || '레시피 검색...'}
         </div>
-        {searchTerm ? (
-          <BiX
-            className="absolute right-3 text-[var(--secondary-color)] text-3xl"
-            onClick={clearSearchTerm}
-          />
-        ) : (
-          <BiSearch className="absolute right-3 text-[var(--secondary-color)] text-2xl" />
-        )}
+        {getIcon()}
       </div>
     </div>
   );
