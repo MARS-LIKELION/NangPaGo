@@ -89,7 +89,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(favoriteResponseDto.recipeId()).isEqualTo(recipe.getId());
     }
     
-    @DisplayName("레시피의 즐겨찾기 상태는 true 다.")
+    @DisplayName("즐겨찾기한 레시피의 즐겨찾기 상태는 true 이다.")
     @Test
     void isFavoriteByUser() {
         // given
@@ -108,7 +108,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(favorite).isTrue();
     }
 
-    @DisplayName("레시피 즐겨찾기 상태는 false 다.")
+    @DisplayName("즐겨찾기하지 않은 레시피의 즐겨찾기 상태는 false 이다.")
     @Test
     void isNotFavoriteByUser() {
         // given
@@ -124,14 +124,12 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         // when
         boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), user1.getEmail());
-        boolean favoriteByUser2 = recipeFavoriteService.isFavorite(recipe.getId(), user2.getEmail());
 
         // then
         assertThat(favoriteByUser1).isFalse();
-        assertThat(favoriteByUser2).isTrue();
     }
 
-    @DisplayName("즐겨찾기 리스트를 조회한다.")
+    @DisplayName("즐겨찾기한 리스트를 조회한다.")
     @Test
     void findMyFavoritePage() {
         // given
@@ -161,7 +159,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(recipeFavorites.getContent().get(1).name()).isEqualTo("순대국밥");
     }
 
-    @DisplayName("레시피 즐겨찾기, 유저 이메일이 없을 때 예외를 발생한다.")
+    @DisplayName("사용자를 찾을 수 없을 때 예외를 발생시킬 수 있다.")
     @Test
     void NotCorrectUserException() {
         // given
@@ -177,7 +175,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
             .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
-    @DisplayName("레시피 즐겨찾기, 레시피 ID가 없을 때 예외를 발생한다.")
+    @DisplayName("레시피를 찾을 수 없을 때 예외를 발생시킬 수 있다.")
     @Test
     void NotFoundRecipeException() {
         // given
