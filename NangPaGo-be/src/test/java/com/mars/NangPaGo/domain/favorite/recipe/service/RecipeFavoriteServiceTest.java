@@ -44,7 +44,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("유저가 레시피 즐겨찾기를 클릭하여 즐겨찾기 추가한다.")
+    @DisplayName("유저는 즐겨찾기 리스트에 추가할 수 있다.")
     @Test
     void addRecipeFavorite() {
         // given
@@ -63,7 +63,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("이미 즐겨찾기를 한 상태에서 유저가 레시피 즐겨찾기를 클릭하여 즐겨찾기 취소한다.")
+    @DisplayName("이미 등록된 즐겨찾기를 취소한다.")
     @Test
     void cancelRecipeFavorite() {
         // given
@@ -82,7 +82,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(favoriteResponseDto.recipeId()).isEqualTo(recipe.getId());
     }
     
-    @DisplayName("즐겨찾기를 누른 유저의 즐겨찾기 상태는 true 이다.")
+    @DisplayName("즐겨찾기를 누른 유저의 즐겨찾기 등록상태는 true 이다.")
     @Test
     void isFavoriteByUser() {
         // given
@@ -97,7 +97,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(favorite).isTrue();
     }
 
-    @DisplayName("다른 유저가 즐겨찾기를 눌렀지만, 또 다른 유저의 즐겨찾기 상태는 false 이다.")
+    @DisplayName("다른 유저의 여부와 상관없이, 현재 유저의 즐겨찾기 상태는 false 이다.")
     @Test
     void isNotFavoriteByUser() {
         // given
@@ -115,7 +115,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(favoriteByUser2).isTrue();
     }
 
-    @DisplayName("유저가 즐겨찾기한 리스트를 조회한다.")
+    @DisplayName("유저의 즐겨찾기 리스트를 조회한다.")
     @Test
     void findMyFavoritePage() {
         // given
@@ -144,7 +144,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(recipeFavorites.getContent().get(1).name()).isEqualTo("순대국밥");
     }
 
-    @DisplayName("즐겨찾기를 클릭한 유저의 이메일을 찾을 수 없을때 예외를 발생할 수 있다.")
+    @DisplayName("즐겨찾기 할 때, 유저의 이메일을 찾을 수 없을 경우 예외를 발생한다.")
     @Test
     void NotCorrectUserException() {
         // given
@@ -158,7 +158,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
             .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
-    @DisplayName("유저가 레시피에 즐겨찾기를 클릭할때 레시피 ID를 못받는 경우 예외처리")
+    @DisplayName("즐겨찾기 할 때, 레시피 ID를 못받는 경우 예외를 발생한다.")
     @Test
     void NotFoundRecipeException() {
         // given
