@@ -15,6 +15,8 @@ import com.mars.NangPaGo.domain.recipe.repository.RecipeRepository;
 import com.mars.NangPaGo.domain.user.entity.User;
 import com.mars.NangPaGo.domain.user.repository.UserRepository;
 import com.mars.NangPaGo.support.IntegrationTestSupport;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
 
 class RecipeCommentServiceTest extends IntegrationTestSupport {
 
@@ -37,10 +38,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Autowired
     private RecipeCommentService recipeCommentService;
 
-    @Autowired
-    private Validator validator;
-
-
     @AfterEach
     void tearDown() {
         recipeCommentRepository.deleteAllInBatch();
@@ -48,7 +45,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         userRepository.deleteAllInBatch();
     }
 
-    @DisplayName("해당 레시피의 모든 댓글을 조회한다.")
+    @DisplayName("레시피의 모든 댓글을 조회한다.")
     @Test
     void pagedCommentsByRecipe() {
         // given
@@ -58,11 +55,18 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
 
         User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
-        for (int i = 0; i < 4; i++) {
-            createRecipeComment(recipe, user, i + "번째 댓글");
-        }
+        List<RecipeComment> comments = Arrays.asList(
+            createRecipeComment(recipe, user, "1번째 댓글"),
+            createRecipeComment(recipe, user, "2번째 댓글"),
+            createRecipeComment(recipe, user, "3번째 댓글"),
+            createRecipeComment(recipe, user, "4번째 댓글")
+        );
 
-        Page<RecipeComment> comments = recipeCommentRepository.findByRecipeId(recipe.getId(), pageable);
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeCommentRepository.saveAll(comments);
+
+        Page<RecipeComment> commentPage = recipeCommentRepository.findByRecipeId(recipe.getId(), pageable);
 
         // when
         PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipe.getId(),
@@ -82,6 +86,9 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         // given
         User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
+
+        userRepository.save(user);
+        recipeRepository.save(recipe);
 
         RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto("댓글 작성 예시");
 
@@ -106,6 +113,10 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "변경 전 댓글입니다.");
 
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeCommentRepository.save(comment);
+
         String updateText = "변경된 댓글입니다.";
         RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(updateText); // 텍스트 변경
 
@@ -127,6 +138,10 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "댓글");
 
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeCommentRepository.save(comment);
+
         // when
         recipeCommentService.delete(comment.getId(), user.getEmail());
 
@@ -134,13 +149,18 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         assertFalse(recipeCommentRepository.existsById(comment.getId()));
     }
 
-    @DisplayName("다른 사람의 댓글을 지우려하면 발생하는 예외를 보여준다.")
+    @Transactional
+    @DisplayName("다른 유저의 댓글 삭제, 예외를 발생한다.")
     @Test
     void validateOwnershipException() {
         // given
         User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "댓글");
+
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeCommentRepository.save(comment);
 
         String anotherUserEmail = "another@nangpago.com";
 
@@ -150,11 +170,12 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("댓글을 수정/삭제할 권한이 없습니다.");
     }
 
-    @DisplayName("레시피에 댓글을 작성을 시도 하였으나, 레시피의 id를 못 가져오면 예외를 보여준다.")
+    @DisplayName("레시피 댓글 작성, 레시피의 ID가 없을 때 예외를 발생한다.")
     @Test
     void validateRecipeException() {
         // given
         User user = createUser("dummy@nangpago.com");
+        userRepository.save(user);
 
         RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto("댓글 작성 예시");
 
@@ -164,11 +185,13 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("레시피를 찾을 수 없습니다.");
     }
 
-    @DisplayName("레시피에 댓글을 작성을 시도 하였으나, 레시피의 id를 못 가져오면 예외를 보여준다.")
+    @DisplayName("레시피 댓글 작성, 유저의 ID가 없을 때 예외를 발생한다.")
     @Test
     void findUserByEmailException() {
         // given
         Recipe recipe = createRecipe("파스타");
+        recipeRepository.save(recipe);
+
         RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto("댓글 작성 예시");
 
         // when, then
@@ -177,13 +200,18 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
-    @DisplayName("레시피 댓글 수정을 시도 하였으나, 댓글의 id를 못 가져오면 예외를 보여준다.")
+    @Transactional
+    @DisplayName("레시피 댓글 수정, 댓글의 ID가 없을 때 예외를 발생한다.")
     @Test
     void validateCommentException() {
         // given
         User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "변경 전 댓글입니다.");
+
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+        recipeCommentRepository.save(comment);
 
         String updateText = "변경된 댓글입니다.";
         RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto(updateText); // 텍스트 변경
@@ -196,21 +224,18 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
 
 
     private User createUser(String email) {
-        User user = User.builder()
+        return User.builder()
             .email(email)
             .build();
-        return userRepository.save(user);
     }
 
     private Recipe createRecipe(String name) {
-        Recipe recipe = Recipe.builder()
+        return Recipe.builder()
             .name(name)
             .build();
-        return recipeRepository.save(recipe);
     }
 
     private RecipeComment createRecipeComment(Recipe recipe, User user, String comment) {
-        RecipeComment recipeComment = RecipeComment.create(recipe, user, comment);
-        return recipeCommentRepository.save(recipeComment);
+        return RecipeComment.create(recipe, user, comment);
     }
 }
