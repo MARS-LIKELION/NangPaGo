@@ -44,7 +44,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("유저는 즐겨찾기 리스트에 추가할 수 있다.")
+    @DisplayName("레시피를 즐겨찾기 할 수 있다.")
     @Test
     void addRecipeFavorite() {
         // given
@@ -66,7 +66,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     }
 
     @Transactional
-    @DisplayName("이미 등록된 즐겨찾기를 취소한다.")
+    @DisplayName("등록된 레시피 즐겨찾기를 취소한다.")
     @Test
     void cancelRecipeFavorite() {
         // given
@@ -89,7 +89,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(favoriteResponseDto.recipeId()).isEqualTo(recipe.getId());
     }
     
-    @DisplayName("즐겨찾기를 누른 유저의 즐겨찾기 등록상태는 true 이다.")
+    @DisplayName("레시피의 즐겨찾기 상태는 true 다.")
     @Test
     void isFavoriteByUser() {
         // given
@@ -108,7 +108,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(favorite).isTrue();
     }
 
-    @DisplayName("다른 유저의 여부와 상관없이, 현재 유저의 즐겨찾기 상태는 false 이다.")
+    @DisplayName("레시피 즐겨찾기 상태는 false 다.")
     @Test
     void isNotFavoriteByUser() {
         // given
@@ -125,12 +125,13 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         // when
         boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), user1.getEmail());
         boolean favoriteByUser2 = recipeFavoriteService.isFavorite(recipe.getId(), user2.getEmail());
+
         // then
         assertThat(favoriteByUser1).isFalse();
         assertThat(favoriteByUser2).isTrue();
     }
 
-    @DisplayName("유저의 즐겨찾기 리스트를 조회한다.")
+    @DisplayName("즐겨찾기 리스트를 조회한다.")
     @Test
     void findMyFavoritePage() {
         // given
@@ -160,25 +161,23 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         assertThat(recipeFavorites.getContent().get(1).name()).isEqualTo("순대국밥");
     }
 
-    @DisplayName("즐겨찾기 할 때, 유저의 이메일을 찾을 수 없을 경우 예외를 발생한다.")
+    @DisplayName("레시피 즐겨찾기, 유저 이메일이 없을 때 예외를 발생한다.")
     @Test
     void NotCorrectUserException() {
         // given
-        User user = createUser("nonExistent@nangpago.com");
-        setAuthenticationAsUserWithToken(user.getEmail());
         Recipe recipe = createRecipe("파스타");
 
-        //현재 유저는 저장하지 않음
-        //userRepository.save(user);
         recipeRepository.save(recipe);
-        
+
+        String email = "dummy@nangpago.com";
+
         // when, then
-        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipe.getId(), user.getEmail()))
+        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipe.getId(), email))
             .isInstanceOf(NPGException.class)
             .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
-    @DisplayName("즐겨찾기 할 때, 레시피 ID를 못받는 경우 예외를 발생한다.")
+    @DisplayName("레시피 즐겨찾기, 레시피 ID가 없을 때 예외를 발생한다.")
     @Test
     void NotFoundRecipeException() {
         // given
@@ -186,8 +185,10 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         userRepository.save(user);
 
+        Long recipeId = 1L;
+
         // when, then
-        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(1L, user.getEmail()))
+        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipeId, user.getEmail()))
             .isInstanceOf(NPGException.class)
             .hasMessage("레시피를 찾을 수 없습니다.");
     }
