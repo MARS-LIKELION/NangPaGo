@@ -35,20 +35,20 @@ function Recipe({ recipe }) {
   const navigate = useNavigate();
   const rightSectionRef = useRef(null);
   const imageRef = useRef(null);
+  const sliderRef = useRef(null);
 
   useEffect(() => {
     const adjustImageHeight = () => {
-      if (
-        window.innerWidth > 767 &&
-        rightSectionRef.current &&
-        imageRef.current
-      ) {
+      if (!rightSectionRef.current || !imageRef.current) return;
+
+      if (window.innerWidth > 767) {
         const rightSectionHeight = rightSectionRef.current.offsetHeight;
         imageRef.current.style.height = `${rightSectionHeight}px`;
         imageRef.current.style.objectFit = 'cover';
-      } else if (imageRef.current) {
-        imageRef.current.style.height = 'auto';
+        return;
       }
+
+      imageRef.current.style.height = 'auto';
     };
 
     adjustImageHeight();
@@ -57,9 +57,21 @@ function Recipe({ recipe }) {
     return () => window.removeEventListener('resize', adjustImageHeight);
   }, []);
 
+  useEffect(() => {
+    const resetSlider = () => {
+      if (sliderRef.current?.innerSlider) {
+        sliderRef.current.innerSlider.slickGoTo(0);
+      }
+    };
+
+    window.addEventListener('resize', resetSlider);
+
+    return () => window.removeEventListener('resize', resetSlider);
+  }, []);
+
   const closeModal = () => setShowLoginModal(false);
   const navigateToLogin = () => {
-    setShowLoginModal(false);
+    closeModal();
     navigate('/login');
   };
 
@@ -120,6 +132,7 @@ function Recipe({ recipe }) {
         <section className="mt-7 px-4">
           <h2 className="text-lg font-semibold">요리 과정</h2>
           <CookingStepsSlider
+            ref={sliderRef} // 슬라이더에 ref 연결
             manuals={recipe.manuals}
             manualImages={recipe.manualImages}
           />
