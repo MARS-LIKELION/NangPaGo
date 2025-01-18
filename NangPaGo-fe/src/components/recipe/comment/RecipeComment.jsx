@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   fetchComments,
   createComment,
@@ -13,6 +14,8 @@ import CommentForm from './CommentForm';
 import Pagination from './Pagination';
 
 function RecipeComment({ recipeId }) {
+  const navigate = useNavigate();
+
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
   const [isEditing, setIsEditing] = useState(null);
@@ -96,6 +99,11 @@ function RecipeComment({ recipeId }) {
     }
   };
 
+  const handleLoginRedirect = () => {
+    setShowLoginModal(false);
+    navigate('/login');
+  };
+
   const maskEmail = (email) => `${email.slice(0, 3)}***`;
 
   return (
@@ -142,6 +150,7 @@ function RecipeComment({ recipeId }) {
 
       <LoginModal
         isOpen={showLoginModal}
+        onConfirm={handleLoginRedirect}
         onClose={() => setShowLoginModal(false)}
       />
       <DeleteModal

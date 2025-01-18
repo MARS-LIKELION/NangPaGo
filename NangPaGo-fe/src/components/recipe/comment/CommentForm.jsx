@@ -22,7 +22,7 @@ function CommentForm({
       />
       <button
         type="submit"
-        className={`block w-full text-white mb-4 px-4 py-2 rounded-md bg-primary ${
+        className={`block w-full mb-4 px-4 py-2 bg-primary ${
           isSubmitting ? 'cursor-not-allowed' : ''
         }`}
         disabled={isSubmitting}

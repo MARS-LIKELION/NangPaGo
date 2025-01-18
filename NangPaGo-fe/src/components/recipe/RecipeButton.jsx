@@ -6,7 +6,7 @@ function RecipeButton({
   likeCount,
   toggleHeart,
   toggleStar,
-  className = '', // 커스텀 클래스를 적용할 수 있도록 설정
+  className = '',
 }) {
   return (
     <div className={`flex items-center justify-between gap-4 ${className}`}>
