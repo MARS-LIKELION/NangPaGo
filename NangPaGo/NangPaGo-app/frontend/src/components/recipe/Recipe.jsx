@@ -132,7 +132,7 @@ function Recipe({ recipe }) {
         <section className="mt-7 px-4">
           <h2 className="text-lg font-semibold">요리 과정</h2>
           <CookingStepsSlider
-            ref={sliderRef} // 슬라이더에 ref 연결
+            ref={sliderRef}
             manuals={recipe.manuals}
             manualImages={recipe.manualImages}
           />

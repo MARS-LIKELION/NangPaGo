@@ -1,129 +1,65 @@
-import { useState, useEffect } from 'react';
-import { BiSearch, BiArrowBack, BiX } from 'react-icons/bi';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import NoResult from '../../components/search/NoResult';
-import EmptyState from '../../components/search/EmptyState';
+import { useRecipeSearch } from '../../hooks/useRecipeSearch';
+import SearchInput from '../../components/search/SearchInput';
+import SearchResult from '../../components/search/SearchResult';
 import { parseHighlightedName } from '../../components/util/stringUtil';
-import useDebounce from '../../hooks/useDebounce';
+import { BiArrowBack } from 'react-icons/bi';
 
 function RecipeSearch() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [keyword, setKeyword] = useState(location.state?.searchTerm || '');
-  const [results, setResults] = useState([]);
-  const debouncedKeyword = useDebounce(keyword, 500);
+  const { keyword, setKeyword, results } = useRecipeSearch(
+    location.state?.searchTerm || '',
+  );
 
-  const handleChange = (e) => setKeyword(e.target.value);
+  function handleChange(e) {
+    setKeyword(e.target.value);
+  }
 
-  const clearKeyword = (e) => {
+  function clearKeyword(e) {
     e.stopPropagation();
     setKeyword('');
-  };
+  }
 
-  useEffect(() => {
-    const searchRecipes = async () => {
-      if (!debouncedKeyword.trim()) {
-        setResults([]);
-        return;
-      }
-
-      try {
-        const response = await axios.get('/api/recipe/search', {
-          params: {
-            pageNo: 1,
-            pageSize: 10,
-            keyword: debouncedKeyword,
-            searchType: 'NAME',
-          },
-        });
-        setResults(response.data.data.content);
-      } catch (error) {
-        console.error('레시피 검색 요청 실패:', error);
-        setResults([]);
-      }
-    };
-
-    searchRecipes();
-  }, [debouncedKeyword]);
-
-  const handleResultClick = (recipe) => {
+  function handleResultClick(recipe) {
     setKeyword(recipe.name);
     navigate('/', {
       state: { searchTerm: recipe.name },
     });
-  };
+  }
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    if (!keyword.trim()) return; // 빈 검색어 처리
+    if (!keyword.trim()) return;
     navigate('/', {
       state: { searchTerm: keyword },
     });
-  };
+  }
 
   return (
-    <div className="bg-white shadow-md mx-auto min-h-screen">
-      {/* 헤더 */}
+    <div className="bg-white shadow-md mx-auto min-h-screen min-w-80 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <div className="sticky top-0 bg-white px-4 py-2 flex items-center gap-2 border-b">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-full hover:bg-gray-100 transition"
+          className="p-2 rounded-full transition"
           aria-label="뒤로가기"
         >
-          <BiArrowBack className="text-2xl text-[var(--secondary-color)]" />
+          <BiArrowBack className="text-2xl" />
         </button>
-
-        <form onSubmit={handleSubmit} className="relative flex-1">
-          <input
-            type="text"
-            placeholder="레시피 검색..."
-            value={keyword}
-            onChange={handleChange}
-            autoFocus
-            className="w-full px-4 py-2 border border-[var(--primary-color)] rounded-lg
-                     focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]
-                     focus:border-transparent placeholder-gray-500"
-            aria-label="검색어 입력"
-          />
-          {keyword ? (
-            <button
-              type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-3xl cursor-pointer"
-              onClick={clearKeyword}
-              aria-label="검색어 삭제"
-            >
-              <BiX />
-            </button>
-          ) : (
-            <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--secondary-color)] text-2xl" />
-          )}
-        </form>
+        <SearchInput
+          value={keyword}
+          onChange={handleChange}
+          onClear={clearKeyword}
+          onSubmit={handleSubmit}
+        />
       </div>
 
-      {/* 검색 결과 */}
       <div className="px-4 py-2">
-        {keyword ? (
-          results.length > 0 ? (
-            <div className="space-y-2">
-              {results.map((recipe) => (
-                <div
-                  key={recipe.id}
-                  onClick={() => handleResultClick(recipe)}
-                  className="p-3 rounded-lg cursor-pointer hover:bg-[var(--primary-color)] hover:text-white transition duration-200"
-                >
-                  <span className="text-black">
-                    {parseHighlightedName(recipe.highlightedName)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <NoResult searchTerm={keyword} />
-          )
-        ) : (
-          <EmptyState />
-        )}
+        <SearchResult
+          results={results}
+          parseHighlightedName={parseHighlightedName}
+          onResultClick={handleResultClick}
+        />
       </div>
     </div>
   );

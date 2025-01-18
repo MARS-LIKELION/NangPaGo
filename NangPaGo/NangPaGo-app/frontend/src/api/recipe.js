@@ -23,6 +23,23 @@ export const getRecipes = async (ingredients, page, size) => {
   }
 };
 
+export const searchRecipes = async (
+  keyword,
+  pageNo = 1,
+  pageSize = 10,
+  searchType = 'NAME',
+) => {
+  try {
+    const response = await axiosInstance.get('/api/recipe/search', {
+      params: { pageNo, pageSize, keyword, searchType },
+    });
+    return response.data.data.content;
+  } catch (error) {
+    console.error('레시피 검색 요청 실패:', error);
+    return [];
+  }
+};
+
 export const fetchRecommendedRecipes = async (
   searchTerm,
   pageNo = 1,

@@ -84,7 +84,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   }, [activeTab, hasMoreRecipes, currentPage]);
 
   return (
-    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[400px]">
+    <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {recipes[activeTab]?.length > 0 ? (
         recipes[activeTab].map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />

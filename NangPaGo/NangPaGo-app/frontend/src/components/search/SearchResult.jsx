@@ -1,17 +1,21 @@
+import NoResult from './NoResult';
+
 function SearchResult({ results, parseHighlightedName, onResultClick }) {
+  if (!results.length) return <NoResult />;
+
   return (
-    <div>
-      <ul>
-        {results.map((item) => (
-          <li
-            key={item.ingredientId}
-            onClick={() => onResultClick(item.highlightedName)}
-            className="p-2 mb-2 cursor-pointer"
-          >
-            {parseHighlightedName(item.highlightedName)}
-          </li>
-        ))}
-      </ul>
+    <div className="space-y-2">
+      {results.map((recipe) => (
+        <div
+          key={recipe.id}
+          onClick={() => onResultClick(recipe)}
+          className="p-3 rounded-lg cursor-pointer hover:text-white transition duration-200"
+        >
+          <span className="text-black">
+            {parseHighlightedName(recipe.highlightedName)}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
