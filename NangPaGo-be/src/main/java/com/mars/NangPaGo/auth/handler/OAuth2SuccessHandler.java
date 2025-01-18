@@ -56,7 +56,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자 검증 에러: " + email));
 
-        if (isEmailAlreadyRegisteredForSignUp(user, provider, response)) {
+        if (isEmailAlreadyRegisteredForSignUp(user, provider)) {
+            redirectToErrorPage(response, user.getOauth2Provider().name());
             return;
         }
 
@@ -65,14 +66,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.sendRedirect(clientHost);
     }
 
-    private boolean isEmailAlreadyRegisteredForSignUp(User user, String provider, HttpServletResponse response) throws IOException {
-        if (!user.getOauth2Provider().name().equals(provider)) {
-            String existingProvider = user.getOauth2Provider().name();
-            redirectToErrorPage(response, existingProvider);
-            return true;
-        }
-
-        return false;
+    private boolean isEmailAlreadyRegisteredForSignUp(User user, String provider) {
+        return !user.getOauth2Provider().name().equals(provider);
     }
 
     private void redirectToErrorPage(HttpServletResponse response, String existingProvider) throws IOException {
