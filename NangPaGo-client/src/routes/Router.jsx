@@ -14,6 +14,7 @@ import ModifyCommunity from '../pages/community/ModifyCommunity.jsx';
 import OAuthError from '../pages/error/OAuthError.jsx';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import UnauthenticatedAccess from '../pages/error/UnauthenticatedAccess';
+import NotFound from '../pages/error/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
   {
     path: '/unauthenticated',
     element: <UnauthenticatedAccess />,
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ]);
 
