@@ -1,14 +1,20 @@
 import axiosInstance from './axiosInstance';
 
+export const fetchRecipeById = async (recipeId) => {
+  try {
+    const response = await axiosInstance.get(`/api/recipe/${recipeId}`);
+    return response.data.data;
+  } catch (error) {
+    console.error('레시피를 가져오는 중 오류가 발생했습니다:', error);
+    throw error;
+  }
+};
+
 export const getRecipes = async (ingredients, page, size) => {
   try {
     const keyword = ingredients.join(' ');
     const response = await axiosInstance.get('/api/recipe/search', {
-      params: {
-        pageNo: page,
-        pageSize: size,
-        keyword,
-      },
+      params: { pageNo: page, pageSize: size, keyword },
     });
     return response.data.data;
   } catch (error) {
@@ -68,6 +74,54 @@ export const getLikeCount = async (recipeId) => {
     return response.data.data;
   } catch (error) {
     console.error('좋아요 수를 가져오는 중 오류가 발생했습니다:', error);
+    throw error;
+  }
+};
+
+export const fetchLikeStatus = async (recipeId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/recipe/${recipeId}/like/status`,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('좋아요 상태를 가져오는 중 오류가 발생했습니다:', error);
+    throw error;
+  }
+};
+
+export const fetchFavoriteStatus = async (recipeId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/recipe/${recipeId}/favorite/status`,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('즐겨찾기 상태를 가져오는 중 오류가 발생했습니다:', error);
+    throw error;
+  }
+};
+
+export const toggleLike = async (recipeId) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/recipe/${recipeId}/like/toggle`,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('좋아요 상태를 변경하는 중 오류가 발생했습니다:', error);
+    throw error;
+  }
+};
+
+export const toggleFavorite = async (recipeId) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/recipe/${recipeId}/favorite/toggle`,
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다:', error);
     throw error;
   }
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // Redux 상태 가져오기
-import axiosInstance from '../../api/axiosInstance';
+import { useSelector } from 'react-redux';
+import { fetchRecipeById } from '../../api/recipe';
 import Recipe from '../../components/recipe/Recipe';
 
 function RecipeDetail() {
@@ -16,8 +16,8 @@ function RecipeDetail() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        const response = await axiosInstance.get(`/api/recipe/${id}`);
-        setRecipe(response.data.data);
+        const data = await fetchRecipeById(id);
+        setRecipe(data);
       } catch (err) {
         setError('레시피를 불러오는데 실패했습니다.');
         console.error(err);
@@ -32,7 +32,7 @@ function RecipeDetail() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary-color)]"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
       </div>
     );
   }
@@ -40,7 +40,7 @@ function RecipeDetail() {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <p className="text-[var(--primary-color)]">{error}</p>
+        <p className="text-primary">{error}</p>
       </div>
     );
   }

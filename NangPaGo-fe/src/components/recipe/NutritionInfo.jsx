@@ -2,7 +2,7 @@ function NutritionInfo({ calories, fat, carbs, protein, sodium }) {
   return (
     <div className="nutrition-info mt-4">
       <h2 className="text-lg font-semibold mb-3">영양 정보</h2>
-      <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-gray-700 text-sm">
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-2 text-text-600 text-sm">
         <li>
           칼로리 <span className="font-medium">{calories}kcal</span>
         </li>
