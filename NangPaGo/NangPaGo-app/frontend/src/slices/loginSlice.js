@@ -28,8 +28,8 @@ export const fetchUserStatus = createAsyncThunk(
 );
 
 const loadState = () => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-  return { isLoggedIn };
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  return { isLoggedIn: isLoggedIn === 'true' };
 };
 
 const initialState = {
@@ -51,6 +51,7 @@ const loginSlice = createSlice({
       state.isLoggedIn = false;
       state.status = 'idle';
       state.error = null;
+      state.isInitialized = true;
       localStorage.removeItem('isLoggedIn');
     },
   },
@@ -72,6 +73,7 @@ const loginSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
         state.isInitialized = true;
+        state.isLoggedIn = false;
         localStorage.removeItem('isLoggedIn');
       });
   },

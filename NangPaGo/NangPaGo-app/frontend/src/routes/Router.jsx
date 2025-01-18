@@ -12,6 +12,9 @@ import CommunityDetail from '../pages/community/CommunityDetail';
 import CreateCommunity from '../pages/community/CreateCommunity.jsx';
 import ModifyCommunity from '../pages/community/ModifyCommunity.jsx';
 import OAuthError from '../pages/error/OAuthError.jsx';
+import AuthenticatedRoute from './AuthenticatedRoute';
+import UnauthenticatedAccess from '../pages/error/UnauthenticatedAccess';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -23,11 +26,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/my-page',
-    element: <Profile />,
+    element: <AuthenticatedRoute><Profile /></AuthenticatedRoute>,
   },
   {
     path: '/my-page/modify',
-    element: <Modify />,
+    element: <AuthenticatedRoute><Modify /></AuthenticatedRoute>,
   },
   {
     path: '/recipe',
@@ -47,15 +50,15 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Refrigerator />,
+        element: <AuthenticatedRoute><Refrigerator /></AuthenticatedRoute>,
       },
       {
         path: 'recipe',
-        element: <Refrigerator />,
+        element: <AuthenticatedRoute><Refrigerator /></AuthenticatedRoute>,
       },
       {
         path: 'search',
-        element: <RefrigeratorSearch />,
+        element: <AuthenticatedRoute><RefrigeratorSearch /></AuthenticatedRoute>,
       },
     ],
   },
@@ -72,17 +75,21 @@ const router = createBrowserRouter([
       },
       {
         path: 'new',
-        element: <CreateCommunity />,
+        element: <AuthenticatedRoute><CreateCommunity /></AuthenticatedRoute>,
       },
       {
         path: ':id/modify',
-        element: <ModifyCommunity />,
+        element: <AuthenticatedRoute><ModifyCommunity /></AuthenticatedRoute>,
       },
     ],
   },
   {
     path: '/oauth/error',
     element: <OAuthError />,
+  },
+  {
+    path: '/unauthenticated',
+    element: <UnauthenticatedAccess />,
   },
 ]);
 
