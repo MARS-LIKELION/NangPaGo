@@ -70,7 +70,7 @@ function Header({ isBlocked = false }) {
 
   return (
     <header className="sticky top-0 z-10 bg-white shadow-md w-full px-1 py-2 mb-4">
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row items-center justify-between px-4">
         <div className="flex items-center justify-center w-17 h-17">
           <img
             src="/logo.png"
@@ -79,42 +79,45 @@ function Header({ isBlocked = false }) {
             onClick={() => handleLinkClick('/')}
           />
         </div>
-        {loginState.isLoggedIn ? (
-            <div className="grid grid-cols-3 gap-5 items-center">
-              <NavItem
-                to="/community"
-                isActive={isActive('/community')}
-                label="커뮤니티"
-                Icon={BsFilePost}
-                onClick={() => handleLinkClick('/community')}
-              />
-              <NavItem
-                to="/refrigerator"
-                isActive={isActive('/refrigerator')}
-                label="냉장고"
-                Icon={CgSmartHomeRefrigerator}
-                onClick={() => handleLinkClick('/refrigerator')}
-              />
-              <ProfileDropdown
-                dropdownRef={dropdownRef}
-                dropdownOpen={dropdownOpen}
-                toggleDropdown={toggleDropdown}
-                handleLogout={handleLogout}
-                handleLinkClick={handleLinkClick}
-                isActive={isActive('/my-page')}
-                icon={FaRegUser}
-                nickname={loginState.nickname}
-              />
-          </div>
-        ) : (
-          <button
-            to="/login"
-            onClick={() => handleLinkClick('/login')}
-            className="bg-primary text-white px-4 py-2 mr-3 rounded-md text-sm shadow-md"
-          >
-            로그인
-          </button>
-        )}
+        <div className="flex items-center justify-center space-x-4">
+          {loginState.isLoggedIn && (
+            <NavItem
+              to="/refrigerator"
+              isActive={isActive('/refrigerator')}
+              label="냉장고"
+              Icon={CgSmartHomeRefrigerator}
+              onClick={() => handleLinkClick('/refrigerator')}
+            />
+          )}
+
+          <NavItem
+            to="/community"
+            isActive={isActive('/community')}
+            label="커뮤니티"
+            Icon={BsFilePost}
+            onClick={() => handleLinkClick('/community')}
+          />
+          {loginState.isLoggedIn ? (
+            <ProfileDropdown
+              dropdownRef={dropdownRef}
+              dropdownOpen={dropdownOpen}
+              toggleDropdown={toggleDropdown}
+              handleLogout={handleLogout}
+              handleLinkClick={handleLinkClick}
+              isActive={isActive('/my-page')}
+              icon={FaRegUser}
+              nickname={loginState.nickname}
+            />
+          ) : (
+            <NavItem
+              to="/login"
+              isActive={isActive('/login')}
+              label="로그인"
+              Icon={FaRegUser}
+              onClick={() => handleLinkClick('/login')}
+            />
+          )}
+        </div>
       </div>
     </header>
   );
