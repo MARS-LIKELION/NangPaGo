@@ -53,25 +53,26 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String provider = (String) oauth2User.getAttributes().get("provider");
         String email = oauth2User.getName();
 
-        User user = validateUser(email);
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> NOT_FOUND_USER.of("사용자 검증 에러: " + email));
 
-        if (isDuplicatedEmail(user, provider)) {
-            redirectToErrorPage(response, user.getOauth2Provider().name());
+        if (isEmailAlreadyRegisteredForSignUp(user, provider, response)) {
             return;
         }
 
         renewOauth2ProviderToken(authentication, email);
-        issueJwtTokens(response, user, email, authentication);
+        issueAccessAndRefreshTokens(response, user, email, authentication);
         response.sendRedirect(clientHost);
     }
 
-    private User validateUser(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of("사용자 검증 에러: " + email));
-    }
+    private boolean isEmailAlreadyRegisteredForSignUp(User user, String provider, HttpServletResponse response) throws IOException {
+        if (!user.getOauth2Provider().name().equals(provider)) {
+            String existingProvider = user.getOauth2Provider().name();
+            redirectToErrorPage(response, existingProvider);
+            return true;
+        }
 
-    private boolean isDuplicatedEmail(User user, String provider) {
-        return user.getOauth2Provider().name().equals(provider);
+        return false;
     }
 
     private void redirectToErrorPage(HttpServletResponse response, String existingProvider) throws IOException {
@@ -93,7 +94,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         return authorizedClient != null && authorizedClient.getRefreshToken() != null;
     }
 
-    private void issueJwtTokens(HttpServletResponse response, User user, String email, Authentication authentication) {
+    private void issueAccessAndRefreshTokens(HttpServletResponse response, User user, String email, Authentication authentication) {
         Long userId = user.getId();
         String role = getRole(authentication);
 
