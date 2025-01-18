@@ -8,7 +8,7 @@ function CookingSteps({ steps, stepImages }) {
             <img
               src={stepImages[index].imageUrl}
               alt={`Step ${index + 1}`}
-              className="w-full"
+              className="w-full rounded-md"
             />
           )}
         </div>

@@ -39,7 +39,7 @@ function Recipe({ recipe }) {
   useEffect(() => {
     const adjustImageHeight = () => {
       if (
-        window.innerWidth > 1024 &&
+        window.innerWidth > 767 &&
         rightSectionRef.current &&
         imageRef.current
       ) {
@@ -68,13 +68,13 @@ function Recipe({ recipe }) {
       <Header />
 
       <main>
-        <section className="mt-4 px-4 lg:flex lg:gap-8 lg:items-start">
+        <section className="mt-4 px-4 md:flex md:gap-8 md:items-start">
           <RecipeImage
             imageRef={imageRef}
             mainImage={recipe.mainImage}
             recipeName={recipe.name}
           />
-          <div className="mt-4 lg:hidden">
+          <div className="mt-4 md:hidden">
             <RecipeButton
               isHeartActive={isHeartActive}
               isStarActive={isStarActive}
@@ -86,13 +86,13 @@ function Recipe({ recipe }) {
           </div>
 
           <div
-            className="lg:w-1/2 lg:flex lg:flex-col lg:justify-between"
+            className="md:w-1/2 md:flex md:flex-col md:justify-between"
             ref={rightSectionRef}
           >
             <div>
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mt-4 lg:mt-0">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between mt-4 md:mt-0">
                 <RecipeInfo recipe={recipe} />
-                <div className="hidden lg:flex items-center gap-4">
+                <div className="hidden md:flex items-center gap-4">
                   <RecipeButton
                     isHeartActive={isHeartActive}
                     isStarActive={isStarActive}
@@ -104,7 +104,7 @@ function Recipe({ recipe }) {
               </div>
             </div>
 
-            <div className="mt-7 flex flex-col lg:gap-4">
+            <div className="mt-7 flex flex-col md:gap-4">
               <IngredientList ingredients={recipe.ingredients} />
               <NutritionInfo
                 calories={recipe.calorie}
