@@ -28,7 +28,7 @@ const AddIngredientForm = ({ onAdd }) => {
         onChange={handleChange}
         onClick={handleInputClick}
         placeholder="재료 이름 입력"
-        className="border border-[var(--primary-color)] p-2 rounded flex-grow"
+        className="border border-primary p-2 rounded-md flex-grow text-text-400"
       />
     </form>
   );

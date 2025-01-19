@@ -26,7 +26,7 @@ function RecipeCard({ recipe }) {
           </div>
         </div>
 
-        <h3 className="text-lg font-semibold">{recipe.name}</h3>
+        <h3 className="text-md font-semibold">{recipe.name}</h3>
         <div className="flex flex-wrap gap-2">
           {recipe.ingredientsDisplayTag.map((tag, index) => (
             <span

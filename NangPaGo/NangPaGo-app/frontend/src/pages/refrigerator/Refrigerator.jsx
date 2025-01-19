@@ -1,248 +1,92 @@
-import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  getRefrigerator,
-  addIngredient,
-  deleteIngredient,
-} from '../../api/refrigerator';
-import { getRecipes } from '../../api/recipe.js';
-import Header from '../../components/layout/header/Header.jsx';
+import { useRefrigerator } from '../../hooks/useRefrigerator';
+import { useLocation } from 'react-router-dom';
+import Header from '../../components/layout/header/Header';
 import IngredientList from '../../components/refrigerator/IngredientList';
 import AddIngredientForm from '../../components/refrigerator/AddIngredientForm';
 import RecipeCard from '../../components/recipe/RecipeCard';
-import TopButton from '../../components/common/TopButton.jsx';
+import TopButton from '../../components/common/TopButton';
 
 function Refrigerator() {
-  const [ingredients, setIngredients] = useState([]);
-  const [recipes, setRecipes] = useState(
-    () => JSON.parse(localStorage.getItem('recipes')) || [],
-  );
-  const [recipePage, setRecipePage] = useState(
-    () => parseInt(localStorage.getItem('recipePage'), 10) || 1,
-  );
-  const [recipeSize] = useState(10);
-  const [hasMoreRecipes, setHasMoreRecipes] = useState(
-    () => localStorage.getItem('hasMoreRecipes') === 'true',
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    ingredients,
+    recipes,
+    hasMoreRecipes,
+    observerRef,
+    handleAddIngredient,
+    handleDeleteIngredient,
+    handleToggleChecked,
+    handleSelectAll,
+    handleDeselectAll,
+    handleFindRecipes,
+    resetAndGoBack,
+  } = useRefrigerator();
 
-  const navigate = useNavigate();
+  const hasChecked = ingredients.some((i) => i.checked);
   const location = useLocation();
-  const observerRef = useRef(null);
-  const isMounted = useRef(false);
-
-  useEffect(() => {
-    fetchRefrigerator();
-  }, []);
-
-  useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      return;
-    }
-    if (location.pathname === '/refrigerator/recipe') {
-      reFetchRefrigeratorRecipes();
-    }
-  }, [location.pathname, ingredients]);
-
-  useEffect(() => {
-    syncLocalStorage();
-  }, [recipes, recipePage, hasMoreRecipes]);
-
-  useEffect(() => {
-    if (location.pathname === '/refrigerator/recipe' && hasMoreRecipes) {
-      const observer = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          loadMoreRecipes();
-        }
-      }, { threshold: 1.0 });
-      if (observerRef.current) observer.observe(observerRef.current);
-      return () => observer.disconnect();
-    }
-  }, [location.pathname, recipes, hasMoreRecipes]);
-
-  const syncLocalStorage = () => {
-    localStorage.setItem('recipes', JSON.stringify(recipes));
-    localStorage.setItem('recipePage', recipePage.toString());
-    localStorage.setItem('hasMoreRecipes', hasMoreRecipes.toString());
-  };
-
-  const handleApiError = (message, error) => {
-    console.error(message, error);
-  };
-
-  const fetchRefrigerator = async () => {
-    try {
-      const data = await getRefrigerator();
-      setIngredients(data);
-    } catch (error) {
-      handleApiError('냉장고 데이터를 가져오는 데 실패했습니다.', error);
-      setIngredients([]);
-    }
-  };
-
-  const reFetchRefrigeratorRecipes = async () => {
-    setRecipePage(1);
-    setHasMoreRecipes(true);
-    try {
-      const ingredientNames = ingredients.map(i => i.ingredientName).filter(Boolean);
-      const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
-      setRecipes(recipeData.content);
-      setHasMoreRecipes(!recipeData.last);
-    } catch (error) {
-      handleApiError('레시피를 다시 가져오는 중 오류가 발생했습니다.', error);
-    }
-  };
-
-  const handleAddIngredient = async (ingredientName) => {
-    try {
-      const addedIngredient = await addIngredient(ingredientName);
-      setIngredients(prev => [...prev, addedIngredient]);
-    } catch (error) {
-      handleApiError('재료 추가 중 오류가 발생했습니다.', error);
-    }
-  };
-
-  const handleDeleteIngredient = async (ingredientName) => {
-    try {
-      await deleteIngredient(ingredientName);
-      setIngredients(prev =>
-        prev.filter(item => item.ingredientName !== ingredientName),
-      );
-    } catch (error) {
-      handleApiError('재료 삭제 중 오류가 발생했습니다.', error);
-    }
-  };
-
-  const handleToggleChecked = (name) => {
-    setIngredients(prev =>
-      prev.map(item =>
-        item.ingredientName === name
-          ? { ...item, checked: !item.checked }
-          : item
-      )
-    );
-  };
-
-  // 전체 선택
-  const handleSelectAll = () => {
-    setIngredients(prev =>
-      prev.map(item => ({ ...item, checked: true }))
-    );
-  };
-
-  // 전체 해제
-  const handleDeselectAll = () => {
-    setIngredients(prev =>
-      prev.map(item => ({ ...item, checked: false }))
-    );
-  };
-
-  const handleFindRecipes = async () => {
-    const checkedItems = ingredients.filter(i => i.checked);
-    if (checkedItems.length === 0) return;
-
-    setRecipePage(1);
-    setHasMoreRecipes(true);
-    try {
-      const ingredientNames = checkedItems.map(i => i.ingredientName);
-      const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
-      setRecipes(recipeData.content);
-      setHasMoreRecipes(!recipeData.last);
-      navigate('/refrigerator/recipe');
-    } catch (error) {
-      handleApiError('레시피를 가져오는 중 오류가 발생했습니다.', error);
-    }
-  };
-
-  const loadMoreRecipes = async () => {
-    if (!hasMoreRecipes || isLoading) return;
-    setIsLoading(true);
-    const nextPage = recipePage + 1;
-    try {
-      const checkedItems = ingredients.filter(i => i.checked);
-      const ingredientNames = checkedItems.map(i => i.ingredientName);
-      const recipeData = await getRecipes(ingredientNames, nextPage, recipeSize);
-      setRecipes(prev => [...prev, ...recipeData.content]);
-      setRecipePage(nextPage);
-      setHasMoreRecipes(!recipeData.last);
-    } catch (error) {
-      handleApiError('추가 레시피를 가져오는 중 오류가 발생했습니다.', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const resetAndGoBack = () => {
-    setRecipes([]);
-    setRecipePage(1);
-    setHasMoreRecipes(true);
-    localStorage.removeItem('recipes');
-    localStorage.removeItem('recipePage');
-    localStorage.removeItem('hasMoreRecipes');
-    navigate('/refrigerator');
-  };
-
-  const hasChecked = ingredients.some(i => i.checked);
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col items-center">
-      <Header title="냉장고 파먹기" />
-      {location.pathname === '/refrigerator' ? (
-        <>
-          <div className="w-full px-4 mt-4">
-            <AddIngredientForm onAdd={handleAddIngredient} />
-          </div>
-
-          <div className="w-full px-4 mt-6 mb-4">
-            <h2 className="text-lg font-medium mb-2">내 냉장고</h2>
-            <IngredientList
-              ingredients={ingredients}
-              onDelete={handleDeleteIngredient}
-              onToggle={handleToggleChecked}
-              onSelectAll={handleSelectAll}
-              onDeselectAll={handleDeselectAll}
-            />
-          </div>
-
-          <div className="w-full px-4 mt-auto mb-4">
-            <button
-              onClick={handleFindRecipes}
-              disabled={!hasChecked}
-              className={`w-full py-3 rounded-lg text-lg font-medium ${
-                hasChecked
-                  ? 'bg-yellow-400 text-white'
-                  : 'bg-yellow-200 text-white cursor-not-allowed'
-              }`}
-            >
-              선택한 재료로 레시피 찾기
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="w-full px-4 mt-6">
-            <h2 className="text-lg font-medium mb-4">추천 레시피</h2>
-            <div className="grid grid-cols-1 gap-6 min-h-[400px]">
-              {recipes.length > 0 &&
-                recipes.map((recipe) => (
-                  <RecipeCard key={recipe.id} recipe={recipe} />
-                ))}
+    <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col justify-between max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
+      <Header />
+      <div className="flex-grow w-full px-4">
+        {location.pathname === '/refrigerator' ? (
+          <>
+            <div className="mt-4">
+              <AddIngredientForm onAdd={handleAddIngredient} />
             </div>
-            {hasMoreRecipes && <div ref={observerRef} className="h-10"></div>}
-            <button
-              className="bg-[var(--primary-color)] text-white w-full py-3 mt-4 mb-4 rounded-lg text-lg font-medium"
-              onClick={resetAndGoBack}
-            >
-              돌아가기
-            </button>
-            <TopButton
-              offset={100}
-              positionClass="bottom-20 right-[calc((100vw-375px)/2+16px)]"
-            />
-          </div>
-        </>
-      )}
+            <div className="mt-6 mb-4">
+              <h2 className="text-lg mb-2">내 냉장고</h2>
+              <IngredientList
+                ingredients={ingredients}
+                onDelete={handleDeleteIngredient}
+                onToggle={handleToggleChecked}
+                onSelectAll={handleSelectAll}
+                onDeselectAll={handleDeselectAll}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="mt-6 flex-grow flex flex-col">
+              <h2 className="text-lg font-medium mb-4">추천 레시피</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {recipes.length > 0 ? (
+                  recipes.map((recipe) => (
+                    <RecipeCard key={recipe.id} recipe={recipe} />
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500">
+                    레시피가 없습니다.
+                  </p>
+                )}
+              </div>
+              {hasMoreRecipes && <div ref={observerRef}></div>}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="sticky bottom-0 bg-white p-4 mt-4 w-full flex justify-center items-center">
+        {location.pathname === '/refrigerator' ? (
+          <button
+            onClick={handleFindRecipes}
+            disabled={!hasChecked}
+            className={`w-full py-3 text-lg font-medium ${
+              hasChecked ? '' : 'bg-yellow-200 text-white cursor-not-allowed'
+            }`}
+          >
+            선택한 재료로 레시피 찾기
+          </button>
+        ) : (
+          <button
+            onClick={resetAndGoBack}
+            className="w-full py-3 text-lg font-medium "
+          >
+            돌아가기
+          </button>
+        )}
+      </div>
+      <aside className="w-full my-0 mx-auto fixed z-50 left-0 right-0 bottom-0 md:bottom-4 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
+        <TopButton />
+      </aside>
     </div>
   );
 }
