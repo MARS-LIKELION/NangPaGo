@@ -111,7 +111,7 @@ jwt:
 
 # Swagger-UI 관련 설정
 springdoc:
-  packages-to-scan: com.mars.NangPaGo.domain
+  packages-to-scan: com.mars.app.domain
   api-docs:
     path: /api-docs
     version: openapi_3_0

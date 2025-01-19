@@ -1,0 +1,112 @@
+spring:
+  profiles:
+    default: local
+
+---
+
+server:
+  port: ${API_SERVER_PORT}
+client:
+  host: ${CLIENT_HOST}
+
+spring:
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/
+  mvc:
+    static-path-pattern: /**
+  application:
+    name: NangPaGo
+
+  # 환경변수에서 불러오도록 설정
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 10
+      idle-timeout: 300000
+      connection-timeout: 30000
+      max-lifetime: 1500000
+
+  # Table 자동 생성 방지
+  jpa:
+    hibernate:
+      ddl-auto: none
+      open-in-view: false
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  token:
+    access-expiration-time: ${JWT_ACCESS_EXPIRATION_TIME}
+    refresh-expiration-time: ${JWT_REFRESH_EXPIRATION_TIME}
+
+# Swagger-UI 관련 설정
+springdoc:
+  packages-to-scan: com.mars.admin.domain
+  api-docs:
+    path: /api-docs
+    version: openapi_3_0
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-request-duration: true
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+
+# 개발(로컬) 환경: local / 배포 환경: prod
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+logging:
+  level:
+    root: info
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  file:
+    name: /logs/application.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+  level:
+    root: warn
+
+---
+
+# Test 코드 실행용 데이터베이스로 연결
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${TEST_DB_HOST}:${TEST_DB_PORT}/${TEST_DB_NAME}
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+
+  # Table 자동 생성 방지
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+        highlight_sql: true
+        format_sql: true
+        use_sql_comments: true
