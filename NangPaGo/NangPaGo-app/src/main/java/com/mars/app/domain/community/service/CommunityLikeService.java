@@ -1,14 +1,14 @@
 package com.mars.app.domain.community.service;
 
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 import com.mars.app.domain.community.dto.CommunityLikeResponseDto;
-import com.mars.app.domain.community.entity.Community;
-import com.mars.app.domain.community.entity.CommunityLike;
+import com.mars.common.model.community.Community;
+import com.mars.common.model.community.CommunityLike;
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

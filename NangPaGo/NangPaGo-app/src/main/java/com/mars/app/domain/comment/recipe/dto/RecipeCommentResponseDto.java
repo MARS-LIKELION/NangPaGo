@@ -1,7 +1,7 @@
 package com.mars.app.domain.comment.recipe.dto;
 
-import com.mars.app.domain.comment.recipe.entity.RecipeComment;
-import com.mars.app.domain.recipe.entity.Recipe;
+import com.mars.common.model.comment.recipe.RecipeComment;
+import com.mars.common.model.recipe.Recipe;
 import java.time.LocalDateTime;
 import lombok.Builder;
 

@@ -1,6 +1,6 @@
 package com.mars.app.domain.auth.dto;
 
-import com.mars.app.domain.auth.entity.RefreshToken;
+import com.mars.common.model.auth.RefreshToken;
 
 import java.time.LocalDateTime;
 

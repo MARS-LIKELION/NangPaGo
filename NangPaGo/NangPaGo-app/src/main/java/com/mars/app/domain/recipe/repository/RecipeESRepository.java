@@ -1,6 +1,6 @@
 package com.mars.app.domain.recipe.repository;
 
-import com.mars.app.domain.recipe.entity.RecipeEs;
+import com.mars.common.model.recipe.RecipeEs;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 

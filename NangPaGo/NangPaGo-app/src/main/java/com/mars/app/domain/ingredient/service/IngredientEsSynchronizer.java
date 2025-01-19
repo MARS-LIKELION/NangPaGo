@@ -1,7 +1,7 @@
 package com.mars.app.domain.ingredient.service;
 
-import com.mars.app.domain.ingredient.entity.Ingredient;
-import com.mars.app.domain.ingredient.entity.IngredientEs;
+import com.mars.common.model.ingredient.Ingredient;
+import com.mars.common.model.ingredient.IngredientEs;
 import com.mars.app.domain.ingredient.repository.IngredientEsRepository;
 import com.mars.app.domain.ingredient.repository.IngredientRepository;
 import java.io.BufferedReader;

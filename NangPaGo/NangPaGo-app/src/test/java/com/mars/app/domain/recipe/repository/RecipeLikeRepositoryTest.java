@@ -1,6 +1,6 @@
 package com.mars.app.domain.recipe.repository;
 
-import com.mars.app.domain.recipe.entity.RecipeLike;
+import com.mars.common.model.recipe.RecipeLike;
 import com.mars.app.support.AbstractRepositoryTestSupport;
 import jakarta.transaction.Transactional;
 import java.util.Optional;

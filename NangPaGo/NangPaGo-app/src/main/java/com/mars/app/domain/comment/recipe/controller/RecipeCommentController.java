@@ -1,9 +1,9 @@
 package com.mars.app.domain.comment.recipe.controller;
 
-import com.mars.app.common.dto.PageDto;
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.aop.auth.AuthenticatedUser;
-import com.mars.app.common.component.auth.AuthenticationHolder;
+import com.mars.common.dto.PageDto;
+import com.mars.common.dto.ResponseDto;
+import com.mars.app.aop.auth.AuthenticatedUser;
+import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.app.domain.comment.recipe.service.RecipeCommentService;

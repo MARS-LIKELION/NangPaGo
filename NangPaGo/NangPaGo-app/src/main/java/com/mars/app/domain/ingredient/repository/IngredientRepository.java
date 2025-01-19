@@ -1,6 +1,6 @@
 package com.mars.app.domain.ingredient.repository;
 
-import com.mars.app.domain.ingredient.entity.Ingredient;
+import com.mars.common.model.ingredient.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

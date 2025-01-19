@@ -1,8 +1,8 @@
 package com.mars.app.domain.refrigerator.controller;
 
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.aop.auth.AuthenticatedUser;
-import com.mars.app.common.component.auth.AuthenticationHolder;
+import com.mars.common.dto.ResponseDto;
+import com.mars.app.aop.auth.AuthenticatedUser;
+import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.refrigerator.dto.RefrigeratorResponseDto;
 import com.mars.app.domain.refrigerator.service.RefrigeratorService;
 import io.swagger.v3.oas.annotations.tags.Tag;

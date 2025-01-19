@@ -1,7 +1,7 @@
 package com.mars.app.domain.user.service;
 
-import com.mars.app.common.dto.PageDto;
-import com.mars.app.common.exception.NPGExceptionType;
+import com.mars.common.dto.PageDto;
+import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
@@ -9,11 +9,11 @@ import com.mars.app.domain.favorite.recipe.repository.RecipeFavoriteRepository;
 import com.mars.app.domain.recipe.dto.RecipeResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.refrigerator.repository.RefrigeratorRepository;
-import com.mars.app.domain.user.dto.MyPageDto;
-import com.mars.app.domain.user.dto.UserInfoRequestDto;
-import com.mars.app.domain.user.dto.UserInfoResponseDto;
-import com.mars.app.domain.user.dto.UserResponseDto;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.dto.user.MyPageDto;
+import com.mars.common.dto.user.UserInfoRequestDto;
+import com.mars.common.dto.user.UserInfoResponseDto;
+import com.mars.common.dto.user.UserResponseDto;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

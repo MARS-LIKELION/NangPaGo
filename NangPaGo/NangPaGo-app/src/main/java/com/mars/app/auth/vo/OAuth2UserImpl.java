@@ -1,6 +1,6 @@
 package com.mars.app.auth.vo;
 
-import com.mars.app.domain.user.dto.UserResponseDto;
+import com.mars.common.dto.user.UserResponseDto;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

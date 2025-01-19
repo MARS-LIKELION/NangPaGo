@@ -1,19 +1,19 @@
 package com.mars.app.domain.comment.recipe.service;
 
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_COMMENT;
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_USER;
-import static com.mars.app.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMENT;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
-import com.mars.app.common.dto.PageDto;
+import com.mars.common.dto.PageDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
-import com.mars.app.domain.comment.recipe.entity.RecipeComment;
+import com.mars.common.model.comment.recipe.RecipeComment;
 import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
-import com.mars.app.domain.recipe.entity.Recipe;
+import com.mars.common.model.recipe.Recipe;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

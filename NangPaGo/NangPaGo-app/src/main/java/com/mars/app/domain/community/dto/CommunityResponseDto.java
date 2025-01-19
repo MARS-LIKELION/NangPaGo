@@ -1,6 +1,6 @@
 package com.mars.app.domain.community.dto;
 
-import com.mars.app.domain.community.entity.Community;
+import com.mars.common.model.community.Community;
 import java.time.LocalDateTime;
 import lombok.Builder;
 

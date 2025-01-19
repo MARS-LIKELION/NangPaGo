@@ -1,6 +1,6 @@
 package com.mars.app.domain.refrigerator.dto;
 
-import com.mars.app.domain.refrigerator.entity.Refrigerator;
+import com.mars.common.model.refrigerator.Refrigerator;
 import lombok.Builder;
 
 @Builder

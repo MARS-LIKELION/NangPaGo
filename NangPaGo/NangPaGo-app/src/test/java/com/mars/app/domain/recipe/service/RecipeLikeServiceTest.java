@@ -3,13 +3,13 @@ package com.mars.app.domain.recipe.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.mars.app.common.exception.NPGException;
+import com.mars.common.exception.NPGException;
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
-import com.mars.app.domain.recipe.entity.Recipe;
-import com.mars.app.domain.recipe.entity.RecipeLike;
+import com.mars.common.model.recipe.Recipe;
+import com.mars.common.model.recipe.RecipeLike;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import jakarta.transaction.Transactional;

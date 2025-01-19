@@ -1,9 +1,9 @@
 package com.mars.app.domain.auth.controller;
 
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.component.auth.AuthenticationHolder;
+import com.mars.common.dto.ResponseDto;
+import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.auth.service.TokenService;
-import com.mars.app.domain.user.dto.UserResponseDto;
+import com.mars.common.dto.user.UserResponseDto;
 import com.mars.app.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

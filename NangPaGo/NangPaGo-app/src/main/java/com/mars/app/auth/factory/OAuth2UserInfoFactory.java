@@ -1,12 +1,12 @@
 package com.mars.app.auth.factory;
 
-import static com.mars.app.auth.enums.OAuth2Provider.*;
+import static com.mars.common.enums.oauth.OAuth2Provider.*;
 
-import com.mars.app.auth.enums.OAuth2Provider;
-import com.mars.app.auth.factory.userinfo.GoogleUserInfo;
-import com.mars.app.auth.factory.userinfo.KakaoUserInfo;
-import com.mars.app.auth.factory.userinfo.NaverUserInfo;
-import com.mars.app.auth.factory.userinfo.OAuth2UserInfo;
+import com.mars.common.enums.oauth.OAuth2Provider;
+import com.mars.common.auth.oauth.GoogleUserInfo;
+import com.mars.common.auth.oauth.KakaoUserInfo;
+import com.mars.common.auth.oauth.NaverUserInfo;
+import com.mars.common.auth.oauth.OAuth2UserInfo;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;

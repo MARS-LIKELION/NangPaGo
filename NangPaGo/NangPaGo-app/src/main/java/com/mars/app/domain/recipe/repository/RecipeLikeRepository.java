@@ -2,9 +2,9 @@ package com.mars.app.domain.recipe.repository;
 
 import static jakarta.persistence.LockModeType.PESSIMISTIC_WRITE;
 
-import com.mars.app.domain.recipe.entity.Recipe;
-import com.mars.app.domain.recipe.entity.RecipeLike;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.recipe.Recipe;
+import com.mars.common.model.recipe.RecipeLike;
+import com.mars.common.model.user.User;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

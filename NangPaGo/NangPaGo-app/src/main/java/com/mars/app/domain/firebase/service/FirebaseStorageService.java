@@ -3,7 +3,7 @@ package com.mars.app.domain.firebase.service;
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
-import com.mars.app.common.exception.NPGExceptionType;
+import com.mars.common.exception.NPGExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

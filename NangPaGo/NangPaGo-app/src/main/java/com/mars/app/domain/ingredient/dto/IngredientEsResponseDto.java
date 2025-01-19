@@ -1,6 +1,6 @@
 package com.mars.app.domain.ingredient.dto;
 
-import com.mars.app.domain.ingredient.entity.IngredientEs;
+import com.mars.common.model.ingredient.IngredientEs;
 import lombok.Builder;
 
 @Builder

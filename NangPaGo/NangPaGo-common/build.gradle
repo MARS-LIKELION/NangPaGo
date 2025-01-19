@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch:3.4.0'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

@@ -1,6 +1,6 @@
 package com.mars.app.domain.auth.factory;
 
-import com.mars.app.auth.enums.OAuth2Provider;
+import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.app.domain.auth.factory.oauth2tokeninfo.GoogleTokenInfo;
 import com.mars.app.domain.auth.factory.oauth2tokeninfo.KakaoTokenInfo;
 import com.mars.app.domain.auth.factory.oauth2tokeninfo.NaverTokenInfo;

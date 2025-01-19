@@ -1,19 +1,19 @@
 package com.mars.app.domain.comment.community.service;
 
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY_COMMENT;
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_USER;
-import static com.mars.app.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY_COMMENT;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
-import com.mars.app.common.dto.PageDto;
+import com.mars.common.dto.PageDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
-import com.mars.app.domain.comment.community.entity.CommunityComment;
+import com.mars.common.model.comment.community.CommunityComment;
 import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
-import com.mars.app.domain.community.entity.Community;
+import com.mars.common.model.community.Community;
 import com.mars.app.domain.community.repository.CommunityRepository;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

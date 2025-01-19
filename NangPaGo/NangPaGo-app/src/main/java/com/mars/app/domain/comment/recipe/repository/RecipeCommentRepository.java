@@ -1,7 +1,7 @@
 package com.mars.app.domain.comment.recipe.repository;
 
-import com.mars.app.domain.comment.recipe.entity.RecipeComment;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.comment.recipe.RecipeComment;
+import com.mars.common.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

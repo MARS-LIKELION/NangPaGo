@@ -2,12 +2,12 @@ package com.mars.app.domain.refrigerator.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mars.app.domain.ingredient.entity.Ingredient;
+import com.mars.common.model.ingredient.Ingredient;
 import com.mars.app.domain.ingredient.repository.IngredientRepository;
 import com.mars.app.domain.refrigerator.dto.RefrigeratorResponseDto;
-import com.mars.app.domain.refrigerator.entity.Refrigerator;
+import com.mars.common.model.refrigerator.Refrigerator;
 import com.mars.app.domain.refrigerator.repository.RefrigeratorRepository;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import jakarta.transaction.Transactional;

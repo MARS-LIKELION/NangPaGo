@@ -1,7 +1,7 @@
 package com.mars.app.support;
 
 import com.google.firebase.FirebaseApp;
-import com.mars.app.common.util.JwtUtil;
+import com.mars.common.util.JwtUtil;
 import com.mars.app.provider.TestJwtProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

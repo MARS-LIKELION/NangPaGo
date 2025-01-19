@@ -2,7 +2,7 @@ package com.mars.app.domain.auth.service;
 
 import com.mars.app.domain.auth.dto.RefreshTokenDto;
 import com.mars.app.domain.auth.repository.RefreshTokenRepository;
-import com.mars.app.common.util.JwtUtil;
+import com.mars.common.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.mars.app.common.exception.NPGExceptionType.*;
+import static com.mars.common.exception.NPGExceptionType.*;
 
 @RequiredArgsConstructor
 @Service

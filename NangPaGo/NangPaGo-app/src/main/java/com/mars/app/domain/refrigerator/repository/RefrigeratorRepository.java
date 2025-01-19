@@ -1,8 +1,8 @@
 package com.mars.app.domain.refrigerator.repository;
 
-import com.mars.app.domain.ingredient.entity.Ingredient;
-import com.mars.app.domain.refrigerator.entity.Refrigerator;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.ingredient.Ingredient;
+import com.mars.common.model.refrigerator.Refrigerator;
+import com.mars.common.model.user.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

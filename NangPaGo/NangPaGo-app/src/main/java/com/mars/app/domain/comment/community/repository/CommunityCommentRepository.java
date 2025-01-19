@@ -1,6 +1,6 @@
 package com.mars.app.domain.comment.community.repository;
 
-import com.mars.app.domain.comment.community.entity.CommunityComment;
+import com.mars.common.model.comment.community.CommunityComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

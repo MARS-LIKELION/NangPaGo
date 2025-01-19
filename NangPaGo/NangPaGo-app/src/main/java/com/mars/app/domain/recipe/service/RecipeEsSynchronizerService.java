@@ -1,8 +1,8 @@
 package com.mars.app.domain.recipe.service;
 
-import com.mars.app.common.exception.NPGExceptionType;
-import com.mars.app.domain.recipe.entity.Recipe;
-import com.mars.app.domain.recipe.entity.RecipeEs;
+import com.mars.common.exception.NPGExceptionType;
+import com.mars.common.model.recipe.Recipe;
+import com.mars.common.model.recipe.RecipeEs;
 import com.mars.app.domain.recipe.repository.RecipeESRepository;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;

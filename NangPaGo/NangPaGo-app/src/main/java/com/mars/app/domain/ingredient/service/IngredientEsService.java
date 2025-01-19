@@ -1,12 +1,12 @@
 package com.mars.app.domain.ingredient.service;
 
-import static com.mars.app.common.exception.NPGExceptionType.SERVER_ERROR_ELASTICSEARCH;
+import static com.mars.common.exception.NPGExceptionType.SERVER_ERROR_ELASTICSEARCH;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.mars.app.domain.ingredient.dto.IngredientEsResponseDto;
-import com.mars.app.domain.ingredient.entity.IngredientEs;
+import com.mars.common.model.ingredient.IngredientEs;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;

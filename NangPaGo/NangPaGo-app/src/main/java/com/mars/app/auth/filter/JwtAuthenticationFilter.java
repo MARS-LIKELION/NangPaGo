@@ -1,10 +1,10 @@
 package com.mars.app.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.exception.NPGException;
-import com.mars.app.common.exception.NPGExceptionType;
-import com.mars.app.common.util.JwtUtil;
+import com.mars.common.dto.ResponseDto;
+import com.mars.common.exception.NPGException;
+import com.mars.common.exception.NPGExceptionType;
+import com.mars.common.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

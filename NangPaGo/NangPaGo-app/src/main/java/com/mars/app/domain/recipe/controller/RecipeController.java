@@ -1,9 +1,9 @@
 package com.mars.app.domain.recipe.controller;
 
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.aop.auth.AuthenticatedUser;
-import com.mars.app.common.component.auth.AuthenticationHolder;
-import com.mars.app.common.exception.NPGExceptionType;
+import com.mars.common.dto.ResponseDto;
+import com.mars.app.aop.auth.AuthenticatedUser;
+import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.recipe.dto.RecipeEsResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeResponseDto;

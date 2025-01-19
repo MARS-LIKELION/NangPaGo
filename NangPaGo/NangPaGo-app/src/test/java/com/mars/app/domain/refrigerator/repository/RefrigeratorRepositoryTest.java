@@ -1,7 +1,7 @@
 package com.mars.app.domain.refrigerator.repository;
 
 import com.mars.app.domain.ingredient.repository.IngredientRepository;
-import com.mars.app.domain.refrigerator.entity.Refrigerator;
+import com.mars.common.model.refrigerator.Refrigerator;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.AbstractRepositoryTestSupport;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.mars.app.auth.entrypoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.exception.NPGException;
-import com.mars.app.common.exception.NPGExceptionType;
+import com.mars.common.dto.ResponseDto;
+import com.mars.common.exception.NPGException;
+import com.mars.common.exception.NPGExceptionType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

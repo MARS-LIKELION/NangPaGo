@@ -1,8 +1,8 @@
 package com.mars.app.domain.community.controller;
 
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.aop.auth.AuthenticatedUser;
-import com.mars.app.common.component.auth.AuthenticationHolder;
+import com.mars.common.dto.ResponseDto;
+import com.mars.app.aop.auth.AuthenticatedUser;
+import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.community.dto.CommunityLikeResponseDto;
 import com.mars.app.domain.community.service.CommunityLikeService;
 import io.swagger.v3.oas.annotations.Operation;

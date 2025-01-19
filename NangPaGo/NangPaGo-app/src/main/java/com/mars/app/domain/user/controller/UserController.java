@@ -1,18 +1,18 @@
 package com.mars.app.domain.user.controller;
 
 
-import com.mars.app.common.aop.auth.AuthenticatedUser;
-import com.mars.app.common.component.auth.AuthenticationHolder;
-import com.mars.app.common.dto.PageDto;
-import com.mars.app.common.dto.ResponseDto;
+import com.mars.app.aop.auth.AuthenticatedUser;
+import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.common.dto.PageDto;
+import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.auth.service.OAuth2ProviderTokenService;
-import com.mars.app.common.exception.NPGExceptionType;
+import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeResponseDto;
-import com.mars.app.domain.user.dto.MyPageDto;
-import com.mars.app.domain.user.dto.UserInfoRequestDto;
-import com.mars.app.domain.user.dto.UserInfoResponseDto;
+import com.mars.common.dto.user.MyPageDto;
+import com.mars.common.dto.user.UserInfoRequestDto;
+import com.mars.common.dto.user.UserInfoResponseDto;
 import com.mars.app.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

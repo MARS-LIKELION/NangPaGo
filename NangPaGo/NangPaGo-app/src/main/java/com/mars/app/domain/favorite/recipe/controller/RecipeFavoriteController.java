@@ -1,9 +1,9 @@
 package com.mars.app.domain.favorite.recipe.controller;
 
-import com.mars.app.common.dto.PageDto;
-import com.mars.app.common.dto.ResponseDto;
-import com.mars.app.common.aop.auth.AuthenticatedUser;
-import com.mars.app.common.component.auth.AuthenticationHolder;
+import com.mars.common.dto.PageDto;
+import com.mars.common.dto.ResponseDto;
+import com.mars.app.aop.auth.AuthenticatedUser;
+import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import com.mars.app.domain.favorite.recipe.service.RecipeFavoriteService;

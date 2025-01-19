@@ -1,14 +1,14 @@
 package com.mars.app.domain.recipe.service;
 
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
-import com.mars.app.domain.recipe.entity.Recipe;
-import com.mars.app.domain.recipe.entity.RecipeLike;
+import com.mars.common.model.recipe.Recipe;
+import com.mars.common.model.recipe.RecipeLike;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

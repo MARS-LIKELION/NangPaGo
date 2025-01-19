@@ -1,6 +1,6 @@
 package com.mars.app.domain.recipe.service;
 
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 
 import com.mars.app.domain.recipe.dto.RecipeResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeRepository;

@@ -1,17 +1,17 @@
 package com.mars.app.domain.auth.service;
 
-import static com.mars.app.common.exception.NPGExceptionType.NOT_FOUND_OAUTH2_PROVIDER_TOKEN;
-import static com.mars.app.common.exception.NPGExceptionType.UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_OAUTH2_PROVIDER_TOKEN;
+import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_OAUTH2_PROVIDER_TOKEN;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mars.app.common.exception.NPGExceptionType;
-import com.mars.app.domain.auth.entity.OAuthProviderToken;
+import com.mars.common.exception.NPGExceptionType;
+import com.mars.common.model.auth.OAuthProviderToken;
 import com.mars.app.domain.auth.factory.OAuth2TokenFactory;
 import com.mars.app.domain.auth.factory.oauth2tokeninfo.OAuth2TokenInfo;
 import com.mars.app.domain.auth.repository.OAuthProviderTokenRepository;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;

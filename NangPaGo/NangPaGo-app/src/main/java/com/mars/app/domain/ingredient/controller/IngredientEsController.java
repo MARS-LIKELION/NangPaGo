@@ -1,6 +1,6 @@
 package com.mars.app.domain.ingredient.controller;
 
-import com.mars.app.common.dto.ResponseDto;
+import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.ingredient.dto.IngredientEsResponseDto;
 import com.mars.app.domain.ingredient.service.IngredientEsService;
 import com.mars.app.domain.ingredient.service.IngredientEsSynchronizer;

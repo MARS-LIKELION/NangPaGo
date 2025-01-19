@@ -1,6 +1,6 @@
 package com.mars.app.domain.recipe.dto;
 
-import com.mars.app.domain.recipe.entity.RecipeEs;
+import com.mars.common.model.recipe.RecipeEs;
 import lombok.Builder;
 import java.util.List;
 

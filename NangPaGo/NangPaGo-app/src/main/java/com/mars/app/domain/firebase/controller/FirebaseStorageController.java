@@ -1,6 +1,6 @@
 package com.mars.app.domain.firebase.controller;
 
-import com.mars.app.common.dto.ResponseDto;
+import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.firebase.service.FirebaseStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

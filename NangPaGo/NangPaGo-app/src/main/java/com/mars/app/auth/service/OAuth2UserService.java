@@ -1,11 +1,11 @@
 package com.mars.app.auth.service;
 
 import com.mars.app.auth.factory.OAuth2UserInfoFactory;
-import com.mars.app.auth.factory.userinfo.OAuth2UserInfo;
+import com.mars.common.auth.oauth.OAuth2UserInfo;
 import com.mars.app.auth.vo.OAuth2UserImpl;
-import com.mars.app.domain.user.dto.UserRequestDto;
-import com.mars.app.domain.user.dto.UserResponseDto;
-import com.mars.app.domain.user.entity.User;
+import com.mars.common.dto.user.UserRequestDto;
+import com.mars.common.dto.user.UserResponseDto;
+import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
