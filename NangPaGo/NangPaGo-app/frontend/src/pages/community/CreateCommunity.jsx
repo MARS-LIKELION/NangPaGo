@@ -46,13 +46,16 @@ function CreateCommunity() {
     }
   }, [file]);
 
-  const handleFileChange = useCallback((e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile !== file) {
-      setFile(selectedFile);
-      setIsBlocked(true);
-    }
-  }, [file]);
+  const handleFileChange = useCallback(
+    (e) => {
+      const selectedFile = e.target.files[0];
+      if (selectedFile && selectedFile !== file) {
+        setFile(selectedFile);
+        setIsBlocked(true);
+      }
+    },
+    [file],
+  );
 
   useEffect(() => {
     const handleRefreshUnload = (e) => {
@@ -64,7 +67,9 @@ function CreateCommunity() {
 
     const handleBackNavigation = (e) => {
       if (isBlocked) {
-        const confirmed = window.confirm('작성 중인 내용을 저장하지 않고 이동하시겠습니까?');
+        const confirmed = window.confirm(
+          '작성 중인 내용을 저장하지 않고 이동하시겠습니까?',
+        );
         if (confirmed) {
           setIsBlocked(false);
           navigate(prevPath);
@@ -98,7 +103,9 @@ function CreateCommunity() {
       );
       if (responseData.data?.id) {
         setIsBlocked(false);
-        navigate(`/community/${responseData.data.id}`, { state: { from: '/community/new' } });
+        navigate(`/community/${responseData.data.id}`, {
+          state: { from: '/community/new' },
+        });
       } else {
         setError('게시글 등록 후 ID를 가져올 수 없습니다.');
       }

@@ -1,8 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCommunityList } from '../../api/community';
-import { AiFillHeart } from 'react-icons/ai';
-import { FaCommentAlt } from 'react-icons/fa';
 import TopButton from '../../components/common/TopButton';
 import CreateButton from '../../components/common/CreateButton';
 import Header from '../../components/layout/header/Header.jsx';
@@ -14,12 +12,10 @@ function CommunityList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
   const observerRef = useRef(null);
   const isFetchingRef = useRef(false);
   const observerInstance = useRef(null);
-  const pageSize = 5;
+  const pageSize = 12;
   const navigate = useNavigate();
 
   const loadCommunityList = async (page) => {
@@ -40,7 +36,6 @@ function CommunityList() {
       console.error('커뮤니티 목록을 가져오는 중 오류 발생:', error);
     } finally {
       isFetchingRef.current = false;
-      setIsInitialLoad(false);
     }
   };
 
@@ -48,16 +43,18 @@ function CommunityList() {
     loadCommunityList(0);
   }, []);
 
+  // 스크롤 이벤트 처리
   useEffect(() => {
     const handleScroll = () => {
       setIsTopButtonVisible(window.scrollY > 100);
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    if (!observerRef.current || isInitialLoad) return;
+    if (!observerRef.current) return;
 
     observerInstance.current = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -70,7 +67,7 @@ function CommunityList() {
     return () => {
       if (observerInstance.current) observerInstance.current.disconnect();
     };
-  }, [hasMore, currentPage, isInitialLoad]);
+  }, [currentPage, hasMore]);
 
   const handleCreateClick = () => {
     navigate('/community/new', { state: { from: window.location.pathname } });
@@ -81,36 +78,31 @@ function CommunityList() {
   };
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
+    <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <Header />
 
       <div className="flex-grow px-4 space-y-4">
-        {
-          <ul className="space-y-4">
-            {communityList.map((community) => (
-              <CommunityCard
-                key={community.id}
-                item={community}
-                onClick={handleCardClick}
-              />
-            ))}
-            <div ref={observerRef} className="h-4"></div>
-          </ul>
-        }
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-2 lg:gap-4 md:mb-2 lg:mb-4">
+          {communityList.map((community) => (
+            <CommunityCard
+              key={community.id}
+              item={community}
+              onClick={handleCardClick}
+            />
+          ))}
+          <div ref={observerRef}></div>
+        </ul>
       </div>
 
-      <CreateButton
-        onClick={handleCreateClick}
-        isTopButtonVisible={isTopButtonVisible}
-        basePositionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-      />
-
-      {isTopButtonVisible && (
-        <TopButton
-          offset={100}
-          positionClass="bottom-10 right-[calc((100vw-375px)/2+16px)]"
-        />
-      )}
+      <aside className="fixed z-50 left-0 right-0 bottom-0 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg mx-auto">
+        <div className="flex justify-end gap-4 px-4">
+          <CreateButton
+            onClick={handleCreateClick}
+            isTopButtonVisible={isTopButtonVisible}
+          />
+          {isTopButtonVisible && <TopButton />}
+        </div>
+      </aside>
 
       <Footer />
     </div>
