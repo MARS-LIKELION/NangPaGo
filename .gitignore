@@ -470,3 +470,4 @@ NangPaGo-data/dataAnalysis/
 NangPaGo-data/output.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,jupyternotebooks,venv
+NangPaGo/NangPaGo-app/src/main/resources/firebase/nangpago.json

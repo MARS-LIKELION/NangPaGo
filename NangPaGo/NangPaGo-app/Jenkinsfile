@@ -1,0 +1,139 @@
+pipeline {
+    agent any
+    environment {
+        SCRIPT_PATH = '/var/jenkins_home/nangpago/NangPaGo/NangPaGo-app'
+        PROJECT_DIR = 'NangPaGo'
+        APP_DIR = 'NangPaGo/NangPaGo-app'
+        REACT_DIR = 'NangPaGo/NangPaGo-app/frontend'
+        DOCKER_DIR = 'NangPaGo/NangPaGo-app/docker'
+        DISCORD_WEBHOOK = credentials('discord-webhook')
+    }
+    tools {
+        gradle 'gradle-8.11'
+        nodejs 'node-18-alpine'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Create Config Files') {
+            steps {
+                withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
+                    sh '''
+                        mkdir -p ./${APP_DIR}/src/main/resources
+                        mkdir -p ./${REACT_DIR}
+                        mkdir -p ./${DOCKER_DIR}
+
+                        cp $ENV_FILE ./${APP_DIR}/src/main/resources/.env
+                        cp $ENV_FILE ./${REACT_DIR}/.env
+                        cp $ENV_FILE ./${DOCKER_DIR}/.env
+                    '''
+                }
+            }
+        }
+        stage('Create Firebase Config') {
+            steps {
+                withCredentials([file(credentialsId: 'FIREBASE_KEY_FILE', variable: 'FIREBASE_KEY_PATH')]) {
+                    sh '''
+                        mkdir -p ./${APP_DIR}/src/main/resources/firebase
+                        cp $FIREBASE_KEY_PATH ./${APP_DIR}/src/main/resources/firebase/nangpago.json
+                    '''
+                }
+            }
+        }
+        stage('Prepare'){
+            steps {
+                dir(PROJECT_DIR) {
+                    sh './gradlew clean'
+                }
+                dir(REACT_DIR) {
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir(PROJECT_DIR) {
+                    sh './gradlew :NangPaGo-app:build -x test'
+                }
+                dir(REACT_DIR) {
+                    sh 'npm run build'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                dir(PROJECT_DIR) {
+                    script {
+                        def version = sh(script: "./gradlew properties -q | grep 'version:' | awk '{print \$2}'", returnStdout: true).trim()
+
+                        // 환경변수로 버전 설정
+                        env.APP_VERSION = version
+                    }
+                }
+                sh '''
+                    mkdir -p ${SCRIPT_PATH}
+                    mkdir -p ${SCRIPT_PATH}/docker
+                    mkdir -p ${SCRIPT_PATH}/frontend
+
+                    # 도커 파일 복사
+                    cp ./${DOCKER_DIR}/docker-compose.blue.yml ${SCRIPT_PATH}/docker/
+                    cp ./${DOCKER_DIR}/docker-compose.green.yml ${SCRIPT_PATH}/docker/
+
+                    # 프론트엔드 파일 복사
+                    cp -r ./${REACT_DIR}/* ${SCRIPT_PATH}/frontend/
+
+                    # 백엔드 파일 복사
+                    cp ./${APP_DIR}/build/libs/*.jar ${SCRIPT_PATH}/
+                    cp ./${APP_DIR}/Dockerfile ${SCRIPT_PATH}/
+
+                    cp ./${APP_DIR}/scripts/deploy.sh ${SCRIPT_PATH}/
+                    chmod +x ${SCRIPT_PATH}/deploy.sh
+                '''
+
+                withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
+                    sh '''
+                        cp $ENV_FILE ${SCRIPT_PATH}/.env
+                        cp $ENV_FILE ${SCRIPT_PATH}/docker/.env
+                        cp $ENV_FILE ${SCRIPT_PATH}/frontend/.env
+
+                        ${SCRIPT_PATH}/deploy.sh
+                    '''
+                }
+            }
+        }
+    }
+    post {
+        success {
+            discordSend description: """
+                🎉 **빌드 및 배포 성공**
+
+                **프로젝트**: ${env.JOB_NAME}
+                **빌드 번호**: #${env.BUILD_NUMBER}
+                **버전**: ${env.APP_VERSION}
+                **소요 시간**: ${currentBuild.durationString}
+                """,
+                link: env.BUILD_URL,
+                result: currentBuild.currentResult,
+                title: "NangPaGo 빌드/배포 성공",
+                webhookURL: DISCORD_WEBHOOK
+        }
+
+        failure {
+            discordSend description: """
+                ❌ **빌드 또는 배포 실패**
+
+                **프로젝트**: ${env.JOB_NAME}
+                **빌드 번호**: #${env.BUILD_NUMBER}
+                **버전**: ${env.APP_VERSION}
+                **소요 시간**: ${currentBuild.durationString}
+                """,
+                link: env.BUILD_URL,
+                result: currentBuild.currentResult,
+                title: "NangPaGo 빌드/배포 실패",
+                webhookURL: DISCORD_WEBHOOK
+        }
+    }
+}
