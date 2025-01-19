@@ -32,8 +32,10 @@ function Header({ isBlocked = false }) {
 
     try {
       await axiosInstance.post('/api/logout');
-      window.location.href = '/';
       dispatch(logout());
+      setTimeout(() => {
+        navigate('/');
+      }, 0);
     } catch (error) {
       console.error('로그아웃 실패:', error.response?.data || error.message);
     }
@@ -89,7 +91,6 @@ function Header({ isBlocked = false }) {
               onClick={() => handleLinkClick('/refrigerator')}
             />
           )}
-
           <NavItem
             to="/community"
             isActive={isActive('/community')}
