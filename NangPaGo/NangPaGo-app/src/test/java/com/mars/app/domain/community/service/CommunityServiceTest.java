@@ -115,7 +115,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
             RuntimeException.class,
             () -> communityService.getCommunityById(privateCommunity.getId(), "other@example.com")
         );
-        assertThat(ex.getMessage()).contains("게시물에 접근 권한이 없습니다.");
+        assertThat(ex.getMessage()).contains("게시물을 수정/삭제할 권한이 없습니다.");
     }
 
     @DisplayName("사용자는 게시글을 수정할 수 있다.")
