@@ -90,7 +90,6 @@ function Community({ community }) {
     <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
       <Header />
 
-      {/* Main Content */}
       <div>
         <div className="mt-6 px-4">
           <h1 className="text-xl font-bold">{community.title}</h1>
@@ -130,10 +129,8 @@ function Community({ community }) {
         <CommunityComment communityId={community.id} />
       </div>
 
-      {/* Footer */}
       <Footer />
 
-      {/* Floating Action Button */}
       <div className="fixed bottom-10 right-[calc((100vw-375px)/2+16px)] z-50">
         <div className="relative">
           {community.isOwnedByUser ? (

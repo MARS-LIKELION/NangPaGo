@@ -43,7 +43,6 @@ function CommunityList() {
     loadCommunityList(0);
   }, []);
 
-  // 스크롤 이벤트 처리
   useEffect(() => {
     const handleScroll = () => {
       setIsTopButtonVisible(window.scrollY > 100);

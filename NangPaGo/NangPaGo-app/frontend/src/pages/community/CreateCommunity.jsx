@@ -66,10 +66,9 @@ function CreateCommunity() {
     };
 
     const handleBackNavigation = (e) => {
-      if (isBlocked) {
-        const confirmed = window.confirm(
+      if (isBlocked) {const confirmed = window.confirm(
           '작성 중인 내용을 저장하지 않고 이동하시겠습니까?',
-        );
+          );
         if (confirmed) {
           setIsBlocked(false);
           navigate(prevPath);
