@@ -1,4 +1,3 @@
-// src/hooks/useRecipeSearch.js
 import { useState, useEffect } from 'react';
 import useDebounce from './useDebounce';
 import { searchRecipes } from '../api/recipe';
