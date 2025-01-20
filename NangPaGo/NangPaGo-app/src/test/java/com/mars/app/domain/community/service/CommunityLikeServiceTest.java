@@ -79,8 +79,9 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
 
         Community community = createCommunity(user);
         communityRepository.save(community);
-
-        communityLikeService.toggleLike(community.getId(), user.getEmail());
+        
+        CommunityLike communityLike = CommunityLike.of(user, community);
+        communityLikeRepository.save(communityLike);
 
         // when : 좋아요를 다시 누름
         var response = communityLikeService.toggleLike(community.getId(), user.getEmail());
