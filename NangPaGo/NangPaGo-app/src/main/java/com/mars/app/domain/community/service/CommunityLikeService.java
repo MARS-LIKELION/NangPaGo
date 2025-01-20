@@ -52,13 +52,11 @@ public class CommunityLikeService {
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
     }
 
-    @Transactional
     private boolean removeLike(CommunityLike communityLike) {
         communityLikeRepository.delete(communityLike);
         return false;
     }
 
-    @Transactional
     private boolean addLike(User user, Community community) {
         communityLikeRepository.save(CommunityLike.of(user, community));
         return true;
