@@ -53,9 +53,9 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
             .build();
     }
 
-    @DisplayName("사용자는 게시물의 좋아요 상태를 토글할 수 있다.")
+    @DisplayName("사용자는 게시물에 좋아요를 추가할 수 있다.")
     @Test
-    void toggleLike() {
+    void addLike() {
         // given
         User user = createUser("user@example.com");
         userRepository.save(user);
@@ -64,16 +64,29 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
         communityRepository.save(community);
 
         // when: 처음 좋아요를 누름
-        var response1 = communityLikeService.toggleLike(community.getId(), user.getEmail());
+        var response = communityLikeService.toggleLike(community.getId(), user.getEmail());
 
         // then: 좋아요 상태가 true로 변경됨
-        assertThat(response1.liked()).isTrue();
+        assertThat(response.liked()).isTrue();
+    }
 
-        // when: 다시 좋아요를 누르면 좋아요가 취소됨
-        var response2 = communityLikeService.toggleLike(community.getId(), user.getEmail());
+    @DisplayName("사용자는 게시물의 좋아요를 취소할 수 있다.")
+    @Test
+    void cancelLike() {
+        // given
+        User user = createUser("user@example.com");
+        userRepository.save(user);
 
-        // then: 좋아요 상태가 false로 변경됨
-        assertThat(response2.liked()).isFalse();
+        Community community = createCommunity(user);
+        communityRepository.save(community);
+
+        communityLikeService.toggleLike(community.getId(), user.getEmail());
+
+        // when : 좋아요를 다시 누름
+        var response = communityLikeService.toggleLike(community.getId(), user.getEmail());
+
+        // then : 좋아요 상태가 false로 변경됨
+        assertThat(response.liked()).isFalse();
     }
 
 
@@ -95,7 +108,7 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
         boolean liked = communityLikeService.isLiked(community.getId(), user.getEmail());
 
         // then
-        assertThat(liked).isTrue(); // 좋아요 상태 확인
+        assertThat(liked).isTrue();
     }
 
 

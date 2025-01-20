@@ -20,9 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CommunityServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    private CommunityService communityService;
-
-    @Autowired
     private CommunityRepository communityRepository;
 
     @Autowired
@@ -33,6 +30,9 @@ class CommunityServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CommunityService communityService;
 
     @Autowired
     private FirebaseStorageService firebaseStorageService;
@@ -54,11 +54,10 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @DisplayName("사용자는 게시글을 생성할 수 있다.")
     @Test
     void createCommunityTest() {
-
+        // given
         User user = createUser("author@example.com");
         userRepository.save(user);
 
-        // title,content,imageUrl,isPublic
         CommunityRequestDto requestDto = new CommunityRequestDto(
             "테스트제목",
             "테스트내용",
@@ -129,7 +128,6 @@ class CommunityServiceTest extends IntegrationTestSupport {
         Community community = Community.of(user, "원제목", "원내용", "sample.png", true);
         communityRepository.save(community);
 
-        // title, content, imageUrl, isPublic
         CommunityRequestDto updateDto = new CommunityRequestDto(
             "새제목",
             "새내용",
