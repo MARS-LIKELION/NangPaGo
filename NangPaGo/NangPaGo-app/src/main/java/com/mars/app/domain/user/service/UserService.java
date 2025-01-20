@@ -13,6 +13,7 @@ import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;
 import com.mars.common.dto.user.UserInfoResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
+import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,12 @@ public class UserService {
     public PageDto<RecipeFavoriteListResponseDto> getMyFavorites(String email, int pageNo, int pageSize) {
         return PageDto.of(
             recipeFavoriteRepository.findAllByUser(findUserByEmail(email), PageRequest.of(pageNo, pageSize))
-                .map(recipeFavorite -> RecipeFavoriteListResponseDto.of(recipeFavorite.getRecipe()))
+                .map(recipeFavorite -> {
+                    Recipe recipe = recipeFavorite.getRecipe();
+                    int likeCount = recipeLikeRepository.countByRecipeId(recipe.getId());
+                    int commentCount = recipeCommentRepository.countByRecipeId(recipe.getId());
+                    return RecipeFavoriteListResponseDto.of(recipe, likeCount, commentCount);
+                })
         );
     }
 

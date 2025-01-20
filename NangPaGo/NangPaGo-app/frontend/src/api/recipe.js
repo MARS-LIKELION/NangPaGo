@@ -61,27 +61,21 @@ export const fetchRecommendedRecipes = async (
   }
 };
 
-export const fetchFavoriteRecipes = async (
-  page = 0,
-  size = 10,
-  sort = 'createdAt,desc',
-) => {
+export const fetchFavoriteRecipes = async (page, size) => {
   try {
-    const response = await axiosInstance.get('/api/recipe/favorite/list', {
-      params: { page, size, sort },
-    });
-    return response.data.data;
-  } catch (error) {
-    console.error('Error fetching favorite recipes:', error);
-    return {
-      content: [],
-      currentPage: 0,
-      totalPages: 0,
-      totalItems: 0,
-      isLast: true,
+    const params = {
+      pageNo: page,
+      pageSize: size,
     };
+    const response = await axiosInstance.get('/api/recipe/favorite/list', { params });
+    const { content, last, number } = response.data.data;
+    return { content: content || [], last, number };
+  } catch (error) {
+    console.error('즐겨찾기한 레시피 목록 조회 실패:', error);
+    return { content: [], last: true, number: page };
   }
 };
+
 
 export const getLikeCount = async (recipeId) => {
   try {

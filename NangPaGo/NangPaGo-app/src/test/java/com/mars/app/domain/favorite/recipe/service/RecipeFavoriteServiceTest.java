@@ -138,7 +138,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         // when
         PageDto<RecipeFavoriteListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
-            user.getEmail(), null);
+            user.getEmail(), 0, 10);
 
         //then
         assertThat(recipeFavorites)

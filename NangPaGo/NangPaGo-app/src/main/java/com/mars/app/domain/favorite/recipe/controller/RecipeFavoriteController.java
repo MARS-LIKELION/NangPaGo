@@ -7,6 +7,7 @@ import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import com.mars.app.domain.favorite.recipe.service.RecipeFavoriteService;
+import com.mars.common.exception.NPGExceptionType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,9 +41,17 @@ public class RecipeFavoriteController {
     @Operation(summary = "즐겨찾기 목록 조회")
     @AuthenticatedUser
     @GetMapping("/favorite/list")
-    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(Pageable pageable) {
+    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "7") int pageSize
+    ) {
+        if (pageNo < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
+        }
+        if (pageSize < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
+        }
         String email = AuthenticationHolder.getCurrentUserEmail();
-        PageDto<RecipeFavoriteListResponseDto> favoriteRecipes = recipeFavoriteService.getFavoriteRecipes(email, pageable);
-        return ResponseDto.of(favoriteRecipes);
+        return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(email, pageNo - 1, pageSize));
     }
 }

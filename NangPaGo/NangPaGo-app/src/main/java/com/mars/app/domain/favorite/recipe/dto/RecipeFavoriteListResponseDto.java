@@ -9,15 +9,19 @@ import java.util.List;
 public record RecipeFavoriteListResponseDto(
     String id,
     String name,
+    int likeCount,
+    int commentCount,
     String recipeImageUrl,
     List<String> ingredients,
     List<String> ingredientsTag,
     List<String> ingredientsDisplayTag
 ) {
-    public static RecipeFavoriteListResponseDto of(Recipe recipe) {
+    public static RecipeFavoriteListResponseDto of(Recipe recipe, int likeCount, int commentCount) {
         return RecipeFavoriteListResponseDto.builder()
             .id(recipe.getId().toString())
             .name(recipe.getName())
+            .likeCount(likeCount)
+            .commentCount(commentCount)
             .recipeImageUrl(recipe.getMainImage())
             .ingredients(List.of(recipe.getIngredients().split(",")))
             .ingredientsTag(List.of(recipe.getIngredients().split(",")))
