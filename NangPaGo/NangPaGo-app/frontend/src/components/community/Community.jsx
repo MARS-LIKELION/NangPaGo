@@ -7,9 +7,9 @@ import Footer from '../common/Footer';
 import CreateButton from '../common/CreateButton';
 import { styles } from '../common/Image';
 import {
+  deleteCommunity,
   getLikeCount,
   getLikeStatus,
-  deleteCommunity,
   toggleLike,
 } from '../../api/community';
 
@@ -67,8 +67,11 @@ function Community({ community }) {
   const handleEditClick = () => navigate(`/community/${community.id}/modify`, { state: { from: window.location.pathname } });
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  const menuItemClass =
+    'bg-secondary text-white px-4 py-2 rounded-md shadow-md hover:bg-opacity-90 transform transition-all duration-300';
+
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col justify-between">
+    <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col justify-between max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <Header />
       <div>
         <div className="mt-6 px-4">
@@ -93,7 +96,6 @@ function Community({ community }) {
             className={styles.mainImage}
           />
         </div>
-
         <div className="mt-2 flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <button
@@ -107,8 +109,7 @@ function Community({ community }) {
             </button>
           </div>
         </div>
-
-        <div className="mt-4 px-4 min-h-[10rem]">
+        <div className="mt-4 px-4">
           <p className="text-gray-700 text-sm">
             {community.content.split(/\r?\n/).map((line, index) => (
               <Fragment key={index}>
@@ -121,8 +122,7 @@ function Community({ community }) {
         <CommunityComment communityId={community.id} />
       </div>
       <Footer />
-
-      <div className="fixed bottom-10 right-[calc((100vw-375px)/2+16px)] z-9999">
+      <div className="fixed bottom-10 right-[calc((100vw-375px)/2+16px)] z-50">
         <div className="relative">
           {community.isOwnedByUser ? (
             <>
@@ -134,7 +134,7 @@ function Community({ community }) {
                 }
               />
               <ul
-                className={`absolute bottom-1 right-16 flex flex-col items-end gap-3 ${
+                className={`absolute bottom-12 right-20 flex flex-col items-end gap-3 ${
                   isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
                 } transition-opacity duration-300`}
               >
@@ -145,7 +145,10 @@ function Community({ community }) {
                       : 'translate-x-[50px] opacity-0'
                   } transition-all duration-300`}
                 >
-                  <button onClick={handleCreateClick} className="text-white ">
+                  <button
+                    onClick={handleCreateClick}
+                    className="bg-secondary text-white w-12 text-center py-2"
+                  >
                     글작성
                   </button>
                 </li>
@@ -156,7 +159,10 @@ function Community({ community }) {
                       : 'translate-x-[50px] opacity-0'
                   } transition-all duration-300`}
                 >
-                  <button onClick={handleEditClick} className="text-white ">
+                  <button
+                    onClick={handleEditClick}
+                    className="bg-secondary text-white w-12 text-center py-2"
+                  >
                     글수정
                   </button>
                 </li>
@@ -167,7 +173,10 @@ function Community({ community }) {
                       : 'translate-x-[50px] opacity-0'
                   } transition-all duration-300`}
                 >
-                  <button onClick={handleDeleteClick} className="text-white ">
+                  <button
+                    onClick={handleDeleteClick}
+                    className="bg-secondary text-white w-12 text-center py-2"
+                  >
                     글삭제
                   </button>
                 </li>

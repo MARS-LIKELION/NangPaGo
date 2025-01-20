@@ -126,8 +126,8 @@ function ModifyCommunity() {
     try {
       const formData = new FormData();
       formData.append('title', title);
-      formData.append('content', content); // 줄바꿈 데이터
-      console.log('전송할 content 데이터:', content); // 전송 전 content 확인
+      formData.append('content', content);
+      console.log('전송할 content 데이터:', content);
       formData.append('isPublic', isPublic);
       if (file) formData.append('file', file);
       await updateCommunity(id, formData);
@@ -140,7 +140,7 @@ function ModifyCommunity() {
   };
 
   return (
-    <div className="bg-white shadow-md mx-auto w-[375px] min-h-screen flex flex-col">
+    <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <Header isBlocked={isBlocked} />
       <div className="flex-1 p-4">
         <TextInput
@@ -179,9 +179,9 @@ function ModifyCommunity() {
               setIsPublic(!e.target.checked);
               setIsBlocked(true);
             }}
-            className="mr-2 w-4 h-4 appearance-none border border-gray-400 rounded-sm checked:bg-yellow-500 checked:border-yellow-500"
+            className="mr-2 w-4 h-4 appearance-none border border-text-400 rounded-md checked:bg-primary"
           />
-          <label htmlFor="is-public" className="text-sm text-gray-500">
+          <label htmlFor="is-public" className="text-sm text-text-600">
             비공개 (체크 시 로그인한 사용자만 볼 수 있습니다.)
           </label>
         </div>
