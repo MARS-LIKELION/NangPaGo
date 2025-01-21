@@ -64,23 +64,6 @@ public class SecurityConfig {
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers( // 정적 리소스 허용
-                    "/",
-                    "/login",
-                    "/index.html",
-                    "/*.js",
-                    "/*.css",
-                    "/*.ico",
-                    "/*.png",
-                    "/static/**",
-                    "/assets/**",
-                    "/images/**",
-                    "/manifest.json",
-                    "/img/*",
-                    "/static/img/*",
-                    "/resources/**",
-                    "/fonts/**"
-                ).permitAll()
                 .requestMatchers(WHITE_LIST).permitAll()
                 .requestMatchers("/api/admin/**")
                 .hasAuthority("ROLE_ADMIN")

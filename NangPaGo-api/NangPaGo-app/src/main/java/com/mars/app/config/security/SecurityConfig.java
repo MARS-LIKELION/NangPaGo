@@ -86,23 +86,6 @@ public class SecurityConfig {
                 .successHandler(oauth2SuccessHandler)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers( // 정적 리소스 허용
-                    "/",
-                    "/index.html",
-                    "/*.js",
-                    "/*.css",
-                    "/*.ico",
-                    "/*.png",
-                    "/static/**",
-                    "/assets/**",
-                    "/images/**",
-                    "/manifest.json",
-                    "/img/*",
-                    "/static/img/*",
-                    "/resources/**",
-                    "/socialLogin/**",
-                    "/fonts/**"
-                ).permitAll()
                 .requestMatchers(WHITE_LIST).permitAll()
                 .requestMatchers(
                     "/api/recipe/{id}/comment/**",
