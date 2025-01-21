@@ -16,8 +16,8 @@ jobs:
       # Firebase 설정 파일 생성
       - name: Create Firebase config file
         run: |
-          mkdir -p ./NangPaGo/NangPaGo-app/src/main/resources/firebase
-          echo '${{ secrets.FIREBASE_SECRET_KEY }}' > ./NangPaGo/NangPaGo-app/src/main/resources/firebase/nangpago.json
+          mkdir -p ./NangPaGo-api/NangPaGo-app/src/main/resources/firebase
+          echo '${{ secrets.FIREBASE_SECRET_KEY }}' > ./NangPaGo-api/NangPaGo-app/src/main/resources/firebase/nangpago.json
 
       # Backend Build
       - name: Set up JDK 17
@@ -27,7 +27,25 @@ jobs:
           distribution: 'temurin'
 
       - name: Grant execute permission for Gradle Wrapper
-        run: chmod +x ./NangPaGo/gradlew
+        run: chmod +x ./NangPaGo-api/gradlew
 
-      - name: Build with Gradle (contains React build)
-        run: cd NangPaGo && ./gradlew build testClasses -x test
+      - name: Build with Gradle
+        run: cd NangPaGo-api && ./gradlew build testClasses -x test
+
+      # Frontend build
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+
+      - name: Install NangPaGo-client Dependencies
+        run: cd NangPaGo-client && npm install
+
+      - name: Build NangPaGo-client
+        run: cd NangPaGo-client && npm run build
+
+      - name: Install NangPaGo-admin Dependencies
+        run: cd NangPaGo-admin && npm install
+
+      - name: Build NangPaGo-admin
+        run: cd NangPaGo-admin && npm run build
