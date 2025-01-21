@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
@@ -6,12 +7,29 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // 실제 구현에서는 API 호출을 통해 인증을 처리합니다
-    localStorage.setItem('isAuthenticated', 'true');
-    navigate('/dashboard');
-  };
+  const handleSubmit = async (e) => {
+         e.preventDefault();
+         const formData = new FormData();
+         formData.append('email', email);
+         formData.append('password', password);
+
+         try {
+             const response = await axios({
+                 url: 'http://localhost:8090/login/proc',
+                 method: 'POST',
+                 data: formData,
+                 withCredentials: true,
+             });
+             if (response.status === 200) {
+                 localStorage.setItem('isAuthenticated', 'true');
+                 alert('로그인 성공! ');
+                 navigate('/dashboard');
+             }
+         } catch (error) {
+             console.log('로그인 에러: ', error);
+         }
+     };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">

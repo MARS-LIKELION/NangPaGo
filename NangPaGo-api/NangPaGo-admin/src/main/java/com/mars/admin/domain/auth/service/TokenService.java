@@ -1,19 +1,19 @@
-package com.mars.app.domain.auth.service;
+package com.mars.admin.domain.auth.service;
 
+import static com.mars.common.exception.NPGExceptionType.BAD_REQUEST_INVALID;
+import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_TOKEN_EXPIRED;
+
+import com.mars.admin.domain.auth.repository.RefreshTokenRepository;
 import com.mars.common.dto.auth.RefreshTokenDto;
-import com.mars.app.domain.auth.repository.RefreshTokenRepository;
 import com.mars.common.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import static com.mars.common.exception.NPGExceptionType.*;
 
 @RequiredArgsConstructor
 @Service

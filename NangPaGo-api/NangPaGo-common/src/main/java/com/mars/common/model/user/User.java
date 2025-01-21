@@ -56,6 +56,8 @@ public class User extends BaseEntity {
     private UserStatus userStatus;
     private LocalDate leftAt;
 
+    private String password;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeComment> comments;
 

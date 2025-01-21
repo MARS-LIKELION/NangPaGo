@@ -7,7 +7,8 @@ import lombok.Builder;
 public record UserResponseDto(
     String email,
     String nickname,
-    String role
+    String role,
+    String password
 ) {
 
     public static UserResponseDto from(User user) {
@@ -15,6 +16,15 @@ public record UserResponseDto(
             .email(user.getEmail())
             .nickname(user.getNickname())
             .role(user.getRole())
+            .build();
+    }
+
+    public static UserResponseDto adminFrom(User user){
+        return UserResponseDto.builder()
+            .email(user.getEmail())
+            .nickname(user.getNickname())
+            .role(user.getRole())
+            .password(user.getPassword())
             .build();
     }
 }
