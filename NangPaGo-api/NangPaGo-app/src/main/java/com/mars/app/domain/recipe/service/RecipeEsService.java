@@ -78,10 +78,10 @@ public class RecipeEsService {
                     .map(highlights -> highlights.get(0))
                     .orElse(source.getName());
 
+                float matchScore = hit.score() != null ? hit.score().floatValue() : 0.0f;
                 int likeCount = getRecipeLikeCountBy(source.getId());
                 int commentCount = getRecipeCommentCountBy(source.getId());
 
-                float matchScore = hit.score() != null ? hit.score().floatValue() : 0.0f;
 
                 return RecipeEsResponseDto.of(
                     source,
@@ -89,7 +89,6 @@ public class RecipeEsService {
                     likeCount,
                     commentCount,
                     matchScore
-//                    hit.score() != null ? hit.score().floatValue() : 0.0f
                 );
             })
             .toList();
