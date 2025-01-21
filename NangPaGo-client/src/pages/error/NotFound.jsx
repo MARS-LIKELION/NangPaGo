@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function UnauthenticatedAccess() {
+function NotFound() {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-8 rounded-lg relative flex flex-col items-center max-w-[300px] w-[calc(100%-32px)]">
@@ -22,4 +22,4 @@ function UnauthenticatedAccess() {
   );
 }
 
-export default UnauthenticatedAccess;
+export default NotFound;
