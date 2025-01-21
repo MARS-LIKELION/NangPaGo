@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
-    id 'com.github.node-gradle.node' version '3.5.1'
 }
 
 ext {
@@ -21,27 +20,6 @@ dependencies {
 
     // Firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
-}
-
-node {
-    version = '23.0.0'
-    download = true
-    nodeProjectDir = file("${project.projectDir}/frontend")
-}
-
-tasks.named('processResources') {
-    dependsOn copyFrontend
-}
-
-tasks.register('npmBuild', NpmTask) {
-    dependsOn npmInstall
-    args = ['run', 'build']
-}
-
-tasks.register('copyFrontend', Copy) {
-    dependsOn npmBuild
-    from "${project.projectDir}/frontend/dist"
-    into "${project.buildDir}/resources/main/static"
 }
 
 springBoot {

@@ -1,4 +1,4 @@
-rootProject.name = 'NangPaGo'
+rootProject.name = 'NangPaGo-api'
 
 include 'NangPaGo-app'
 include 'NangPaGo-admin'

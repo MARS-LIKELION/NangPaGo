@@ -4,7 +4,7 @@ echo "Running tests before push..."
 
 # Git 프로젝트 루트 디렉토리 경로 얻기
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-cd "$REPO_ROOT/NangPaGo"
+cd "$REPO_ROOT/NangPaGo-api"
 
 # OS 확인 및 Gradle 명령어 실행
 case "$(uname -s)" in
