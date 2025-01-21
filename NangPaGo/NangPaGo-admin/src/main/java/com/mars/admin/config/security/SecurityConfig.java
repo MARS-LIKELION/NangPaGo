@@ -104,6 +104,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .build();
+            
     }
 
     @Bean
