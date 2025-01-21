@@ -1,4 +1,4 @@
-package com.mars.admin.user.repository;
+package com.mars.admin.domain.user.repository;
 
 import com.mars.common.model.user.User;
 import java.util.Optional;

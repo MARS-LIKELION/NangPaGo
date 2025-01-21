@@ -1,10 +1,10 @@
-package com.mars.common.auth.service;
+package com.mars.admin.domain.auth.service;
 
 import static com.mars.common.exception.NPGExceptionType.BAD_REQUEST_INVALID;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_TOKEN_EXPIRED;
 
+import com.mars.admin.domain.auth.repository.RefreshTokenRepository;
 import com.mars.common.auth.dto.RefreshTokenDto;
-import com.mars.common.auth.repository.RefreshTokenRepository;
 import com.mars.common.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

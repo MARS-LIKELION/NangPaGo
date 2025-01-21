@@ -5,7 +5,7 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import com.mars.app.auth.vo.OAuth2UserImpl;
 import com.mars.common.util.JwtUtil;
 import com.mars.app.domain.auth.service.OAuth2ProviderTokenService;
-import com.mars.common.auth.service.TokenService;
+import com.mars.app.domain.auth.service.TokenService;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;

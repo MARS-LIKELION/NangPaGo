@@ -1,4 +1,4 @@
-package com.mars.common.auth.filter;
+package com.mars.admin.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mars.common.dto.ResponseDto;
@@ -11,19 +11,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-/*    @Override
+    @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         return path.equals("/") ||
@@ -34,12 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             path.matches("/fonts/.*") ||
             path.matches("/logo\\..*") ||
             path.matches(".*\\.(js|css|ico|png|jpg|jpeg|gif|svg)$");
-    }*/
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+        HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
 
         String token = extractJwtFromRequest(request);
 
@@ -76,4 +74,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.getWriter().write(jsonResponse);
     }
 }
-

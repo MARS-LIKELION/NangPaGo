@@ -1,11 +1,11 @@
 package com.mars.app.config.security;
 
-import com.mars.common.auth.entrypoint.UnauthorizedEntryPoint;
-import com.mars.common.auth.filter.LogoutFilter;
+import com.mars.app.auth.entrypoint.UnauthorizedEntryPoint;
+import com.mars.app.auth.filter.OAuth2LogoutFilter;
 import com.mars.app.auth.handler.OAuth2SuccessHandler;
-import com.mars.common.auth.service.LogoutService;
+import com.mars.app.auth.service.OAuth2LogoutService;
 import com.mars.app.auth.service.OAuth2UserService;
-import com.mars.common.auth.filter.JwtAuthenticationFilter;
+import com.mars.app.auth.filter.JwtAuthenticationFilter;
 import com.mars.app.auth.vo.OAuth2RequestResolver;
 import com.mars.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -53,7 +54,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final OAuth2UserService oauth2UserService;
     private final OAuth2SuccessHandler oauth2SuccessHandler;
-    private final LogoutService oauth2LogoutService;
+    private final OAuth2LogoutService oauth2LogoutService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
@@ -70,7 +71,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new LogoutFilter(oauth2LogoutService), org.springframework.security.web.authentication.logout.LogoutFilter.class)
+            .addFilterBefore(new OAuth2LogoutFilter(oauth2LogoutService), LogoutFilter.class)
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
             )

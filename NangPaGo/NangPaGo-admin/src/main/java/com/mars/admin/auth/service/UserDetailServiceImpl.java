@@ -3,7 +3,7 @@ package com.mars.admin.auth.service;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 import com.mars.admin.auth.vo.UserDetailsImpl;
-import com.mars.admin.user.repository.UserRepository;
+import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.model.user.User;
 import lombok.RequiredArgsConstructor;
