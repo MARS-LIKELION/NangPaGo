@@ -171,11 +171,10 @@ spring:
     username: ${TEST_DB_USERNAME}
     password: ${TEST_DB_PASSWORD}
 
-  # Table 자동 생성 방지
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop  # 테스트가 실행될 때 마다 모든 테이블을 Create-Drop
     properties:
       hibernate:
         show_sql: true
