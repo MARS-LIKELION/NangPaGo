@@ -2,10 +2,11 @@ pipeline {
     agent any
     environment {
         SCRIPT_PATH = '/var/jenkins_home/nangpago/NangPaGo/NangPaGo-app'
-        PROJECT_DIR = 'NangPaGo'
-        APP_DIR = 'NangPaGo/NangPaGo-app'
-        REACT_DIR = 'NangPaGo/NangPaGo-app/frontend'
-        DOCKER_DIR = 'NangPaGo/NangPaGo-app/docker'
+        PROJECT_DIR = 'NangPaGo-api'
+        APP_DIR = 'NangPaGo-api/NangPaGo-app'
+        REACT_DIR = 'NangPaGo-client'
+        DOCKER_DIR = 'docker/nangpago-app'
+        DEPLOY_DIR = 'deploy/nangpago-app'
         DISCORD_WEBHOOK = credentials('discord-webhook')
     }
     tools {
@@ -68,28 +69,27 @@ pipeline {
                 dir(PROJECT_DIR) {
                     script {
                         def version = sh(script: "./gradlew properties -q | grep 'version:' | awk '{print \$2}'", returnStdout: true).trim()
-
-                        // 환경변수로 버전 설정
                         env.APP_VERSION = version
                     }
                 }
                 sh '''
                     mkdir -p ${SCRIPT_PATH}
                     mkdir -p ${SCRIPT_PATH}/docker
-                    mkdir -p ${SCRIPT_PATH}/frontend
+                    mkdir -p ${SCRIPT_PATH}/NangPaGo-client
 
                     # 도커 파일 복사
                     cp ./${DOCKER_DIR}/docker-compose.blue.yml ${SCRIPT_PATH}/docker/
                     cp ./${DOCKER_DIR}/docker-compose.green.yml ${SCRIPT_PATH}/docker/
 
-                    # 프론트엔드 파일 복사
-                    cp -r ./${REACT_DIR}/* ${SCRIPT_PATH}/frontend/
+                    # 프론트엔드 파일 복사 (전체 프로젝트)
+                    cp -r ./${REACT_DIR}/* ${SCRIPT_PATH}/NangPaGo-client/
 
                     # 백엔드 파일 복사
                     cp ./${APP_DIR}/build/libs/*.jar ${SCRIPT_PATH}/
-                    cp ./${APP_DIR}/Dockerfile ${SCRIPT_PATH}/
+                    cp ./${APP_DIR}/Dockerfile-app-be ${SCRIPT_PATH}/Dockerfile-app-be
 
-                    cp ./${APP_DIR}/scripts/deploy.sh ${SCRIPT_PATH}/
+                    # 배포 스크립트 복사
+                    cp ./${DEPLOY_DIR}/deploy.sh ${SCRIPT_PATH}/
                     chmod +x ${SCRIPT_PATH}/deploy.sh
                 '''
 
@@ -97,7 +97,7 @@ pipeline {
                     sh '''
                         cp $ENV_FILE ${SCRIPT_PATH}/.env
                         cp $ENV_FILE ${SCRIPT_PATH}/docker/.env
-                        cp $ENV_FILE ${SCRIPT_PATH}/frontend/.env
+                        cp $ENV_FILE ${SCRIPT_PATH}/NangPaGo-client/.env
 
                         ${SCRIPT_PATH}/deploy.sh
                     '''

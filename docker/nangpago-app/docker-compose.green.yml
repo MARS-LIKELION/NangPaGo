@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ../
+      dockerfile: Dockerfile-app-be
+    image: nangpago-app-be:${APP_VERSION}
+    container_name: nangpago-app-be-green
+    ports:
+      - "9174:${API_SERVER_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Seoul
+    networks:
+      - nangpago-network
+    volumes:
+      - /Users/muncheolhyun/home-server/server-logs:/logs
+
+  frontend:
+    build:
+      context: ../NangPaGo-client/
+      dockerfile: Dockerfile-app-fe
+    image: nangpago-app-fe:${APP_VERSION}
+    container_name: nangpago-app-fe-green
+    ports:
+      - "7429:${VITE_FRONT_SERVER_PORT}"
+    networks:
+      - nangpago-network
+
+networks:
+  nangpago-network:
+    external: true
+    driver: bridge

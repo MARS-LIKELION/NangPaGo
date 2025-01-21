@@ -1,0 +1,8 @@
+FROM --platform=linux/amd64 amazoncorretto:17-alpine as builder
+WORKDIR /app
+COPY *.jar app.jar
+
+FROM amazoncorretto:17-alpine
+WORKDIR /app
+COPY --from=builder /app/app.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
