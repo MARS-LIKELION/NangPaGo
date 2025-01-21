@@ -56,6 +56,9 @@ public class RecipeEsSynchronizerService {
                 if (recipe.getCookingMethod() != null) {
                     displayTag.add(recipe.getCookingMethod());
                 }
+                int likeCount = recipe.getLikes() != null ? recipe.getLikes().size() : 0;
+                int commentCount = recipe.getComments() != null ? recipe.getComments().size() : 0;
+
 
                 RecipeEs recipeEs = new RecipeEs(
                     String.valueOf(recipe.getId()),
@@ -63,7 +66,9 @@ public class RecipeEsSynchronizerService {
                     recipe.getMainImage(),
                     ingredientsList,
                     ingredientsTagList,
-                    displayTag
+                    displayTag,
+                    likeCount,
+                    commentCount
                 );
                 recipeElasticList.add(recipeEs);
             }

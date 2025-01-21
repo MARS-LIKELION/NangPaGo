@@ -1,6 +1,8 @@
 package com.mars.app.domain.recipe.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.mars.common.exception.NPGExceptionType;
@@ -52,6 +54,12 @@ public class RecipeEsService {
                     .fields("name.ngram", f -> f)
                     .preTags("<em>").postTags("</em>")
                 )
+                .sort(sort -> sort
+                    .field(FieldSort.of(f -> f
+                        .field("_score")
+                        .order(SortOrder.Desc)
+                    ))
+                )
                 .from((int) pageable.getOffset())
                 .size(pageable.getPageSize()), RecipeEs.class);
         } catch (Exception e) {
@@ -73,12 +81,15 @@ public class RecipeEsService {
                 int likeCount = getRecipeLikeCountBy(source.getId());
                 int commentCount = getRecipeCommentCountBy(source.getId());
 
+                float matchScore = hit.score() != null ? hit.score().floatValue() : 0.0f;
+
                 return RecipeEsResponseDto.of(
                     source,
                     highlightedName,
                     likeCount,
                     commentCount,
-                    hit.score() != null ? hit.score().floatValue() : 0.0f
+                    matchScore
+//                    hit.score() != null ? hit.score().floatValue() : 0.0f
                 );
             })
             .toList();

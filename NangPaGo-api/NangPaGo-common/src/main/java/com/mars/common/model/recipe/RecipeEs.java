@@ -37,4 +37,11 @@ public class RecipeEs {
 
     @Field(type = FieldType.Text)
     private List<String> ingredientsDisplayTag;
+
+    @Field(type = FieldType.Integer)
+    private Integer likes;
+
+    @Field(type = FieldType.Integer)
+    private Integer comments;
+
 }

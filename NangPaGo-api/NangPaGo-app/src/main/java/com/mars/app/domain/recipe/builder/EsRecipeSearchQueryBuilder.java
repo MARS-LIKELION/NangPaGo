@@ -1,7 +1,6 @@
 package com.mars.app.domain.recipe.builder;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.elasticsearch._types.query_dsl.*;
 
 import java.util.Optional;
 
@@ -55,11 +54,23 @@ public class EsRecipeSearchQueryBuilder {
         return QueryBuilders.functionScore(fs -> fs
             .query(QueryBuilders.matchAll(m -> m))
             .functions(f -> f
-                .randomScore(rs -> rs
-                    .seed(String.valueOf(System.currentTimeMillis()))
-                    .field("_seq_no")
+                .filter(q -> q.exists(e -> e.field("likes")))
+                .fieldValueFactor(ff -> ff
+                    .field("likes")
+                    .factor(1.0)
+                    .missing(0.0)
                 )
             )
+            .functions(f -> f
+                .filter(q -> q.exists(e -> e.field("comments")))
+                .fieldValueFactor(ff -> ff
+                    .field("comments")
+                    .factor(1.5)
+                    .missing(0.0)
+                )
+            )
+            .scoreMode(FunctionScoreMode.Sum)
+            .boostMode(FunctionBoostMode.Sum)
         );
     }
 }
