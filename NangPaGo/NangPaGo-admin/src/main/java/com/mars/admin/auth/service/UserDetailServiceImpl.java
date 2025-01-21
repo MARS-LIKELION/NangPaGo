@@ -23,6 +23,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(username).orElseThrow(NOT_FOUND_USER::of);
 
         return new UserDetailsImpl(
-            new UserResponseDto(user.getEmail(), user.getNickname(), user.getPassword(), user.getRole()));
+            new UserResponseDto(user.getEmail(), user.getNickname(), user.getRole(), "{noop}" + user.getPassword()));
     }
 }

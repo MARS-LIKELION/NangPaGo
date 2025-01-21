@@ -49,7 +49,6 @@ public class AdminSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         }
 
         issueAccessAndRefreshTokens(response, user, email, authentication);
-        response.sendRedirect(clientHost+"/dashboard");
     }
 
     private void issueAccessAndRefreshTokens(HttpServletResponse response, User user, String email, Authentication authentication) {
