@@ -1,4 +1,4 @@
-package com.mars.app.domain.auth.dto;
+package com.mars.common.auth.dto;
 
 import com.mars.common.model.auth.RefreshToken;
 

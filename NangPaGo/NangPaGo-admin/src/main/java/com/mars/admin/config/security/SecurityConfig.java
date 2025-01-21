@@ -1,12 +1,10 @@
-package com.mars.app.config.security;
+package com.mars.admin.config.security;
 
+import com.mars.admin.auth.handler.AdminSuccessHandler;
 import com.mars.common.auth.entrypoint.UnauthorizedEntryPoint;
-import com.mars.common.auth.filter.LogoutFilter;
-import com.mars.app.auth.handler.OAuth2SuccessHandler;
-import com.mars.common.auth.service.LogoutService;
-import com.mars.app.auth.service.OAuth2UserService;
 import com.mars.common.auth.filter.JwtAuthenticationFilter;
-import com.mars.app.auth.vo.OAuth2RequestResolver;
+import com.mars.common.auth.filter.LogoutFilter;
+import com.mars.common.auth.service.LogoutService;
 import com.mars.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,10 +12,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -31,6 +30,8 @@ public class SecurityConfig {
 
     @Value("${client.host}")
     private String clientHost;
+
+    private final LogoutService logoutService;
 
     private static final String[] WHITE_LIST = {
         "/api/common/version",
@@ -51,42 +52,38 @@ public class SecurityConfig {
     };
 
     private final JwtUtil jwtUtil;
-    private final OAuth2UserService oauth2UserService;
-    private final OAuth2SuccessHandler oauth2SuccessHandler;
-    private final LogoutService oauth2LogoutService;
+    private final AdminSuccessHandler adminSuccessHandler;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
-
-        OAuth2AuthorizationRequestResolver customResolver =
-            new OAuth2RequestResolver(clientRegistrationRepository, "/api/oauth2/authorization");
+    public BCryptPasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
-            .formLogin(AbstractHttpConfigurer::disable)
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login/proc")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .successHandler(adminSuccessHandler)
+            )
             .httpBasic(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new LogoutFilter(oauth2LogoutService), org.springframework.security.web.authentication.logout.LogoutFilter.class)
-            .exceptionHandling(exception -> exception
+            .addFilterBefore(new LogoutFilter(logoutService), org.springframework.security.web.authentication.logout.LogoutFilter.class)
+/*            .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .authorizationEndpoint(authorization ->
-                    authorization
-                        .authorizationRequestResolver(customResolver)
-                )
-                .loginProcessingUrl("/api/login/oauth2/code/*")
-                .userInfoEndpoint(userInfoEndpointConfig ->
-                    userInfoEndpointConfig.userService(oauth2UserService))
-                .successHandler(oauth2SuccessHandler)
-            )
+            )*/
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers( // 정적 리소스 허용
                     "/",
+                    "/login",
                     "/index.html",
                     "/*.js",
                     "/*.css",
@@ -99,18 +96,11 @@ public class SecurityConfig {
                     "/img/*",
                     "/static/img/*",
                     "/resources/**",
-                    "/socialLogin/**",
                     "/fonts/**"
                 ).permitAll()
                 .requestMatchers(WHITE_LIST).permitAll()
-                .requestMatchers(
-                    "/api/recipe/{id}/comment/**",
-                    "/api/recipe/{id}/like/**",
-                    "/api/recipe/{id}/favorite/**",
-                    "/api/community/{id}/comment/**",
-                    "/api/community/{id}/like/**"
-                )
-                .hasAuthority("ROLE_USER")
+                .requestMatchers("/api/admin/**")
+                .hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
             )
             .build();

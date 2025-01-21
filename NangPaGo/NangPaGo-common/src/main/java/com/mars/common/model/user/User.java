@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Builder
 @Getter
@@ -55,6 +56,8 @@ public class User extends BaseEntity {
     @Column(name="user_status")
     private UserStatus userStatus;
     private LocalDate leftAt;
+
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeComment> comments;

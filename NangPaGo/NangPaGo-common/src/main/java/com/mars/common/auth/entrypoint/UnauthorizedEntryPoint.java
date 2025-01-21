@@ -1,4 +1,4 @@
-package com.mars.app.auth.entrypoint;
+package com.mars.common.auth.entrypoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mars.common.dto.ResponseDto;

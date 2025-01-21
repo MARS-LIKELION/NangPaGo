@@ -1,6 +1,6 @@
-package com.mars.app.auth.filter;
+package com.mars.common.auth.filter;
 
-import com.mars.app.auth.service.OAuth2LogoutService;
+import com.mars.common.auth.service.LogoutService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -17,9 +17,9 @@ import org.springframework.web.filter.GenericFilterBean;
 
 @RequiredArgsConstructor
 @Component
-public class OAuth2LogoutFilter extends GenericFilterBean {
+public class LogoutFilter extends GenericFilterBean {
 
-    private final OAuth2LogoutService oauth2LogoutService;
+    private final LogoutService LogoutService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -34,7 +34,7 @@ public class OAuth2LogoutFilter extends GenericFilterBean {
 
         try {
             String refreshToken = extractRefreshToken(httpRequest);
-            oauth2LogoutService.handleLogout(refreshToken, httpResponse);
+            LogoutService.handleLogout(refreshToken, httpResponse);
         } catch (IllegalArgumentException e) {
             httpResponse.setStatus(HttpStatus.BAD_REQUEST.value());
             httpResponse.getWriter().write(e.getMessage());

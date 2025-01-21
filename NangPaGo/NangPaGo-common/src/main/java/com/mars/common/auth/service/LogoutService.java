@@ -1,7 +1,7 @@
-package com.mars.app.auth.service;
+package com.mars.common.auth.service;
 
+import com.mars.common.auth.repository.RefreshTokenRepository;
 import com.mars.common.util.JwtUtil;
-import com.mars.app.domain.auth.repository.RefreshTokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class OAuth2LogoutService {
+public class LogoutService {
 
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
