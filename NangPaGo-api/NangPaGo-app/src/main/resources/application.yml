@@ -21,7 +21,7 @@ spring:
   # 엘라스틱 서치
   elasticsearch:
     uris: ${ELASTICSEARCH_HOST}
-    username: ${ELASTICSEAR CH_USERNAME}
+    username: ${ELASTICSEARCH_USERNAME}
     password: ${ELASTICSEARCH_PASSWORD}
 
   rabbitmq:
