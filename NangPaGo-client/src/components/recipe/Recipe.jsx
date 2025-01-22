@@ -1,17 +1,16 @@
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import Header from '../layout/header/Header';
-import Footer from '../common/Footer';
-import LoginModal from '../../common/modal/LoginModal';
-import RecipeComment from './comment/RecipeComment';
+import Footer from '../layout/Footer';
+import LoginModal from '../modal/LoginModal';
+import Comment from '../comment/Comment';
 import CookingStepsSlider from './CookingStepsSlider';
 import NutritionInfo from './NutritionInfo';
 import IngredientList from './IngredientList';
 import RecipeImage from './RecipeImage';
 import RecipeInfo from './RecipeInfo';
-import RecipeButton from './RecipeButton';
+import RecipeButton from '../button/RecipeButton';
 
 import useRecipeData from '../../hooks/useRecipeData';
 
@@ -32,7 +31,6 @@ function Recipe({ recipe }) {
     setShowLoginModal,
   } = useRecipeData(recipe.id, isLoggedIn);
 
-  const navigate = useNavigate();
   const rightSectionRef = useRef(null);
   const imageRef = useRef(null);
   const sliderRef = useRef(null);
@@ -68,12 +66,6 @@ function Recipe({ recipe }) {
 
     return () => window.removeEventListener('resize', resetSlider);
   }, []);
-
-  const closeModal = () => setShowLoginModal(false);
-  const navigateToLogin = () => {
-    closeModal();
-    navigate('/login');
-  };
 
   return (
     <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col justify-between min-w-80 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
@@ -137,15 +129,13 @@ function Recipe({ recipe }) {
             manualImages={recipe.manualImages}
           />
         </section>
-
-        <RecipeComment recipeId={recipe.id} />
+        <Comment entityId={recipe.id} entityType="recipe" />
       </main>
 
       <Footer />
       <LoginModal
         isOpen={showLoginModal}
-        onConfirm={navigateToLogin}
-        onClose={closeModal}
+        onClose={() => setShowDeleteModal(false)}
       />
     </div>
   );

@@ -1,19 +1,22 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import LoginModal from '../../components/modal/LoginModal';
+import DeleteModal from '../../components/modal/DeleteModal';
+import CommentList from '../comment/CommentList';
+import CommentForm from '../comment/CommentForm';
+import Pagination from '../comment/Pagination';
 import {
   fetchComments,
   createComment,
   deleteComment,
   updateComment,
-} from '../../../api/commentService.js';
-import LoginModal from '../../../common/modal/LoginModal';
-import DeleteModal from '../../../common/modal/DeleteModal';
-import CommentList from './CommentList';
-import CommentForm from './CommentForm';
-import Pagination from './Pagination';
+} from '../../api/CommentService';
 
-function RecipeComment({ recipeId }) {
+function Comment({
+  entityType,
+  entityId,
+}) {
   const navigate = useNavigate();
 
   const [comments, setComments] = useState([]);
@@ -33,7 +36,7 @@ function RecipeComment({ recipeId }) {
   const loadComments = useCallback(
     async (page) => {
       try {
-        const response = await fetchComments(recipeId, page, 5);
+        const response = await fetchComments(entityType, entityId, page, 5);
         const data = response.data.data;
         setComments(data.content);
         setCurrentPage(data.currentPage);
@@ -43,14 +46,14 @@ function RecipeComment({ recipeId }) {
         alert('댓글을 불러오는 중 문제가 발생했습니다.');
       }
     },
-    [recipeId],
+    [entityType, entityId, fetchComments],
   );
 
   useEffect(() => {
-    if (recipeId) {
+    if (entityType, entityId) {
       loadComments(0);
     }
-  }, [recipeId, loadComments]);
+  }, [entityType, entityId, loadComments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -65,7 +68,7 @@ function RecipeComment({ recipeId }) {
 
     setIsSubmitting(true);
     try {
-      await createComment(recipeId, { content: commentText });
+      await createComment(entityType, entityId, { content: commentText });
       await loadComments(currentPage);
       setCommentText('');
     } finally {
@@ -79,7 +82,7 @@ function RecipeComment({ recipeId }) {
       return;
     }
     try {
-      await updateComment(recipeId, commentId, { content: editedComment });
+      await updateComment(entityType, entityId, commentId, { content: editedComment });
       await loadComments(currentPage);
       setIsEditing(null);
       setEditedComment('');
@@ -91,7 +94,7 @@ function RecipeComment({ recipeId }) {
   const handleDeleteComment = async () => {
     if (!commentToDelete) return;
     try {
-      await deleteComment(recipeId, commentToDelete);
+      await deleteComment(entityType, entityId, commentToDelete);
       await loadComments(currentPage);
       setShowDeleteModal(false);
     } catch {
@@ -141,10 +144,8 @@ function RecipeComment({ recipeId }) {
         onCommentChange={setCommentText}
         onSubmit={handleCommentSubmit}
       />
-
       <LoginModal
         isOpen={showLoginModal}
-        onConfirm={handleLoginRedirect}
         onClose={() => setShowLoginModal(false)}
       />
       <DeleteModal
@@ -156,4 +157,4 @@ function RecipeComment({ recipeId }) {
   );
 }
 
-export default RecipeComment;
+export default Comment;

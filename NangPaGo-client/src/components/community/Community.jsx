@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useState } from 'react';
 import { FaHeart, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import CommunityComment from './comment/CommunityComment';
-import Header from '../layout/header/Header.jsx';
-import Footer from '../common/Footer';
-import CreateButton from '../common/CreateButton';
-import { styles } from '../common/Image';
+import Comment from '../comment/Comment';
+import Header from '../layout/header/Header';
+import Footer from '../layout/Footer';
+import CreateButton from '../button/CreateButton';
+import { IMAGE_STYLES } from '../../common/styles/Image';
 import {
   deleteCommunity,
   getLikeCount,
@@ -104,7 +104,7 @@ function Community({ community }) {
           <img
             src={community.imageUrl}
             alt={community.title}
-            className={styles.mainImage}
+            className={IMAGE_STYLES.mainImage}
           />
         </div>
         <div className="mt-2 flex items-center justify-between px-4">
@@ -123,7 +123,7 @@ function Community({ community }) {
             {renderContentLines(community.content)}
           </p>
         </div>
-        <CommunityComment communityId={community.id} />
+        <Comment entityId={community.id} entityType="community" />
       </div>
       <Footer />
       <div className="fixed bottom-10 right-[calc((100vw-375px)/2+16px)] z-50">

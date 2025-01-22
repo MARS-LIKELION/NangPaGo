@@ -1,22 +1,22 @@
 import axiosInstance from './axiosInstance';
 
-export const fetchComments = (recipeId, pageNo = 0, pageSize = 5) =>
-  axiosInstance.get(`/api/recipe/${recipeId}/comment`, {
+export const fetchComments = (entityType, entityId, pageNo = 0, pageSize = 5) =>
+  axiosInstance.get(`/api/${entityType}/${entityId}/comment`, {
     params: { pageNo, pageSize },
   });
 
-export const createComment = (recipeId, commentData) => {
-  return axiosInstance.post(`/api/recipe/${recipeId}/comment`, {
+export const createComment = (entityType, entityId, commentData) => {
+  return axiosInstance.post(`/api/${entityType}/${entityId}/comment`, {
     userEmail: commentData.email,
     content: commentData.content,
   });
 };
 
-export const updateComment = (recipeId, commentId, commentData) =>
+export const updateComment = (entityType, entityId, commentId, commentData) =>
   axiosInstance.put(
-    `/api/recipe/${recipeId}/comment/${commentId}`,
+    `/api/${entityType}/${entityId}/comment/${commentId}`,
     commentData,
   );
 
-export const deleteComment = (recipeId, commentId) =>
-  axiosInstance.delete(`/api/recipe/${recipeId}/comment/${commentId}`);
+export const deleteComment = (entityType, entityId, commentId) =>
+  axiosInstance.delete(`/api/${entityType}/${entityId}/comment/${commentId}`);
