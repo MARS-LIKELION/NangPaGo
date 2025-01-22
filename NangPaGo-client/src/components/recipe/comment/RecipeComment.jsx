@@ -143,9 +143,6 @@ function RecipeComment({ recipeId }) {
         isSubmitting={isSubmitting}
         onCommentChange={setCommentText}
         onSubmit={handleCommentSubmit}
-        handleKeyDown={(e) =>
-          e.key === 'Enter' && !e.shiftKey && handleCommentSubmit(e)
-        }
       />
 
       <LoginModal

@@ -4,7 +4,6 @@ function CommentForm({
   isSubmitting,
   onCommentChange,
   onSubmit,
-  handleKeyDown,
 }) {
   const getPlaceholderText = () =>
     isLoggedIn ? '댓글을 입력하세요.' : '로그인 후 댓글을 입력할 수 있습니다.';
@@ -19,7 +18,6 @@ function CommentForm({
       <textarea
         value={commentText}
         onChange={(e) => onCommentChange(e.target.value)}
-        onKeyDown={handleKeyDown}
         className="w-full p-2 border border-gray-300 rounded-md mb-4"
         placeholder={getPlaceholderText()}
         disabled={!isLoggedIn}
