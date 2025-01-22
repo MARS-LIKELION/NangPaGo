@@ -22,7 +22,6 @@ export default function Login() {
              });
              if (response.status === 200) {
                  localStorage.setItem('isAuthenticated', 'true');
-                 alert('로그인 성공! ');
                  navigate('/dashboard');
              }
          } catch (error) {
