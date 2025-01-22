@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  getLikeCount,
-  fetchLikeStatus,
   fetchFavoriteStatus,
-  toggleLike,
+  fetchLikeStatus,
+  getLikeCount,
   toggleFavorite,
+  toggleLike,
 } from '../api/recipe';
 
 const useRecipeData = (recipeId, isLoggedIn) => {
@@ -12,28 +12,58 @@ const useRecipeData = (recipeId, isLoggedIn) => {
   const [isStarActive, setIsStarActive] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isReconnecting, setIsReconnecting] = useState(false);
+
+  const initializeData = async () => {
+    try {
+      const count = await getLikeCount(recipeId);
+      setLikeCount(count);
+
+      if (isLoggedIn) {
+        const [likeStatus, favoriteStatus] = await Promise.all([
+          fetchLikeStatus(recipeId),
+          fetchFavoriteStatus(recipeId),
+        ]);
+        setIsHeartActive(likeStatus);
+        setIsStarActive(favoriteStatus);
+      }
+    } catch (error) {
+      console.error('초기 데이터 가져오기 오류:', error);
+    }
+  };
+
+  const handleSseError = () => {
+    if (!isReconnecting) {
+      setIsReconnecting(true);
+      setTimeout(() => {
+        setIsReconnecting(false);
+      }, 3000);
+    }
+  };
 
   useEffect(() => {
-    const initializeData = async () => {
-      try {
-        const count = await getLikeCount(recipeId);
-        setLikeCount(count);
-
-        if (isLoggedIn) {
-          const [likeStatus, favoriteStatus] = await Promise.all([
-            fetchLikeStatus(recipeId),
-            fetchFavoriteStatus(recipeId),
-          ]);
-          setIsHeartActive(likeStatus);
-          setIsStarActive(favoriteStatus);
-        }
-      } catch (error) {
-        console.error('데이터 초기화 중 오류:', error);
-      }
-    };
-
     initializeData();
   }, [recipeId, isLoggedIn]);
+
+  useEffect(() => {
+    const eventSource = new EventSource(`/api/recipe/${recipeId}/like/notification/subscribe`);
+
+    eventSource.addEventListener('좋아요 이벤트 발생', (event) => {
+      const updatedLikeCount = parseInt(event.data, 10);
+      setLikeCount((prevCount) =>
+        prevCount !== updatedLikeCount ? updatedLikeCount : prevCount,
+      );
+    });
+
+    eventSource.onerror = () => {
+      eventSource.close();
+      handleSseError();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [recipeId]);
 
   const toggleHeart = async () => {
     if (!isLoggedIn) {

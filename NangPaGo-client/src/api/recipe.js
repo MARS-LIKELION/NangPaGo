@@ -130,7 +130,7 @@ export const toggleFavorite = async (recipeId) => {
     const response = await axiosInstance.post(
       `/api/recipe/${recipeId}/favorite/toggle`,
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다:', error);
     throw error;

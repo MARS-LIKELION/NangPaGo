@@ -53,6 +53,8 @@ public enum NPGExceptionType {
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"),
     SERVER_ERROR_ELASTICSEARCH(HttpStatus.INTERNAL_SERVER_ERROR, "Elasticsearch 서버 에러"),
     SERVER_ERROR_IMAGE_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드 중 서버 오류"),
+    SERVER_ERROR_RABBITMQ_CONNECTION(HttpStatus.INTERNAL_SERVER_ERROR, "RabbitMQ 연결에 실패했습니다."),
+    SERVER_ERROR_SEND_LIKE_COUNT(HttpStatus.INTERNAL_SERVER_ERROR, "좋아요 수 전송 중 오류가 발생했습니다."),
     ;
 
     private final HttpStatus httpStatus;

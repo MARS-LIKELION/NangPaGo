@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../api/axiosInstance';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axiosInstance from '../api/axiosInstance.js';
 
 const hasAccessToken = () => {
   return document.cookie.split('; ').some((row) => row.startsWith('access'));

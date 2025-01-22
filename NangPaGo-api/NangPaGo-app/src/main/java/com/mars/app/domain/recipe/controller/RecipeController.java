@@ -1,5 +1,6 @@
 package com.mars.app.domain.recipe.controller;
 
+import com.mars.app.domain.recipe.messaging.SseEmitterService;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RequiredArgsConstructor
 @Tag(name = "레시피 API", description = "레시피 관련 API")
@@ -31,6 +33,7 @@ public class RecipeController {
     private final RecipeLikeService recipeLikeService;
     private final RecipeEsService recipeEsService;
     private final RecipeEsSynchronizerService recipeEsSynchronizerService;
+    private final SseEmitterService sseEmitterService;
 
     @GetMapping("/{id}")
     public ResponseDto<RecipeResponseDto> recipeById(@PathVariable("id") Long id) {
@@ -54,6 +57,11 @@ public class RecipeController {
     @GetMapping("/{id}/like/count")
     public ResponseDto<Integer> getLikeCount(@PathVariable Long id) {
         return ResponseDto.of(recipeLikeService.getLikeCount(id));
+    }
+
+    @GetMapping("/{id}/like/notification/subscribe")
+    public SseEmitter streamLikes(@PathVariable Long id) {
+        return sseEmitterService.createEmitter(id);
     }
 
     @GetMapping("/search")
