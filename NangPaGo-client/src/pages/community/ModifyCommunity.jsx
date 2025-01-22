@@ -8,7 +8,7 @@ import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
-import FileSizeErrorModal from '../../common/modal/FileSizeErrorModal';
+import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
 const DEFAULT_IMAGE_URL =
   'https://storage.googleapis.com/nangpago-9d371.firebasestorage.app/dc137676-6240-4920-97d3-727c4b7d6d8d_360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg';

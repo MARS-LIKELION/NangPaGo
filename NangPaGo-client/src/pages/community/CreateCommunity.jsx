@@ -8,7 +8,7 @@ import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
 import ErrorMessage from '../../components/common/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
-import FileSizeErrorModal from '../../common/modal/FileSizeErrorModal';
+import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 

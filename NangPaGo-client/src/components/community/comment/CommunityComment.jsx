@@ -6,8 +6,8 @@ import {
   deleteComment,
   updateComment,
 } from '../../../api/communityComment.js';
-import LoginModal from '../../../common/modal/LoginModal';
-import DeleteModal from '../../../common/modal/DeleteModal';
+import LoginModal from '../../../components/modal/LoginModal';
+import DeleteModal from '../../../components/modal/DeleteModal';
 import {
   FaArrowLeft,
   FaArrowRight,

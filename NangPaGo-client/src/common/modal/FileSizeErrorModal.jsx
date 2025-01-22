@@ -1,3 +1,4 @@
+// TODO: 수정해야함 (파일위치이동)
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 

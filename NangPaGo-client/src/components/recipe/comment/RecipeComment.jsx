@@ -7,8 +7,8 @@ import {
   deleteComment,
   updateComment,
 } from '../../../api/commentService.js';
-import LoginModal from '../../../common/modal/LoginModal';
-import DeleteModal from '../../../common/modal/DeleteModal';
+import LoginModal from '../../../components/modal/LoginModal';
+import DeleteModal from '../../../components/modal/DeleteModal';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 import Pagination from './Pagination';
@@ -141,10 +141,8 @@ function RecipeComment({ recipeId }) {
         onCommentChange={setCommentText}
         onSubmit={handleCommentSubmit}
       />
-
       <LoginModal
         isOpen={showLoginModal}
-        onConfirm={handleLoginRedirect}
         onClose={() => setShowLoginModal(false)}
       />
       <DeleteModal

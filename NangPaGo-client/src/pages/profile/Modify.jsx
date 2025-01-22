@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import axiosInstance from '../../api/axiosInstance.js';
 import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/common/Footer.jsx';
-import UpdateUserInfoModal from '../../common/modal/UpdateUserInfoModal.jsx';
+import UpdateUserInfoModal from '../../components/modal/UpdateUserInfoModal.jsx';
 
 const Modify = () => {
   const [userInfo, setUserInfo] = useState({});
@@ -11,14 +11,10 @@ const Modify = () => {
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
   const [isNicknameAvailableMessage, setIsNicknameAvailableMessage] =
     useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showUpdateUserInfoModal, setShowUpdateUserInfoModal] = useState(false);
 
   const loginState = useSelector((state) => state.loginSlice);
   const isLoggedIn = Boolean(loginState.email);
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -72,7 +68,7 @@ const Modify = () => {
         nickname: nickname,
       };
       await axiosInstance.put('/api/user/profile', userInfoRequestDto);
-      setIsModalOpen(true);
+      setShowUpdateUserInfoModal(true);
     } catch (error) {
       console.error('Failed to update user info:', error);
     }
@@ -132,7 +128,10 @@ const Modify = () => {
         >
           회원정보 저장하기
         </button>
-        <UpdateUserInfoModal isOpen={isModalOpen} onClose={handleCloseModal} />
+        <UpdateUserInfoModal
+          isOpen={showUpdateUserInfoModal}
+          onClose={() => setShowUpdateUserInfoModal(false)}
+        />
       </div>
       <Footer />
     </div>
