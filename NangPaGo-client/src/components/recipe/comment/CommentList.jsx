@@ -37,22 +37,23 @@ function CommentList({
           ) : (
             <div className="flex justify-between items-start">
               <div className="flex flex-col">
-                <p className="text-text-600 text-sm break-words">
-                  <strong>{maskEmail(comment.email)}</strong>: {comment.content}
+                <p className="text-text-600 text-sm break-words whitespace-pre-wrap">
+                  <p className="opacity-70">{maskEmail(comment.email)}</p>
+                  <p className="text-base">{comment.content}</p>
                 </p>
-                <p className="text-text-600 text-xs">
+                <p className="text-text-600 text-xs opacity-50">
                   {new Date(comment.updatedAt).toLocaleString()}
                 </p>
               </div>
 
               {comment.isOwnedByUser && (
-                <div className="flex gap-2 ml-4">
+                <div className="flex gap-2 ml-4 mt-4">
                   <button
                     onClick={() => {
                       onSetEditing(comment.id);
                       onEditChange(comment.content);
                     }}
-                    className="bg-transparent hover:opacity-70"
+                    className="mr-2 bg-transparent hover:opacity-70"
                     aria-label="댓글 수정"
                   >
                     <FaPen className="w-5 h-5 text-primary" />
