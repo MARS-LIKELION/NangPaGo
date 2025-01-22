@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
-import Header from '../../components/layout/header/Header.jsx';
-import Footer from '../../components/layout/Footer.jsx';
+import Header from '../../components/layout/header/Header';
+import Footer from '../../components/layout/Footer';
 import TopButton from '../../components/button/TopButton';
 
 function RecipeList() {

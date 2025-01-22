@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import { HEADER_STYLES } from '../../../common/styles/Header';
 import NavItem from './NavItem.jsx';
 
 function ProfileDropdown({
@@ -25,30 +27,30 @@ function ProfileDropdown({
       />
       {dropdownOpen && (
         <div className="absolute -bottom-1 right-6 z-10">
-          <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-secondary"></div>
-          <div className="absolute top-[1px] w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-white"></div>
+          <div className={clsx(HEADER_STYLES.arrowBase, HEADER_STYLES.arrowOuter)}></div>
+          <div className={clsx(HEADER_STYLES.arrowBase, HEADER_STYLES.arrowInner)}></div>
         </div>
       )}
       <div
-        className={`absolute right-3 mt-1 w-40 bg-white border border-secondary rounded-md shadow-md overflow-hidden transition-all ${
-          dropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
+        className={clsx(
+          HEADER_STYLES.dropdownContainer,
+          dropdownOpen ? HEADER_STYLES.dropdownVisible : HEADER_STYLES.dropdownHidden
+        )}
       >
         <div className="px-4 py-2 text-text-900 overflow-hidden text-ellipsis whitespace-nowrap">
           {nickname}
         </div>
-
         <div className="max-h-30 overflow-hidden">
           <button
             to="/my-page"
             onClick={() => handleLinkClick('/my-page')}
-            className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
+            className={HEADER_STYLES.dropdownItem}
           >
             마이페이지
           </button>
           <button
             onClick={handleLogout}
-            className="w-full text-left px-4 py-2 text-text-900 bg-white hover:bg-secondary overflow-hidden rounded-none"
+            className={HEADER_STYLES.dropdownItem}
           >
             로그아웃
           </button>

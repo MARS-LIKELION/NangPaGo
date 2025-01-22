@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axiosInstance from '../../api/axiosInstance.js';
-import Header from '../../components/layout/header/Header.jsx';
-import Footer from '../../components/layout/Footer.jsx';
+import Header from '../../components/layout/header/Header';
+import Footer from '../../components/layout/Footer';
 import UpdateUserInfoModal from '../../components/modal/UpdateUserInfoModal.jsx';
 
 const Modify = () => {
