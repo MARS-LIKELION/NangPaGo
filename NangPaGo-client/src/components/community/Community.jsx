@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CommunityComment from './comment/CommunityComment';
 import Header from '../layout/header/Header.jsx';
 import Footer from '../layout/Footer';
-import CreateButton from '../common/CreateButton';
+import CreateButton from '../button/CreateButton';
 import { IMAGE_STYLES } from '../../common/styles/Image';
 import {
   deleteCommunity,

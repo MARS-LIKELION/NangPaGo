@@ -7,7 +7,7 @@ import TextInput from '../../components/community/TextInput';
 import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
 import { ERROR_STYLES } from '../../common/styles/ErrorMessage';
-import SubmitButton from '../../components/common/SubmitButton';
+import SubmitButton from '../../components/button/SubmitButton';
 import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;

@@ -4,7 +4,7 @@ import Header from '../../components/layout/header/Header';
 import IngredientList from '../../components/refrigerator/IngredientList';
 import AddIngredientForm from '../../components/refrigerator/AddIngredientForm';
 import RecipeCard from '../../components/recipe/RecipeCard';
-import TopButton from '../../components/common/TopButton';
+import TopButton from '../../components/button/TopButton';
 
 function Refrigerator() {
   const {

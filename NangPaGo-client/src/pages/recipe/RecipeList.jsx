@@ -6,7 +6,7 @@ import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
 import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/layout/Footer.jsx';
-import TopButton from '../../components/common/TopButton';
+import TopButton from '../../components/button/TopButton';
 
 function RecipeList() {
   const location = useLocation();

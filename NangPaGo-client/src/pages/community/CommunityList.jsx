@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCommunityList } from '../../api/community';
-import TopButton from '../../components/common/TopButton';
-import CreateButton from '../../components/common/CreateButton';
+import TopButton from '../../components/button/TopButton';
+import CreateButton from '../../components/button/CreateButton';
 import Header from '../../components/layout/header/Header.jsx';
 import Footer from '../../components/layout/Footer';
 import CommunityCard from '../../components/community/CommunityCard';
