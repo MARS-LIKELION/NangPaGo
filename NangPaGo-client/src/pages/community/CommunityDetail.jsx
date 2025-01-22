@@ -51,7 +51,7 @@ function CommunityDetail() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[var(--primary-color)]"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
       </div>
     );
   }
@@ -59,7 +59,7 @@ function CommunityDetail() {
   if (error) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <p className="text-[var(--primary-color)]">{error}</p>
+        <p className="text-primary">{error}</p>
       </div>
     );
   }

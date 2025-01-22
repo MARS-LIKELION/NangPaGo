@@ -17,7 +17,7 @@ function FileSizeErrorModal({ isOpen, onClose }) {
         <p className="text-center text-sm text-gray-500">10MB 이하의 파일만 업로드 가능합니다.</p>
         <button
           onClick={onClose}
-          className="mt-4 bg-[var(--primary-color)] text-white px-5 py-3 rounded-lg"
+          className="mt-4 bg-primary text-white px-5 py-3 rounded-lg"
         >
           닫기
         </button>

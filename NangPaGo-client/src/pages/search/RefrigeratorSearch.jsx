@@ -65,7 +65,7 @@ function RefrigeratorSearch() {
     <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <div className="sticky top-0 bg-white px-4 py-2 flex items-center gap-2 border-b">
         <button onClick={() => navigate(-1)} className="p-2 rounded-full">
-          <BiArrowBack className="text-2xl text-[var(--secondary-color)]" />
+          <BiArrowBack className="text-2xl text-secondary" />
         </button>
 
         <div className="relative flex-1">

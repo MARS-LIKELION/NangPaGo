@@ -229,10 +229,10 @@ function CommunityComment({ communityId }) {
         <button
           onClick={() => handlePageChange(0)}
           disabled={currentPage === 0}
-          className={`px-1 py-2 rounded-md ${
+          className={`px-1 py-2 bg-white ${
             currentPage === 0
               ? 'text-gray-300'
-              : 'text-[var(--secondary-color)]'
+              : 'text-secondary'
           }`}
         >
           <FaAngleDoubleLeft size={20} />
@@ -240,10 +240,10 @@ function CommunityComment({ communityId }) {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 0}
-          className={`px-1 py-2 rounded-md ${
+          className={`px-1 py-2 bg-white ${
             currentPage === 0
               ? 'text-gray-300'
-              : 'text-[var(--secondary-color)]'
+              : 'text-secondary'
           }`}
         >
           <FaArrowLeft size={20} />
@@ -254,10 +254,10 @@ function CommunityComment({ communityId }) {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage + 1 >= totalPages}
-          className={`px-1 py-2 rounded-md ${
+          className={`px-1 py-2 bg-white ${
             currentPage + 1 >= totalPages
               ? 'text-gray-300'
-              : 'text-[var(--secondary-color)]'
+              : 'text-secondary'
           }`}
         >
           <FaArrowRight size={20} />
@@ -265,10 +265,10 @@ function CommunityComment({ communityId }) {
         <button
           onClick={() => handlePageChange(totalPages - 1)}
           disabled={currentPage + 1 >= totalPages}
-          className={`px-1 py-2 rounded-md ${
+          className={`px-1 py-2 bg-white ${
             currentPage + 1 >= totalPages
               ? 'text-gray-300'
-              : 'text-[var(--secondary-color)]'
+              : 'text-secondary'
           }`}
         >
           <FaAngleDoubleRight size={20} />
@@ -289,7 +289,7 @@ function CommunityComment({ communityId }) {
         />
         <button
           type="submit"
-          className={`block w-full text-white mb-4 px-4 py-2 rounded-md bg-[var(--primary-color)] ${
+          className={`block w-full text-white mb-4 px-4 py-2 ${
             isSubmitting ? 'cursor-not-allowed' : ''
           }`}
           disabled={isSubmitting}

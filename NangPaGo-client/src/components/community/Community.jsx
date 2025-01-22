@@ -109,7 +109,7 @@ function Community({ community }) {
         </div>
         <div className="mt-2 flex items-center justify-between px-4">
           <button
-            className={`flex items-center ${
+            className={`flex items-center bg-white ${
               isHeartActive ? 'text-red-500' : 'text-gray-500'
             }`}
             onClick={toggleHeart}
