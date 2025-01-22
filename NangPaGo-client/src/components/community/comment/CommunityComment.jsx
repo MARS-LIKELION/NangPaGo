@@ -108,17 +108,6 @@ function CommunityComment({ communityId }) {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (isEditing !== null) {
-        handleEditComment(isEditing);
-      } else {
-        handleCommentSubmit(e);
-      }
-    }
-  };
-
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       loadComments(newPage);
@@ -146,7 +135,6 @@ function CommunityComment({ communityId }) {
                 <textarea
                   value={editedComment}
                   onChange={(e) => setEditedComment(e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(e)}
                   className="col-span-2 w-full p-2 border border-gray-300 rounded-md"
                 />
                 <button
@@ -259,7 +247,6 @@ function CommunityComment({ communityId }) {
         <textarea
           value={commentText}
           onChange={(e) => setCommentText(e.target.value)}
-          onKeyDown={handleKeyDown}
           className="w-full p-2 border border-gray-300 rounded-md mb-4"
           placeholder={
             isLoggedIn
