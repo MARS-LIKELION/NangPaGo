@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchCommunityList } from '../../api/community';
 import TopButton from '../../components/button/TopButton';
 import CreateButton from '../../components/button/CreateButton';
-import Header from '../../components/layout/header/Header.jsx';
+import Header from '../../components/layout/header/Header';
 import Footer from '../../components/layout/Footer';
 import CommunityCard from '../../components/community/CommunityCard';
 

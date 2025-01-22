@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { FaHeart, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import CommunityComment from './comment/CommunityComment';
-import Header from '../layout/header/Header.jsx';
+import Header from '../layout/header/Header';
 import Footer from '../layout/Footer';
 import CreateButton from '../button/CreateButton';
 import { IMAGE_STYLES } from '../../common/styles/Image';

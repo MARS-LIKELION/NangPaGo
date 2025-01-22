@@ -7,7 +7,7 @@ import {
   getComments,
 } from '../../api/myPage.js';
 
-import Header from '../../components/layout/header/Header.jsx';
+import Header from '../../components/layout/header/Header';
 import Footer from '../../components/layout/Footer';
 import ProfileHeader from '../../components/profile/ProfileHeader';
 import ProfileTabs from '../../components/profile/ProfileTabs';

@@ -1,5 +1,5 @@
-import SocialLoginButton from '../../components/login/SocialLoginButton.jsx';
-import { SOCIAL_BUTTON_STYLES } from '../../components/util/auth.js';
+import SocialLoginButton from '../../components/button/SocialLoginButton';
+import { SOCIAL_BUTTON_STYLES } from '../../common/styles/SocialButton';
 
 const API_HOST = import.meta.env.VITE_HOST;
 
