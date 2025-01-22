@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { HomeIcon, UserGroupIcon, ShieldCheckIcon, ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
 
 function NavLink({ to, children, icon: Icon }) {
@@ -23,9 +24,18 @@ function NavLink({ to, children, icon: Icon }) {
 export default function DashboardLayout({ children }) {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      const response = await axios({
+          url: 'http://localhost:8090/logout',
+          method: 'POST',
+          withCredentials: true,
+      });
+      localStorage.setItem('isAuthenticated', 'false');
+      navigate('/')
+    } catch (error) {
+      console.error('로그아웃 실패:', error.response?.data || error.message);
+    }
   };
 
   return (
@@ -76,4 +86,4 @@ export default function DashboardLayout({ children }) {
       </div>
     </div>
   );
-} 
+}

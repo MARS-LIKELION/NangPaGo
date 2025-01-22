@@ -1,10 +1,9 @@
 package com.mars.admin.config;
 
 import com.mars.admin.auth.entrypoint.UnauthorizedEntryPoint;
-import com.mars.admin.auth.filter.AdminLogoutFilter;
 import com.mars.admin.auth.filter.JwtAuthenticationFilter;
 import com.mars.admin.auth.handler.AdminSuccessHandler;
-import com.mars.admin.auth.service.AdminLogoutService;
+import com.mars.admin.auth.service.AdminLogoutSuccessHandler;
 import com.mars.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,8 +29,6 @@ public class SecurityConfig {
     @Value("${client.host}")
     private String clientHost;
 
-    private final AdminLogoutService adminLogoutService;
-
     private static final String[] WHITE_LIST = {
         "/swagger-ui/**",
         "/swagger-ui.html",
@@ -42,6 +38,7 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final AdminSuccessHandler adminSuccessHandler;
+    private final AdminLogoutSuccessHandler adminLogoutSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -55,18 +52,21 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(form -> form
-                .loginPage("/")
+                .loginPage("/login")
                 .loginProcessingUrl("/login/proc")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .successHandler(adminSuccessHandler)
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(adminLogoutSuccessHandler)
             )
             .httpBasic(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new AdminLogoutFilter(adminLogoutService), LogoutFilter.class)
             .exceptionHandling(exception -> exception
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
             )
