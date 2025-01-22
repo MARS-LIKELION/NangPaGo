@@ -262,7 +262,7 @@ function CommunityComment({ communityId }) {
           }`}
           disabled={isSubmitting}
         >
-          전송
+          등록
         </button>
       </form>
 

@@ -27,7 +27,7 @@ function CommentForm({
         className={getButtonClassName()}
         disabled={isSubmitting}
       >
-        전송
+        등록
       </button>
     </form>
   );
