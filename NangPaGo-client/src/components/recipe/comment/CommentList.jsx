@@ -1,4 +1,6 @@
 import { FaPen, FaTrash } from 'react-icons/fa';
+import { BsThreeDots } from 'react-icons/bs';
+import { useState, useEffect } from 'react';
 
 function CommentList({
   comments,
@@ -10,6 +12,20 @@ function CommentList({
   onSetEditing,
   maskEmail,
 }) {
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+
+  const handleDropdownClick = (commentId, e) => {
+    e.stopPropagation();
+    setOpenDropdownId(openDropdownId === commentId ? null : commentId);
+  };
+
+  // 드롭다운 외부 클릭시 닫기
+  useEffect(() => {
+    const handleClickOutside = () => setOpenDropdownId(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
     <div className="mt-4 space-y-3">
       {comments.map((comment) => (
@@ -51,24 +67,40 @@ function CommentList({
             </div>
 
             {comment.isOwnedByUser && !isEditing && (
-              <div className="flex gap-2 ml-4 mt-4">
+              <div className="relative">
                 <button
-                  onClick={() => {
-                    onSetEditing(comment.id);
-                    onEditChange(comment.content);
-                  }}
-                  className="mr-2 bg-transparent hover:opacity-70"
-                  aria-label="댓글 수정"
+                  onClick={(e) => handleDropdownClick(comment.id, e)}
+                  className="p-1 bg-transparent rounded-full"
+                  aria-label="더보기"
                 >
-                  <FaPen className="w-5 h-5 text-primary" />
+                  <BsThreeDots className="w-5 h-5 text-gray-500" />
                 </button>
-                <button
-                  onClick={() => onDeleteClick(comment.id)}
-                  className="bg-transparent hover:opacity-70"
-                  aria-label="댓글 삭제"
-                >
-                  <FaTrash className="w-5 h-5 text-red-500" />
-                </button>
+                
+                {openDropdownId === comment.id && (
+                  <div className="absolute right-0 mt-1 w-24 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                    <button
+                      onClick={() => {
+                        onSetEditing(comment.id);
+                        onEditChange(comment.content);
+                        setOpenDropdownId(null);
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 bg-white text-gray-900"
+                    >
+                      <FaPen className="w-4 h-4 text-primary" />
+                      수정
+                    </button>
+                    <button
+                      onClick={() => {
+                        onDeleteClick(comment.id);
+                        setOpenDropdownId(null);
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 bg-white text-gray-900"
+                    >
+                      <FaTrash className="w-4 h-4 text-red-500" />
+                      삭제
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
