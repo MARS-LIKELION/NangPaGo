@@ -126,9 +126,6 @@ function RecipeComment({ recipeId }) {
         }}
         onSetEditing={setIsEditing}
         maskEmail={maskEmail}
-        handleKeyDown={(e) =>
-          e.key === 'Enter' && !e.shiftKey && handleEditComment(isEditing)
-        }
       />
 
       <Pagination
