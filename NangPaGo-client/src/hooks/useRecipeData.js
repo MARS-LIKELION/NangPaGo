@@ -36,7 +36,6 @@ const useRecipeData = (recipeId, isLoggedIn) => {
     if (!isReconnecting) {
       setIsReconnecting(true);
       setTimeout(() => {
-        console.log('SSE 재연결 시도');
         setIsReconnecting(false);
       }, 3000);
     }
@@ -47,7 +46,7 @@ const useRecipeData = (recipeId, isLoggedIn) => {
   }, [recipeId, isLoggedIn]);
 
   useEffect(() => {
-    const eventSource = new EventSource(`/api/recipe/${recipeId}/like/stream`);
+    const eventSource = new EventSource(`/api/recipe/${recipeId}/like/notification/subscribe`);
 
     eventSource.addEventListener('좋아요 이벤트 발생', (event) => {
       const updatedLikeCount = parseInt(event.data, 10);
@@ -57,7 +56,6 @@ const useRecipeData = (recipeId, isLoggedIn) => {
     });
 
     eventSource.onerror = () => {
-      console.error('SSE 연결 오류 발생');
       eventSource.close();
       handleSseError();
     };

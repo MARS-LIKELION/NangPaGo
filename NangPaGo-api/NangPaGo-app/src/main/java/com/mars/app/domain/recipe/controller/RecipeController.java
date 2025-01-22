@@ -59,7 +59,7 @@ public class RecipeController {
         return ResponseDto.of(recipeLikeService.getLikeCount(id));
     }
 
-    @GetMapping("/{id}/like/stream")
+    @GetMapping("/{id}/like/notification/subscribe")
     public SseEmitter streamLikes(@PathVariable Long id) {
         return sseEmitterService.createEmitter(id);
     }
