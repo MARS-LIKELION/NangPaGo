@@ -13,7 +13,10 @@ import {
   FaArrowRight,
   FaAngleDoubleLeft,
   FaAngleDoubleRight,
+  FaPen,
+  FaTrash,
 } from 'react-icons/fa';
+import { BsThreeDots } from 'react-icons/bs';
 
 function CommunityComment({ communityId }) {
   const [comments, setComments] = useState([]);
@@ -31,6 +34,8 @@ function CommunityComment({ communityId }) {
   const [totalItems, setTotalItems] = useState(0);
 
   const isLoggedIn = useSelector((state) => Boolean(state.loginSlice.email));
+
+  const [openDropdownId, setOpenDropdownId] = useState(null);
 
   // 댓글 로드 함수
   const loadComments = useCallback(
@@ -119,6 +124,17 @@ function CommunityComment({ communityId }) {
     return `${visiblePart}***`;
   };
 
+  const handleDropdownClick = (commentId, e) => {
+    e.stopPropagation();
+    setOpenDropdownId(openDropdownId === commentId ? null : commentId);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => setOpenDropdownId(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
     <div className="mt-8 px-4">
       <div className="mt-10 flex justify-center items-center border-t-2 border-b-2 border-gray-300 p-4 mx-auto">
@@ -129,66 +145,82 @@ function CommunityComment({ communityId }) {
 
       <div className="mt-4 space-y-3">
         {comments.map((comment) => (
-          <div key={comment.id} className="border-b pb-1">
-            {isEditing === comment.id ? (
-              <div className="grid grid-cols-2 gap-2">
-                <textarea
-                  value={editedComment}
-                  onChange={(e) => setEditedComment(e.target.value)}
-                  className="col-span-2 w-full p-2 border border-gray-300 rounded-md"
-                />
-                <button
-                  onClick={() => handleEditComment(comment.id)}
-                  className="bg-[var(--primary-color)] text-white px-4 py-2 rounded-md"
-                >
-                  수정
-                </button>
-                <button
-                  onClick={() => setIsEditing(null)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded-md"
-                >
-                  취소
-                </button>
+          <div key={comment.id} className="border-b pb-2">
+            <div className="flex justify-between items-start">
+              <div className="flex flex-col w-full">
+                <p className="text-text-600 text-sm break-words whitespace-pre-wrap">
+                  <p className="opacity-70">{maskEmail(comment.email)}</p>
+                  {isEditing === comment.id ? (
+                    <div className="mt-2">
+                      <textarea
+                        value={editedComment}
+                        onChange={(e) => setEditedComment(e.target.value)}
+                        rows={editedComment.split('\n').length}
+                        className="w-full p-2 border border-gray-300 rounded-md mb-2 resize-none"
+                      />
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={() => setIsEditing(null)}
+                          className="bg-gray-500 text-white px-4 py-2 rounded-md"
+                        >
+                          취소
+                        </button>
+                        <button
+                          onClick={() => handleEditComment(comment.id)}
+                          className="bg-primary text-white px-4 py-2 rounded-md"
+                        >
+                          등록
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-base">{comment.content}</p>
+                  )}
+                </p>
+                <p className="text-text-600 text-xs opacity-50">
+                  {new Date(comment.updatedAt).toLocaleString()}
+                </p>
               </div>
-            ) : (
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-gray-700 text-sm">
-                    <strong>{maskEmail(comment.email)}</strong>:{' '}
-                    {comment.content}
-                  </p>
-                  <p className="text-gray-500 text-xs">
-                    {new Intl.DateTimeFormat('ko-KR', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    }).format(new Date(comment.updatedAt))}
-                  </p>
+
+              {comment.isOwnedByUser && !isEditing && (
+                <div className="relative">
+                  <button
+                    onClick={(e) => handleDropdownClick(comment.id, e)}
+                    className="p-1 bg-transparent rounded-full"
+                    aria-label="더보기"
+                  >
+                    <BsThreeDots className="w-5 h-5 text-gray-500" />
+                  </button>
+                  
+                  {openDropdownId === comment.id && (
+                    <div className="absolute right-0 mt-1 w-24 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                      <button
+                        onClick={() => {
+                          setIsEditing(comment.id);
+                          setEditedComment(comment.content);
+                          setOpenDropdownId(null);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 bg-white text-gray-900"
+                      >
+                        <FaPen className="w-4 h-4 text-primary" />
+                        수정
+                      </button>
+                      <button
+                        onClick={() => {
+                          setCommentToDelete(comment.id);
+                          setShowDeleteModal(true);
+                          setOpenDropdownId(null);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 bg-white text-gray-900"
+                      >
+                        <FaTrash className="w-4 h-4 text-red-500" />
+                        삭제
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {comment.isOwnedByUser && (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setIsEditing(comment.id);
-                        setEditedComment(comment.content);
-                      }}
-                      className="text-[var(--primary-color)]"
-                    >
-                      수정
-                    </button>
-                    <button
-                      onClick={() => {
-                        setCommentToDelete(comment.id);
-                        setShowDeleteModal(true);
-                      }}
-                      className="text-gray-500"
-                    >
-                      삭제
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
         ))}
       </div>
