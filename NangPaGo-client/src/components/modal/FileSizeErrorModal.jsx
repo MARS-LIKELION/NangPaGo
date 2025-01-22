@@ -10,7 +10,7 @@ function FileSizeErrorModal({ isOpen, onClose }) {
       description="10MB 이하의 파일만 업로드 가능합니다."
       buttons={{
         primary: {
-          text: '닫기',
+          text: '확인',
           onClick: onClose
           },
       }}
