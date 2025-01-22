@@ -11,7 +11,7 @@ import {
   createComment,
   deleteComment,
   updateComment,
-} from '../../api/CommentService';
+} from '../../api/commentService';
 
 function Comment({
   entityType,
