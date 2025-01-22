@@ -3,14 +3,14 @@ import { useSelector } from 'react-redux';
 
 import Header from '../layout/header/Header';
 import Footer from '../layout/Footer';
-import LoginModal from '../../components/modal/LoginModal';
-import RecipeComment from './comment/RecipeComment';
+import LoginModal from '../modal/LoginModal';
+import Comment from '../comment/Comment';
 import CookingStepsSlider from './CookingStepsSlider';
 import NutritionInfo from './NutritionInfo';
 import IngredientList from './IngredientList';
 import RecipeImage from './RecipeImage';
 import RecipeInfo from './RecipeInfo';
-import RecipeButton from './RecipeButton';
+import RecipeButton from '../button/RecipeButton';
 
 import useRecipeData from '../../hooks/useRecipeData';
 
@@ -129,8 +129,7 @@ function Recipe({ recipe }) {
             manualImages={recipe.manualImages}
           />
         </section>
-
-        <RecipeComment recipeId={recipe.id} />
+        <Comment entityId={recipe.id} entityType="recipe" />
       </main>
 
       <Footer />

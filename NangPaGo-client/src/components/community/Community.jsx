@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { FaHeart, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import CommunityComment from './comment/CommunityComment';
+import Comment from '../comment/Comment';
 import Header from '../layout/header/Header';
 import Footer from '../layout/Footer';
 import CreateButton from '../button/CreateButton';
@@ -123,7 +123,7 @@ function Community({ community }) {
             {renderContentLines(community.content)}
           </p>
         </div>
-        <CommunityComment communityId={community.id} />
+        <Comment entityId={community.id} entityType="community" />
       </div>
       <Footer />
       <div className="fixed bottom-10 right-[calc((100vw-375px)/2+16px)] z-50">
