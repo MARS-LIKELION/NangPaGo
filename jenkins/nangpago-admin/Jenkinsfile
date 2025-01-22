@@ -1,12 +1,12 @@
 pipeline {
     agent any
     environment {
-        SCRIPT_PATH = '/var/jenkins_home/nangpago/NangPaGo/NangPaGo-app'
+        SCRIPT_PATH = '/var/jenkins_home/nangpago/NangPaGo/NangPaGo-admin'
         PROJECT_DIR = 'NangPaGo-api'
-        APP_DIR = 'NangPaGo-api/NangPaGo-app'
-        REACT_DIR = 'NangPaGo-client'
-        DOCKER_DIR = 'docker/nangpago-app'
-        DEPLOY_DIR = 'deploy/nangpago-app'
+        APP_DIR = 'NangPaGo-api/NangPaGo-admin'
+        REACT_DIR = 'NangPaGo-admin'
+        DOCKER_DIR = 'docker/nangpago-admin'
+        DEPLOY_DIR = 'deploy/nangpago-admin'
         DISCORD_WEBHOOK = credentials('discord-webhook')
     }
     tools {
@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Create Config Files') {
             steps {
-                withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'admin-env-file', variable: 'ENV_FILE')]) {
                     sh '''
                         mkdir -p ./${APP_DIR}/src/main/resources
                         mkdir -p ./${REACT_DIR}
@@ -30,16 +30,6 @@ pipeline {
                         cp $ENV_FILE ./${APP_DIR}/src/main/resources/.env
                         cp $ENV_FILE ./${REACT_DIR}/.env
                         cp $ENV_FILE ./${DOCKER_DIR}/.env
-                    '''
-                }
-            }
-        }
-        stage('Create Firebase Config') {
-            steps {
-                withCredentials([file(credentialsId: 'FIREBASE_KEY_FILE', variable: 'FIREBASE_KEY_PATH')]) {
-                    sh '''
-                        mkdir -p ./${APP_DIR}/src/main/resources/firebase
-                        cp $FIREBASE_KEY_PATH ./${APP_DIR}/src/main/resources/firebase/nangpago.json
                     '''
                 }
             }
@@ -57,7 +47,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir(PROJECT_DIR) {
-                    sh './gradlew :NangPaGo-app:build'
+                    sh './gradlew :NangPaGo-admin:build'
                 }
                 dir(REACT_DIR) {
                     sh 'npm run build'
@@ -75,29 +65,29 @@ pipeline {
                 sh '''
                     mkdir -p ${SCRIPT_PATH}
                     mkdir -p ${SCRIPT_PATH}/docker
-                    mkdir -p ${SCRIPT_PATH}/NangPaGo-client
+                    mkdir -p ${SCRIPT_PATH}/NangPaGo-admin
 
                     # 도커 파일 복사
                     cp ./${DOCKER_DIR}/docker-compose.blue.yml ${SCRIPT_PATH}/docker/
                     cp ./${DOCKER_DIR}/docker-compose.green.yml ${SCRIPT_PATH}/docker/
 
                     # 프론트엔드 파일 복사 (전체 프로젝트)
-                    cp -r ./${REACT_DIR}/* ${SCRIPT_PATH}/NangPaGo-client/
+                    cp -r ./${REACT_DIR}/* ${SCRIPT_PATH}/NangPaGo-admin/
 
                     # 백엔드 파일 복사
                     cp ./${APP_DIR}/build/libs/*.jar ${SCRIPT_PATH}/
-                    cp ./${APP_DIR}/Dockerfile-app-be ${SCRIPT_PATH}/Dockerfile-app-be
+                    cp ./${APP_DIR}/Dockerfile-admin-be ${SCRIPT_PATH}/Dockerfile-admin-be
 
                     # 배포 스크립트 복사
                     cp ./${DEPLOY_DIR}/deploy.sh ${SCRIPT_PATH}/
                     chmod +x ${SCRIPT_PATH}/deploy.sh
                 '''
 
-                withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
+                withCredentials([file(credentialsId: 'admin-env-file', variable: 'ENV_FILE')]) {
                     sh '''
                         cp $ENV_FILE ${SCRIPT_PATH}/.env
                         cp $ENV_FILE ${SCRIPT_PATH}/docker/.env
-                        cp $ENV_FILE ${SCRIPT_PATH}/NangPaGo-client/.env
+                        cp $ENV_FILE ${SCRIPT_PATH}/NangPaGo-admin/.env
 
                         ${SCRIPT_PATH}/deploy.sh
                     '''
@@ -110,15 +100,15 @@ pipeline {
             discordSend description: """
                 🎉 **빌드 및 배포 성공**
 
-                **프로젝트**: NangPaGo **App**
-                **프로젝트**: ${env.JOB_NAME}
+                **프로젝트**: NangPaGo **Admin**
+                **Jenkins Job**: ${env.JOB_NAME}
                 **빌드 번호**: #${env.BUILD_NUMBER}
                 **버전**: ${env.APP_VERSION}
                 **소요 시간**: ${currentBuild.durationString}
                 """,
                 link: env.BUILD_URL,
                 result: currentBuild.currentResult,
-                title: "NangPaGo App 빌드/배포 성공",
+                title: "NangPaGo Admin 빌드/배포 성공",
                 webhookURL: DISCORD_WEBHOOK
         }
 
@@ -126,15 +116,15 @@ pipeline {
             discordSend description: """
                 ❌ **빌드 또는 배포 실패**
 
-                **프로젝트**: NangPaGo **App**
-                **프로젝트**: ${env.JOB_NAME}
+                **프로젝트**: NangPaGo **Admin**
+                **Jenkins Job**: ${env.JOB_NAME}
                 **빌드 번호**: #${env.BUILD_NUMBER}
                 **버전**: ${env.APP_VERSION}
                 **소요 시간**: ${currentBuild.durationString}
                 """,
                 link: env.BUILD_URL,
                 result: currentBuild.currentResult,
-                title: "NangPaGo App 빌드/배포 실패",
+                title: "NangPaGo Admin 빌드/배포 실패",
                 webhookURL: DISCORD_WEBHOOK
         }
     }

@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ../
+      dockerfile: Dockerfile-admin-be
+    image: nangpago-admin-be:${APP_VERSION}
+    container_name: nangpago-admin-be-blue
+    ports:
+      - "9273:${API_SERVER_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Seoul
+    networks:
+      - nangpago-network
+    volumes:
+      - /Users/muncheolhyun/home-server/admin/server-logs:/logs
+
+  frontend:
+    build:
+      context: ../NangPaGo-admin/
+      dockerfile: Dockerfile-admin-fe
+    image: nangpago-admin-fe:${APP_VERSION}
+    container_name: nangpago-admin-fe-blue
+    ports:
+      - "7528:${VITE_FRONT_SERVER_PORT}"
+    networks:
+      - nangpago-network
+
+networks:
+  nangpago-network:
+    external: true
+    driver: bridge

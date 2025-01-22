@@ -13,7 +13,7 @@ services:
     networks:
       - nangpago-network
     volumes:
-      - /Users/muncheolhyun/home-server/server-logs:/logs
+      - /Users/muncheolhyun/home-server/app/server-logs:/logs
 
   frontend:
     build:
