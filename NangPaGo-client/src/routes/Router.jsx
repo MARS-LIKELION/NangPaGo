@@ -11,7 +11,7 @@ import CommunityList from '../pages/community/CommunityList.jsx';
 import CommunityDetail from '../pages/community/CommunityDetail';
 import CreateCommunity from '../pages/community/CreateCommunity.jsx';
 import ModifyCommunity from '../pages/community/ModifyCommunity.jsx';
-import OAuthError from '../pages/error/OAuthError.jsx';
+import Error from '../pages/error/Error.jsx';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import UnauthenticatedAccess from '../pages/error/UnauthenticatedAccess';
 import NotFound from '../pages/error/NotFound';
@@ -85,8 +85,8 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/oauth/error',
-    element: <OAuthError />,
+    path: '/error',
+    element: <Error />,
   },
   {
     path: '/unauthenticated',

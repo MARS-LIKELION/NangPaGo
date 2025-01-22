@@ -70,8 +70,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     private void redirectToErrorPage(HttpServletResponse response, String existingProvider) throws IOException {
-        String encodedMessage = URLEncoder.encode(existingProvider, StandardCharsets.UTF_8);
-        response.sendRedirect(clientHost + "/oauth/error?existingProvider=" + encodedMessage);
+        String encodedTitle = URLEncoder.encode("이미 가입된 계정입니다.", StandardCharsets.UTF_8);
+        String encodedDescription = URLEncoder.encode("해당 이메일은 " + existingProvider + " 계정으로 이미 가입되어 있습니다.\n기존 계정으로 로그인하거나 다른 방법을 사용해 주세요.", StandardCharsets.UTF_8);
+        response.sendRedirect(clientHost + "/error?title=" + encodedTitle + "&description=" + encodedDescription);
     }
 
     private void renewOauth2ProviderToken(Authentication authentication, String email) {
