@@ -5,7 +5,7 @@ import RecipeListTab from '../../components/recipe/RecipeListTab';
 import RecipeListContent from '../../components/recipe/RecipeListContent';
 import SearchBar from '../../components/search/SearchBar';
 import Header from '../../components/layout/header/Header.jsx';
-import Footer from '../../components/common/Footer.jsx';
+import Footer from '../../components/layout/Footer.jsx';
 import TopButton from '../../components/common/TopButton';
 
 function RecipeList() {

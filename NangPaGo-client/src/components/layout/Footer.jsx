@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import BuildVersionModal from '../../common/modal/BuildVersionModal';
+import BuildVersionModal from '../../components/modal/BuildVersionModal';
 import versionFetcher from '../../api/footer';
 
 function Footer() {

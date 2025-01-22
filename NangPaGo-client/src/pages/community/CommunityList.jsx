@@ -4,7 +4,7 @@ import { fetchCommunityList } from '../../api/community';
 import TopButton from '../../components/common/TopButton';
 import CreateButton from '../../components/common/CreateButton';
 import Header from '../../components/layout/header/Header.jsx';
-import Footer from '../../components/common/Footer';
+import Footer from '../../components/layout/Footer';
 import CommunityCard from '../../components/community/CommunityCard';
 
 function CommunityList() {

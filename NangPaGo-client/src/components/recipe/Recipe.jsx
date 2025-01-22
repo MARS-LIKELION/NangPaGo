@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import Header from '../layout/header/Header';
-import Footer from '../common/Footer';
+import Footer from '../layout/Footer';
 import LoginModal from '../../components/modal/LoginModal';
 import RecipeComment from './comment/RecipeComment';
 import CookingStepsSlider from './CookingStepsSlider';
