@@ -5,7 +5,7 @@ import CommunityComment from './comment/CommunityComment';
 import Header from '../layout/header/Header.jsx';
 import Footer from '../layout/Footer';
 import CreateButton from '../common/CreateButton';
-import { styles } from '../common/Image';
+import { IMAGE_STYLES } from '../../common/styles/Image';
 import {
   deleteCommunity,
   getLikeCount,
@@ -104,7 +104,7 @@ function Community({ community }) {
           <img
             src={community.imageUrl}
             alt={community.title}
-            className={styles.mainImage}
+            className={IMAGE_STYLES.mainImage}
           />
         </div>
         <div className="mt-2 flex items-center justify-between px-4">

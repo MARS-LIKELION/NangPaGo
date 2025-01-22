@@ -6,7 +6,7 @@ import Footer from '../../components/layout/Footer';
 import TextInput from '../../components/community/TextInput';
 import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
-import ErrorMessage from '../../components/common/ErrorMessage';
+import { ERROR_STYLES } from '../../common/styles/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
 import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
@@ -160,7 +160,7 @@ function CreateCommunity() {
             비공개
           </label>
         </div>
-        <ErrorMessage error={error} />
+        <p className={ERROR_STYLES.community}>{error}</p>
         <SubmitButton onClick={handleSubmit} label="게시글 등록" />
       </div>
       <Footer />

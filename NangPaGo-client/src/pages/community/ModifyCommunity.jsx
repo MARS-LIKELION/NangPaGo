@@ -6,7 +6,7 @@ import Footer from '../../components/layout/Footer';
 import TextInput from '../../components/community/TextInput';
 import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
-import ErrorMessage from '../../components/common/ErrorMessage';
+import {ERROR_STYLES} from '../../common/styles/ErrorMessage';
 import SubmitButton from '../../components/common/SubmitButton';
 import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
@@ -185,7 +185,7 @@ function ModifyCommunity() {
             비공개 (체크 시 로그인한 사용자만 볼 수 있습니다.)
           </label>
         </div>
-        <ErrorMessage error={error} />
+        <p className={ERROR_STYLES.community}>{error}</p>
         <div className="mt-4">
           {' '}
           <SubmitButton onClick={handleSubmit} label="수정 완료" />

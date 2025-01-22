@@ -1,6 +1,6 @@
 import { AiFillHeart } from 'react-icons/ai';
 import { FaCommentAlt } from 'react-icons/fa';
-import { styles } from '../../components/common/Image';
+import { IMAGE_STYLES } from '../../common/styles/Image';
 
 function CommunityCard({ item, onClick }) {
   return (
@@ -8,7 +8,7 @@ function CommunityCard({ item, onClick }) {
       className="border rounded-md overflow-hidden shadow-md flex flex-col cursor-pointer"
       onClick={() => onClick(item.id)}
     >
-      <img src={item.imageUrl} alt={item.title} className={styles.imageList} />
+      <img src={item.imageUrl} alt={item.title} className={IMAGE_STYLES.imageList} />
       <div className="p-4 space-y-2">
         <div className="flex items-center gap-4 text-text-400">
           <div className="flex items-center gap-1">

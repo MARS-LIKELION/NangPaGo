@@ -1,4 +1,4 @@
-import { styles } from '../common/Image';
+import { IMAGE_STYLES } from '../../common/styles/Image';
 import { FaTimes } from 'react-icons/fa';
 
 function FileUpload({ file, onChange, imagePreview, onCancel }) {
@@ -18,7 +18,7 @@ function FileUpload({ file, onChange, imagePreview, onCancel }) {
             <img
               src={imagePreview}
               alt="Uploaded Preview"
-              className={`${styles.mainImage} object-contain`}
+              className={`${IMAGE_STYLES.mainImage} object-contain`}
             />
             <button
               type="button"
