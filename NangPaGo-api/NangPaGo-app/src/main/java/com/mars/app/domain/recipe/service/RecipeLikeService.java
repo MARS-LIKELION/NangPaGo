@@ -4,6 +4,7 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
+import com.mars.app.domain.recipe.messaging.LikeNotificationPublisher;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.recipe.RecipeLike;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
@@ -22,6 +23,7 @@ public class RecipeLikeService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
+    private final LikeNotificationPublisher likeNotificationPublisher;
 
     public boolean isLiked(Long recipeId, String email) {
         return recipeLikeRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
@@ -34,6 +36,7 @@ public class RecipeLikeService {
     @Transactional
     public RecipeLikeResponseDto toggleLike(Long recipeId, String email) {
         boolean isLikedAfterToggle = toggleLikeStatus(recipeId, email);
+        likeNotificationPublisher.sendLikeNotification(RecipeLikeResponseDto.of(recipeId, isLikedAfterToggle));
         return RecipeLikeResponseDto.of(recipeId, isLikedAfterToggle);
     }
 

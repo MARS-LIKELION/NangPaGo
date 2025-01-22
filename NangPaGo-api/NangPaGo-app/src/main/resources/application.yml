@@ -21,8 +21,14 @@ spring:
   # 엘라스틱 서치
   elasticsearch:
     uris: ${ELASTICSEARCH_HOST}
-    username: ${ELASTICSEARCH_USERNAME}
+    username: ${ELASTICSEAR CH_USERNAME}
     password: ${ELASTICSEARCH_PASSWORD}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
 
   # 환경변수에서 불러오도록 설정
   datasource:
