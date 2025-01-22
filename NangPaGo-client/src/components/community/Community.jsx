@@ -30,7 +30,7 @@ const renderContentLines = (content) =>
     </Fragment>
   ));
 
-function Community({ community }) {
+function Community({ data: community }) {
   const [isHeartActive, setIsHeartActive] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);

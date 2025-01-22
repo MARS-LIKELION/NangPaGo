@@ -17,7 +17,7 @@ import useRecipeData from '../../hooks/useRecipeData';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-function Recipe({ recipe }) {
+function Recipe({ data: recipe }) {
   const { email: userEmail } = useSelector((state) => state.loginSlice);
   const isLoggedIn = Boolean(userEmail);
 
