@@ -4,6 +4,7 @@ import {
   fetchRecommendedRecipes,
   fetchFavoriteRecipes,
 } from '../../api/recipe';
+import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination'
 
 function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   const [recipes, setRecipes] = useState({
@@ -21,7 +22,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
 
   const observerRef = useRef(null);
   const observerInstance = useRef(null);
-  const pageSize = 12;
+  const pageSize = PAGE_SIZE.list;
   const isFetching = useRef(false);
 
   const fetchFunctions = {
@@ -67,7 +68,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
       observerInstance.current = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            loadRecipes(activeTab, currentPage[activeTab] + 1);
+            loadRecipes(activeTab, currentPage[activeTab] + PAGE_INDEX.one);
           }
         },
         { threshold: 1.0 },

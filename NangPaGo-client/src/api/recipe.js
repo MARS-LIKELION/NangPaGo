@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance';
+import { PAGE_INDEX, PAGE_SIZE } from '../common/constants/pagination'
 
 export const fetchRecipeById = async (recipeId) => {
   try {
@@ -25,8 +26,8 @@ export const getRecipes = async (ingredients, page, size) => {
 
 export const searchRecipes = async (
   keyword,
-  pageNo = 1,
-  pageSize = 10,
+  pageNo = PAGE_INDEX.one,
+  pageSize = PAGE_SIZE.search,
   searchType = 'NAME',
 ) => {
   try {
@@ -42,8 +43,8 @@ export const searchRecipes = async (
 
 export const fetchRecommendedRecipes = async (
   searchTerm,
-  pageNo = 1,
-  pageSize = 12,
+  pageNo = PAGE_INDEX.one,
+  pageSize = PAGE_SIZE.list,
 ) => {
   try {
     const params = {

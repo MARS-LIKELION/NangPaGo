@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
+import { PAGE_INDEX, PAGE_SIZE } from '../common/constants/pagination'
 
-export const fetchCommunityList = async (pageNo = 0, pageSize = 10) => {
+export const fetchCommunityList = async (pageNo = PAGE_INDEX.zero, pageSize = PAGE_SIZE.search) => {
   try {
     const response = await axiosInstance.get('/api/community/list', {
       params: { pageNo, pageSize },
