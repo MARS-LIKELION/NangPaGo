@@ -1,3 +1,5 @@
+import { FaPen, FaTrash } from 'react-icons/fa';
+
 function CommentList({
   comments,
   isEditing,
@@ -54,15 +56,17 @@ function CommentList({
                   onSetEditing(comment.id);
                   onEditChange(comment.content);
                 }}
-                className="bg-primary px-4 py-2"
+                className="bg-transparent hover:opacity-70"
+                aria-label="댓글 수정"
               >
-                수정
+                <FaPen className="w-5 h-5 text-primary" />
               </button>
               <button
                 onClick={() => onDeleteClick(comment.id)}
-                className="bg-primary px-4 py-2"
+                className="bg-transparent hover:opacity-70"
+                aria-label="댓글 삭제"
               >
-                삭제
+                <FaTrash className="w-5 h-5 text-red-500" />
               </button>
             </div>
           )}
