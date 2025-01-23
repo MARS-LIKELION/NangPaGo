@@ -1,8 +1,7 @@
-package com.mars.admin.domain.total.controller;
+package com.mars.admin.domain.admin.controller;
 
-import com.mars.admin.domain.total.service.TotalService;
+import com.mars.admin.domain.admin.service.AdminService;
 import com.mars.common.dto.ResponseDto;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/admin")
-public class TotalController {
+@RequestMapping("/api")
+public class AdminController {
 
-    private final TotalService totalService;
+    private final AdminService adminService;
 
     @GetMapping("/dashboard")
     public ResponseDto<Map<String, Long>> dashboard() {
-        return ResponseDto.of(totalService.getTotals(), "");
+        return ResponseDto.of(adminService.getTotals(), "");
     }
 }

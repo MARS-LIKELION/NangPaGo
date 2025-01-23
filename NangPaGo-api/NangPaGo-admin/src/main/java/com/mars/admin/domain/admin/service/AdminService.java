@@ -1,8 +1,7 @@
-package com.mars.admin.domain.total.service;
+package com.mars.admin.domain.admin.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
 import com.mars.admin.domain.user.repository.UserRepository;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
-public class TotalService {
+public class AdminService {
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
 

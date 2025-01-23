@@ -1,5 +1,9 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect } from 'react';
+import {
+  getTotals
+} from '../api/total';
 
 // 더미 데이터
 const userStats = [
@@ -75,6 +79,19 @@ const monthlyAverageLoginStats = [
 ];
 
 export default function Home() {
+const [totalData, setTotalData] = useState({});
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await getTotals();
+          setTotalData(response.data)
+        } catch (error) {
+          console.error('데이터 가져오기 에러: ', error);
+        }
+      };
+      fetchData();
+    }, []);
   return (
     <div className="p-6">
       {/* 통계 카드 */}
@@ -88,7 +105,7 @@ export default function Home() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">총 사용자</dt>
-                  <dd className="text-3xl font-semibold text-gray-900">1,234</dd>
+                  <dd className="text-3xl font-semibold text-gray-900">{totalData.userCount || 0}</dd>
                 </dl>
               </div>
             </div>
@@ -104,7 +121,7 @@ export default function Home() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">총 게시글</dt>
-                  <dd className="text-3xl font-semibold text-gray-900">5,678</dd>
+                  <dd className="text-3xl font-semibold text-gray-900">{totalData.communityCount || 0}</dd>
                 </dl>
               </div>
             </div>
