@@ -17,7 +17,7 @@ public record CommunityCommentResponseDto(
     public static CommunityCommentResponseDto of(CommunityComment communityComment, String email) {
         return CommunityCommentResponseDto.builder()
             .id(communityComment.getId())
-            .entityId(communityComment.communityComment().getId())
+            .entityId(communityComment.getCommunity().getId())
             .content(communityComment.getContent())
             .email(maskEmail(communityComment.getUser().getEmail()))
             .isOwnedByUser(communityComment.getUser().getEmail().equals(email))
