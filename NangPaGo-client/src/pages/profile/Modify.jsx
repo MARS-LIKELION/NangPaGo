@@ -4,22 +4,32 @@ import axiosInstance from '../../api/axiosInstance.js';
 import Header from '../../components/layout/header/Header';
 import Footer from '../../components/layout/Footer';
 import UpdateUserInfoModal from '../../components/modal/UpdateUserInfoModal.jsx';
+import DeleteAccountConfirmModal from '../../components/modal/DeleteAccountConfirmModal.jsx';
+import DeleteAccountSuccessModal from '../../components/modal/DeleteAccountSuccessModal.jsx';
+
 
 const Modify = () => {
   const [userInfo, setUserInfo] = useState({});
   const [nickname, setNickname] = useState('');
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
   const [isNicknameAvailableMessage, setIsNicknameAvailableMessage] =
-    useState('');
-  const [showUpdateUserInfoModal, setShowUpdateUserInfoModal] = useState(false);
-
+  useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [isDeleteSuccessOpen, setIsDeleteSuccessOpen] = useState(false);
+  
   const loginState = useSelector((state) => state.loginSlice);
   const isLoggedIn = Boolean(loginState.email);
-
+  
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         const response = await axiosInstance.get('/api/user/profile');
+        
         setUserInfo(response.data.data);
         setNickname(response.data.data.nickname);
         setIsNicknameAvailableMessage('');
@@ -68,11 +78,31 @@ const Modify = () => {
         nickname: nickname,
       };
       await axiosInstance.put('/api/user/profile', userInfoRequestDto);
-      setShowUpdateUserInfoModal(true);
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Failed to update user info:', error);
     }
   };
+
+  // ▼ "정말로 회원탈퇴?" 모달 열기
+  const handleDeleteAccount = () => {
+    setIsDeleteConfirmOpen(true);
+  };
+
+  // ▼ 모달에서 [확인] 누를 때 -> 실제 탈퇴 API 호출
+  const confirmDeleteAccount = async () => {
+    try {
+      await axiosInstance.get('/api/user/deactivate');
+      console.log('회원탈퇴 성공');
+      // 확인 모달 닫고 성공 모달 열기
+      setIsDeleteConfirmOpen(false);
+      setIsDeleteSuccessOpen(true);
+    } catch (error) {
+      console.error('회원탈퇴 실패:', error);
+      alert('회원탈퇴에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
 
   return (
     <div className="bg-white mx-auto min-h-screen flex flex-col min-w-80 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
@@ -108,32 +138,60 @@ const Modify = () => {
                 </p>
               )}
             </div>
+
             <div className="mb-4">
               <label className="block text-text-400 mb-2">이메일</label>
-              <input
-                type="email"
-                value={userInfo.email}
-                className="w-full p-2 rounded-md bg-gray-200"
-                disabled
-              />
+              <div className="flex flex-col items-end gap-2">
+                <input
+                  type="email"
+                  value={userInfo.email || ''}
+                  className="w-full p-2 rounded-md bg-gray-200"
+                  disabled
+                />
+                <button
+                  onClick={handleSubmit}
+                  className={`px-4 py-2 ${
+                    isNicknameAvailable
+                      ? 'bg-primary text-white'
+                      : 'bg-yellow-200 text-white cursor-not-allowed'
+                  }`}
+                  disabled={!isNicknameAvailable}
+                  style={{
+                    width: '100%',
+                    maxWidth: '300px',
+                    alignSelf: 'flex-end',
+                  }}
+                >
+                  회원정보 저장하기
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="px-4 mb-4 mt-auto">
+      {/* 회원탈퇴 버튼 */}
+      <div className="flex justify-end px-6 mb-4">
         <button
-          onClick={handleSubmit}
-          className={`w-full py-2 mt-6 ${isNicknameAvailable ? 'bg-primary text-white' : 'bg-yellow-200 text-white cursor-not-allowed'}`}
-          disabled={!isNicknameAvailable}
+          onClick={handleDeleteAccount}
+          className="bg-gray-400 text-white px-3 py-2 rounded text-sm"
         >
-          회원정보 저장하기
+          회원탈퇴
         </button>
-        <UpdateUserInfoModal
-          isOpen={showUpdateUserInfoModal}
-          onClose={() => setShowUpdateUserInfoModal(false)}
-        />
       </div>
       <Footer />
+
+      <DeleteAccountConfirmModal
+        isOpen={isDeleteConfirmOpen}
+        onConfirm={confirmDeleteAccount}
+        onCancel={() => setIsDeleteConfirmOpen(false)}
+      />
+
+      <DeleteAccountSuccessModal
+        isOpen={isDeleteSuccessOpen}
+        onClose={() => setIsDeleteSuccessOpen(false)}
+      />
+      
+      <UpdateUserInfoModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };
