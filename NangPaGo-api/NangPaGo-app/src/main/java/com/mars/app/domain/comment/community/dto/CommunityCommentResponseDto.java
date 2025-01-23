@@ -7,7 +7,7 @@ import lombok.Builder;
 @Builder
 public record CommunityCommentResponseDto(
     Long id,
-    Long entityId,
+    Long postId,
     String content,
     String email,
     boolean isOwnedByUser,
