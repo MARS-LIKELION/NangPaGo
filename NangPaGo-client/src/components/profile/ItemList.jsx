@@ -70,9 +70,11 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
               </p>
             </div>
             <div>
-              <h3 className="text-text-900 text-base line-clamp-4">
-                {item.content}
-              </h3>
+              <div className="mt-2">
+                <h3 className="text-text-900 text-base line-clamp-4" style={{ whiteSpace: 'pre-line' }}>
+                  {item.content}
+                </h3>
+              </div>
             </div>
           </div>
         ) : (
