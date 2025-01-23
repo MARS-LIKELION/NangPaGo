@@ -1,4 +1,4 @@
-package com.mars.admin.domain.admin.service;
+package com.mars.admin.domain.chart.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
 import com.mars.admin.domain.user.repository.UserRepository;
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
-public class AdminService {
+public class ChartService {
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
 

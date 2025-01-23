@@ -1,6 +1,6 @@
-package com.mars.admin.domain.admin.controller;
+package com.mars.admin.domain.chart.controller;
 
-import com.mars.admin.domain.admin.service.AdminService;
+import com.mars.admin.domain.chart.service.ChartService;
 import com.mars.common.dto.ResponseDto;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-public class AdminController {
+public class ChartController {
 
-    private final AdminService adminService;
+    private final ChartService chartService;
 
     @GetMapping("/dashboard")
     public ResponseDto<Map<String, Long>> dashboard() {
-        return ResponseDto.of(adminService.getTotals(), "");
+        return ResponseDto.of(chartService.getTotals(), "");
     }
 }
