@@ -8,7 +8,7 @@ import lombok.Builder;
 @Builder
 public record RecipeCommentResponseDto(
     Long id,
-    Long entityId,
+    Long postId,
     String content,
     String imageUrl,
     String title,
@@ -20,7 +20,7 @@ public record RecipeCommentResponseDto(
     public static RecipeCommentResponseDto from(RecipeComment recipeComment, Recipe recipe, String email) {
         return RecipeCommentResponseDto.builder()
             .id(recipeComment.getId())
-            .entityId(recipeComment.getRecipe().getId())
+            .postId(recipeComment.getRecipe().getId())
             .content(recipeComment.getContent())
             .imageUrl(recipe.getMainImage())
             .title(recipe.getName())
