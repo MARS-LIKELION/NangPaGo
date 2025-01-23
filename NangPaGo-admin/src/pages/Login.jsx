@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../api/axiosInstance.js';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
@@ -14,12 +14,7 @@ export default function Login() {
          formData.append('password', password);
 
          try {
-             const response = await axios({
-                 url: 'http://localhost:8090/login/proc',
-                 method: 'POST',
-                 data: formData,
-                 withCredentials: true,
-             });
+             const response = await axiosInstance.post('/login/proc', formData);
              if (response.status === 200) {
                  localStorage.setItem('isAuthenticated', 'true');
                  navigate('/dashboard');
