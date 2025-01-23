@@ -1,6 +1,7 @@
 package com.mars.app.domain.recipe.controller;
 
 import com.mars.app.domain.recipe.messaging.SseEmitterService;
+import com.mars.app.domain.recipe.service.RecipeLikeMessageService;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
@@ -31,6 +32,7 @@ public class RecipeController {
 
     private final RecipeService recipeService;
     private final RecipeLikeService recipeLikeService;
+    private final RecipeLikeMessageService recipeLikeMessageService;
     private final RecipeEsService recipeEsService;
     private final RecipeEsSynchronizerService recipeEsSynchronizerService;
     private final SseEmitterService sseEmitterService;
@@ -51,7 +53,7 @@ public class RecipeController {
     @PostMapping("/{id}/like/toggle")
     public ResponseDto<RecipeLikeResponseDto> toggleRecipeLike(@PathVariable Long id) {
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeLikeService.toggleLike(id, email));
+        return ResponseDto.of(recipeLikeMessageService.toggleLike(id, email));
     }
 
     @GetMapping("/{id}/like/count")

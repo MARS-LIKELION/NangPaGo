@@ -49,24 +49,6 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
             .build();
     }
 
-    @DisplayName("레시피 좋아요를 클릭할 수 있다.")
-    @Test
-    void addRecipeLike() {
-        // given
-        User user = createUser("dummy@nangpago.com");
-        Recipe recipe = createRecipe("파스타");
-
-        userRepository.save(user);
-        recipeRepository.save(recipe);
-
-        // when
-        RecipeLikeResponseDto recipeLikeResponseDto = recipeLikeService.toggleLike(recipe.getId(), user.getEmail());
-
-        // then
-        assertThat(recipeLikeResponseDto).isNotNull();
-        assertThat(recipeLikeResponseDto.recipeId()).isEqualTo(recipe.getId());
-    }
-
     @DisplayName("좋아요를 누른 레시피는 좋아요 상태가 true 이다.")
     @Test
     void isLikedByUser() {

@@ -134,10 +134,6 @@ firebase:
     path: ${FIREBASE_CONFIGURATION_FILE}
     bucket: ${FIREBASE_BUCKET}
 
-developer:
-  rabbitmq:
-    username: ${RABBITMQ_CONSUMER_NAME}
-
 # 개발(로컬) 환경: local / 배포 환경: prod
 ---
 
