@@ -1,6 +1,5 @@
 package com.mars.app.domain.recipe.messaging;
 
-import static com.mars.app.config.rabbitmq.RabbitMQConfig.LIKE_QUEUE_NAME;
 import static com.mars.common.exception.NPGExceptionType.SERVER_ERROR_RABBITMQ_CONNECTION;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
@@ -17,8 +16,9 @@ public class LikeNotificationConsumer {
     private final RecipeLikeService recipeLikeService;
     private final SseEmitterService sseEmitterService;
 
-    @RabbitListener(queues = LIKE_QUEUE_NAME)
+    @RabbitListener(queues = "#{@likeQueue.name}")
     public void processLikeEvent(RecipeLikeResponseDto notification) {
+        System.out.println("[Published] RecipeLikeResponseDto = " + notification);
         try {
             processLikeNotification(notification);
         } catch (AmqpConnectException e) {

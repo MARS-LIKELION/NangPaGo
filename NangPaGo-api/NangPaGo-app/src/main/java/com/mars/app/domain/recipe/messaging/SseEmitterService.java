@@ -24,6 +24,7 @@ public class SseEmitterService {
     }
 
     public void sendLikeCount(Long recipeId, int likeCount) {
+        System.out.println("[Send Event to Client] recipeId = " + recipeId + " / likeCount = " + likeCount);
         List<SseEmitter> recipeEmitters = getEmitterForRecipe(recipeId);
         recipeEmitters.removeIf(emitter -> !sendEventToEmitter(emitter, likeCount));
     }

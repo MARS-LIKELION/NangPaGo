@@ -7,25 +7,25 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String LIKE_QUEUE_NAME = "like-notification-queue";
+    @Value("${RABBITMQ_CONSUMER_NAME}")
+    private String developer;
     public static final String LIKE_ROUTING_KEY = "recipe.like.*";
-
-    public static final String EXCHANGE_NAME = "notification-exchange";
 
     @Bean
     public TopicExchange topicExchange() {
-        return new TopicExchange(EXCHANGE_NAME);
+        return new TopicExchange(this.getExchangeName());
     }
 
     @Bean
     public Queue likeQueue() {
-        return new Queue(LIKE_QUEUE_NAME);
+        return new Queue(this.getLikeQueueName());
     }
 
     @Bean
@@ -36,12 +36,20 @@ public class RabbitMQConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setMessageConverter(messageConverter());
+        template.setMessageConverter(new Jackson2JsonMessageConverter());
         return template;
     }
 
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
+    }
+
+    private String getLikeQueueName() {
+        return "like-notification-queue-" + developer;
+    }
+
+    private String getExchangeName() {
+        return "notification-exchange-" + developer;
     }
 }
