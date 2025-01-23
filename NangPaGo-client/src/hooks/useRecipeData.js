@@ -72,10 +72,12 @@ const useRecipeData = (recipeId, isLoggedIn) => {
     }
 
     try {
-      const { liked } = await toggleLike(recipeId);
-      setIsHeartActive(liked);
-      setLikeCount((prev) => (liked ? prev + 1 : prev - 1));
+      setIsHeartActive(!isHeartActive);
+      setLikeCount((prev) => (isHeartActive ? prev - 1 : prev + 1));
+      await toggleLike(recipeId);
     } catch (error) {
+      setIsHeartActive(!isHeartActive);
+      setLikeCount((prev) => (isHeartActive ? prev - 1 : prev + 1));
       console.error('좋아요 상태 변경 오류:', error);
     }
   };
