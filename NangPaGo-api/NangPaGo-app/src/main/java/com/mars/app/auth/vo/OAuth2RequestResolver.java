@@ -38,6 +38,7 @@ public class OAuth2RequestResolver implements OAuth2AuthorizationRequestResolver
                 // Google과 같은 Provider에만 access_type=offline 추가
                 if ("google".equals(authorizationRequest.getAttributes().get("registration_id"))) {
                     params.put("access_type", "offline");
+                    params.put("prompt", "consent");
                 }
             })
             .build();
