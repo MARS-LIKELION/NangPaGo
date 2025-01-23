@@ -51,10 +51,9 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
         activeTab === 'comments' ? (
           <div key={item.id} className="flex gap-5 border-b pb-1">
             <div className="w-[100px] h-[130px]">
-              {/* 레시피 이미지와 제목 클릭 시 이동 */}
               <div
                 className="w-[100px] h-[100px] overflow-hidden rounded-md border mb-2 cursor-pointer"
-                onClick={() => navigate(`/recipe/${item.id}`)} // 이동
+                onClick={() => navigate(`/recipe/${item.entityId}`)}
               >
                 <img
                   src={item.imageUrl}
@@ -64,7 +63,7 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
               </div>
               <p
                 className="line-clamp-1 text-sm cursor-pointer"
-                onClick={() => navigate(`/recipe/${item.id}`)} // 이동
+                onClick={() => navigate(`/recipe/${item.id}`)}
               >
                 {item.title}
               </p>

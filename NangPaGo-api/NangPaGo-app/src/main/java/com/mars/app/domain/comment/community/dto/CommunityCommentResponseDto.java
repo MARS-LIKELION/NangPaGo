@@ -7,6 +7,7 @@ import lombok.Builder;
 @Builder
 public record CommunityCommentResponseDto(
     Long id,
+    Long entityId,
     String content,
     String email,
     boolean isOwnedByUser,
@@ -16,6 +17,7 @@ public record CommunityCommentResponseDto(
     public static CommunityCommentResponseDto of(CommunityComment communityComment, String email) {
         return CommunityCommentResponseDto.builder()
             .id(communityComment.getId())
+            .entityId(communityComment.communityComment().getId())
             .content(communityComment.getContent())
             .email(maskEmail(communityComment.getUser().getEmail()))
             .isOwnedByUser(communityComment.getUser().getEmail().equals(email))
