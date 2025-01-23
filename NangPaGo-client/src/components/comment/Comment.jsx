@@ -30,6 +30,7 @@ function Comment({
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [defaultPage] = useState(0);
 
   const isLoggedIn = useSelector((state) => Boolean(state.loginSlice.email));
 
@@ -69,7 +70,7 @@ function Comment({
     setIsSubmitting(true);
     try {
       await createComment(entityType, entityId, { content: commentText });
-      await loadComments(currentPage);
+      await loadComments(defaultPage);
       setCommentText('');
     } finally {
       setIsSubmitting(false);
