@@ -1,15 +1,16 @@
 package com.mars.app.domain.recipe.messaging;
 
-import static com.mars.common.exception.NPGExceptionType.SERVER_ERROR_SEND_LIKE_COUNT;
 import static java.lang.Long.MAX_VALUE;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+@Slf4j
 @Service
 public class SseEmitterService {
 
@@ -24,9 +25,12 @@ public class SseEmitterService {
     }
 
     public void sendLikeCount(Long recipeId, int likeCount) {
-        System.out.println("[Send Event to Client] recipeId = " + recipeId + " / likeCount = " + likeCount);
-        List<SseEmitter> recipeEmitters = getEmitterForRecipe(recipeId);
-        recipeEmitters.removeIf(emitter -> !sendEventToEmitter(emitter, likeCount));
+        try {
+            List<SseEmitter> recipeEmitters = getEmitterForRecipe(recipeId);
+            recipeEmitters.removeIf(emitter -> !sendEventToEmitter(emitter, likeCount));
+        } catch (Exception e) {
+            log.error("좋아요 이벤트 전송 중 오류 발생: {}", e.getMessage(), e);
+        }
     }
 
     private void addEmitterToMap(Long recipeId, SseEmitter emitter) {
@@ -42,7 +46,8 @@ public class SseEmitterService {
             emitter.send(SseEmitter.event().name(EVENT_NAME).data(likeCount));
             return true;
         } catch (Exception e) {
-            throw SERVER_ERROR_SEND_LIKE_COUNT.of("좋아요 수 전송 중 오류가 발생했습니다.");
+            log.error("좋아요 수 전송 중 오류 발생: {}", e.getMessage(), e);
+            return false;
         }
     }
 

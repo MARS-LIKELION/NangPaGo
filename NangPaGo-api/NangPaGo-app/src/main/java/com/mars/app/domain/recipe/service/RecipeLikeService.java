@@ -1,16 +1,8 @@
 package com.mars.app.domain.recipe.service;
 
-import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
-import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
-
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.app.domain.recipe.messaging.LikeNotificationPublisher;
-import com.mars.common.model.recipe.Recipe;
-import com.mars.common.model.recipe.RecipeLike;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
-import com.mars.app.domain.recipe.repository.RecipeRepository;
-import com.mars.common.model.user.User;
-import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecipeLikeService {
 
     private final RecipeLikeRepository recipeLikeRepository;
-    private final RecipeRepository recipeRepository;
-    private final UserRepository userRepository;
     private final LikeNotificationPublisher likeNotificationPublisher;
 
     public boolean isLiked(Long recipeId, String email) {
@@ -33,39 +23,10 @@ public class RecipeLikeService {
         return recipeLikeRepository.countByRecipeId(recipeId);
     }
 
-    @Transactional
     public RecipeLikeResponseDto toggleLike(Long recipeId, String email) {
-        boolean isLikedAfterToggle = toggleLikeStatus(recipeId, email);
-        likeNotificationPublisher.sendLikeNotification(RecipeLikeResponseDto.of(recipeId, isLikedAfterToggle));
-        return RecipeLikeResponseDto.of(recipeId, isLikedAfterToggle);
-    }
+        // Message 전송 to RabbitMQ
+        likeNotificationPublisher.sendLikeNotification(recipeId, email);
 
-    private boolean toggleLikeStatus(Long recipeId, String email) {
-        User user = getUserByEmail(email);
-        Recipe recipe = getRecipeById(recipeId);
-
-        return recipeLikeRepository.findByUserAndRecipe(user, recipe)
-            .map(this::removeLike)
-            .orElseGet(() -> addLike(user, recipe));
-    }
-
-    private User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
-    }
-
-    private Recipe getRecipeById(Long recipeId) {
-        return recipeRepository.findById(recipeId)
-            .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
-    }
-
-    private boolean removeLike(RecipeLike recipeLike) {
-        recipeLikeRepository.delete(recipeLike);
-        return false;
-    }
-
-    private boolean addLike(User user, Recipe recipe) {
-        recipeLikeRepository.save(RecipeLike.of(user, recipe));
-        return true;
+        return RecipeLikeResponseDto.of(recipeId);
     }
 }
