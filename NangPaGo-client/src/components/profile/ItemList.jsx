@@ -53,7 +53,7 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
             <div className="w-[100px] h-[130px]">
               <div
                 className="w-[100px] h-[100px] overflow-hidden rounded-md border mb-2 cursor-pointer"
-                onClick={() => navigate(`/recipe/${item.entityId}`)}
+                onClick={() => navigate(`/recipe/${item.postId}`)}
               >
                 <img
                   src={item.imageUrl}
