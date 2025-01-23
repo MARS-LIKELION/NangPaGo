@@ -11,7 +11,7 @@ export default function Users() {
       provider: "google",
       created_at: "2024-01-01",
       updated_at: "2024-01-01",
-      user_status: "ACTIVE"
+      user_status: "BANNED"
     },
     {
       id: 2,
@@ -23,6 +23,28 @@ export default function Users() {
       created_at: "2024-01-02",
       updated_at: "2024-01-02",
       user_status: "ACTIVE"
+    },
+    {
+      id: 3,
+      email: "cbk@example.com",
+      nickname: "최보경",
+      birthday: "2000-01-01",
+      phone: "",
+      provider: "naver",
+      created_at: "2024-01-23",
+      updated_at: "2024-01-23",
+      user_status: "OTHERS"
+    },
+    {
+      id: 4,
+      email: "npg@example.com",
+      nickname: "냉파고",
+      birthday: "",
+      phone: "",
+      provider: "naver",
+      created_at: "2024-01-02",
+      updated_at: "2024-01-02",
+      user_status: "WITHDRAWN"
     }
   ]);
 
@@ -48,60 +70,49 @@ export default function Users() {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">사용자 관리</h2>
-      <div className="bg-white p-4 rounded-md shadow-md h-[725px]">
-        <table className="min-w-full">
+      <div className="bg-white p-4 rounded-md shadow-md h-[725px] flex flex-col">
+        <table className="min-w-full border-collapse">
           <thead>
-          <tr className="bg-gray-200">
-            <th className="border border-gray-300 px-4 py-2 text-center">ID</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">이메일</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">닉네임</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">생년월일</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">전화번호</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">가입 경로</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">가입일</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">수정일</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">상태</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">관리</th>
+          <tr>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">ID</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">이메일</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">닉네임</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">생년월일</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">전화번호</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">가입 경로</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">가입일</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b">수정일</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold border-b w-28">상태</th>
           </tr>
           </thead>
           <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="hover:bg-blue-50 bg-white">
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.id}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.email}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.nickname}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.birthday || '-'}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.phone || '-'}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.provider}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.created_at}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{user.updated_at}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">
-                  <span className={`px-2 py-1 rounded text-sm ${
-                    user.user_status === 'ACTIVE'
-                      ? ''
-                      : 'text-red-600'
-                  }`}>
-                    {user.user_status}
-                  </span>
-              </td>
-              <td className="border border-gray-300 px-4 py-2 text-center">
-                {user.user_status === 'ACTIVE' ? (
-                  <div className="space-x-2">
-                    <button
-                      className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
-                      onClick={() => handleStatusChange(user, 'WITHDRAWN')}
-                    >
-                      WITHDRAWN
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    className="bg-gray-500 text-white px-3 py-1 rounded text-sm"
-                    onClick={() => handleStatusChange(user, 'ACTIVE')}
-                  >
-                    ACTIVE
-                  </button>
-                )}
+          {users.map((user, index) => (
+            <tr
+              key={user.id}
+              className={`${
+                index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+              } hover:bg-blue-50 border-b`}
+            >
+              <td className="px-4 py-2 text-sm text-gray-700">{user.id}</td>
+              <td className="px-4 py-2 text-sm text-gray-700">{user.email}</td>
+              <td
+                className="px-4 py-2 text-sm text-gray-700">{user.nickname}</td>
+              <td className="px-4 py-2 text-sm text-gray-700">{user.birthday || '-'}</td>
+              <td className="px-4 py-2 text-sm text-gray-700">{user.phone || '-'}</td>
+              <td className="px-4 py-2 text-sm text-gray-700">{user.provider}</td>
+              <td className="px-4 py-2 text-sm text-gray-700">{user.created_at}</td>
+              <td className="px-4 py-2 text-sm text-gray-700">{user.updated_at}</td>
+              <td className="px-4 py-2 text-sm text-gray-700 w-28">
+                <select
+                  value={user.user_status}
+                  onChange={(e) => handleStatusChange(user, e.target.value)}
+                  className="border rounded px-2 py-1 text-sm"
+                >
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="WITHDRAWN">WITHDRAWN</option>
+                  <option value="BANNED">BANNED</option>
+                  <option value="OTHERS">OTHERS</option>
+                </select>
               </td>
             </tr>
           ))}
@@ -110,12 +121,15 @@ export default function Users() {
       </div>
 
       {showConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
             <h3 className="text-lg font-semibold mb-4">사용자 상태 변경</h3>
             <p className="mb-4">
-              {actionType === 'WITHDRAWN' && '해당 사용자의 계정을 비활성화하시겠습니까?'}
-              {actionType === 'ACTIVE' && '해당 사용자의 계정을 활성화하시겠습니까?'}
+              {actionType === 'ACTIVE' && '해당 사용자의 계정을 정상으로 바꾸시겠습니까?'}
+              {actionType === 'WITHDRAWN' && '해당 사용자를 탈퇴시키시겠습니까?'}
+              {actionType === 'BANNED' && '해당 사용자의 활동을 금지시키겠습니까?'}
+              {actionType === 'OTHERS' && '해당 사용자의 계정을 기타로 바꾸시겠습니까?'}
             </p>
             <div className="flex justify-end space-x-3">
               <button
