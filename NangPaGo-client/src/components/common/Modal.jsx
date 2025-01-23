@@ -10,9 +10,21 @@ function Modal({ isOpen, onClose, title, description, children, buttons }) {
     secondary: { text: secondaryButtonText, onClick: secondaryButtonAction } = {},
   } = buttons || {};
 
+  const handleBackgroundClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-8 rounded-lg relative flex flex-col items-center max-w-[300px] w-[calc(100%-32px)]">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      onClick={handleBackgroundClick}
+    >
+      <div
+        className="bg-white p-8 rounded-lg relative flex flex-col items-center max-w-[300px] w-[calc(100%-32px)]"
+        onClick={(e) => e.stopPropagation()}
+      >
         {title && (
           <p className="text-center text-lg font-semibold text-text-600 mb-2">{title}</p>
         )}
