@@ -41,10 +41,10 @@ function RecipeSearch() {
       <div className="sticky top-0 bg-white px-4 py-2 flex items-center gap-2 border-b">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-full transition"
+          className="bg-white p-2 rounded-full transition"
           aria-label="뒤로가기"
         >
-          <BiArrowBack className="text-2xl" />
+          <BiArrowBack className="text-secondary text-2xl" />
         </button>
         <SearchInput
           value={keyword}
