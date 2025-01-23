@@ -12,8 +12,10 @@ function parseHighlightedName(htmlString) {
   });
 }
 
-function stripHtmlTags(htmlString) {
-  return htmlString.replace(/<[^>]+>/g, '');
+function stripHtmlTags(result) {
+  const htmlString = result.highlightedName;
+
+  return htmlString.replace(/<em[^>]*>(.*?)<\/em>/g, '$1');
 }
 
 export { parseHighlightedName, stripHtmlTags };
