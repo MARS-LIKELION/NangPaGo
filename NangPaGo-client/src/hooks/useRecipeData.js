@@ -46,7 +46,9 @@ const useRecipeData = (recipeId, isLoggedIn) => {
   }, [recipeId, isLoggedIn]);
 
   useEffect(() => {
-    const eventSource = new EventSource(`/api/recipe/${recipeId}/like/notification/subscribe`);
+    const eventSource = new EventSource(
+      `/api/recipe/${recipeId}/like/notification/subscribe`,
+    );
 
     eventSource.addEventListener('좋아요 이벤트 발생', (event) => {
       const updatedLikeCount = parseInt(event.data, 10);

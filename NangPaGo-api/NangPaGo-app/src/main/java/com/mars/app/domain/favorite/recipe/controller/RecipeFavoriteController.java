@@ -25,9 +25,9 @@ public class RecipeFavoriteController {
 
     @Operation(summary = "즐겨찾기 상태 확인")
     @GetMapping("/{id}/favorite/status")
-    public ResponseEntity<Boolean> isFavorite(@PathVariable("id") Long id) {
+    public ResponseDto<Boolean> isFavorite(@PathVariable("id") Long id) {
         String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseEntity.ok(recipeFavoriteService.isFavorite(id, email));
+        return ResponseDto.of(recipeFavoriteService.isFavorite(id, email));
     }
 
     @Operation(summary = "즐겨찾기 상태 변경")
