@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .successHandler(adminSuccessHandler)
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")
+                .logoutUrl("/api/logout")
                 .logoutSuccessHandler(adminLogoutSuccessHandler)
             )
             .httpBasic(AbstractHttpConfigurer::disable)

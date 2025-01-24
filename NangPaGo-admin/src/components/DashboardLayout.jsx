@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }) {
 
   const handleLogout = async () => {
     try {
-      const response = await axiosInstance.post('/logout');
+      const response = await axiosInstance.post('/api/logout');
       localStorage.setItem('isAuthenticated', 'false');
       navigate('/')
     } catch (error) {
