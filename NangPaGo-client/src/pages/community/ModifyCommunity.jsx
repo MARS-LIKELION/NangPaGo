@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { updateCommunity, getCommunityDetail } from '../../api/community';
+import { fetchPostById } from '../../api/post';
+import { updateCommunity } from '../../api/community';
 import Header from '../../components/layout/header/Header';
 import Footer from '../../components/layout/Footer';
 import TextInput from '../../components/community/TextInput';
@@ -39,7 +40,7 @@ function ModifyCommunity() {
   useEffect(() => {
     const fetchCommunity = async () => {
       try {
-        const { data } = await getCommunityDetail(id);
+        const { data } = await fetchPostById({type: "community", id: id});
         console.log(data);
         if (!data.isOwnedByUser) {
           navigate(`/community/${id}`, { replace: true });

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { fetchCommunityList } from '../../api/community';
+import { fetchPosts } from '../../api/community';
 import CommunityCard from '../../components/community/CommunityCard';
 import { PAGE_STYLES, BUTTON_STYLES } from '../../common/styles/ListPage';
 import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination'
@@ -22,7 +22,7 @@ function CommunityListContent() {
     isFetching.current = true;
 
     try {
-      const response = await fetchCommunityList(page, pageSize);
+      const response = await fetchPosts(page, pageSize);
       const { content, last } = response.data;
 
       setCommunityList((prev) =>

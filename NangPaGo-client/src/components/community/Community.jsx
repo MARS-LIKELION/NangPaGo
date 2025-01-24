@@ -6,12 +6,8 @@ import Header from '../layout/header/Header';
 import Footer from '../layout/Footer';
 import CreateButton from '../button/CreateButton';
 import { IMAGE_STYLES } from '../../common/styles/Image';
-import {
-  deleteCommunity,
-  getLikeCount,
-  getLikeStatus,
-  toggleLike,
-} from '../../api/community';
+import { deleteCommunity } from '../../api/community';
+import usePostStatus from '../../hooks/usePostStatus';
 
 const maskEmail = (email) => (email ? `${email.slice(0, 3)}***` : '');
 
@@ -30,37 +26,16 @@ const renderContentLines = (content) =>
     </Fragment>
   ));
 
-function Community({ data: community }) {
-  const [isHeartActive, setIsHeartActive] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+function Community({ data: community, isLoggedIn }) {
+  const {
+    isHeartActive,
+    likeCount,
+    showLoginModal,
+    toggleHeart,
+    setShowLoginModal,
+  } = usePostStatus({ type: "community", id: community.id }, isLoggedIn);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchLikeData();
-  }, [community.id]);
-
-  const fetchLikeData = async () => {
-    try {
-      const count = await getLikeCount(community.id);
-      const status = await getLikeStatus(community.id);
-      setLikeCount(count);
-      setIsHeartActive(status);
-    } catch (error) {
-      console.error('Failed to fetch like data:', error);
-    }
-  };
-
-  const toggleHeart = async () => {
-    try {
-      const isLiked = await toggleLike(community.id);
-      setIsHeartActive(isLiked);
-      setLikeCount((prev) => (isLiked ? prev + 1 : prev - 1));
-    } catch (error) {
-      console.error('Failed to toggle like:', error);
-    }
-  };
 
   const handleDeleteClick = async () => {
     if (window.confirm('정말로 글을 삭제하시겠습니까?')) {

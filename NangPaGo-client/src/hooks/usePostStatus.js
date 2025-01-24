@@ -5,9 +5,9 @@ import {
   getLikeCount,
   toggleFavorite,
   toggleLike,
-} from '../api/recipe';
+} from '../api/postStatus';
 
-const useRecipeData = (recipeId, isLoggedIn) => {
+const usePostStatus = (post, isLoggedIn) => {
   const [isHeartActive, setIsHeartActive] = useState(false);
   const [isStarActive, setIsStarActive] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -16,16 +16,16 @@ const useRecipeData = (recipeId, isLoggedIn) => {
 
   const initializeData = async () => {
     try {
-      const count = await getLikeCount(recipeId);
+      const count = await getLikeCount(post);
       setLikeCount(count);
 
       if (isLoggedIn) {
-        const [likeStatus, favoriteStatus] = await Promise.all([
-          fetchLikeStatus(recipeId),
-          fetchFavoriteStatus(recipeId),
-        ]);
+        const likeStatus = await fetchLikeStatus(post);
         setIsHeartActive(likeStatus);
-        setIsStarActive(favoriteStatus);
+        if (post.type === 'recipe') {
+          const favoriteStatus = await fetchFavoriteStatus(post);
+          setIsStarActive(favoriteStatus);
+        }
       }
     } catch (error) {
       console.error('초기 데이터 가져오기 오류:', error);
@@ -43,11 +43,14 @@ const useRecipeData = (recipeId, isLoggedIn) => {
 
   useEffect(() => {
     initializeData();
-  }, [recipeId, isLoggedIn]);
+  }, [post, isLoggedIn]);
 
   useEffect(() => {
+    if (post.type === 'community') { // TODO: 향후 커뮤니티 좋아요(SSE)를 가져오는 것이 구현된다면, 지워야함.
+      return;
+    }
     const eventSource = new EventSource(
-      `/api/recipe/${recipeId}/like/notification/subscribe`,
+      `/api/${post.type}/${post.id}/like/notification/subscribe`
     );
 
     eventSource.addEventListener('좋아요 이벤트 발생', (event) => {
@@ -65,7 +68,7 @@ const useRecipeData = (recipeId, isLoggedIn) => {
     return () => {
       eventSource.close();
     };
-  }, [recipeId]);
+  }, [post]);
 
   const toggleHeart = async () => {
     if (!isLoggedIn) {
@@ -76,7 +79,7 @@ const useRecipeData = (recipeId, isLoggedIn) => {
     try {
       setIsHeartActive(!isHeartActive);
       setLikeCount((prev) => (isHeartActive ? prev - 1 : prev + 1));
-      await toggleLike(recipeId);
+      await toggleLike(post);
     } catch (error) {
       setIsHeartActive(!isHeartActive);
       setLikeCount((prev) => (isHeartActive ? prev - 1 : prev + 1));
@@ -91,7 +94,7 @@ const useRecipeData = (recipeId, isLoggedIn) => {
     }
 
     try {
-      const { favorited } = await toggleFavorite(recipeId);
+      const { favorited } = await toggleFavorite(post);
       setIsStarActive(favorited);
     } catch (error) {
       console.error('즐겨찾기 상태 변경 오류:', error);
@@ -100,13 +103,13 @@ const useRecipeData = (recipeId, isLoggedIn) => {
 
   return {
     isHeartActive,
-    isStarActive,
+    isStarActive: post.type === "recipe" ? isStarActive : undefined,
     likeCount,
     showLoginModal,
     toggleHeart,
-    toggleStar,
+    toggleStar: post.type === "recipe" ? toggleStar : undefined,
     setShowLoginModal,
   };
 };
 
-export default useRecipeData;
+export default usePostStatus;

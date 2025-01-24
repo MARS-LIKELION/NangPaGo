@@ -11,16 +11,12 @@ import IngredientList from './IngredientList';
 import RecipeImage from './RecipeImage';
 import RecipeInfo from './RecipeInfo';
 import RecipeButton from '../button/RecipeButton';
-
-import useRecipeData from '../../hooks/useRecipeData';
+import usePostStatus from '../../hooks/usePostStatus';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-function Recipe({ data: recipe }) {
-  const { email: userEmail } = useSelector((state) => state.loginSlice);
-  const isLoggedIn = Boolean(userEmail);
-
+function Recipe({ data: recipe, isLoggedIn }) {
   const {
     isHeartActive,
     isStarActive,
@@ -29,7 +25,7 @@ function Recipe({ data: recipe }) {
     toggleHeart,
     toggleStar,
     setShowLoginModal,
-  } = useRecipeData(recipe.id, isLoggedIn);
+  } = usePostStatus({ type: "recipe", id: recipe.id }, isLoggedIn);
 
   const rightSectionRef = useRef(null);
   const imageRef = useRef(null);
