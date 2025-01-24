@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { fetchDetailById } from '../../api/detailPage';
+import Header from '../../components/layout/header/Header';
+import Footer from '../../components/layout/Footer';
+import { PAGE_STYLES } from '../../common/styles/ListPage';
+import Comment from '../../components/comment/Comment';
 import Recipe from '../../components/recipe/Recipe';
 import Community from '../../components/community/Community';
 
@@ -70,7 +74,16 @@ function DetailPage({ type }) {
 
   const Component = pageComponents[type];
 
-  return Component ? <Component data={data} isLoggedIn={isLoggedIn} /> : null;
+    return (
+      <div className={PAGE_STYLES.wrapper}>
+        <Header />
+        <main className={PAGE_STYLES.body}>
+          {Component ? <Component data={data} isLoggedIn={isLoggedIn} /> : null}
+          <Comment post={{ type: type, id: data.id }} isLoggedIn={isLoggedIn} />
+        </main>
+        <Footer />
+      </div>
+    );
 }
 
 export default DetailPage;

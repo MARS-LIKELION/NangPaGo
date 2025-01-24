@@ -3,20 +3,17 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import LoginModal from '../../components/modal/LoginModal';
 import DeleteModal from '../../components/modal/DeleteModal';
-import CommentList from '../comment/CommentList';
-import CommentForm from '../comment/CommentForm';
-import Pagination from '../comment/Pagination';
+import CommentList from './CommentList';
+import CommentForm from './CommentForm';
+import Pagination from './Pagination';
 import {
   fetchComments,
   createComment,
   deleteComment,
   updateComment,
-} from '../../api/commentService';
+} from '../../api/comment';
 
-function Comment({
-  entityType,
-  entityId,
-}) {
+function Comment({ post, isLoggedIn }) {
   const navigate = useNavigate();
 
   const [comments, setComments] = useState([]);
@@ -30,14 +27,11 @@ function Comment({
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-  const [defaultPage] = useState(0);
-
-  const isLoggedIn = useSelector((state) => Boolean(state.loginSlice.email));
 
   const loadComments = useCallback(
     async (page) => {
       try {
-        const response = await fetchComments(entityType, entityId, page, 5);
+        const response = await fetchComments(post, page);
         const data = response.data.data;
         setComments(data.content);
         setCurrentPage(data.currentPage);
@@ -47,14 +41,14 @@ function Comment({
         alert('댓글을 불러오는 중 문제가 발생했습니다.');
       }
     },
-    [entityType, entityId, fetchComments],
+    [post],
   );
 
   useEffect(() => {
-    if (entityType, entityId) {
+    if (post) {
       loadComments(0);
     }
-  }, [entityType, entityId, loadComments]);
+  }, [post, loadComments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -69,8 +63,8 @@ function Comment({
 
     setIsSubmitting(true);
     try {
-      await createComment(entityType, entityId, { content: commentText });
-      await loadComments(defaultPage);
+      await createComment(post, { content: commentText });
+      await loadComments(currentPage);
       setCommentText('');
     } finally {
       setIsSubmitting(false);
@@ -83,7 +77,7 @@ function Comment({
       return;
     }
     try {
-      await updateComment(entityType, entityId, commentId, { content: editedComment });
+      await updateComment(post, commentId, { content: editedComment });
       await loadComments(currentPage);
       setIsEditing(null);
       setEditedComment('');
@@ -95,7 +89,7 @@ function Comment({
   const handleDeleteComment = async () => {
     if (!commentToDelete) return;
     try {
-      await deleteComment(entityType, entityId, commentToDelete);
+      await deleteComment(post, commentToDelete);
       await loadComments(currentPage);
       setShowDeleteModal(false);
     } catch {
