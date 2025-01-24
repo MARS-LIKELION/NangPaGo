@@ -173,7 +173,7 @@ const Modify = () => {
       <div className="flex justify-end px-6 mb-4">
         <button
           onClick={handleDeleteAccount}
-          className="bg-gray-400 text-white px-3 py-2 rounded text-sm"
+          className="bg-white text-gray-400 px-3 py-2 rounded text-sm"
         >
           회원탈퇴
         </button>

@@ -10,13 +10,13 @@ function DeleteAccountConfirmModal({ isOpen, onConfirm, onCancel }) {
         <div className="flex gap-4">
           <button
             onClick={onConfirm}
-            className="bg-gray-400 text-white px-4 py-2 rounded"
+            className="bg-gray-300 text-white px-4 py-2 rounded"
           >
             확인
           </button>
           <button
             onClick={onCancel}
-            className="bg-gray-400 text-white px-4 py-2 rounded"
+            className="bg-yellow text-white px-4 py-2 rounded"
           >
             취소
           </button>
