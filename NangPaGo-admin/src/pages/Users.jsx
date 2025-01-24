@@ -75,17 +75,20 @@ export default function Users() {
                 <td className="px-4 py-2 text-sm text-gray-700">{user.createdAt}</td>
                 <td className="px-4 py-2 text-sm text-gray-700">{user.updatedAt}</td>
                 <td className="px-4 py-2 text-sm text-gray-700 w-28">
+                  {user.userStatus === 'WITHDRAWN' ? (
+                    <div className="text-gray-500 px-2 py-1">
+                      WITHDRAWN
+                    </div>
+                  ) : (
                   <select
                     value={user.userStatus}
                     onChange={(e) => handleStatusChange(user, e.target.value)}
                     className="border rounded px-2 py-1 text-sm"
                   >
                     <option value="ACTIVE">ACTIVE</option>
-                    <option value="WITHDRAWN">WITHDRAWN</option>
                     <option value="BANNED">BANNED</option>
-                    <option value="OTHERS">OTHERS</option>
                   </select>
-                </td>
+                )}</td>
               </tr>
             ))}
             </tbody>
@@ -144,9 +147,7 @@ export default function Users() {
             <h3 className="text-lg font-semibold mb-4">사용자 상태 변경</h3>
             <p className="mb-4">
               {actionType === 'ACTIVE' && '해당 사용자의 계정을 정상으로 바꾸시겠습니까?'}
-              {actionType === 'WITHDRAWN' && '해당 사용자를 탈퇴시키시겠습니까?'}
               {actionType === 'BANNED' && '해당 사용자의 활동을 금지시키겠습니까?'}
-              {actionType === 'OTHERS' && '해당 사용자의 계정을 기타로 바꾸시겠습니까?'}
             </p>
             <div className="flex justify-end space-x-3">
               <button
