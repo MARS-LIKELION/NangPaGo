@@ -14,7 +14,7 @@ export default function Login() {
          formData.append('password', password);
 
          try {
-             const response = await axiosInstance.post('/login/proc', formData);
+             const response = await axiosInstance.post('/api/login/proc', formData);
              if (response.status === 200) {
                  localStorage.setItem('isAuthenticated', 'true');
                  navigate('/dashboard');

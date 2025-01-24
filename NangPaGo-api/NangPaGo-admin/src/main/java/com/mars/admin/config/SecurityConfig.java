@@ -54,7 +54,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .formLogin(form -> form
                 .loginPage("/login")
-                .loginProcessingUrl("/login/proc")
+                .loginProcessingUrl("/api/login/proc")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .successHandler(adminSuccessHandler)
