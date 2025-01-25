@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class AuthController {
 
     @Operation(summary = "Access token 재발급")
     @PostMapping("/reissue")
-    public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         tokenService.reissueTokens(request, response);
         return ResponseEntity.ok().build();
     }
