@@ -13,6 +13,7 @@ import Error from '../pages/error/Error.jsx';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import UnauthenticatedAccess from '../pages/error/UnauthenticatedAccess';
 import NotFound from '../pages/error/NotFound';
+import LoginExpired from '../pages/error/LoginExpired.jsx';
 
 const router = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
   {
     path: '/unauthenticated',
     element: <UnauthenticatedAccess />,
+  },
+  {
+    path: '/login/expired',
+    element: <LoginExpired />,
   },
   {
     path: '*',

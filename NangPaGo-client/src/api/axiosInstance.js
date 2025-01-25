@@ -68,7 +68,9 @@ axiosInstance.interceptors.response.use(
         } catch (refreshError) {
           isRefreshing = false;
           onRefreshError(refreshError);
-          console.error('토큰 갱신 실패:', refreshError);
+          if (refreshError.response?.status === 401) {
+            window.location.href = '/login/expired';
+          }
           return Promise.reject(refreshError);
         }
       }
