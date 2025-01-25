@@ -7,7 +7,7 @@ import com.mars.admin.auth.vo.UserDetailsImpl;
 import com.mars.admin.domain.auth.service.TokenService;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.common.model.user.User;
-import com.mars.common.util.JwtUtil;
+import com.mars.common.util.web.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

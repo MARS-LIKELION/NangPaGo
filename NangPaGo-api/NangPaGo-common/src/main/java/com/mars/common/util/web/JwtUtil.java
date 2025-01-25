@@ -1,4 +1,4 @@
-package com.mars.common.util;
+package com.mars.common.util.web;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

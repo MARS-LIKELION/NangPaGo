@@ -1,6 +1,6 @@
 package com.mars.app.provider;
 
-import com.mars.common.util.JwtUtil;
+import com.mars.common.util.web.JwtUtil;
 import org.springframework.stereotype.Component;
 
 @Component

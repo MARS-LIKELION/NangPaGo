@@ -4,7 +4,7 @@ import com.mars.admin.auth.entrypoint.UnauthorizedEntryPoint;
 import com.mars.admin.auth.filter.JwtAuthenticationFilter;
 import com.mars.admin.auth.handler.AdminSuccessHandler;
 import com.mars.admin.auth.service.AdminLogoutSuccessHandler;
-import com.mars.common.util.JwtUtil;
+import com.mars.common.util.web.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

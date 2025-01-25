@@ -7,7 +7,7 @@ import com.mars.app.auth.service.OAuth2LogoutService;
 import com.mars.app.auth.service.OAuth2UserService;
 import com.mars.app.auth.filter.JwtAuthenticationFilter;
 import com.mars.app.auth.vo.OAuth2RequestResolver;
-import com.mars.common.util.JwtUtil;
+import com.mars.common.util.web.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

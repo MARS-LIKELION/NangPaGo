@@ -5,7 +5,7 @@ import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_TOKEN_EXPI
 
 import com.mars.admin.domain.auth.repository.RefreshTokenRepository;
 import com.mars.common.dto.auth.RefreshTokenDto;
-import com.mars.common.util.JwtUtil;
+import com.mars.common.util.web.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

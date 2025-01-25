@@ -1,7 +1,7 @@
 package com.mars.admin.auth.service;
 
 import com.mars.admin.domain.auth.repository.RefreshTokenRepository;
-import com.mars.common.util.JwtUtil;
+import com.mars.common.util.web.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

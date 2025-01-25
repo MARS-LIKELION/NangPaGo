@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mars.common.dto.ResponseDto;
 import com.mars.common.exception.NPGException;
 import com.mars.common.exception.NPGExceptionType;
-import com.mars.common.util.JwtUtil;
+import com.mars.common.util.web.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
