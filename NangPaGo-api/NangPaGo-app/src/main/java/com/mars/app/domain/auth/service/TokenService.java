@@ -44,7 +44,7 @@ public class TokenService {
         Long userId = jwtUtil.getId(refreshToken);
 
         String newAccessToken = jwtUtil.createJwt(CookieUtil.ACCESS_TOKEN_NAME, userId, email, role, jwtUtil.getAccessTokenExpireMillis());
-        cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, newAccessToken, jwtUtil.getAccessTokenExpireMillis());
+        cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, newAccessToken, jwtUtil.getAccessTokenExpireMillis(), false);
     }
 
     @Transactional

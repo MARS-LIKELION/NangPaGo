@@ -27,12 +27,12 @@ public class CookieUtil {
             .orElseThrow(() -> BAD_REQUEST_INVALID.of(name + "이 존재하지 않습니다."));
     }
 
-    public void addCookie(HttpServletResponse response, String key, String value, long expireMillis) {
+    public void addCookie(HttpServletResponse response, String key, String value, long expireMillis, boolean httpOnly) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge((int) (expireMillis / 1000));
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setHttpOnly(false);
+        cookie.setHttpOnly(httpOnly);
         response.addCookie(cookie);
     }
 
