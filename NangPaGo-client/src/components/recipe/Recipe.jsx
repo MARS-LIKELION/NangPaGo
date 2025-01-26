@@ -101,15 +101,21 @@ function Recipe({ data: recipe }) {
             </div>
           </div>
 
-          <div className="mt-7 flex flex-col md:gap-4">
-            <IngredientList ingredients={recipe.ingredients} />
-            <NutritionInfo
-              calories={recipe.calorie}
-              fat={recipe.fat}
-              carbs={recipe.carbohydrate}
-              protein={recipe.protein}
-              sodium={recipe.natrium}
-            />
+        <section className="mt-7 px-4">
+          <h2 className="text-lg font-semibold">요리 과정</h2>
+          <CookingStepsSlider
+            ref={sliderRef}
+            manuals={recipe.manuals}
+            manualImages={recipe.manualImages}
+          />
+          <div class="flex justify-end mt-14 sm:scroll-mt-20">
+            <span class="text-[7pt] sm:text-[8pt] text-gray-400">
+              * 이 레시피는 "
+              <a href="https://www.foodsafetykorea.go.kr/api/openApiInfo.do?menu_grp=MENU_GRP31&menu_no=661&show_cnt=10&start_idx=1&svc_no=COOKRCP01" target="_blank" class="text-blue-500 underline">
+                식품의약품안전처 - 요리 음식 레시피 DB
+              </a>
+              "에서 제공된 정보를 바탕으로 작성되었습니다.
+            </span>
           </div>
         </div>
       </section>
