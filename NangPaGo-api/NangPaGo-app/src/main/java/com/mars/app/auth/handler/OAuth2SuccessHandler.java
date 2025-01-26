@@ -100,7 +100,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         tokenService.renewRefreshToken(email, refresh);
 
         cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, access, jwtUtil.getAccessTokenExpireMillis(), false);
-        cookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_NAME, refresh, jwtUtil.getAccessTokenExpireMillis(), false);
+        cookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_NAME, refresh, jwtUtil.getRefreshTokenExpireMillis(), false);
     }
 
     private String getRole(Authentication authentication) {
