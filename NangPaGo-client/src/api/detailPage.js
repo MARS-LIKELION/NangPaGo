@@ -131,7 +131,7 @@ export const toggleFavorite = async (entityId) => {
     const response = await axiosInstance.post(
       `/api/${entityType}/${entityId}/favorite/toggle`,
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error('즐겨찾기 상태를 변경하는 중 오류가 발생했습니다:', error);
     throw error;
