@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @RestController
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/dashboard/users")
-    public ResponseDto<Page<UserDto>> userInfos(@RequestParam(defaultValue = "0") int page) {
-        return ResponseDto.of(userService.getUserInfos(page), "");
+    @GetMapping
+    public ResponseDto<Page<UserDto>> userList(@RequestParam(defaultValue = "0") int page) {
+        return ResponseDto.of(userService.getUserList(page), "");
     }
 }

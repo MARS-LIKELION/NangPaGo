@@ -24,8 +24,8 @@ public class UserService {
             .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of));
     }
 
-    public Page<UserDto> getUserInfos(int page) {
+    public Page<UserDto> getUserList(int page) {
         Pageable pageable = PageRequest.of(page, PAGESIZE);
-        return userRepository.findByUsers(pageable).map(UserDto::toDto);
+        return userRepository.findByUsers(pageable).map(UserDto::from);
     }
 }

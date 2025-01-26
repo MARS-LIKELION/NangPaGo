@@ -18,7 +18,7 @@ public record UserDto(
     UserStatus userStatus
 ) {
 
-    public static UserDto toDto(User user) {
+    public static UserDto from(User user) {
         return UserDto.builder()
             .id(user.getId())
             .email(user.getEmail())

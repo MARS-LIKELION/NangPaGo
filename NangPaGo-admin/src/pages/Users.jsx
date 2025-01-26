@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getUserInfos } from '../api/usermanage';
+import { getUserList } from '../api/usermanage';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -27,7 +27,7 @@ export default function Users() {
   useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await getUserInfos(currentPage);
+          const response = await getUserList(currentPage);
           console.log(response.data); // 확인용 로그
           setUsers(response.data.content); // 사용자 목록
           setTotalPages(response.data.totalPages); // 총 페이지 수
