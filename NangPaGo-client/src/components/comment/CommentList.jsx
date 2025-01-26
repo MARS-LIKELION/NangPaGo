@@ -32,7 +32,7 @@ function CommentList({
         <div key={comment.id} className="border-b pb-2">
           <div className="flex justify-between items-start">
             <div className="flex flex-col w-full">
-              <p className="text-text-600 text-sm break-words whitespace-pre-wrap">
+              <div className="text-text-600 text-sm break-words whitespace-pre-wrap">
                 <p className="opacity-70">{maskEmail(comment.email)}</p>
                 {isEditing === comment.id ? (
                   <div className="mt-2">
@@ -60,7 +60,7 @@ function CommentList({
                 ) : (
                   <p className="text-base">{comment.content}</p>
                 )}
-              </p>
+              </div>
               <p className="text-text-600 text-xs opacity-50">
                 {new Date(comment.updatedAt).toLocaleString()}
               </p>
