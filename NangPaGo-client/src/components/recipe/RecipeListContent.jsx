@@ -1,8 +1,8 @@
 import RecipeCard from './RecipeCard';
 import { useEffect, useState, useRef } from 'react';
 import {
-  fetchRecommendedRecipes,
-  fetchFavoriteRecipes,
+  fetchRecommendedPosts,
+  fetchFavoritePosts,
 } from '../../api/recipe';
 import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination'
 
@@ -26,8 +26,8 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   const isFetching = useRef(false);
 
   const fetchFunctions = {
-    recommended: (page) => fetchRecommendedRecipes(searchTerm, page, pageSize),
-    favorites: (page) => fetchFavoriteRecipes(page, pageSize),
+    recommended: (page) => fetchRecommendedPosts(searchTerm, page, pageSize),
+    favorites: (page) => fetchFavoritePosts(page, pageSize),
   };
 
   const loadRecipes = async (type, page = 1, isInitial = false) => {

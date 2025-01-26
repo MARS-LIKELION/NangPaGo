@@ -4,8 +4,8 @@ import {
   getRefrigerator,
   addIngredient,
   deleteIngredient,
+  searchPostsByIngredient,
 } from '../api/refrigerator';
-import { getRecipes } from '../api/recipe';
 
 export function useRefrigerator(recipeSize = 10) {
   const [ingredients, setIngredients] = useState([]);
@@ -70,7 +70,7 @@ export function useRefrigerator(recipeSize = 10) {
       const ingredientNames = ingredients
         .map((i) => i.ingredientName)
         .filter(Boolean);
-      const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
+      const recipeData = await searchPostsByIngredient(ingredientNames, 1, recipeSize);
       setRecipes(recipeData.content);
       setHasMoreRecipes(!recipeData.last);
     } catch (error) {
@@ -127,7 +127,7 @@ export function useRefrigerator(recipeSize = 10) {
     setHasMoreRecipes(true);
     try {
       const ingredientNames = checkedItems.map((i) => i.ingredientName);
-      const recipeData = await getRecipes(ingredientNames, 1, recipeSize);
+      const recipeData = await getPosts(ingredientNames, 1, recipeSize);
       setRecipes(recipeData.content);
       setHasMoreRecipes(!recipeData.last);
       navigate('/refrigerator/recipe');
@@ -143,7 +143,7 @@ export function useRefrigerator(recipeSize = 10) {
     try {
       const checkedItems = ingredients.filter((i) => i.checked);
       const ingredientNames = checkedItems.map((i) => i.ingredientName);
-      const recipeData = await getRecipes(
+      const recipeData = await getPosts(
         ingredientNames,
         nextPage,
         recipeSize,
