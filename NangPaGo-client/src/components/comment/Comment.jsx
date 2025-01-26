@@ -27,6 +27,7 @@ function Comment({ post, isLoggedIn }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [defaultPage] = useState(0);
 
   const loadComments = useCallback(
     async (page) => {
@@ -64,7 +65,7 @@ function Comment({ post, isLoggedIn }) {
     setIsSubmitting(true);
     try {
       await createComment(post, { content: commentText });
-      await loadComments(currentPage);
+      await loadComments(defaultPage);
       setCommentText('');
     } finally {
       setIsSubmitting(false);
