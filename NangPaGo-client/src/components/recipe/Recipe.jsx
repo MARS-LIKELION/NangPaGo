@@ -1,35 +1,26 @@
-import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-
-import Header from '../layout/header/Header';
-import Footer from '../layout/Footer';
-import LoginModal from '../modal/LoginModal';
-import Comment from '../comment/Comment';
+import { useEffect, useRef, useCallback } from 'react';
 import CookingStepsSlider from './CookingStepsSlider';
 import NutritionInfo from './NutritionInfo';
 import IngredientList from './IngredientList';
 import RecipeImage from './RecipeImage';
 import RecipeInfo from './RecipeInfo';
 import RecipeButton from '../button/RecipeButton';
-
-import useRecipeData from '../../hooks/useRecipeData';
+import usePostStatus from '../../hooks/usePostStatus';
+import LoginModal from '../modal/LoginModal';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-function Recipe({ data: recipe }) {
-  const { email: userEmail } = useSelector((state) => state.loginSlice);
-  const isLoggedIn = Boolean(userEmail);
-
+function Recipe({ data: recipe, isLoggedIn }) {
   const {
     isHeartActive,
     isStarActive,
     likeCount,
-    showLoginModal,
     toggleHeart,
     toggleStar,
-    setShowLoginModal,
-  } = useRecipeData(recipe.id, isLoggedIn);
+    modalState,
+    setModalState,
+  } = usePostStatus({ type: "recipe", id: recipe.id }, isLoggedIn);
 
   const rightSectionRef = useRef(null);
   const imageRef = useRef(null);
@@ -68,76 +59,70 @@ function Recipe({ data: recipe }) {
   }, []);
 
   return (
-    <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col justify-between min-w-80 max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
-      <Header />
-
-      <main>
-        <section className="mt-4 px-4 md:flex md:gap-8 md:items-start">
-          <RecipeImage
-            imageRef={imageRef}
-            mainImage={recipe.mainImage}
-            recipeName={recipe.name}
+    <>
+      <section className="mt-4 px-4 md:flex md:gap-8 md:items-start">
+        <RecipeImage
+          imageRef={imageRef}
+          mainImage={recipe.mainImage}
+          recipeName={recipe.name}
+        />
+        <div className="mt-4 md:hidden">
+          <RecipeButton
+            isHeartActive={isHeartActive}
+            isStarActive={isStarActive}
+            likeCount={likeCount}
+            toggleHeart={toggleHeart}
+            toggleStar={toggleStar}
+            className="w-full"
           />
-          <div className="mt-4 md:hidden">
-            <RecipeButton
-              isHeartActive={isHeartActive}
-              isStarActive={isStarActive}
-              likeCount={likeCount}
-              toggleHeart={toggleHeart}
-              toggleStar={toggleStar}
-              className="w-full"
-            />
-          </div>
-
-          <div
-            className="md:w-1/2 md:flex md:flex-col md:justify-between"
-            ref={rightSectionRef}
-          >
-            <div>
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between mt-4 md:mt-0">
-                <RecipeInfo recipe={recipe} />
-                <div className="hidden md:flex items-center gap-4">
-                  <RecipeButton
-                    isHeartActive={isHeartActive}
-                    isStarActive={isStarActive}
-                    likeCount={likeCount}
-                    toggleHeart={toggleHeart}
-                    toggleStar={toggleStar}
-                  />
-                </div>
+        </div>
+        <div
+          className="md:w-1/2 md:flex md:flex-col md:justify-between"
+          ref={rightSectionRef}
+        >
+          <div>
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between mt-4 md:mt-0">
+              <RecipeInfo recipe={recipe} />
+              <div className="hidden md:flex items-center gap-4">
+                <RecipeButton
+                  isHeartActive={isHeartActive}
+                  isStarActive={isStarActive}
+                  likeCount={likeCount}
+                  toggleHeart={toggleHeart}
+                  toggleStar={toggleStar}
+                />
               </div>
             </div>
-
-            <div className="mt-7 flex flex-col md:gap-4">
-              <IngredientList ingredients={recipe.ingredients} />
-              <NutritionInfo
-                calories={recipe.calorie}
-                fat={recipe.fat}
-                carbs={recipe.carbohydrate}
-                protein={recipe.protein}
-                sodium={recipe.natrium}
-              />
-            </div>
           </div>
-        </section>
+          <div className="mt-7 flex flex-col md:gap-4">
+            <IngredientList ingredients={recipe.ingredients} />
+            <NutritionInfo
+              calories={recipe.calorie}
+              fat={recipe.fat}
+              carbs={recipe.carbohydrate}
+              protein={recipe.protein}
+              sodium={recipe.natrium}
+            />
+          </div>
+        </div>
+      </section>
+      <section className="mt-7 px-4">
+        <h2 className="text-lg font-semibold">요리 과정</h2>
+        <CookingStepsSlider
+          ref={sliderRef}
+          manuals={recipe.manuals}
+          manualImages={recipe.manualImages}
+        />
+      </section>
 
-        <section className="mt-7 px-4">
-          <h2 className="text-lg font-semibold">요리 과정</h2>
-          <CookingStepsSlider
-            ref={sliderRef}
-            manuals={recipe.manuals}
-            manualImages={recipe.manualImages}
-          />
-        </section>
-        <Comment entityId={recipe.id} entityType="recipe" />
-      </main>
-
-      <Footer />
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowDeleteModal(false)}
-      />
-    </div>
+      {modalState.type === 'login' && (
+        <LoginModal
+          isOpen={true}
+          onClose={() => setModalState({ type: null, data: null })}
+          description={modalState.data}
+        />
+      )}
+    </>
   );
 }
 

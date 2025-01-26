@@ -1,22 +1,18 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import LoginModal from '../../components/modal/LoginModal';
-import DeleteModal from '../../components/modal/DeleteModal';
-import CommentList from '../comment/CommentList';
-import CommentForm from '../comment/CommentForm';
-import Pagination from '../comment/Pagination';
+import LoginModal from '../modal/LoginModal';
+import DeleteModal from '../modal/DeleteModal';
+import CommentList from './CommentList';
+import CommentForm from './CommentForm';
+import Pagination from './Pagination';
 import {
   fetchComments,
   createComment,
   deleteComment,
   updateComment,
-} from '../../api/commentService';
+} from '../../api/comment';
 
-function Comment({
-  entityType,
-  entityId,
-}) {
+function Comment({ post, isLoggedIn }) {
   const navigate = useNavigate();
 
   const [comments, setComments] = useState([]);
@@ -24,20 +20,19 @@ function Comment({
   const [isEditing, setIsEditing] = useState(null);
   const [editedComment, setEditedComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [commentToDelete, setCommentToDelete] = useState(null);
+  const [modalState, setModalState] = useState({
+    type: null,
+    data: null,
+  });
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [defaultPage] = useState(0);
 
-  const isLoggedIn = useSelector((state) => Boolean(state.loginSlice.email));
-
   const loadComments = useCallback(
     async (page) => {
       try {
-        const response = await fetchComments(entityType, entityId, page, 5);
+        const response = await fetchComments(post, page);
         const data = response.data.data;
         setComments(data.content);
         setCurrentPage(data.currentPage);
@@ -47,19 +42,22 @@ function Comment({
         alert('댓글을 불러오는 중 문제가 발생했습니다.');
       }
     },
-    [entityType, entityId, fetchComments],
+    [post],
   );
 
   useEffect(() => {
-    if (entityType, entityId) {
+    if (post) {
       loadComments(0);
     }
-  }, [entityType, entityId, loadComments]);
+  }, [post, loadComments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      setShowLoginModal(true);
+      setModalState({
+        type: 'login',
+        data: '댓글 기능은 로그인 후 이용해 주세요.',
+      });
       return;
     }
     if (!commentText.trim()) {
@@ -69,7 +67,7 @@ function Comment({
 
     setIsSubmitting(true);
     try {
-      await createComment(entityType, entityId, { content: commentText });
+      await createComment(post, { content: commentText });
       await loadComments(defaultPage);
       setCommentText('');
     } finally {
@@ -83,7 +81,7 @@ function Comment({
       return;
     }
     try {
-      await updateComment(entityType, entityId, commentId, { content: editedComment });
+      await updateComment(post, commentId, { content: editedComment });
       await loadComments(currentPage);
       setIsEditing(null);
       setEditedComment('');
@@ -93,18 +91,18 @@ function Comment({
   };
 
   const handleDeleteComment = async () => {
-    if (!commentToDelete) return;
+    if (!modalState.data) return;
     try {
-      await deleteComment(entityType, entityId, commentToDelete);
+      await deleteComment(post, modalState.data);
       await loadComments(currentPage);
-      setShowDeleteModal(false);
+      setModalState({ type: null });
     } catch {
       alert('댓글 삭제 중 문제가 발생했습니다.');
     }
   };
 
   const handleLoginRedirect = () => {
-    setShowLoginModal(false);
+    setModalState({ type: null });
     navigate('/login');
   };
 
@@ -125,8 +123,7 @@ function Comment({
         onEditChange={setEditedComment}
         onEditSubmit={handleEditComment}
         onDeleteClick={(commentId) => {
-          setCommentToDelete(commentId);
-          setShowDeleteModal(true);
+          setModalState({ type: 'delete', data: commentId });
         }}
         onSetEditing={setIsEditing}
         maskEmail={maskEmail}
@@ -145,15 +142,20 @@ function Comment({
         onCommentChange={setCommentText}
         onSubmit={handleCommentSubmit}
       />
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
-      <DeleteModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        onDelete={handleDeleteComment}
-      />
+      {modalState.type === 'login' && (
+        <LoginModal
+          isOpen={true}
+          onClose={() => setModalState({ type: null })}
+          description={modalState.data}
+        />
+      )}
+      {modalState.type === 'delete' && (
+        <DeleteModal
+          isOpen={true}
+          onClose={() => setModalState({ type: null })}
+          onDelete={handleDeleteComment}
+        />
+      )}
     </div>
   );
 }
