@@ -74,16 +74,16 @@ function DetailPage({ type }) {
 
   const Component = pageComponents[type];
 
-    return (
-      <div className={PAGE_STYLES.wrapper}>
-        <Header />
-        <main className={PAGE_STYLES.body}>
-          {Component ? <Component data={data} isLoggedIn={isLoggedIn} /> : null}
-          <Comment post={{ type: type, id: data.id }} isLoggedIn={isLoggedIn} />
-        </main>
-        <Footer />
-      </div>
-    );
+  return (
+    <div className={PAGE_STYLES.wrapper}>
+      <Header />
+      <main className={PAGE_STYLES.body}>
+        {Component ? <Component data={data} isLoggedIn={isLoggedIn} /> : null}
+        <Comment post={{ type: type, id: data.id }} isLoggedIn={isLoggedIn} />
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
 export default DetailPage;
