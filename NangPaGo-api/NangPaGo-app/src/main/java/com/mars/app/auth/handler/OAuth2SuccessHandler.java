@@ -72,7 +72,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private void redirectToErrorPage(HttpServletResponse response, String existingProvider) throws IOException {
         String encodedTitle = URLEncoder.encode("이미 가입된 계정입니다.", StandardCharsets.UTF_8);
-        String encodedDescription = URLEncoder.encode("해당 이메일은 " + existingProvider + " 계정으로 이미 가입되어 있습니다.\n기존 계정으로 로그인하거나 다른 방법을 사용해 주세요.", StandardCharsets.UTF_8);
+        String encodedDescription = URLEncoder.encode(
+            "해당 이메일은 " + existingProvider + " 계정으로 이미 가입되어 있습니다.\n기존 계정으로 로그인하거나 다른 방법을 사용해 주세요.",
+            StandardCharsets.UTF_8);
         response.sendRedirect(clientHost + "/error?title=" + encodedTitle + "&description=" + encodedDescription);
     }
 
@@ -90,17 +92,22 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         return authorizedClient != null && authorizedClient.getRefreshToken() != null;
     }
 
-    private void issueAccessAndRefreshTokens(HttpServletResponse response, User user, String email, Authentication authentication) {
+    private void issueAccessAndRefreshTokens(HttpServletResponse response, User user, String email,
+        Authentication authentication) {
         Long userId = user.getId();
         String role = getRole(authentication);
 
-        String access = jwtUtil.createJwt(CookieUtil.ACCESS_TOKEN_NAME, userId, email, role, jwtUtil.getAccessTokenExpireMillis());
-        String refresh = jwtUtil.createJwt(CookieUtil.REFRESH_TOKEN_NAME, userId, email, role, jwtUtil.getRefreshTokenExpireMillis());
+        String access = jwtUtil.createJwt(CookieUtil.ACCESS_TOKEN_NAME, userId, email, role,
+            jwtUtil.getAccessTokenExpireMillis());
+        String refresh = jwtUtil.createJwt(CookieUtil.REFRESH_TOKEN_NAME, userId, email, role,
+            jwtUtil.getRefreshTokenExpireMillis());
 
         tokenService.renewRefreshToken(email, refresh);
 
-        cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, access, jwtUtil.getAccessTokenExpireMillis(), false);
-        cookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_NAME, refresh, jwtUtil.getRefreshTokenExpireMillis(), false);
+        cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, access, jwtUtil.getAccessTokenExpireMillis(),
+            false);
+        cookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_NAME, refresh, jwtUtil.getRefreshTokenExpireMillis(),
+            false);
     }
 
     private String getRole(Authentication authentication) {

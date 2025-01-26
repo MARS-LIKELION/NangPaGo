@@ -6,7 +6,6 @@ import com.mars.common.util.web.JwtUtil;
 import com.mars.app.domain.auth.repository.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class OAuth2LogoutService {
     private final CookieUtil cookieUtil;
 
     @Transactional
-    public void handleLogout(String refreshToken, HttpServletResponse response) throws IOException {
+    public void handleLogout(String refreshToken, HttpServletResponse response) {
         validateRefreshToken(refreshToken);
 
         if (Boolean.FALSE.equals(refreshTokenRepository.existsByRefreshToken(refreshToken))) {

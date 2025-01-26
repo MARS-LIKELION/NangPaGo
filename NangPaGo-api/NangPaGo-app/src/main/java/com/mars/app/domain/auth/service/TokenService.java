@@ -24,8 +24,8 @@ public class TokenService {
     private String clientHost;
 
     private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final CookieUtil cookieUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public void reissueTokens(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -35,7 +35,6 @@ public class TokenService {
         boolean isExist = refreshTokenRepository.existsByRefreshToken(refreshToken);
         if (!isExist) {
             cookieUtil.invalidateCookie(response, CookieUtil.REFRESH_TOKEN_NAME);
-            cookieUtil.invalidateCookie(response, CookieUtil.ACCESS_TOKEN_NAME);
             throw UNAUTHORIZED_TOKEN_EXPIRED.of("유효하지 않은 Refresh Token 입니다.");
         }
 

@@ -5,13 +5,12 @@ import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_TOKEN_EXPI
 
 import com.mars.admin.domain.auth.repository.RefreshTokenRepository;
 import com.mars.common.dto.auth.RefreshTokenDto;
+import com.mars.common.util.web.CookieUtil;
 import com.mars.common.util.web.JwtUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +19,17 @@ import org.springframework.stereotype.Service;
 public class TokenService {
 
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public void reissueTokens(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = getRefreshTokenFromRequest(request);
+        String refreshToken = cookieUtil.findCookieByName(request, CookieUtil.REFRESH_TOKEN_NAME);
         validateRefreshToken(refreshToken);
 
         boolean isExist = refreshTokenRepository.existsByRefreshToken(refreshToken);
         if (!isExist) {
+            cookieUtil.invalidateCookie(response, CookieUtil.REFRESH_TOKEN_NAME);
             throw BAD_REQUEST_INVALID.of("유효하지 않은 Refresh Token 입니다.");
         }
 
@@ -36,9 +37,10 @@ public class TokenService {
         String role = jwtUtil.getRole(refreshToken);
         Long userId = jwtUtil.getId(refreshToken);
 
-        String newAccessToken = jwtUtil.createJwt("access", userId, email, role, jwtUtil.getAccessTokenExpireMillis());
-
-        response.addCookie(createCookie("access", newAccessToken, jwtUtil.getAccessTokenExpireMillis()));
+        String newAccessToken = jwtUtil.createJwt(CookieUtil.ACCESS_TOKEN_NAME, userId, email, role,
+            jwtUtil.getAccessTokenExpireMillis());
+        cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_NAME, newAccessToken,
+            jwtUtil.getAccessTokenExpireMillis(), false);
     }
 
     @Transactional
@@ -46,18 +48,6 @@ public class TokenService {
         LocalDateTime expiration = LocalDateTime.now().plusNanos(jwtUtil.getRefreshTokenExpireMillis() * 1_000_000);
         refreshTokenRepository.deleteByEmail(email);
         refreshTokenRepository.save(new RefreshTokenDto(email, refreshToken, expiration).toEntity());
-    }
-
-    private String getRefreshTokenFromRequest(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            throw BAD_REQUEST_INVALID.of("요청에 쿠키가 존재하지 않습니다.");
-        }
-        return Arrays.stream(cookies)
-            .filter(cookie -> "refresh".equals(cookie.getName()))
-            .map(Cookie::getValue)
-            .findFirst()
-            .orElseThrow(() -> BAD_REQUEST_INVALID.of("Refresh Token이 존재하지 않습니다."));
     }
 
     private void validateRefreshToken(String refreshToken) {
@@ -68,14 +58,5 @@ public class TokenService {
         if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
             throw BAD_REQUEST_INVALID.of("유효하지 않은 Refresh Token입니다.");
         }
-    }
-
-    private Cookie createCookie(String key, String value, long expireMillis) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge((int) (expireMillis / 1000));
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setHttpOnly(false);
-        return cookie;
     }
 }

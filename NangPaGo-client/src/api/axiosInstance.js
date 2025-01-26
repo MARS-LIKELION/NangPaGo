@@ -71,44 +71,47 @@ axiosInstance.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (!hasRefreshToken()) {
-        // 브라우저 쿠키에 토큰이 없다면 홈으로
-        window.location.href = '/';
-      } else {
-        // 액세스 토큰 재발급
-        originalRequest._retry = true;
-        if (!isRefreshing) {
-          isRefreshing = true;
-
-          try {
-            await axiosInstance.post('/api/auth/reissue');
-            isRefreshing = false;
-            onRefreshed();
-            return axiosInstance(originalRequest);
-          } catch (refreshError) {
-            isRefreshing = false;
-            onRefreshError(refreshError);
-            if (refreshError.response?.status === 401) {
-              dispatchLogout();
-              removeAccessAndRefreshFromCookie();
-
-              if (!ERROR_ROUTES.includes(window.location.pathname)) {
-                window.location.href = ERROR_ROUTES.LOGIN_EXPIRED;
-              }
-            }
-            return Promise.reject(refreshError);
-          }
+        if (!Object.values(ERROR_ROUTES).includes(window.location.pathname)) {
+          window.location.href = '/';
         }
-
-        return new Promise((resolve, reject) => {
-          refreshSubscribers.push((error) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(axiosInstance(originalRequest));
-            }
-          });
-        });
+        return Promise.reject(error);
       }
+
+      // 액세스 토큰 재발급
+      originalRequest._retry = true;
+      if (!isRefreshing) {
+        isRefreshing = true;
+
+        try {
+          await axiosInstance.post('/api/auth/reissue');
+          isRefreshing = false;
+          onRefreshed();
+          return axiosInstance(originalRequest);
+        } catch (refreshError) {
+          isRefreshing = false;
+          onRefreshError(refreshError);
+          if (refreshError.response?.status === 401) {
+            dispatchLogout();
+            removeAccessAndRefreshFromCookie();
+
+            if (!Object.values(ERROR_ROUTES).includes(window.location.pathname)) {
+              window.location.href = ERROR_ROUTES.LOGIN_EXPIRED;
+            }
+          }
+          return Promise.reject(refreshError);
+        }
+      }
+
+      // 재발급 진행 중일 때의 요청 처리
+      return new Promise((resolve, reject) => {
+        refreshSubscribers.push((error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(axiosInstance(originalRequest));
+          }
+        });
+      });
     }
     return Promise.reject(error);
   },
