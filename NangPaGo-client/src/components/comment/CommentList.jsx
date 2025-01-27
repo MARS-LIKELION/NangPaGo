@@ -33,7 +33,7 @@ function CommentList({
           <div className="flex justify-between items-start">
             <div className="flex flex-col w-full">
               <div className="text-text-600 text-sm break-words whitespace-pre-wrap">
-                <p className="opacity-70">{maskEmail(comment.email)}</p>
+                <p className="opacity-70">{comment.writerName}</p>
                 {isEditing === comment.id ? (
                   <div className="mt-2">
                     <textarea

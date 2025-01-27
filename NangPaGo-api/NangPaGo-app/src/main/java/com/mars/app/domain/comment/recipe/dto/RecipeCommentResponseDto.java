@@ -12,7 +12,7 @@ public record RecipeCommentResponseDto(
     String content,
     String imageUrl,
     String title,
-    String email,
+    String writerName,
     boolean isOwnedByUser,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
@@ -24,7 +24,7 @@ public record RecipeCommentResponseDto(
             .content(recipeComment.getContent())
             .imageUrl(recipe.getMainImage())
             .title(recipe.getName())
-            .email(maskEmail(recipeComment.getUser().getEmail()))
+            .writerName(recipeComment.getUser().getNickname())
             .isOwnedByUser(recipeComment.getUser().getId().equals(userId))
             .createdAt(recipeComment.getCreatedAt())
             .updatedAt(recipeComment.getUpdatedAt())

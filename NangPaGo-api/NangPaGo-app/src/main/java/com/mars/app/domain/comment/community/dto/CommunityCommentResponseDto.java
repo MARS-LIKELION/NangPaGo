@@ -9,7 +9,7 @@ public record CommunityCommentResponseDto(
     Long id,
     Long postId,
     String content,
-    String email,
+    String writerName,
     boolean isOwnedByUser,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
@@ -19,7 +19,7 @@ public record CommunityCommentResponseDto(
             .id(communityComment.getId())
             .postId(communityComment.getCommunity().getId())
             .content(communityComment.getContent())
-            .email(maskEmail(communityComment.getUser().getEmail()))
+            .writerName(communityComment.getUser().getNickname())
             .isOwnedByUser(communityComment.getUser().getId().equals(userId))
             .createdAt(communityComment.getCreatedAt())
             .updatedAt(communityComment.getUpdatedAt())
