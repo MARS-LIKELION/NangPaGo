@@ -1,4 +1,4 @@
-package com.mars.admin.domain.chart.service;
+package com.mars.admin.domain.dashboard.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
 import com.mars.admin.domain.user.repository.UserRepository;

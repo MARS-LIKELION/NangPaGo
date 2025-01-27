@@ -1,0 +1,34 @@
+package com.mars.admin.domain.user.dto;
+
+import com.mars.common.enums.oauth.OAuth2Provider;
+import com.mars.common.enums.user.UserStatus;
+import com.mars.common.model.user.User;
+import lombok.Builder;
+
+@Builder
+public record UserDto(
+    Long id,
+    String email,
+    String nickname,
+    String birthday,
+    String phone,
+    OAuth2Provider oAuth2Provider,
+    String createdAt,
+    String updatedAt,
+    UserStatus userStatus
+) {
+
+    public static UserDto from(User user) {
+        return UserDto.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .nickname(user.getNickname())
+            .birthday(user.getBirthday())
+            .phone(user.getPhone())
+            .oAuth2Provider(user.getOauth2Provider())
+            .createdAt(user.getCreatedAt().toString())
+            .updatedAt(user.getUpdatedAt().toString())
+            .userStatus(user.getUserStatus())
+            .build();
+    }
+}

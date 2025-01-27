@@ -114,7 +114,6 @@ function Recipe({ data: recipe, isLoggedIn }) {
           manualImages={recipe.manualImages}
         />
       </section>
-
       {modalState.type === 'login' && (
         <LoginModal
           isOpen={true}
