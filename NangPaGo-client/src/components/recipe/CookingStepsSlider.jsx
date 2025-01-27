@@ -1,8 +1,8 @@
 import Slider from 'react-slick';
 import CookingSteps from './CookingSteps';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, forwardRef } from 'react';
 
-function CookingStepsSlider({ manuals, manualImages }) {
+const CookingStepsSlider = forwardRef(({ manuals, manualImages }, ref) => {
   const sliderSettings = {
     dots: true,
     infinite: false,
@@ -14,6 +14,12 @@ function CookingStepsSlider({ manuals, manualImages }) {
   const [sliderKey, setSliderKey] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef(null);
+
+  useEffect(() => {
+    if (ref && ref.current !== sliderRef.current) {
+      ref.current = sliderRef.current;
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,6 +60,6 @@ function CookingStepsSlider({ manuals, manualImages }) {
       </div>
     </div>
   );
-}
+});
 
 export default CookingStepsSlider;
