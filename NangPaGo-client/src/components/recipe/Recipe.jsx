@@ -28,7 +28,9 @@ function Recipe({ data: recipe, isLoggedIn }) {
 
   useEffect(() => {
     const adjustImageHeight = () => {
-      if (!rightSectionRef.current || !imageRef.current) return;
+      if (!rightSectionRef.current || !imageRef.current) {
+        return;
+      }
 
       if (window.innerWidth > 767) {
         const rightSectionHeight = rightSectionRef.current.offsetHeight;
@@ -113,6 +115,19 @@ function Recipe({ data: recipe, isLoggedIn }) {
           manuals={recipe.manuals}
           manualImages={recipe.manualImages}
         />
+        <div className="flex justify-end mt-14 sm:scroll-mt-20">
+          <span className="text-[7pt] sm:text-[8pt] text-gray-400">
+            * 이 레시피는 "
+            <a
+              href="https://www.foodsafetykorea.go.kr/api/openApiInfo.do?menu_grp=MENU_GRP31&menu_no=661&show_cnt=10&start_idx=1&svc_no=COOKRCP01"
+              target="_blank"
+              className="text-blue-500 underline"
+            >
+              식품의약품안전처 - 요리 음식 레시피 DB
+            </a>
+            "에서 제공된 정보를 바탕으로 작성되었습니다.
+          </span>
+        </div>
       </section>
       {modalState.type === 'login' && (
         <LoginModal

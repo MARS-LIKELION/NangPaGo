@@ -101,6 +101,7 @@ const usePostStatus = (post, isLoggedIn) => {
 
   const toggleStar = async () => {
     if (!checkLogin(isLoggedIn, setModalState, '즐겨찾기는 로그인 후 사용 가능합니다.')) {
+
       return;
     }
 
