@@ -14,13 +14,13 @@ public record CommunityCommentResponseDto(
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
-    public static CommunityCommentResponseDto of(CommunityComment communityComment, String email) {
+    public static CommunityCommentResponseDto of(CommunityComment communityComment, Long userId) {
         return CommunityCommentResponseDto.builder()
             .id(communityComment.getId())
             .postId(communityComment.getCommunity().getId())
             .content(communityComment.getContent())
             .email(maskEmail(communityComment.getUser().getEmail()))
-            .isOwnedByUser(communityComment.getUser().getEmail().equals(email))
+            .isOwnedByUser(communityComment.getUser().getId().equals(userId))
             .createdAt(communityComment.getCreatedAt())
             .updatedAt(communityComment.getUpdatedAt())
             .build();

@@ -35,9 +35,8 @@ public class CommunityCommentController {
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "5") int pageSize) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-
-        return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(id, email, pageNo, pageSize));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(id, userId, pageNo, pageSize));
     }
 
     @Operation(summary = "댓글 작성")
@@ -47,8 +46,8 @@ public class CommunityCommentController {
         @RequestBody CommunityCommentRequestDto requestDto,
         @PathVariable("id") Long id) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityCommentService.create(requestDto, email, id), "댓글이 성공적으로 추가되었습니다.");
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityCommentService.create(requestDto, userId, id), "댓글이 성공적으로 추가되었습니다.");
     }
 
     @Operation(summary = "댓글 수정")
@@ -59,8 +58,8 @@ public class CommunityCommentController {
         @PathVariable("commentId") Long commentId,
         @PathVariable String id) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityCommentService.update(commentId, email, requestDto), "댓글이 성공적으로 수정되었습니다.");
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityCommentService.update(commentId, userId, requestDto), "댓글이 성공적으로 수정되었습니다.");
     }
 
     @Operation(summary = "댓글 삭제")
@@ -70,8 +69,8 @@ public class CommunityCommentController {
         @PathVariable("commentId") Long commentId,
         @PathVariable String id) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        communityCommentService.delete(commentId, email);
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        communityCommentService.delete(commentId, userId);
         return ResponseDto.of(null, "댓글이 성공적으로 삭제되었습니다.");
     }
 }
