@@ -1,5 +1,6 @@
 package com.mars.common.util.web;
 
+import com.mars.common.auth.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -108,7 +109,11 @@ public class JwtUtil {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         
-        UserDetails principal = new User(claims.get("email").toString(), "", authorities);
+        UserDetailsImpl principal = UserDetailsImpl.builder()
+            .id(claims.get("id", Long.class))
+            .email(claims.get("email").toString())
+            .authorities(authorities)
+            .build();
         
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
