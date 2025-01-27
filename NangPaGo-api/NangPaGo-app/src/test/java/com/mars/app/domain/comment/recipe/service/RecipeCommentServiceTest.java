@@ -87,8 +87,8 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(responseDto)
-            .extracting("content", "email")
-            .containsExactly("댓글 작성 예시", "dum**@nangpago.com");
+            .extracting("content", "writerName")
+            .containsExactly("댓글 작성 예시", "TestNickName");
     }
 
     @DisplayName("레시피 댓글을 수정할 수 있다.")
@@ -206,10 +206,15 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("댓글을 찾을 수 없습니다.");
     }
 
-    private User createUser(String email) {
+    private User createUser(String email, String writerName) {
         return User.builder()
             .email(email)
+            .nickname(writerName)
             .build();
+    }
+
+    private User createUser(String email) {
+        return createUser(email, "TestNickName");
     }
 
     private Recipe createRecipe(String name) {
