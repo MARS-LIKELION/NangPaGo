@@ -73,6 +73,6 @@ public class User extends BaseEntity {
         this.userStatus = UserStatus.from("탈퇴");
         this.leftAt = LocalDate.now();
         this.nickname = "탈퇴한 회원 " + this.id;
-        this.email = this.email + "-deleted" + this.id;
+        this.email = "deleted-user";
     }
 }
