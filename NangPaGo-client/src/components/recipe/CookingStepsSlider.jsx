@@ -11,9 +11,9 @@ function ArrowButton({ onClick, direction }) {
       onClick={onClick}
       className={`absolute top-1/2 transform -translate-y-1/2 z-10
         ${direction === 'left' ? 'left-2' : 'right-2'}
-        bg-white/20 w-9 h-9 rounded-full shadow-md
+        bg-white/20 w-11 h-11 rounded-full shadow-md
         hover:bg-white/60 transition-colors
-        text-gray-600 text-xl flex items-center justify-center`}
+        text-gray-600 text-2xl flex items-center justify-center`}
     >
       {direction === 'left' ? <FaChevronLeft /> : <FaChevronRight />}
     </button>
