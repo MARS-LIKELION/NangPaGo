@@ -108,8 +108,8 @@ public class UserController {
             throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.getMyComments(email, pageNo - 1, pageSize));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userService.getMyComments(userId, pageNo - 1, pageSize));
     }
 
     @AuthenticatedUser

@@ -25,9 +25,9 @@ public class RecipeCommentController {
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "5") int pageSize) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
+        Long userId = AuthenticationHolder.getCurrentUserId();
 
-        return ResponseDto.of(recipeCommentService.pagedCommentsByRecipe(recipeId, email, pageNo, pageSize));
+        return ResponseDto.of(recipeCommentService.pagedCommentsByRecipe(recipeId, userId, pageNo, pageSize));
     }
 
     @AuthenticatedUser
@@ -36,8 +36,8 @@ public class RecipeCommentController {
         @RequestBody RecipeCommentRequestDto requestDto,
         @PathVariable("recipeId") Long recipeId) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeCommentService.create(requestDto, email, recipeId));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeCommentService.create(requestDto, userId, recipeId));
     }
 
     @AuthenticatedUser
@@ -47,8 +47,8 @@ public class RecipeCommentController {
         @PathVariable("commentId") Long commentId,
         @PathVariable String recipeId) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeCommentService.update(commentId, email, requestDto));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeCommentService.update(commentId, userId, requestDto));
     }
 
     @AuthenticatedUser
@@ -57,8 +57,8 @@ public class RecipeCommentController {
         @PathVariable("commentId") Long commentId,
         @PathVariable String recipeId) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        recipeCommentService.delete(commentId, email);
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        recipeCommentService.delete(commentId, userId);
         return ResponseDto.of(null);
     }
 

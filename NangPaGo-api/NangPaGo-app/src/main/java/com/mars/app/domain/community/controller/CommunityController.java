@@ -25,8 +25,8 @@ public class CommunityController {
     @Operation(summary = "게시물 단일 조회")
     @GetMapping("/{id}")
     public ResponseDto<CommunityResponseDto> getCommunityById(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.getCommunityById(id, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityService.getCommunityById(id, userId));
     }
 
     @Operation(summary = "게시물 목록 조회")
@@ -35,16 +35,16 @@ public class CommunityController {
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "10") int pageSize) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.pagesByCommunity(pageNo, pageSize, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityService.pagesByCommunity(pageNo, pageSize, userId));
     }
 
     @Operation(summary = "수정 페이지용 게시물 조회")
     @AuthenticatedUser
     @GetMapping("/edit/{id}")
     public ResponseDto<CommunityResponseDto> getPostForEdit(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.getPostForEdit(id, email), "게시물을 성공적으로 가져왔습니다.");
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityService.getPostForEdit(id, userId), "게시물을 성공적으로 가져왔습니다.");
     }
 
     @Operation(summary = "게시물 작성")
@@ -55,8 +55,8 @@ public class CommunityController {
         @RequestParam(value = "file", required = false) MultipartFile file
     ) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.createCommunity(requestDto, file, email), "게시물이 성공적으로 생성되었습니다.");
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityService.createCommunity(requestDto, file, userId), "게시물이 성공적으로 생성되었습니다.");
     }
 
     @Operation(summary = "게시물 수정")
@@ -67,16 +67,16 @@ public class CommunityController {
         @RequestParam(value = "file", required = false) MultipartFile file,
         @PathVariable("id") Long id) {
 
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityService.updateCommunity(id, requestDto, file, email), "게시물이 성공적으로 수정되었습니다.");
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityService.updateCommunity(id, requestDto, file, userId), "게시물이 성공적으로 수정되었습니다.");
     }
 
     @Operation(summary = "게시물 삭제")
     @AuthenticatedUser
     @DeleteMapping("/{id}")
     public ResponseDto<Void> delete(@PathVariable("id") Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        communityService.deleteCommunity(id, email);
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        communityService.deleteCommunity(id, userId);
         return ResponseDto.of(null, "게시물이 성공적으로 삭제되었습니다.");
     }
 }

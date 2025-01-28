@@ -35,8 +35,8 @@ public class UserService {
     private final RecipeCommentRepository recipeCommentRepository;
     private final RefrigeratorRepository refrigeratorRepository;
 
-    public UserResponseDto getCurrentUser(String email) {
-        return UserResponseDto.from(userRepository.findByEmail(email)
+    public UserResponseDto getCurrentUser(Long userId) {
+        return UserResponseDto.from(userRepository.findById(userId)
             .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of));
     }
 
@@ -75,11 +75,11 @@ public class UserService {
         );
     }
 
-    public PageDto<RecipeCommentResponseDto> getMyComments(String email, int pageNo, int pageSize) {
+    public PageDto<RecipeCommentResponseDto> getMyComments(Long userId, int pageNo, int pageSize) {
         return PageDto.of(
-            recipeCommentRepository.findByUserEmailWithRecipe(email, PageRequest.of(pageNo, pageSize))
+            recipeCommentRepository.findByUserIdWithRecipe(userId, PageRequest.of(pageNo, pageSize))
                 .map(recipeComment -> {
-                    return RecipeCommentResponseDto.from(recipeComment, recipeComment.getRecipe(), email);
+                    return RecipeCommentResponseDto.from(recipeComment, recipeComment.getRecipe(), userId);
                 })
         );
     }

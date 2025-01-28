@@ -29,8 +29,8 @@ public class AuthController {
     @Operation(summary = "Email, Role 정보 조회")
     @GetMapping("/status")
     public ResponseDto<Object> currentUser() {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        UserResponseDto currentUser = userService.getCurrentUser(email);
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        UserResponseDto currentUser = userService.getCurrentUser(userId);
         return ResponseDto.of(currentUser);
     }
 

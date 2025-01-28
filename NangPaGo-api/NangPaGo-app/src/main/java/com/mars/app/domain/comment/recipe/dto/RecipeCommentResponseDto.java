@@ -17,7 +17,7 @@ public record RecipeCommentResponseDto(
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
-    public static RecipeCommentResponseDto from(RecipeComment recipeComment, Recipe recipe, String email) {
+    public static RecipeCommentResponseDto from(RecipeComment recipeComment, Recipe recipe, Long userId) {
         return RecipeCommentResponseDto.builder()
             .id(recipeComment.getId())
             .postId(recipeComment.getRecipe().getId())
@@ -25,7 +25,7 @@ public record RecipeCommentResponseDto(
             .imageUrl(recipe.getMainImage())
             .title(recipe.getName())
             .email(maskEmail(recipeComment.getUser().getEmail()))
-            .isOwnedByUser(recipeComment.getUser().getEmail().equals(email))
+            .isOwnedByUser(recipeComment.getUser().getId().equals(userId))
             .createdAt(recipeComment.getCreatedAt())
             .updatedAt(recipeComment.getUpdatedAt())
             .build();

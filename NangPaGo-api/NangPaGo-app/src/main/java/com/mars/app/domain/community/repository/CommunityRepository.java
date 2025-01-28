@@ -6,6 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
-    Page<Community> findByIsPublicTrue(Pageable pageable);
-    Page<Community> findByIsPublicTrueOrUserEmail(String email, Pageable pageable);
+    Page<Community> findByIsPublicTrueOrUserId(Long userId, Pageable pageable);
 }

@@ -14,8 +14,8 @@ public interface RecipeCommentRepository extends JpaRepository<RecipeComment, Lo
 
     Page<RecipeComment> findByRecipeId(Long recipeId, Pageable pageable);
 
-    @Query("SELECT rc FROM RecipeComment rc JOIN FETCH rc.recipe WHERE rc.user.email = :email ORDER BY rc.updatedAt DESC")
-    Page<RecipeComment> findByUserEmailWithRecipe(@Param("email") String email, Pageable pageable);
+    @Query("SELECT rc FROM RecipeComment rc JOIN FETCH rc.recipe WHERE rc.user.id = :userId ORDER BY rc.updatedAt DESC")
+    Page<RecipeComment> findByUserIdWithRecipe(@Param("userId") Long userId, Pageable pageable);
 
     int countByRecipeId(Long recipeId);
 
