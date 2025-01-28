@@ -10,3 +10,25 @@ export const getUserList = async (page) => {
     );
   }
 };
+
+export const banUser = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/api/user/ban?userId=${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      `차단 중 에러가 발생했습니다.: ${error.message}`,
+    );
+  }
+};
+
+export const unBanUser = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/api/user/unban?userId=${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      `차단 해제 중 에러가 발생했습니다.: ${error.message}`,
+    );
+  }
+};

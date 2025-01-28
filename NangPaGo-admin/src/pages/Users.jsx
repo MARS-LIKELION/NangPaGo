@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getUserList } from '../api/usermanage';
+import { getUserList, banUser, unBanUser } from '../api/usermanage';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -15,13 +15,23 @@ export default function Users() {
     setShowConfirm(true);
   };
 
-  const confirmStatusChange = () => {
-    setUsers(users.map(user =>
-      user.id === selectedUser.id
-        ? { ...user, user_status: actionType }
-        : user
-    ));
-    setShowConfirm(false);
+  const confirmStatusChange = async () => {
+    try {
+      if (actionType === 'BANNED') {
+        await banUser(selectedUser.id);
+      }
+      if (actionType === 'ACTIVE') {
+        await unBanUser(selectedUser.id);
+      }
+      setUsers(users.map(user =>
+        user.id === selectedUser.id
+          ? { ...user, userStatus: actionType }
+          : user
+      ));
+      setShowConfirm(false);
+    } catch (error) {
+        console.error('상태 변경 중 오류 발생:', error);
+    }
   };
 
   useEffect(() => {

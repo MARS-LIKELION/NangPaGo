@@ -73,6 +73,13 @@ public class User extends BaseEntity {
         this.nickname = requestDto.nickname();
     }
 
+    public void ban(){
+        this.userStatus = UserStatus.BANNED;
+    }
+    public void unban(){
+        this.userStatus = UserStatus.ACTIVE;
+    }
+
     public void softDelete(){
         this.userStatus = UserStatus.from("탈퇴");
         this.leftAt = LocalDate.now();

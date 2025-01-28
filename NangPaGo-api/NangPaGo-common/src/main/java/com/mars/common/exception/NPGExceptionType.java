@@ -20,6 +20,7 @@ public enum NPGExceptionType {
     BAD_REQUEST_UNUSABLE_NICKNAME(HttpStatus.BAD_REQUEST, "사용할 수 없는 닉네임입니다."),
     BAD_REQUEST_DISCONNECT_THIRD_PARTY(HttpStatus.BAD_REQUEST, "서드 파티 연결에 실패했습니다."),
 
+
     // UNAUTHORIZED(401)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
     UNAUTHORIZED_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰"),
@@ -45,6 +46,7 @@ public enum NPGExceptionType {
 
     // Conflict(409)
     DUPLICATE_INGREDIENT(HttpStatus.CONFLICT, "이미 등록되어있는 정보입니다."),
+    CONFLICT_USER_STATUS(HttpStatus.BAD_REQUEST, "이미 유저 상태가 동일합니다."),
 
     // Unprocessable Entity(422)
     UNPROCESSABLE_JSON(HttpStatus.UNPROCESSABLE_ENTITY, "JSON 객체 변환에 실패했습니다."),

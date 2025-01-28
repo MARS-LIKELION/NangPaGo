@@ -21,4 +21,16 @@ public class UserController {
     public ResponseDto<Page<UserDto>> userList(@RequestParam(defaultValue = "0") int page) {
         return ResponseDto.of(userService.getUserList(page), "");
     }
+
+    @GetMapping("/ban")
+    public ResponseDto<Void> banUser(@RequestParam long userId) {
+        userService.ban(userId);
+        return ResponseDto.of(null,"");
+    }
+
+    @GetMapping("/unban")
+    public ResponseDto<Void> unBanUser(@RequestParam long userId) {
+        userService.unBan(userId);
+        return ResponseDto.of(null,"");
+    }
 }
