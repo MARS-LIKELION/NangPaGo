@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.mars.common.exception.NPGExceptionType.CONFLICT_USER_STATUS;
+import static com.mars.common.exception.NPGExceptionType.BAD_REQUEST_USER_STATUS;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 @Transactional(readOnly = true)
@@ -24,8 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserResponseDto getCurrentUser(String email) {
-        return UserResponseDto.from(userRepository.findByEmail(email)
-                .orElseThrow(NOT_FOUND_USER::of));
+        return UserResponseDto.from(userRepository.findByEmail(email).orElseThrow(NOT_FOUND_USER::of));
     }
 
     public Page<UserDto> getUserList(int page) {
@@ -39,7 +38,7 @@ public class UserService {
         checkUserStatus(user, UserStatus.BANNED);
         user.ban();
     }
-
+    
     @Transactional
     public void unBan(long userId) {
         User user = findUserById(userId);
@@ -47,14 +46,13 @@ public class UserService {
         user.unban();
     }
 
-
     private User findUserById(long userId) {
         return userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of);
     }
 
-    private void checkUserStatus(User user, UserStatus userStatus){
-        if(user.getUserStatus() == userStatus){
-            throw CONFLICT_USER_STATUS.of();
+    private void checkUserStatus(User user, UserStatus userStatus) {
+        if (user.getUserStatus() == userStatus) {
+            throw BAD_REQUEST_USER_STATUS.of();
         }
     }
 }

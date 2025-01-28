@@ -13,7 +13,7 @@ export const getUserList = async (page) => {
 
 export const banUser = async (userId) => {
   try {
-    const response = await axiosInstance.get(`/api/user/ban?userId=${userId}`);
+    const response = await axiosInstance.put(`/api/user/ban?userId=${userId}`);
     return response.data;
   } catch (error) {
     throw new Error(
@@ -24,7 +24,7 @@ export const banUser = async (userId) => {
 
 export const unBanUser = async (userId) => {
   try {
-    const response = await axiosInstance.get(`/api/user/unban?userId=${userId}`);
+    const response = await axiosInstance.put(`/api/user/unban?userId=${userId}`);
     return response.data;
   } catch (error) {
     throw new Error(

@@ -8,22 +8,14 @@ import com.mars.common.model.BaseEntity;
 import com.mars.common.model.comment.recipe.RecipeComment;
 import com.mars.common.model.favorite.recipe.RecipeFavorite;
 import com.mars.common.model.recipe.RecipeLike;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.time.LocalDate;
-import java.util.List;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @Getter
@@ -54,7 +46,7 @@ public class User extends BaseEntity {
     private String providerId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="user_status")
+    @Column(name = "user_status")
     private UserStatus userStatus;
     private LocalDate leftAt;
 
@@ -73,14 +65,15 @@ public class User extends BaseEntity {
         this.nickname = requestDto.nickname();
     }
 
-    public void ban(){
+    public void ban() {
         this.userStatus = UserStatus.BANNED;
     }
-    public void unban(){
+
+    public void unban() {
         this.userStatus = UserStatus.ACTIVE;
     }
 
-    public void softDelete(){
+    public void softDelete() {
         this.userStatus = UserStatus.from("탈퇴");
         this.leftAt = LocalDate.now();
     }

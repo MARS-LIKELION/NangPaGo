@@ -5,10 +5,7 @@ import com.mars.admin.domain.user.service.UserService;
 import com.mars.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -22,13 +19,13 @@ public class UserController {
         return ResponseDto.of(userService.getUserList(page), "");
     }
 
-    @GetMapping("/ban")
+    @PutMapping("/ban")
     public ResponseDto<Void> banUser(@RequestParam long userId) {
         userService.ban(userId);
         return ResponseDto.of(null,"");
     }
 
-    @GetMapping("/unban")
+    @PutMapping("/unban")
     public ResponseDto<Void> unBanUser(@RequestParam long userId) {
         userService.unBan(userId);
         return ResponseDto.of(null,"");
