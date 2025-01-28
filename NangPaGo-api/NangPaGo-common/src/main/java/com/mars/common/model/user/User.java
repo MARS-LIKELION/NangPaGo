@@ -32,6 +32,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class User extends BaseEntity {
 
+    public static final Long ANONYMOUS_USER_ID = -1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -67,9 +69,8 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeFavorite> favorites;
 
-    public User updateNickname(UserInfoRequestDto requestDto) {
+    public void updateNickname(UserInfoRequestDto requestDto) {
         this.nickname = requestDto.nickname();
-        return this;
     }
 
     public void softDelete(){
