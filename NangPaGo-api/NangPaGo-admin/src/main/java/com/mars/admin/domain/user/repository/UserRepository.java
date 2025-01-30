@@ -12,5 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.role <> 'ROLE_ADMIN'")
-    Page<User> findByUsers(Pageable pageable);
+    Page<User> findByRoleNotAdmin(Pageable pageable);
 }

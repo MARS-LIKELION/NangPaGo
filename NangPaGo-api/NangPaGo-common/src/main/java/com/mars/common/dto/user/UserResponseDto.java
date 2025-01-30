@@ -18,13 +18,4 @@ public record UserResponseDto(
             .role(user.getRole())
             .build();
     }
-
-    public static UserResponseDto adminFrom(User user){
-        return UserResponseDto.builder()
-            .email(user.getEmail())
-            .nickname(user.getNickname())
-            .role(user.getRole())
-            .password(user.getPassword())
-            .build();
-    }
 }

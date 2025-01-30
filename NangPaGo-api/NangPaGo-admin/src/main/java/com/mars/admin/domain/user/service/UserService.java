@@ -1,7 +1,7 @@
 package com.mars.admin.domain.user.service;
 
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
-import com.mars.admin.domain.user.dto.UserDto;
+import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.user.UserStatus;
@@ -27,9 +27,9 @@ public class UserService {
         return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
     }
 
-    public Page<UserDto> getUserList(int page) {
+    public Page<UserDetailResponseDto> getUserList(int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        return userRepository.findByUsers(pageable).map(UserDto::from);
+        return userRepository.findByRoleNotAdmin(pageable).map(UserDetailResponseDto::from);
     }
 
     @Transactional

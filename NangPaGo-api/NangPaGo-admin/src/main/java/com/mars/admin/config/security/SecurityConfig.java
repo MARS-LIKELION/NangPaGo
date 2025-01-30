@@ -1,4 +1,4 @@
-package com.mars.admin.config;
+package com.mars.admin.config.security;
 
 import com.mars.admin.auth.entrypoint.UnauthorizedEntryPoint;
 import com.mars.admin.auth.filter.JwtAuthenticationFilter;

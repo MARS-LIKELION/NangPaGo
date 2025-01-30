@@ -1,7 +1,7 @@
 package com.mars.admin.domain.user.controller;
 
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
-import com.mars.admin.domain.user.dto.UserDto;
+import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.service.UserService;
 import com.mars.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseDto<Page<UserDto>> userList(@RequestParam(defaultValue = "0") int page) {
+    public ResponseDto<Page<UserDetailResponseDto>> userList(@RequestParam(defaultValue = "0") int page) {
         return ResponseDto.of(userService.getUserList(page), "");
     }
 

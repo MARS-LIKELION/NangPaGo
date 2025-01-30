@@ -6,7 +6,7 @@ import com.mars.common.model.user.User;
 import lombok.Builder;
 
 @Builder
-public record UserDto(
+public record UserDetailResponseDto(
     Long id,
     String email,
     String nickname,
@@ -18,8 +18,8 @@ public record UserDto(
     UserStatus userStatus
 ) {
 
-    public static UserDto from(User user) {
-        return UserDto.builder()
+    public static UserDetailResponseDto from(User user) {
+        return UserDetailResponseDto.builder()
             .id(user.getId())
             .email(user.getEmail())
             .nickname(user.getNickname())
