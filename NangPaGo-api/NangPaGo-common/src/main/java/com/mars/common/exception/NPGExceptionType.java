@@ -19,7 +19,6 @@ public enum NPGExceptionType {
     BAD_REQUEST_CHECK_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임 중복 검사를 해야합니다."),
     BAD_REQUEST_UNUSABLE_NICKNAME(HttpStatus.BAD_REQUEST, "사용할 수 없는 닉네임입니다."),
     BAD_REQUEST_DISCONNECT_THIRD_PARTY(HttpStatus.BAD_REQUEST, "서드 파티 연결에 실패했습니다."),
-    BAD_REQUEST_USER_STATUS(HttpStatus.BAD_REQUEST, "이미 유저 상태가 동일합니다."),
 
     // UNAUTHORIZED(401)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증 실패"),
