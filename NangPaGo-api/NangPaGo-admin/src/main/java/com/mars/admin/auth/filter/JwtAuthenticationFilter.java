@@ -23,19 +23,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-        return path.equals("/") ||
-            path.equals("/index.html") ||
-            path.matches("/static/.*") ||
-            path.matches("/assets/.*") ||
-            path.matches("/socialLogin/.*") ||
-            path.matches("/fonts/.*") ||
-            path.matches("/logo\\..*") ||
-            path.matches(".*\\.(js|css|ico|png|jpg|jpeg|gif|svg)$");
-    }
-
-    @Override
     protected void doFilterInternal(HttpServletRequest request,
         HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
