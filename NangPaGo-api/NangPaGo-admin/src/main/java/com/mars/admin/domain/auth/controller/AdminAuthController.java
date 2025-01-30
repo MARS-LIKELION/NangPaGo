@@ -19,19 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AdminAuthController {
 
-  private final UserService userService;
-  private final TokenService tokenService;
+    private final UserService userService;
+    private final TokenService tokenService;
 
-  @GetMapping("/status")
-  public ResponseDto<Object> currentUser() {
-    String email = AuthenticationHolder.getCurrentUserEmail();
-    UserResponseDto currentUser = userService.getCurrentUser(email);
-    return ResponseDto.of(currentUser);
-  }
+    @GetMapping("/status")
+    public ResponseDto<Object> currentUser() {
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        UserResponseDto currentUser = userService.getCurrentUser(userId);
+        return ResponseDto.of(currentUser);
+    }
 
-  @PostMapping("/reissue")
-  public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
-    tokenService.reissueTokens(request, response);
-    return ResponseEntity.ok().build();
-  }
+    @PostMapping("/reissue")
+    public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
+        tokenService.reissueTokens(request, response);
+        return ResponseEntity.ok().build();
+    }
 }

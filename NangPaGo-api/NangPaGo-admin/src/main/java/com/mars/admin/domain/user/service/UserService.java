@@ -23,8 +23,8 @@ public class UserService {
     private static final int PAGE_SIZE = 10;
     private final UserRepository userRepository;
 
-    public UserResponseDto getCurrentUser(String email) {
-        return UserResponseDto.from(userRepository.findByEmail(email).orElseThrow(NOT_FOUND_USER::of));
+    public UserResponseDto getCurrentUser(Long userId) {
+        return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
     }
 
     public Page<UserDto> getUserList(int page) {
