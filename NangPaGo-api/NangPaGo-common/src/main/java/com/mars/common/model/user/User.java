@@ -65,14 +65,12 @@ public class User extends BaseEntity {
         this.nickname = requestDto.nickname();
     }
 
-    public void softDelete(){
-        this.userStatus = UserStatus.WITHDRAWN;
     public void updateUserStatus(UserStatus userStatus) {
         this.userStatus = userStatus;
     }
 
-    public void softDelete() {
-        this.userStatus = UserStatus.from("탈퇴");
+    public void softDelete(){
+        this.userStatus = UserStatus.WITHDRAWN;
         this.leftAt = LocalDate.now();
         this.nickname = "탈퇴한 회원 " + this.id;
         this.email = "deleted-user " + this.id;
