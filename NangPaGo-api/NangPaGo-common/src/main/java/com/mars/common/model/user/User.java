@@ -80,6 +80,5 @@ public class User extends BaseEntity {
         this.profileImageUrl = "deleted-user";
         this.providerId = "deleted-user";
         this.birthday = "deleted-user";
-
     }
 }
