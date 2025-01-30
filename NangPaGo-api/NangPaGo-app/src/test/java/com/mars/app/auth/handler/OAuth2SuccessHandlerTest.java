@@ -29,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
@@ -68,19 +69,8 @@ class OAuth2SuccessHandlerTest {
     @Mock
     private OAuth2RefreshToken refreshToken;
 
+    @InjectMocks
     private OAuth2SuccessHandler oauth2SuccessHandler;
-
-    @BeforeEach
-    void setUp() {
-        oauth2SuccessHandler = new OAuth2SuccessHandler(
-            jwtUtil,
-            cookieUtil,
-            tokenService,
-            oauth2ProviderTokenService,
-            oauth2AuthorizedClientManager,
-            userRepository
-        );
-    }
 
     @DisplayName("OAuth2 인증 성공 시 토큰을 발급하고 홈페이지로 리다이렉트할 수 있다.")
     @Test
