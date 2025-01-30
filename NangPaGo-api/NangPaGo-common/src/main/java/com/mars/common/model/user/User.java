@@ -65,6 +65,8 @@ public class User extends BaseEntity {
         this.nickname = requestDto.nickname();
     }
 
+    public void softDelete(){
+        this.userStatus = UserStatus.WITHDRAWN;
     public void updateUserStatus(UserStatus userStatus) {
         this.userStatus = userStatus;
     }
