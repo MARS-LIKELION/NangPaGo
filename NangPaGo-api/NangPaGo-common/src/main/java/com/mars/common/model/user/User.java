@@ -74,11 +74,11 @@ public class User extends BaseEntity {
         this.leftAt = LocalDate.now();
         this.nickname = "탈퇴한 회원 " + this.id;
         this.email = "deleted-user " + this.id;
-        this.name = "deleted-user";
+        this.name = "-";
         this.gender = Gender.NONE;
-        this.phone = "deleted-user";
-        this.profileImageUrl = "deleted-user";
-        this.providerId = "deleted-user";
-        this.birthday = "deleted-user";
+        this.phone = "-";
+        this.profileImageUrl = "-";
+        this.providerId = "-";
+        this.birthday = "-";
     }
 }
