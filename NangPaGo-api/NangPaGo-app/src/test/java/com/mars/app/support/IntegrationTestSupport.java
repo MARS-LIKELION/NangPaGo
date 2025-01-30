@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 public abstract class IntegrationTestSupport {
 
     @Autowired
-    private TestJwtProvider testJwtProvider;
+    protected TestJwtProvider testJwtProvider;
 
     @Autowired
     private JwtUtil jwtUtil;

@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,15 +19,12 @@ import static com.mars.common.exception.NPGExceptionType.*;
 @Service
 public class TokenService {
 
-    @Value("${client.host}")
-    private String clientHost;
-
     private final JwtUtil jwtUtil;
     private final CookieUtil cookieUtil;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void reissueTokens(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void reissueTokens(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = cookieUtil.findCookieByName(request, CookieUtil.REFRESH_TOKEN_NAME);
         validateRefreshToken(refreshToken);
 
