@@ -1,9 +1,9 @@
 package com.mars.admin.domain.user.controller;
 
+import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDto;
 import com.mars.admin.domain.user.service.UserService;
 import com.mars.common.dto.ResponseDto;
-import com.mars.common.enums.user.UserStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +21,14 @@ public class UserController {
     }
 
     @PutMapping("/ban")
-    public ResponseDto<Void> banUser(@RequestParam long userId) {
-        userService.updateUserStatus(userId, UserStatus.BANNED);
-        return ResponseDto.of(null, "");
+    public ResponseDto<UserBanResponseDto> banUser(@RequestParam long userId) {
+        UserBanResponseDto userBanResponseDto = userService.banUser(userId);
+        return ResponseDto.of(userBanResponseDto, "");
     }
 
     @PutMapping("/unban")
-    public ResponseDto<Void> unBanUser(@RequestParam long userId) {
-        userService.updateUserStatus(userId, UserStatus.ACTIVE);
-        return ResponseDto.of(null, "");
+    public ResponseDto<UserBanResponseDto> unbanUser(@RequestParam long userId) {
+        UserBanResponseDto userBanResponseDto = userService.unbanUser(userId);
+        return ResponseDto.of(userBanResponseDto, "");
     }
 }

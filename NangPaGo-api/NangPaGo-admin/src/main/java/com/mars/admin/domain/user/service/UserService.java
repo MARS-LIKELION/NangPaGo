@@ -1,5 +1,6 @@
 package com.mars.admin.domain.user.service;
 
+import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.common.dto.user.UserResponseDto;
@@ -19,7 +20,7 @@ import static com.mars.common.exception.NPGExceptionType.*;
 @Service
 public class UserService {
 
-    private static int PAGESIZE = 10;
+    private static final int PAGE_SIZE = 10;
     private final UserRepository userRepository;
 
     public UserResponseDto getCurrentUser(String email) {
@@ -27,14 +28,22 @@ public class UserService {
     }
 
     public Page<UserDto> getUserList(int page) {
-        Pageable pageable = PageRequest.of(page, PAGESIZE);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return userRepository.findByUsers(pageable).map(UserDto::from);
     }
 
     @Transactional
-    public void updateUserStatus(long userId, UserStatus userStatus) {
+    public UserBanResponseDto banUser(Long userId) {
         User user = findUserById(userId);
-        user.updateUserStatus(userStatus);
+        user.updateUserStatus(UserStatus.BANNED);
+        return UserBanResponseDto.from(user);
+    }
+
+    @Transactional
+    public UserBanResponseDto unbanUser(Long userId) {
+        User user = findUserById(userId);
+        user.updateUserStatus(UserStatus.ACTIVE);
+        return UserBanResponseDto.from(user);
     }
 
     private User findUserById(long userId) {
