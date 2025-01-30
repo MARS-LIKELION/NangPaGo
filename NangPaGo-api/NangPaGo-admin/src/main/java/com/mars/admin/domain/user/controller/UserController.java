@@ -23,12 +23,12 @@ public class UserController {
     @PutMapping("/ban")
     public ResponseDto<Void> banUser(@RequestParam long userId) {
         userService.updateUserStatus(userId, UserStatus.BANNED);
-        return ResponseDto.of(null,"");
+        return ResponseDto.of(null, "");
     }
 
     @PutMapping("/unban")
     public ResponseDto<Void> unBanUser(@RequestParam long userId) {
-        userService.updateUserStatus(userId, UserStatus.BANNED);
-        return ResponseDto.of(null,"");
+        userService.updateUserStatus(userId, UserStatus.ACTIVE);
+        return ResponseDto.of(null, "");
     }
 }
