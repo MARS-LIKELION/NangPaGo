@@ -2,7 +2,7 @@ package com.mars.app.domain.refrigerator.service;
 
 import static com.mars.common.exception.NPGExceptionType.DUPLICATE_INGREDIENT;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_INGREDIENT;
-import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 import com.mars.common.model.ingredient.Ingredient;
 import com.mars.app.domain.ingredient.repository.IngredientRepository;
@@ -25,34 +25,27 @@ public class RefrigeratorService {
     private final UserRepository userRepository;
     private final IngredientRepository ingredientRepository;
 
-    public List<RefrigeratorResponseDto> findRefrigerator(String email) {
-        return refrigeratorRepository.findByUserEmail(email)
+    public List<RefrigeratorResponseDto> findRefrigerator(Long userId) {
+        return refrigeratorRepository.findByUserId(userId)
             .stream()
             .map(RefrigeratorResponseDto::from)
             .toList();
     }
 
     @Transactional
-    public void addIngredient(String email, String ingredientName) {
-        User user = getUserByEmail(email);
-        Ingredient ingredient = getIngredientByName(ingredientName);
+    public void addIngredient(Long userId, String ingredientName) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(NOT_FOUND_USER::of);
+        Ingredient ingredient = ingredientRepository.findByName(ingredientName)  // TODO: findByName -> findById
+            .orElseThrow(NOT_FOUND_INGREDIENT::of);
+
         checkIngredientDuplicate(user, ingredient);
         saveIngredientToRefrigerator(user, ingredient);
     }
 
     @Transactional
-    public void deleteIngredient(String email, String ingredientName) {
-        refrigeratorRepository.deleteByUserEmailAndIngredientName(email, ingredientName);
-    }
-
-    private User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> UNAUTHORIZED.of());
-    }
-
-    private Ingredient getIngredientByName(String ingredientName) {
-        return ingredientRepository.findByName(ingredientName)
-            .orElseThrow(() -> NOT_FOUND_INGREDIENT.of());
+    public void deleteIngredient(Long userId, String ingredientName) {
+        refrigeratorRepository.deleteByUserIdAndIngredientName(userId, ingredientName);
     }
 
     private void checkIngredientDuplicate(User user, Ingredient ingredient) {

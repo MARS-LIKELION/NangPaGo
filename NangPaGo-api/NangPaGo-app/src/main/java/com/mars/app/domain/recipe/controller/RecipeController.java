@@ -45,15 +45,15 @@ public class RecipeController {
     @AuthenticatedUser
     @GetMapping("/{id}/like/status")
     public ResponseDto<Boolean> getRecipeLikeStatus(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeLikeService.isLiked(id, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeLikeService.isLiked(id, userId));
     }
 
     @AuthenticatedUser
     @PostMapping("/{id}/like/toggle")
     public ResponseDto<RecipeLikeResponseDto> toggleRecipeLike(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeLikeMessageService.toggleLike(id, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeLikeMessageService.toggleLike(id, userId));
     }
 
     @GetMapping("/{id}/like/count")

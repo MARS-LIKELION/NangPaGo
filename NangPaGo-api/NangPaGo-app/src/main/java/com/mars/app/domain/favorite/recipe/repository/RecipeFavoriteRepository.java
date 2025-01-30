@@ -23,8 +23,8 @@ public interface RecipeFavoriteRepository extends JpaRepository<RecipeFavorite, 
     @Query("SELECT rf FROM RecipeFavorite rf WHERE rf.user = :user")
     Page<RecipeFavorite> findAllByUser(@Param("user") User user, Pageable pageable);
 
-    @Query("SELECT rf FROM RecipeFavorite rf WHERE rf.user.email = :email AND rf.recipe.id = :recipeId")
-    Optional<RecipeFavorite> findByEmailAndRecipeId(@Param("email") String email, @Param("recipeId") Long recipeId);
+    @Query("SELECT rf FROM RecipeFavorite rf WHERE rf.user.id = :userId AND rf.recipe.id = :recipeId")
+    Optional<RecipeFavorite> findByUserIdAndRecipeId(@Param("userId") Long userId, @Param("recipeId") Long recipeId);
 
     int countByUser(User user);
 }

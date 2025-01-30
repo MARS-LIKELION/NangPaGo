@@ -58,13 +58,13 @@ class LikeNotificationConsumerTest extends IntegrationTestSupport {
         userRepository.save(user);
         recipeRepository.save(recipe);
 
-        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), user.getEmail());
+        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), user.getId());
 
         // when
         likeNotificationConsumer.processLikeEvent(messageDto);
 
         // then
-        assertThat(recipeLikeRepository.findByEmailAndRecipeId(user.getEmail(), recipe.getId()))
+        assertThat(recipeLikeRepository.findByUserIdAndRecipeId(user.getId(), recipe.getId()))
             .isPresent();
         assertThat(recipeLikeRepository.countByRecipeId(recipe.getId())).isEqualTo(1);
     }
@@ -82,13 +82,13 @@ class LikeNotificationConsumerTest extends IntegrationTestSupport {
         RecipeLike recipeLike = RecipeLike.of(user, recipe);
         recipeLikeRepository.save(recipeLike);
 
-        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), user.getEmail());
+        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), user.getId());
 
         // when
         likeNotificationConsumer.processLikeEvent(messageDto);
 
         // then
-        assertThat(recipeLikeRepository.findByEmailAndRecipeId(user.getEmail(), recipe.getId()))
+        assertThat(recipeLikeRepository.findByUserIdAndRecipeId(user.getId(), recipe.getId()))
             .isEmpty();
         assertThat(recipeLikeRepository.countByRecipeId(recipe.getId())).isZero();
     }
@@ -100,7 +100,7 @@ class LikeNotificationConsumerTest extends IntegrationTestSupport {
         Recipe recipe = createRecipe("테스트 레시피");
         recipeRepository.save(recipe);
 
-        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), "invalid@nangpago.com");
+        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), 9999L);
 
         // when & then
         assertThatThrownBy(() -> likeNotificationConsumer.processLikeEvent(messageDto))
@@ -115,7 +115,7 @@ class LikeNotificationConsumerTest extends IntegrationTestSupport {
         User user = createUser("test@nangpago.com");
         userRepository.save(user);
 
-        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(999L, user.getEmail());
+        RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(999L, user.getId());
 
         // when & then
         assertThatThrownBy(() -> likeNotificationConsumer.processLikeEvent(messageDto))

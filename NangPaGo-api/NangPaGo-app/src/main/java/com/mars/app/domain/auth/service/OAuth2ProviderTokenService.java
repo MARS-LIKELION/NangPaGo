@@ -46,11 +46,12 @@ public class OAuth2ProviderTokenService {
     }
 
     @Transactional
-    public void deactivateUser(String email)
+    public void deactivateUser(Long userId)
         throws IOException, InterruptedException {
-        User user = findUserByEmail(email);
+        User user = userRepository.findById(userId)
+            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
         String providerName = user.getOauth2Provider().name();
-        String refreshToken = findProviderRefreshToken(providerName, email);
+        String refreshToken = findProviderRefreshToken(providerName, user.getEmail());  // TODO: refresh_token 테이블에 userId 컬럼 추가
 
         String accessToken = oAuth2GetAccessToken(providerName, refreshToken);
         disconnectThirdPartyService(user, providerName, accessToken);
@@ -136,11 +137,6 @@ public class OAuth2ProviderTokenService {
 
     private void updateOauth2ProviderToken(OAuthProviderToken token, String refreshToken) {
         token.updateRefreshToken(refreshToken);
-    }
-
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
     }
 
     private String findProviderRefreshToken(String providerName, String email) {

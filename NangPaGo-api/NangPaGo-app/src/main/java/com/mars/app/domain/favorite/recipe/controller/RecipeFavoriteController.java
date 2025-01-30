@@ -26,16 +26,16 @@ public class RecipeFavoriteController {
     @Operation(summary = "즐겨찾기 상태 확인")
     @GetMapping("/{id}/favorite/status")
     public ResponseDto<Boolean> isFavorite(@PathVariable("id") Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeFavoriteService.isFavorite(id, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeFavoriteService.isFavorite(id, userId));
     }
 
     @Operation(summary = "즐겨찾기 상태 변경")
     @AuthenticatedUser
     @PostMapping("/{id}/favorite/toggle")
     public ResponseDto<RecipeFavoriteResponseDto> toggleFavorite(@PathVariable("id") Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeFavoriteService.toggleFavorite(id, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeFavoriteService.toggleFavorite(id, userId));
     }
 
     @Operation(summary = "즐겨찾기 목록 조회")
@@ -51,7 +51,7 @@ public class RecipeFavoriteController {
         if (pageSize < 1) {
             throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(email, pageNo - 1, pageSize));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageNo - 1, pageSize));
     }
 }

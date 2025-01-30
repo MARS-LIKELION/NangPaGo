@@ -77,7 +77,7 @@ class RefrigeratorServiceTest extends IntegrationTestSupport {
         refrigeratorRepository.saveAll(List.of(refrigerator1, refrigerator2));
 
         // when
-        List<RefrigeratorResponseDto> result = refrigeratorService.findRefrigerator(email);
+        List<RefrigeratorResponseDto> result = refrigeratorService.findRefrigerator(user.getId());
 
         // then
         assertThat(result).hasSize(2)

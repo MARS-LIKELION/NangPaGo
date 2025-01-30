@@ -33,11 +33,11 @@ class RecipeLikeRepositoryTest extends AbstractRepositoryTestSupport {
     @Test
     void findByUserAndRecipe() {
         // given
-        String email = "dummy@nangpago.com";
+        Long userId = 2L;
         Long recipeId = 2L;
 
         // when
-        Optional<RecipeLike> findRecipeLike = recipeLikeRepository.findByEmailAndRecipeId(email, recipeId);
+        Optional<RecipeLike> findRecipeLike = recipeLikeRepository.findByUserIdAndRecipeId(userId, recipeId);
 
         // then
         findRecipeLike.ifPresent(recipeLike ->

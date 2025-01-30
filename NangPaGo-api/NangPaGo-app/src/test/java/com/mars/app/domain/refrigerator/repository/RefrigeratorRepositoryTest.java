@@ -19,14 +19,14 @@ class RefrigeratorRepositoryTest extends AbstractRepositoryTestSupport {
     @Autowired
     private IngredientRepository ingredientRepository;
 
-    @DisplayName("UserEmail로 Refrigerator 테이블 조회")
+    @DisplayName("UserId로 Refrigerator 테이블 조회")
     @Test
     void deleteByUser_EmailAndIngredient_Name() {
         // given
-        String email = "dummy@nangpago.com";
+        Long dummyUserId = 2L;
 
-        // when, 임의로 추가한 데이터 삭제
-        List<Refrigerator> remainingRefrigerators = refrigeratorRepository.findByUserEmail(email);
+        // when
+        List<Refrigerator> remainingRefrigerators = refrigeratorRepository.findByUserId(dummyUserId);
 
         // then
         if (!remainingRefrigerators.isEmpty()) {

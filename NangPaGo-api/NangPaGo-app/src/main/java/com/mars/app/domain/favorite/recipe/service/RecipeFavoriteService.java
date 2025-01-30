@@ -31,18 +31,18 @@ public class RecipeFavoriteService {
     private final RecipeCommentRepository recipeCommentRepository;
 
     @Transactional
-    public RecipeFavoriteResponseDto toggleFavorite(Long recipeId, String email) {
-        boolean isFavorite = toggleFavoriteStatus(email, recipeId);
+    public RecipeFavoriteResponseDto toggleFavorite(Long recipeId, Long userId) {
+        boolean isFavorite = toggleFavoriteStatus(userId, recipeId);
         return RecipeFavoriteResponseDto.of(recipeId, isFavorite);
     }
 
     @Transactional
-    public boolean isFavorite(Long recipeId, String email) {
-        return recipeFavoriteRepository.findByEmailAndRecipeId(email, recipeId).isPresent();
+    public boolean isFavorite(Long recipeId, Long userId) {
+        return recipeFavoriteRepository.findByUserIdAndRecipeId(userId, recipeId).isPresent();
     }
 
-    public PageDto<RecipeFavoriteListResponseDto> getFavoriteRecipes(String email, int pageNo, int pageSize) {
-        User user = userRepository.findByEmail(email)
+    public PageDto<RecipeFavoriteListResponseDto> getFavoriteRecipes(Long userId, int pageNo, int pageSize) {
+        User user = userRepository.findById(userId)
             .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
 
         return PageDto.of(
@@ -56,23 +56,15 @@ public class RecipeFavoriteService {
         );
     }
 
-    private boolean toggleFavoriteStatus(String email, Long recipeId) {
-        User user = findUserByEmail(email);
-        Recipe recipe = findRecipeById(recipeId);
+    private boolean toggleFavoriteStatus(Long userId, Long recipeId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
+        Recipe recipe = recipeRepository.findById(recipeId)
+            .orElseThrow(NPGExceptionType.NOT_FOUND_RECIPE::of);
 
         return recipeFavoriteRepository.findByUserAndRecipe(user, recipe)
             .map(this::removeFavorite)
             .orElseGet(() -> addFavorite(user, recipe));
-    }
-
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> NPGExceptionType.NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
-    }
-
-    private Recipe findRecipeById(Long recipeId) {
-        return recipeRepository.findById(recipeId)
-            .orElseThrow(() -> NPGExceptionType.NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
     }
 
     private boolean addFavorite(User user, Recipe recipe) {

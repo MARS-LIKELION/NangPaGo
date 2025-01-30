@@ -64,7 +64,7 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
         communityRepository.save(community);
 
         // when: 처음 좋아요를 누름
-        var response = communityLikeService.toggleLike(community.getId(), user.getEmail());
+        var response = communityLikeService.toggleLike(community.getId(), user.getId());
 
         // then: 좋아요 상태가 true로 변경됨
         assertThat(response.liked()).isTrue();
@@ -84,7 +84,7 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
         communityLikeRepository.save(communityLike);
 
         // when : 좋아요를 다시 누름
-        var response = communityLikeService.toggleLike(community.getId(), user.getEmail());
+        var response = communityLikeService.toggleLike(community.getId(), user.getId());
 
         // then : 좋아요 상태가 false로 변경됨
         assertThat(response.liked()).isFalse();
@@ -106,7 +106,7 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
         communityLikeRepository.save(like);
 
         // when
-        boolean liked = communityLikeService.isLiked(community.getId(), user.getEmail());
+        boolean liked = communityLikeService.isLiked(community.getId(), user.getId());
 
         // then
         assertThat(liked).isTrue();

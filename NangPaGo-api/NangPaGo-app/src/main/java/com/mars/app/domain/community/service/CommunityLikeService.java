@@ -23,8 +23,8 @@ public class CommunityLikeService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
-    public boolean isLiked(Long id, String email) {
-        return communityLikeRepository.findByEmailAndCommunityId(email, id).isPresent();
+    public boolean isLiked(Long id, Long userId) {
+        return communityLikeRepository.findByUserIdAndCommunityId(userId, id).isPresent();
     }
 
     public long getLikeCount(Long id) {
@@ -32,24 +32,19 @@ public class CommunityLikeService {
     }
 
     @Transactional
-    public CommunityLikeResponseDto toggleLike(Long id, String email) {
-        boolean isLikedAfterToggle = toggleLikeStatus(id, email);
+    public CommunityLikeResponseDto toggleLike(Long id, Long userId) {
+        boolean isLikedAfterToggle = toggleLikeStatus(id, userId);
         return CommunityLikeResponseDto.of(id, isLikedAfterToggle);
     }
 
-    @Transactional
-    private boolean toggleLikeStatus(Long id, String email) {
-        User user = getUserByEmail(email);
+    private boolean toggleLikeStatus(Long id, Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(NOT_FOUND_USER::of);
         Community community = communityRepository.findById(id)
             .orElseThrow(() -> NOT_FOUND_COMMUNITY.of("게시물을 찾을 수 없습니다."));
         return communityLikeRepository.findByUserAndCommunity(user, community)
             .map(this::removeLike)
             .orElseGet(() -> addLike(user, community));
-    }
-
-    private User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
     }
 
     private boolean removeLike(CommunityLike communityLike) {

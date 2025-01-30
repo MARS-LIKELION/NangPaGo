@@ -16,8 +16,8 @@ public interface CommunityLikeRepository extends JpaRepository<CommunityLike, Lo
     @Lock(PESSIMISTIC_WRITE)
     Optional<CommunityLike> findByUserAndCommunity(User user, Community community);
 
-    @Query("SELECT clike FROM CommunityLike clike WHERE clike.user.email = :email AND clike.community.id = :communityId")
-    Optional<CommunityLike> findByEmailAndCommunityId(@Param("email") String email, @Param("communityId") Long communityId);
+    @Query("SELECT clike FROM CommunityLike clike WHERE clike.user.id = :userId AND clike.community.id = :communityId")
+    Optional<CommunityLike> findByUserIdAndCommunityId(@Param("userId") Long userId, @Param("communityId") Long communityId);
 
     int countByCommunityId(Long communityId);
 }

@@ -22,20 +22,20 @@ public class RefrigeratorController {
     @AuthenticatedUser
     @GetMapping
     public ResponseDto<List<RefrigeratorResponseDto>> getRefrigerator() {
-        return ResponseDto.of(refrigeratorService.findRefrigerator(AuthenticationHolder.getCurrentUserEmail()));
+        return ResponseDto.of(refrigeratorService.findRefrigerator(AuthenticationHolder.getCurrentUserId()));
     }
 
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<RefrigeratorResponseDto> addIngredient(@RequestParam(name = "ingredientName") String ingredientName) {
-        refrigeratorService.addIngredient(AuthenticationHolder.getCurrentUserEmail(), ingredientName);
+        refrigeratorService.addIngredient(AuthenticationHolder.getCurrentUserId(), ingredientName);
         return ResponseDto.of(RefrigeratorResponseDto.from(ingredientName));
     }
 
     @AuthenticatedUser
     @DeleteMapping
     public ResponseDto<RefrigeratorResponseDto> deleteMyIngredient(@RequestParam(name = "ingredientName") String ingredientName) {
-        refrigeratorService.deleteIngredient(AuthenticationHolder.getCurrentUserEmail(), ingredientName);
+        refrigeratorService.deleteIngredient(AuthenticationHolder.getCurrentUserId(), ingredientName);
         return ResponseDto.of(RefrigeratorResponseDto.from(ingredientName));
     }
 }

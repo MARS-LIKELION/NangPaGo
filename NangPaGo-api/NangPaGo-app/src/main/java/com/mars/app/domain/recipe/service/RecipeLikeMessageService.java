@@ -11,9 +11,9 @@ public class RecipeLikeMessageService {
 
     private final LikeNotificationPublisher likeNotificationPublisher;
 
-    public RecipeLikeResponseDto toggleLike(Long recipeId, String email) {
+    public RecipeLikeResponseDto toggleLike(Long recipeId, Long userId) {
         // Message 전송 to RabbitMQ
-        likeNotificationPublisher.sendLikeNotification(recipeId, email);
+        likeNotificationPublisher.sendLikeNotification(recipeId, userId);
 
         return RecipeLikeResponseDto.of(recipeId);
     }

@@ -26,16 +26,16 @@ public class CommunityLikeController {
     @AuthenticatedUser
     @GetMapping("/{id}/like/status")
     public ResponseDto<Boolean> getCommunityLikeStatus(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityLikeService.isLiked(id, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityLikeService.isLiked(id, userId));
     }
 
     @Operation(summary = "게시물 좋아요 토글 버튼")
     @AuthenticatedUser
     @PostMapping("/{id}/like/toggle")
     public ResponseDto<CommunityLikeResponseDto> toggleCommunityLike(@PathVariable Long id) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(communityLikeService.toggleLike(id, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(communityLikeService.toggleLike(id, userId));
     }
 
     @Operation(summary = "게시물 좋아요 개수 조회")

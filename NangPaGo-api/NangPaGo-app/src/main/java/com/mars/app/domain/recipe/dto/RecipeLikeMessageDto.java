@@ -5,12 +5,12 @@ import lombok.Builder;
 @Builder
 public record RecipeLikeMessageDto(
     Long recipeId,
-    String email
+    Long userId
 ) {
-    public static RecipeLikeMessageDto of(Long recipeId, String email) {
+    public static RecipeLikeMessageDto of(Long recipeId, Long userId) {
         return RecipeLikeMessageDto.builder()
             .recipeId(recipeId)
-            .email(email)
+            .userId(userId)
             .build();
     }
 }

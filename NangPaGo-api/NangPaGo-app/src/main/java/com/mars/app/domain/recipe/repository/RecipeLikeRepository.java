@@ -14,8 +14,8 @@ public interface RecipeLikeRepository extends JpaRepository<RecipeLike, Long> {
 
     Optional<RecipeLike> findByUserAndRecipe(User user, Recipe recipe);
 
-    @Query("SELECT rl FROM RecipeLike rl WHERE rl.user.email = :email AND rl.recipe.id = :recipeId")
-    Optional<RecipeLike> findByEmailAndRecipeId(@Param("email") String email, @Param("recipeId") Long recipeId);
+    @Query("SELECT rl FROM RecipeLike rl WHERE rl.user.id = :userId AND rl.recipe.id = :recipeId")
+    Optional<RecipeLike> findByUserIdAndRecipeId(@Param("userId") Long userId, @Param("recipeId") Long recipeId);
 
     Page<RecipeLike> findRecipeLikeByUser(User user, Pageable pageable);
 

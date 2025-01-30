@@ -52,7 +52,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         // when
         RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipe.getId(),
-            user.getEmail());
+            user.getId());
 
         // then
         assertThat(favoriteResponseDto)
@@ -74,7 +74,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         // when
         RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipe.getId(),
-            user.getEmail());
+            user.getId());
 
         // then
         assertThat(favoriteResponseDto)
@@ -95,7 +95,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         recipeFavoriteRepository.save(recipeFavorite);
 
         // when
-        boolean favorite = recipeFavoriteService.isFavorite(recipe.getId(), user.getEmail());
+        boolean favorite = recipeFavoriteService.isFavorite(recipe.getId(), user.getId());
 
         // then
         assertThat(favorite).isTrue();
@@ -108,9 +108,9 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         User user = createUser("dummy@nangpago.com");
         Recipe recipe = createRecipe("파스타");
         recipeRepository.save(recipe);
-        
+
         // when
-        boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), user.getEmail());
+        boolean favoriteByUser1 = recipeFavoriteService.isFavorite(recipe.getId(), user.getId());
 
         // then
         assertThat(favoriteByUser1).isFalse();
@@ -138,7 +138,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
         // when
         PageDto<RecipeFavoriteListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
-            user.getEmail(), 0, 10);
+            user.getId(), 0, 10);
 
         //then
         assertThat(recipeFavorites)
@@ -151,14 +151,13 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
     @Test
     void NotCorrectUserException() {
         // given
-        Recipe recipe = createRecipe("파스타");
+        Long nonExistUserId = 9999L;
 
+        Recipe recipe = createRecipe("파스타");
         recipeRepository.save(recipe);
 
-        String email = "dummy@nangpago.com";
-
         // when, then
-        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipe.getId(), email))
+        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipe.getId(), nonExistUserId))
             .isInstanceOf(NPGException.class)
             .hasMessage("사용자를 찾을 수 없습니다.");
     }
@@ -174,7 +173,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         Long recipeId = 1L;
 
         // when, then
-        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipeId, user.getEmail()))
+        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipeId, user.getId()))
             .isInstanceOf(NPGException.class)
             .hasMessage("레시피를 찾을 수 없습니다.");
     }

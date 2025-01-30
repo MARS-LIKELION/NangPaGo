@@ -15,8 +15,8 @@ public class LikeNotificationPublisher {
     private final TopicExchange topicExchange;
     private final RabbitTemplate rabbitTemplate;
 
-    public void sendLikeNotification(Long recipeId, String email) {
-        RecipeLikeMessageDto recipeLikeMessageDto = RecipeLikeMessageDto.of(recipeId, email);
+    public void sendLikeNotification(Long recipeId, Long userId) {
+        RecipeLikeMessageDto recipeLikeMessageDto = RecipeLikeMessageDto.of(recipeId, userId);
 
         rabbitTemplate.convertAndSend(topicExchange.getName(), LIKE_ROUTING_KEY, recipeLikeMessageDto);
     }

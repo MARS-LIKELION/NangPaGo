@@ -29,7 +29,7 @@ public class LikeNotificationConsumer {
     @Transactional
     @RabbitListener(queues = "#{@likeQueue.name}")
     public void processLikeEvent(RecipeLikeMessageDto recipeLikeMessageDto) {
-        toggleLikeStatus(recipeLikeMessageDto.recipeId(), recipeLikeMessageDto.email());
+        toggleLikeStatus(recipeLikeMessageDto.recipeId(), recipeLikeMessageDto.userId());
 
         try {
             publishRecipeLikeEvent(recipeLikeMessageDto);
@@ -42,23 +42,15 @@ public class LikeNotificationConsumer {
         return recipeLikeRepository.countByRecipeId(recipeId);
     }
 
-    private void toggleLikeStatus(Long recipeId, String email) {
-        User user = getUserByEmail(email);
-        Recipe recipe = getRecipeById(recipeId);
+    private void toggleLikeStatus(Long recipeId, Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(NOT_FOUND_USER::of);
+        Recipe recipe = recipeRepository.findById(recipeId)
+            .orElseThrow(NOT_FOUND_RECIPE::of);
 
         recipeLikeRepository.findByUserAndRecipe(user, recipe)
             .map(this::removeLike)
             .orElseGet(() -> addLike(user, recipe));
-    }
-
-    private User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> NOT_FOUND_USER.of("사용자를 찾을 수 없습니다."));
-    }
-
-    private Recipe getRecipeById(Long recipeId) {
-        return recipeRepository.findById(recipeId)
-            .orElseThrow(() -> NOT_FOUND_RECIPE.of("레시피를 찾을 수 없습니다."));
     }
 
     private boolean removeLike(RecipeLike recipeLike) {

@@ -38,8 +38,8 @@ public class UserController {
     @AuthenticatedUser
     @GetMapping("/my-page")
     public ResponseDto<MyPageDto> findMyPage() {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        MyPageDto myPageDto = userService.getMyPage(email);
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        MyPageDto myPageDto = userService.getMyPage(userId);
 
         return ResponseDto.of(myPageDto);
     }
@@ -47,8 +47,8 @@ public class UserController {
     @AuthenticatedUser
     @GetMapping("/profile")
     public ResponseDto<UserInfoResponseDto> findUserInfo() {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.getUserInfo(email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userService.getUserInfo(userId));
     }
 
     @AuthenticatedUser
@@ -60,8 +60,8 @@ public class UserController {
     @AuthenticatedUser
     @PutMapping("/profile")
     public ResponseDto<UserInfoResponseDto> updateUserInfo(@RequestBody UserInfoRequestDto requestDto) {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.updateUserInfo(requestDto, email));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userService.updateUserInfo(requestDto, userId));
     }
 
     @GetMapping("/recipe/like")
@@ -75,8 +75,8 @@ public class UserController {
         if (pageSize < 1) {
             throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.getMyLikedRecipes(email, pageNo - 1, pageSize));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userService.getMyLikedRecipes(userId, pageNo - 1, pageSize));
     }
 
     @AuthenticatedUser
@@ -91,8 +91,8 @@ public class UserController {
         if (pageSize < 1) {
             throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
         }
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        return ResponseDto.of(userService.getMyFavorites(email, pageNo - 1, pageSize));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userService.getMyFavorites(userId, pageNo - 1, pageSize));
     }
 
     @AuthenticatedUser
@@ -115,8 +115,8 @@ public class UserController {
     @AuthenticatedUser
     @GetMapping("/deactivate")
     public ResponseDto<String> deactivateUser() throws IOException, InterruptedException {
-        String email = AuthenticationHolder.getCurrentUserEmail();
-        oauth2ProviderTokenService.deactivateUser(email);
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        oauth2ProviderTokenService.deactivateUser(userId);
         return ResponseDto.of("");
     }
 }

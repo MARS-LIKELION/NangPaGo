@@ -10,14 +10,6 @@ import org.springframework.stereotype.Component;
 public class AuthenticationHolder {
     private AuthenticationHolder() { }
 
-    public static String getCurrentUserEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
-            return userDetails.getUsername();
-        }
-        return "anonymous_user";
-    }
-
     public static Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {

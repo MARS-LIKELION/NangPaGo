@@ -67,7 +67,7 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
         recipeLikeRepository.save(recipeLike);
 
         // when
-        boolean isLiked = recipeLikeService.isLiked(recipe.getId(), user.getEmail());
+        boolean isLiked = recipeLikeService.isLiked(recipe.getId(), user.getId());
 
         // then
         assertThat(isLiked).isTrue();
@@ -84,7 +84,7 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
         recipeRepository.save(recipe);
 
         // when
-        boolean isLiked = recipeLikeService.isLiked(recipe.getId(), user.getEmail());
+        boolean isLiked = recipeLikeService.isLiked(recipe.getId(), user.getId());
 
         // then
         assertThat(isLiked).isFalse();
@@ -109,7 +109,7 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
         recipeLikeRepository.save(recipeLike);
 
         // when
-        boolean isLiked = recipeLikeService.isLiked(recipe.getId(), user2.getEmail());
+        boolean isLiked = recipeLikeService.isLiked(recipe.getId(), user2.getId());
 
         // then
         assertThat(isLiked).isFalse();

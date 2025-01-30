@@ -40,9 +40,8 @@ public class UserService {
             .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of));
     }
 
-    public MyPageDto getMyPage(String email) {
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
+    public MyPageDto getMyPage(Long userId) {
+        User user = findUserById(userId);
 
         int likeCount = recipeLikeRepository.countByUser(user);
         int favoriteCount = recipeFavoriteRepository.countByUser(user);
@@ -56,16 +55,16 @@ public class UserService {
         );
     }
 
-    public PageDto<RecipeResponseDto> getMyLikedRecipes(String email, int pageNo, int pageSize) {
+    public PageDto<RecipeResponseDto> getMyLikedRecipes(Long userId, int pageNo, int pageSize) {
         return PageDto.of(
-            recipeLikeRepository.findRecipeLikeByUser(findUserByEmail(email), PageRequest.of(pageNo, pageSize))
+            recipeLikeRepository.findRecipeLikeByUser(findUserById(userId), PageRequest.of(pageNo, pageSize))
                 .map(recipeLike -> RecipeResponseDto.from(recipeLike.getRecipe()))
         );
     }
 
-    public PageDto<RecipeFavoriteListResponseDto> getMyFavorites(String email, int pageNo, int pageSize) {
+    public PageDto<RecipeFavoriteListResponseDto> getMyFavorites(Long userId, int pageNo, int pageSize) {
         return PageDto.of(
-            recipeFavoriteRepository.findAllByUser(findUserByEmail(email), PageRequest.of(pageNo, pageSize))
+            recipeFavoriteRepository.findAllByUser(findUserById(userId), PageRequest.of(pageNo, pageSize))
                 .map(recipeFavorite -> {
                     Recipe recipe = recipeFavorite.getRecipe();
                     int likeCount = recipeLikeRepository.countByRecipeId(recipe.getId());
@@ -84,8 +83,8 @@ public class UserService {
         );
     }
 
-    public UserInfoResponseDto getUserInfo(String email) {
-        return UserInfoResponseDto.from(findUserByEmail(email));
+    public UserInfoResponseDto getUserInfo(Long userId) {
+        return UserInfoResponseDto.from(findUserById(userId));
     }
 
     public boolean isNicknameAvailable(String targetNickname) {
@@ -94,11 +93,11 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, String email) {
+    public UserInfoResponseDto updateUserInfo(UserInfoRequestDto requestDto, Long userId) {
         String targetNickname = requestDto.nickname().trim();
         validateNickname(targetNickname);
 
-        User updatedUser = updateNickname(requestDto, email);
+        User updatedUser = updateNickname(requestDto, userId);
         return UserInfoResponseDto.from(updatedUser);
     }
 
@@ -120,15 +119,15 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    private User updateNickname(UserInfoRequestDto requestDto, String email) {
-        User user = findUserByEmail(email);
+    private User updateNickname(UserInfoRequestDto requestDto, Long userId) {
+        User user = findUserById(userId);
         user.updateNickname(requestDto);
 
         return user;
     }
 
-    private User findUserByEmail(String email){
-        return userRepository.findByEmail(email)
-            .orElseThrow(NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT::of);
+    private User findUserById(Long userId){
+        return userRepository.findById(userId)
+            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
     }
 }

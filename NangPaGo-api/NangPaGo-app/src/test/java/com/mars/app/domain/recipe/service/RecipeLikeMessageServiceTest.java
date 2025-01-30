@@ -21,30 +21,30 @@ class RecipeLikeMessageServiceTest {
     @InjectMocks
     private RecipeLikeMessageService recipeLikeMessageService;
 
-    @DisplayName("좋아요 토글 메시지를 RabbitMQ로 전송한다.")
+    @DisplayName("좋아요 토글 메시지를 RabbitMQ로 전송할 수 있다.")
     @Test
     void toggleLike() {
         // given
         Long recipeId = 1L;
-        String email = "test@nangpago.com";
+        Long userId = 1L;
 
         // when
-        RecipeLikeResponseDto response = recipeLikeMessageService.toggleLike(recipeId, email);
+        RecipeLikeResponseDto response = recipeLikeMessageService.toggleLike(recipeId, userId);
 
         // then
-        verify(likeNotificationPublisher).sendLikeNotification(recipeId, email);
+        verify(likeNotificationPublisher).sendLikeNotification(recipeId, userId);
         assertThat(response.recipeId()).isEqualTo(recipeId);
     }
 
-    @DisplayName("좋아요 토글 응답은 레시피 ID를 포함한다")
+    @DisplayName("좋아요 토글 응답은 레시피 ID를 포함한다.")
     @Test
     void toggleLikeResponse() {
         // given
         Long recipeId = 1L;
-        String email = "test@nangpago.com";
+        Long userId = 1L;
 
         // when
-        RecipeLikeResponseDto response = recipeLikeMessageService.toggleLike(recipeId, email);
+        RecipeLikeResponseDto response = recipeLikeMessageService.toggleLike(recipeId, userId);
 
         // then
         assertThat(response)
