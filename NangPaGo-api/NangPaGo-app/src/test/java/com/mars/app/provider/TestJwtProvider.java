@@ -1,5 +1,6 @@
 package com.mars.app.provider;
 
+import com.mars.common.model.user.User;
 import com.mars.common.util.web.JwtUtil;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +12,8 @@ public class TestJwtProvider {
         this.jwtUtil = jwtUtil;
     }
 
-    public String createTestAccessToken(String email, String role) {
-        return jwtUtil.createJwt("access", 1L ,email, role, 3600000L); // 1시간
+    public String createTestAccessToken(User user) {
+        return jwtUtil.createJwt("access", user.getId(), user.getEmail(), user.getRole(), 3600000L); // 1시간
     }
 
     public String createTestRefreshToken(String email, String role) {

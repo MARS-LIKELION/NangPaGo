@@ -1,6 +1,7 @@
 package com.mars.app.support;
 
 import com.google.firebase.FirebaseApp;
+import com.mars.common.model.user.User;
 import com.mars.common.util.web.JwtUtil;
 import com.mars.app.provider.TestJwtProvider;
 import org.junit.jupiter.api.AfterEach;
@@ -32,16 +33,8 @@ public abstract class IntegrationTestSupport {
         SecurityContextHolder.clearContext();
     }
 
-    protected void setAuthenticationAsUserWithToken(String email) {
-        setAuthenticationWithToken(email, "ROLE_USER");
-    }
-
-    protected void setAuthenticationAsAdminWithToken(String email) {
-        setAuthenticationWithToken(email, "ROLE_ADMIN");
-    }
-
-    private void setAuthenticationWithToken(String email, String role) {
-        String token = testJwtProvider.createTestAccessToken(email, role);
+    protected void setAuthenticationAsUserWithToken(User user) {
+        String token = testJwtProvider.createTestAccessToken(user);
         Authentication authentication = jwtUtil.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
