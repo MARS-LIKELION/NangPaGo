@@ -42,6 +42,15 @@ class UserServiceTest extends IntegrationTestSupport {
             .build();
     }
 
+    private User createUserWithNickname(String email, String nickname) {
+        return User.builder()
+                .email(email)
+                .nickname(nickname)
+                .userStatus(UserStatus.ACTIVE)
+                .role("ROLE_USER")
+                .build();
+    }
+
     @DisplayName("사용자 정보를 조회할 수 있다.")
     @Test
     void getCurrentUser() {
@@ -81,6 +90,82 @@ class UserServiceTest extends IntegrationTestSupport {
         assertThat(result.getContent().size()).isEqualTo(10);
         assertThat(result.getTotalElements()).isEqualTo(15);
         assertThat(result.getTotalPages()).isEqualTo(2);
+    }
+
+    @DisplayName("사용자 목록을 Id를 기준으로 내림차순 정렬할 수 있다.")
+    @Test
+    void getUserListSortedByIdDesc() {
+        // given
+        List<User> users = IntStream.range(0, 15)
+                .mapToObj(i -> createUser("test" + i + "@example.com"))
+                .collect(Collectors.toList());
+        userRepository.saveAll(users);
+
+        // when
+        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, Sort.Direction.DESC, "id");
+        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, Sort.Direction.DESC, "id");
+
+        // then
+        assertThat(firstPage.getContent().get(0).id()).isGreaterThan(secondPage.getContent().get(4).id());
+    }
+
+    @DisplayName("사용자 목록을 Id를 기준으로 오름차순 정렬할 수 있다.")
+    @Test
+    void getUserListSortedByIdAsc() {
+        // given
+        List<User> users = IntStream.range(0, 15)
+                .mapToObj(i -> createUser("test" + i + "@example.com"))
+                .collect(Collectors.toList());
+        userRepository.saveAll(users);
+
+        // when
+        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, Sort.Direction.ASC, "id");
+        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, Sort.Direction.ASC, "id");
+
+        // then
+        assertThat(firstPage.getContent().get(0).id()).isLessThan(secondPage.getContent().get(4).id());
+    }
+
+    @DisplayName("사용자 목록을 닉네임을 기준으로 내림차순 정렬할 수 있다.")
+    @Test
+    void getUserListSortedByNicknameDesc() {
+        // given
+        List<User> users = IntStream.range(0, 15)
+                .mapToObj(i -> createUserWithNickname("test" + i + "@example.com"
+                        , "nickname" + i))
+                .collect(Collectors.toList());
+        userRepository.saveAll(users);
+
+        // when
+        Page<UserDetailResponseDto> firstPage = userService
+                .getUserList(0, Sort.Direction.DESC, "nickname");
+        Page<UserDetailResponseDto> secondPage = userService
+                .getUserList(1, Sort.Direction.DESC, "nickname");
+
+        // then
+        assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname9");
+        assertThat(secondPage.getContent().get(4).nickname()).isEqualTo("nickname0");
+    }
+
+    @DisplayName("사용자 목록을 닉네임을 기준으로 오름차순 정렬할 수 있다.")
+    @Test
+    void getUserListSortedByNicknameAsc() {
+        // given
+        List<User> users = IntStream.range(0, 15)
+                .mapToObj(i -> createUserWithNickname("test" + i + "@example.com"
+                        , "nickname" + i))
+                .collect(Collectors.toList());
+        userRepository.saveAll(users);
+
+        // when
+        Page<UserDetailResponseDto> firstPage = userService
+                .getUserList(0, Sort.Direction.ASC, "nickname");
+        Page<UserDetailResponseDto> secondPage = userService
+                .getUserList(1, Sort.Direction.ASC, "nickname");
+
+        // then
+        assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname0");
+        assertThat(secondPage.getContent().get(4).nickname()).isEqualTo("nickname9");
     }
 
     @DisplayName("사용자를 차단할 수 있다.")
