@@ -65,12 +65,8 @@ public class User extends BaseEntity {
         this.nickname = requestDto.nickname();
     }
 
-    public void ban() {
-        this.userStatus = UserStatus.BANNED;
-    }
-
-    public void unban() {
-        this.userStatus = UserStatus.ACTIVE;
+    public void updateUserStatus(UserStatus userStatus){
+        this.userStatus = userStatus;
     }
 
     public void softDelete() {

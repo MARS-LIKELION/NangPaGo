@@ -9,11 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.mars.common.exception.NPGExceptionType.BAD_REQUEST_USER_STATUS;
-import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
+import static com.mars.common.exception.NPGExceptionType.*;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -33,26 +34,12 @@ public class UserService {
     }
 
     @Transactional
-    public void ban(long userId) {
+    public void updateUserStatus(long userId, UserStatus userStatus) {
         User user = findUserById(userId);
-        checkUserStatus(user, UserStatus.BANNED);
-        user.ban();
-    }
-    
-    @Transactional
-    public void unBan(long userId) {
-        User user = findUserById(userId);
-        checkUserStatus(user, UserStatus.ACTIVE);
-        user.unban();
+        user.updateUserStatus(userStatus);
     }
 
     private User findUserById(long userId) {
         return userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of);
-    }
-
-    private void checkUserStatus(User user, UserStatus userStatus) {
-        if (user.getUserStatus() == userStatus) {
-            throw BAD_REQUEST_USER_STATUS.of();
-        }
     }
 }
