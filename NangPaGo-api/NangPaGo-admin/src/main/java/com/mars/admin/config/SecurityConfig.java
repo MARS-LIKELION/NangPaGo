@@ -73,7 +73,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST).permitAll()
-                .requestMatchers("/api/admin/**")
+                .requestMatchers("/api/**")
                 .hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
             )
