@@ -19,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 class UserServiceTest extends IntegrationTestSupport {
 
@@ -74,7 +75,7 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> result = userService.getUserList(0);
+        Page<UserDetailResponseDto> result = userService.getUserList(0, Sort.Direction.ASC, "id");
 
         // then
         assertThat(result.getContent().size()).isEqualTo(10);

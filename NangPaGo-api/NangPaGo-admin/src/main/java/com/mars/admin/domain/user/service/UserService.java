@@ -10,10 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.mars.common.exception.NPGExceptionType.*;
+import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -27,8 +28,8 @@ public class UserService {
         return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
     }
 
-    public Page<UserDetailResponseDto> getUserList(int page) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+    public Page<UserDetailResponseDto> getUserList(int page, Sort.Direction sort, String sortName) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(sort, sortName));
         return userRepository.findByRoleNotAdmin(pageable).map(UserDetailResponseDto::from);
     }
 

@@ -4,10 +4,21 @@ import { getUserList, banUser, unBanUser } from '../api/usermanage';
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isAscending, setIsAscending] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [actionType, setActionType] = useState("");
+  const [sortField, setSortField] = useState("id");
+
+  const toggleSort = (field) => {
+    if (sortField === field) {
+      setIsAscending(prev => !prev);
+    } else {
+      setSortField(field);
+      setIsAscending(true);
+    }
+  };
 
   const handleStatusChange = (user, newStatus) => {
     setSelectedUser(user);
@@ -35,75 +46,133 @@ export default function Users() {
   };
 
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await getUserList(currentPage);
-          console.log(response.data); // 확인용 로그
-          setUsers(response.data.content); // 사용자 목록
-          setTotalPages(response.data.totalPages); // 총 페이지 수
-        } catch (error) {
-          console.error('데이터 가져오기 에러: ', error);
-        }
-      };
-      fetchData();
-    }, [currentPage]);
+    const fetchData = async () => {
+      try {
+        const response = await getUserList(currentPage, isAscending, sortField);
+        setUsers(response.data.content);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error('데이터 가져오기 에러: ', error);
+      }
+    };
+    fetchData();
+  }, [currentPage, isAscending, sortField]);
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">사용자 관리</h2>
-      <div className="bg-white p-4 rounded-md shadow-md h-[800px] flex flex-col">
-      <div className="flex-1 min-h-[580px] overflow-auto">
-          <table className="min-w-full border-collapse">
-            <thead>
+      <div className="bg-white p-4 rounded-md shadow-md flex flex-col">
+        <div className="flex-1 overflow-x-auto">
+          <table className="w-full table-fixed border-collapse min-w-[800px]">
+            <colgroup>
+              <col className="w-[5%]" />{/* ID */}
+              <col className="w-[20%]" />{/* 이메일 */}
+              <col className="w-[13%]" />{/* 닉네임 */}
+              <col className="w-[8%]" />{/* 생년월일 */}
+              <col className="w-[9%]" />{/* 전화번호 */}
+              <col className="w-[7%]" />{/* 가입 경로 */}
+              <col className="w-[12%]" />{/* 가입일 */}
+              <col className="w-[12%]" />{/* 수정일 */}
+              <col className="w-[9%]" />{/* 상태 */}
+            </colgroup>
+          <thead>
             <tr>
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">ID</th>
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">이메일</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold border-b">닉네임</th>
+              <th 
+                className="px-4 py-3 text-left text-sm font-semibold border-b cursor-pointer group"
+                onClick={() => toggleSort('nickname')}
+              >
+                <div className="flex items-center">
+                  닉네임
+                  <span className="ml-1">
+                    {sortField === 'nickname' ? (
+                      isAscending ? (
+                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"/>
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                      )
+                    ) : (
+                      <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                      </svg>
+                    )}
+                  </span>
+                </div>
+              </th>
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">생년월일</th>
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">전화번호</th>
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">가입 경로</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold border-b">가입일</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold border-b">수정일</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold border-b w-28">상태</th>
-            </tr>
-            </thead>
-            <tbody>
-            {users.map((user, index) => (
-              <tr
-                key={user.id}
-                className={`${
-                  index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-                } hover:bg-blue-50 border-b`}
+              <th 
+                className="px-4 py-3 text-left text-sm font-semibold border-b cursor-pointer group"
+                onClick={() => toggleSort('id')}
               >
-                <td className="px-4 py-2 text-sm text-gray-700">{user.id}</td>
-                <td className="px-4 py-2 text-sm text-gray-700">{user.email}</td>
-                <td
-                  className="px-4 py-2 text-sm text-gray-700">{user.nickname}</td>
-                <td className="px-4 py-2 text-sm text-gray-700">{user.birthday || '-'}</td>
-                <td className="px-4 py-2 text-sm text-gray-700">{user.phone || '-'}</td>
-                <td className="px-4 py-2 text-sm text-gray-700">{user.oAuth2Provider}</td>
-                <td className="px-4 py-2 text-sm text-gray-700">{user.createdAt}</td>
-                <td className="px-4 py-2 text-sm text-gray-700">{user.updatedAt}</td>
-                <td className="px-4 py-2 text-sm text-gray-700 w-28">
+                <div className="flex items-center">
+                  가입일
+                  <span className="ml-1">
+                    {sortField === 'id' ? (
+                      isAscending ? (
+                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"/>
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                      )
+                    ) : (
+                      <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                      </svg>
+                    )}
+                  </span>
+                </div>
+              </th>
+              <th className="px-4 py-3 text-left text-sm font-semibold border-b">수정일</th>
+              <th className="px-4 py-3 text-left text-sm font-semibold border-b">상태</th>
+            </tr>
+          </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr
+                  key={user.id}
+                  className={`${
+                    index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+                  } hover:bg-blue-50 border-b`}
+                >
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.id}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.email}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.nickname}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.birthday || '-'}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.phone || '-'}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.oAuth2Provider}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.createdAt}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.updatedAt}</td>
+                  <td className="px-4 py-2 text-sm text-gray-700 w-[120px]">
                   {user.userStatus === 'WITHDRAWN' ? (
-                    <div className="text-gray-500 px-2 py-1">
+                    <div className="text-gray-500 px-2 py-1.5 w-[100px] overflow-hidden whitespace-nowrap text-ellipsis h-[32px] flex items-center border rounded">
                       WITHDRAWN
                     </div>
                   ) : (
-                  <select
-                    value={user.userStatus}
-                    onChange={(e) => handleStatusChange(user, e.target.value)}
-                    className="border rounded px-2 py-1 text-sm"
-                  >
-                    <option value="ACTIVE">ACTIVE</option>
-                    <option value="BANNED">BANNED</option>
-                  </select>
-                )}</td>
-              </tr>
-            ))}
+                        <select
+                          value={user.userStatus}
+                          onChange={(e) => handleStatusChange(user, e.target.value)}
+                          className="border rounded px-2 py-1.5 text-sm w-[100px] h-[32px]"
+                        >
+                          <option value="ACTIVE">ACTIVE</option>
+                          <option value="BANNED">BANNED</option>
+                        </select>
+                      )}
+                    </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
-          </div>
+        </div>
         <div className="flex-shrink-0 mt-auto pt-4 pb-8">
           <div className="flex items-center justify-center space-x-8">
             <button
