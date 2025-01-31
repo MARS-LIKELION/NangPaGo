@@ -7,7 +7,6 @@ import com.mars.admin.domain.user.sort.SortType;
 import com.mars.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
