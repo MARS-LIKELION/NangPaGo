@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
+import com.mars.admin.domain.user.sort.SortType;
 import com.mars.admin.support.IntegrationTestSupport;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.user.UserStatus;
@@ -84,7 +85,7 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> result = userService.getUserList(0, Sort.Direction.ASC, "id");
+        Page<UserDetailResponseDto> result = userService.getUserList(0, SortType.ID_ASC);
 
         // then
         assertThat(result.getContent().size()).isEqualTo(10);
@@ -102,8 +103,8 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, Sort.Direction.DESC, "id");
-        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, Sort.Direction.DESC, "id");
+        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, SortType.ID_DESC);
+        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, SortType.ID_DESC);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isGreaterThan(secondPage.getContent().get(4).id());
@@ -119,8 +120,8 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, Sort.Direction.ASC, "id");
-        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, Sort.Direction.ASC, "id");
+        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, SortType.ID_ASC);
+        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, SortType.ID_ASC);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isLessThan(secondPage.getContent().get(4).id());
@@ -138,9 +139,9 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         Page<UserDetailResponseDto> firstPage = userService
-                .getUserList(0, Sort.Direction.DESC, "nickname");
+                .getUserList(0, SortType.NICKNAME_DESC);
         Page<UserDetailResponseDto> secondPage = userService
-                .getUserList(1, Sort.Direction.DESC, "nickname");
+                .getUserList(1, SortType.NICKNAME_DESC);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname9");
@@ -159,9 +160,9 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         Page<UserDetailResponseDto> firstPage = userService
-                .getUserList(0, Sort.Direction.ASC, "nickname");
+                .getUserList(0, SortType.NICKNAME_ASC);
         Page<UserDetailResponseDto> secondPage = userService
-                .getUserList(1, Sort.Direction.ASC, "nickname");
+                .getUserList(1, SortType.NICKNAME_ASC);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname0");

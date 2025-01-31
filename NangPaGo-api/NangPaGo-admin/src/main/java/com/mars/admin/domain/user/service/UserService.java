@@ -3,6 +3,7 @@ package com.mars.admin.domain.user.service;
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
+import com.mars.admin.domain.user.sort.SortType;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.model.user.User;
@@ -28,8 +29,8 @@ public class UserService {
         return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
     }
 
-    public Page<UserDetailResponseDto> getUserList(int page, Sort.Direction sort, String sortName) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(sort, sortName));
+    public Page<UserDetailResponseDto> getUserList(int pageNo, SortType sort) {
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(sort.getDirection(), sort.getField()));
         return userRepository.findByRoleNotAdmin(pageable).map(UserDetailResponseDto::from);
     }
 

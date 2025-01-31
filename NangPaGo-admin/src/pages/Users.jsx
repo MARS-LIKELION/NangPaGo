@@ -9,7 +9,7 @@ export default function Users() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [actionType, setActionType] = useState("");
-  const [sortField, setSortField] = useState("id");
+  const [sortField, setSortField] = useState("ID");
 
   const toggleSort = (field) => {
     if (sortField === field) {
@@ -48,7 +48,8 @@ export default function Users() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getUserList(currentPage, isAscending, sortField);
+        const sortType = `${sortField}_${isAscending ? 'ASC' : 'DESC'}`;
+        const response = await getUserList(currentPage, sortType);
         setUsers(response.data.content);
         setTotalPages(response.data.totalPages);
       } catch (error) {
@@ -57,7 +58,7 @@ export default function Users() {
     };
     fetchData();
   }, [currentPage, isAscending, sortField]);
-
+  
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">사용자 관리</h2>
@@ -81,12 +82,12 @@ export default function Users() {
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">이메일</th>
               <th 
                 className="px-4 py-3 text-left text-sm font-semibold border-b cursor-pointer group"
-                onClick={() => toggleSort('nickname')}
+                onClick={() => toggleSort('NICKNAME')}
               >
                 <div className="flex items-center">
                   닉네임
                   <span className="ml-1">
-                    {sortField === 'nickname' ? (
+                    {sortField === 'NICKNAME' ? (
                       isAscending ? (
                         <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"/>
@@ -109,12 +110,12 @@ export default function Users() {
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">가입 경로</th>
               <th 
                 className="px-4 py-3 text-left text-sm font-semibold border-b cursor-pointer group"
-                onClick={() => toggleSort('id')}
+                onClick={() => toggleSort('ID')}
               >
                 <div className="flex items-center">
                   가입일
                   <span className="ml-1">
-                    {sortField === 'id' ? (
+                    {sortField === 'ID' ? (
                       isAscending ? (
                         <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"/>
