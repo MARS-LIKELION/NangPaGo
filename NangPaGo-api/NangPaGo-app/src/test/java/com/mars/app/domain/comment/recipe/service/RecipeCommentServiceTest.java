@@ -206,6 +206,28 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .hasMessage("댓글을 찾을 수 없습니다.");
     }
 
+    @DisplayName("레시피의 댓글 총 개수를 조회할 수 있다.")
+    @Test
+    void getCommentsCount() {
+        // given
+        User user = createUser("dummy@nangpago.com", "dummy user");
+        Recipe recipe = createRecipe("파스타");
+        userRepository.save(user);
+        recipeRepository.save(recipe);
+
+        recipeCommentRepository.saveAll(List.of(
+            createRecipeComment(recipe, user, "댓글 1"),
+            createRecipeComment(recipe, user, "댓글 2"),
+            createRecipeComment(recipe, user, "댓글 3")
+        ));
+
+        // when
+        int result = recipeCommentService.countCommentsByRecipe(recipe.getId());
+
+        // then
+        assertThat(result).isEqualTo(3);
+    }
+
     private User createUser(String email, String writerName) {
         return User.builder()
             .email(email)
