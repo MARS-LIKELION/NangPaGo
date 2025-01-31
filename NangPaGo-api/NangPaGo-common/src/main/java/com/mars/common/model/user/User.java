@@ -69,7 +69,7 @@ public class User extends BaseEntity {
         this.userStatus = userStatus;
     }
 
-    public void softDelete(){
+    public void withdraw() {
         this.userStatus = UserStatus.WITHDRAWN;
         this.leftAt = LocalDate.now();
         this.nickname = "탈퇴한 회원 " + this.id;

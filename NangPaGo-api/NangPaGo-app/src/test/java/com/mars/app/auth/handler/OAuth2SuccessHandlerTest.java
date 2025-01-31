@@ -105,7 +105,7 @@ class OAuth2SuccessHandlerTest {
         oauth2SuccessHandler.onAuthenticationSuccess(request, response, oauth2Authentication);
 
         // then
-        verify(oauth2ProviderTokenService).renewOauth2ProviderToken(eq(provider), eq(mockRefreshTokenValue), eq(email));
+        verify(oauth2ProviderTokenService).renewOauth2ProviderToken(eq(provider), eq(mockRefreshTokenValue), eq(user.getId()));
         verify(tokenService).renewRefreshToken(eq(email), anyString());
         verify(cookieUtil).addCookie(eq(response), eq(CookieUtil.ACCESS_TOKEN_NAME), anyString(), anyLong(), eq(false));
         verify(cookieUtil).addCookie(eq(response), eq(CookieUtil.REFRESH_TOKEN_NAME), anyString(), anyLong(), eq(false));
@@ -130,7 +130,7 @@ class OAuth2SuccessHandlerTest {
         oauth2SuccessHandler.onAuthenticationSuccess(request, response, authentication);
 
         // then
-        verify(oauth2ProviderTokenService, never()).renewOauth2ProviderToken(anyString(), anyString(), anyString());
+        verify(oauth2ProviderTokenService, never()).renewOauth2ProviderToken(anyString(), anyString(), anyLong());
         verify(tokenService, never()).renewRefreshToken(anyString(), anyString());
         verify(response).sendRedirect(any());
     }

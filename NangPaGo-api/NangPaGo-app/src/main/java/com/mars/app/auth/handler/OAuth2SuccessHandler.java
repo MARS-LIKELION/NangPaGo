@@ -61,7 +61,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             return;
         }
 
-        renewOauth2ProviderToken(authentication, email);
+        renewOauth2ProviderToken(authentication, user.getId());
         issueAccessAndRefreshTokens(response, user, email, authentication);
         response.sendRedirect(clientHost);
     }
@@ -78,13 +78,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.sendRedirect(clientHost + "/error?title=" + encodedTitle + "&description=" + encodedDescription);
     }
 
-    private void renewOauth2ProviderToken(Authentication authentication, String email) {
+    private void renewOauth2ProviderToken(Authentication authentication, Long userId) {
         OAuth2AuthorizedClient authorizedClient = getOAuth2AuthorizedClient(authentication);
         if (validateAuthorizedClient(authorizedClient)) {
             String refreshToken = authorizedClient.getRefreshToken().getTokenValue();
             String clientName = authorizedClient.getClientRegistration().getClientName();
 
-            oauth2ProviderTokenService.renewOauth2ProviderToken(clientName, refreshToken, email);
+            oauth2ProviderTokenService.renewOauth2ProviderToken(clientName, refreshToken, userId);
         }
     }
 

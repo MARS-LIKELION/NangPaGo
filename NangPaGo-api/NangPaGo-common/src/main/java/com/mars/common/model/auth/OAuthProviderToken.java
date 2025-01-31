@@ -1,10 +1,14 @@
 package com.mars.common.model.auth;
 
+import com.mars.common.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,23 +28,26 @@ public class OAuthProviderToken {
     @Column(name = "refresh_token")
     private String providerRefreshToken;
 
-    private String email;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Builder
-    private OAuthProviderToken(String providerName, String providerRefreshToken, String email) {
+    private OAuthProviderToken(String providerName, String providerRefreshToken, User user) {
         this.providerName = providerName;
         this.providerRefreshToken = providerRefreshToken;
-        this.email = email;
+        this.user = user;
     }
 
     public void updateRefreshToken(String providerRefreshToken){
         this.providerRefreshToken = providerRefreshToken;
     }
 
-    public static OAuthProviderToken of(String providerName, String providerRefreshToken, String email) {
+    public static OAuthProviderToken of(String providerName, String providerRefreshToken, User user) {
         return OAuthProviderToken.builder()
             .providerName(providerName)
             .providerRefreshToken(providerRefreshToken)
-            .email(email).build();
+            .user(user)
+            .build();
     }
 }
