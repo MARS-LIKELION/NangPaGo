@@ -47,7 +47,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         int pageNo = 0;
         int pageSize = 3;
 
-        User user = createUser("dummy@nangpago.com");
+        User user = createUser("dummy@nangpago.com", "TestNickName");
         Recipe recipe = createRecipe("파스타");
         List<RecipeComment> comments = Arrays.asList(
             createRecipeComment(recipe, user, "1번째 댓글"),
@@ -74,7 +74,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Test
     void create() {
         // given
-        User user = createUser("dummy@nangpago.com");
+        User user = createUser("dummy@nangpago.com", "TestNickName");
         Recipe recipe = createRecipe("파스타");
 
         userRepository.save(user);
@@ -95,7 +95,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Test
     void update() {
         // given
-        User user = createUser("dummy@nangpago.com");
+        User user = createUser("dummy@nangpago.com", "TestNickName");
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "변경 전 댓글입니다.");
 
@@ -119,7 +119,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Test
     void delete() {
         // given
-        User user = createUser("dummy@nangpago.com");
+        User user = createUser("dummy@nangpago.com", "TestNickName");
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "댓글");
 
@@ -139,7 +139,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Test
     void validateOwnershipException() {
         // given
-        User user = createUser("dummy@nangpago.com");
+        User user = createUser("dummy@nangpago.com", "TestNickName");
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "댓글");
 
@@ -159,7 +159,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Test
     void validateRecipeException() {
         // given
-        User user = createUser("dummy@nangpago.com");
+        User user = createUser("dummy@nangpago.com", "TestNickName");
         userRepository.save(user);
 
         RecipeCommentRequestDto requestDto = new RecipeCommentRequestDto("댓글 작성 예시");
@@ -189,7 +189,7 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Test
     void validateCommentException() {
         // given
-        User user = createUser("dummy@nangpago.com");
+        User user = createUser("dummy@nangpago.com", "TestNickName");;
         Recipe recipe = createRecipe("파스타");
         RecipeComment comment = createRecipeComment(recipe, user, "변경 전 댓글입니다.");
 
@@ -211,10 +211,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
             .email(email)
             .nickname(writerName)
             .build();
-    }
-
-    private User createUser(String email) {
-        return createUser(email, "TestNickName");
     }
 
     private Recipe createRecipe(String name) {
