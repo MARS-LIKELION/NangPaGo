@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.mars.common.model.user.User;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -205,5 +206,25 @@ class CommunityServiceTest extends IntegrationTestSupport {
         // then
         boolean exists = communityRepository.existsById(community.getId());
         assertThat(exists).isFalse();
+    }
+
+    @DisplayName("게시글 수정을 위한 현재 게시글 상세 정보를 조회할 수 있다.")
+    @Test
+    void getPostForEditTest() {
+        // given
+        User user = createUser("author@example.com");
+        userRepository.save(user);
+
+        Community community = Community.of(user, "수정 상세 테스트", "수정 상세 내용", null, true);
+        communityRepository.save(community);
+
+        // when
+        CommunityResponseDto postForEdit = communityService.getPostForEdit(community.getId(), user.getId());
+
+        // then
+        assertThat(postForEdit.id()).isEqualTo(community.getId());
+        assertThat(postForEdit.title()).isEqualTo("수정 상세 테스트");
+        assertThat(postForEdit.content()).isEqualTo("수정 상세 내용");
+        assertThat(postForEdit.isPublic()).isTrue();
     }
 }
