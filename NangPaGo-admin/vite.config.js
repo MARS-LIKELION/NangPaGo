@@ -16,6 +16,9 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: env.VITE_HOST,
           changeOrigin: true,
+          ws: true,
+          proxyTimeout: 60000, // 60초
+          timeout: 60000,
         },
       },
     },

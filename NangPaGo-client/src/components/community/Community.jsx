@@ -30,7 +30,7 @@ function Community({ data: community, isLoggedIn }) {
     toggleHeart,
     modalState,
     setModalState,
-  } = usePostStatus({ type: "community", id: community.id }, isLoggedIn);
+  } = usePostStatus("community", community.id, isLoggedIn);
 
   const navigate = useNavigate();
 

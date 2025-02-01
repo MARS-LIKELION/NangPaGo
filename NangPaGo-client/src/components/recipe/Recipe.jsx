@@ -20,7 +20,7 @@ function Recipe({ data: recipe, isLoggedIn }) {
     toggleStar,
     modalState,
     setModalState,
-  } = usePostStatus({ type: "recipe", id: recipe.id }, isLoggedIn);
+  } = usePostStatus("recipe", recipe.id, isLoggedIn);
 
   const rightSectionRef = useRef(null);
   const imageRef = useRef(null);
