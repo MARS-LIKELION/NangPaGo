@@ -1,4 +1,4 @@
-package com.mars.app.domain.recipe.messaging;
+package com.mars.app.domain.recipe.event;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

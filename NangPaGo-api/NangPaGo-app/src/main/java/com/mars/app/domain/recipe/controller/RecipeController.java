@@ -1,6 +1,6 @@
 package com.mars.app.domain.recipe.controller;
 
-import com.mars.app.domain.recipe.messaging.SseEmitterService;
+import com.mars.app.domain.recipe.event.RecipeLikeSseService;
 import com.mars.app.domain.recipe.service.RecipeLikeMessageService;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
@@ -35,7 +35,7 @@ public class RecipeController {
     private final RecipeLikeMessageService recipeLikeMessageService;
     private final RecipeEsService recipeEsService;
     private final RecipeEsSynchronizerService recipeEsSynchronizerService;
-    private final SseEmitterService sseEmitterService;
+    private final RecipeLikeSseService recipeLikeSseService;
 
     @GetMapping("/{id}")
     public ResponseDto<RecipeResponseDto> recipeById(@PathVariable("id") Long id) {
@@ -63,7 +63,7 @@ public class RecipeController {
 
     @GetMapping("/{id}/like/notification/subscribe")
     public SseEmitter streamLikes(@PathVariable Long id) {
-        return sseEmitterService.createEmitter(id);
+        return recipeLikeSseService.createEmitter(id);
     }
 
     @GetMapping("/search")

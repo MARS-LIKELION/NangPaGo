@@ -1,4 +1,4 @@
-package com.mars.app.domain.recipe.messaging;
+package com.mars.app.domain.recipe.event;
 
 import static com.mars.app.config.rabbitmq.RabbitMQConfig.LIKE_ROUTING_KEY;
 

@@ -1,7 +1,7 @@
 package com.mars.app.domain.recipe.service;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
-import com.mars.app.domain.recipe.messaging.LikeNotificationPublisher;
+import com.mars.app.domain.recipe.event.LikeNotificationPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,7 @@
-package com.mars.app.domain.recipe.messaging;
+package com.mars.app.domain.recipe.event;
 
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
-import static com.mars.common.exception.NPGExceptionType.SERVER_ERROR;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeMessageDto;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
@@ -13,6 +12,7 @@ import com.mars.common.model.recipe.RecipeLike;
 import com.mars.common.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,18 +24,13 @@ public class LikeNotificationConsumer {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    private final SseEmitterService sseEmitterService;
+    private final ApplicationEventPublisher sseEventPublisher;
 
     @Transactional
     @RabbitListener(queues = "#{@likeQueue.name}")
     public void processLikeEvent(RecipeLikeMessageDto recipeLikeMessageDto) {
         toggleLikeStatus(recipeLikeMessageDto.recipeId(), recipeLikeMessageDto.userId());
-
-        try {
-            publishRecipeLikeEvent(recipeLikeMessageDto);
-        } catch (Exception exception) {
-            throw SERVER_ERROR.of("SSE 전송 중 에러");
-        }
+        publishRecipeLikeEvent(recipeLikeMessageDto);
     }
 
     private int getLikeCount(Long recipeId) {
@@ -65,6 +60,8 @@ public class LikeNotificationConsumer {
 
     private void publishRecipeLikeEvent(RecipeLikeMessageDto recipeLikeMessageDto) {
         int likeCount = getLikeCount(recipeLikeMessageDto.recipeId());
-        sseEmitterService.sendLikeCount(recipeLikeMessageDto.recipeId(), likeCount);
+        sseEventPublisher.publishEvent(
+            RecipeLikeEvent.of(recipeLikeMessageDto.recipeId(), recipeLikeMessageDto.userId(), likeCount)
+        );
     }
 }

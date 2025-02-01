@@ -4,7 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
-import com.mars.app.domain.recipe.messaging.LikeNotificationPublisher;
+import com.mars.app.domain.recipe.event.LikeNotificationPublisher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
