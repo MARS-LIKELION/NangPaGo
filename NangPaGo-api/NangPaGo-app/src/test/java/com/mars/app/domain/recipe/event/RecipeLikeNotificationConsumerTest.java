@@ -2,8 +2,8 @@ package com.mars.app.domain.recipe.event;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.argThat;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeMessageDto;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
@@ -78,7 +78,14 @@ class RecipeLikeNotificationConsumerTest extends IntegrationTestSupport {
         recipeLikeNotificationConsumer.processLikeEvent(messageDto);
 
         // then
-        verify(sseEventPublisher).publishEvent(any(RecipeLikeEvent.class));  // 이벤트 발행 검증
+        verify(sseEventPublisher).publishEvent(
+            argThat(event -> {
+                RecipeLikeEvent recipeLikeEvent = (RecipeLikeEvent) event;
+                return recipeLikeEvent.getRecipeId().equals(recipe.getId()) &&
+                       recipeLikeEvent.getUserId().equals(user.getId()) &&
+                       recipeLikeEvent.getLikeCount() == 1;
+            })
+        );
         assertThat(recipeLikeRepository.findByUserIdAndRecipeId(user.getId(), recipe.getId()))
             .isPresent();
         assertThat(recipeLikeRepository.countByRecipeId(recipe.getId())).isEqualTo(1);
@@ -103,6 +110,14 @@ class RecipeLikeNotificationConsumerTest extends IntegrationTestSupport {
         recipeLikeNotificationConsumer.processLikeEvent(messageDto);
 
         // then
+        verify(sseEventPublisher).publishEvent(
+            argThat(event -> {
+                RecipeLikeEvent recipeLikeEvent = (RecipeLikeEvent) event;
+                return recipeLikeEvent.getRecipeId().equals(recipe.getId()) &&
+                       recipeLikeEvent.getUserId().equals(user.getId()) &&
+                       recipeLikeEvent.getLikeCount() == 0;
+            })
+        );
         assertThat(recipeLikeRepository.findByUserIdAndRecipeId(user.getId(), recipe.getId()))
             .isEmpty();
         assertThat(recipeLikeRepository.countByRecipeId(recipe.getId())).isZero();

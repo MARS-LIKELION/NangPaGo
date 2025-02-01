@@ -61,7 +61,12 @@ public class RecipeLikeNotificationConsumer {
     private void publishRecipeLikeEvent(RecipeLikeMessageDto recipeLikeMessageDto) {
         int likeCount = getLikeCount(recipeLikeMessageDto.recipeId());
         sseEventPublisher.publishEvent(
-            RecipeLikeEvent.of(recipeLikeMessageDto.recipeId(), recipeLikeMessageDto.userId(), likeCount)
+            RecipeLikeEvent.of(
+                this,
+                recipeLikeMessageDto.recipeId(),
+                recipeLikeMessageDto.userId(),
+                likeCount
+            )
         );
     }
 }

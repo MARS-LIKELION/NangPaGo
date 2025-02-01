@@ -13,6 +13,6 @@ public class RecipeLikeEventListener {
 
     @EventListener
     public void handleRecipeLikeEvent(RecipeLikeEvent event) {
-        recipeLikeSseService.sendToClient(event.recipeId(), event.likeCount());
+        recipeLikeSseService.sendToClient(event.getRecipeId(), event.getLikeCount());
     }
 }
