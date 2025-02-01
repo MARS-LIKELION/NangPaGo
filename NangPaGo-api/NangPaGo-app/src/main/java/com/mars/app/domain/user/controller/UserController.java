@@ -48,7 +48,7 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseDto<UserInfoResponseDto> findUserInfo() {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userService.getUserInfo(userId));
+        return ResponseDto.of(userService.getUserDetailInfo(userId));
     }
 
     @AuthenticatedUser

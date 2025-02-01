@@ -12,8 +12,6 @@ public record RecipeFavoriteListResponseDto(
     int likeCount,
     int commentCount,
     String recipeImageUrl,
-    List<String> ingredients,
-    List<String> ingredientsTag,
     List<String> ingredientsDisplayTag
 ) {
     public static RecipeFavoriteListResponseDto of(Recipe recipe, int likeCount, int commentCount) {
@@ -23,8 +21,6 @@ public record RecipeFavoriteListResponseDto(
             .likeCount(likeCount)
             .commentCount(commentCount)
             .recipeImageUrl(recipe.getMainImage())
-            .ingredients(List.of(recipe.getIngredients().split(",")))
-            .ingredientsTag(List.of(recipe.getIngredients().split(",")))
             .ingredientsDisplayTag(List.of(
                     recipe.getMainIngredient(),
                     recipe.getCalorie() != null ? recipe.getCalorie() + " kcal" : null,

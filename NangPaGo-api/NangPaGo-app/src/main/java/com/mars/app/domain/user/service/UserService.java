@@ -83,7 +83,7 @@ public class UserService {
         );
     }
 
-    public UserInfoResponseDto getUserInfo(Long userId) {
+    public UserInfoResponseDto getUserDetailInfo(Long userId) {
         return UserInfoResponseDto.from(findUserById(userId));
     }
 

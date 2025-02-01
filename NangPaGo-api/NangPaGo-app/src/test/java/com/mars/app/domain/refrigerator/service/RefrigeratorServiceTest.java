@@ -86,7 +86,7 @@ class RefrigeratorServiceTest extends IntegrationTestSupport {
         // then
         List<Refrigerator> refrigerators = refrigeratorRepository.findByUserId(user.getId());
         assertThat(refrigerators).hasSize(1);
-        assertThat(refrigerators.getFirst().getIngredient().getName()).isEqualTo(ingredientName);
+        assertThat(refrigerators.get(0).getIngredient().getName()).isEqualTo(ingredientName);
     }
 
     @DisplayName("냉장고 속 식재료를 삭제할 수 있다.")
