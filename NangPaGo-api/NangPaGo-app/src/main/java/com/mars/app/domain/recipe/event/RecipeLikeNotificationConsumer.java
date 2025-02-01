@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class LikeNotificationConsumer {
+public class RecipeLikeNotificationConsumer {
 
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeRepository recipeRepository;
