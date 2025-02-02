@@ -1,5 +1,6 @@
 package com.mars.app.domain.favorite.recipe.controller;
 
+import com.mars.app.domain.favorite.recipe.message.RecipeFavoriteMessagePublisher;
 import com.mars.common.dto.PageDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class RecipeFavoriteController {
 
     private final RecipeFavoriteService recipeFavoriteService;
+    private final RecipeFavoriteMessagePublisher recipeFavoriteMessagePublisher;
 
     @Operation(summary = "즐겨찾기 상태 확인")
     @GetMapping("/{id}/favorite/status")
@@ -35,7 +37,7 @@ public class RecipeFavoriteController {
     @PostMapping("/{id}/favorite/toggle")
     public ResponseDto<RecipeFavoriteResponseDto> toggleFavorite(@PathVariable("id") Long id) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(recipeFavoriteService.toggleFavorite(id, userId));
+        return ResponseDto.of(recipeFavoriteMessagePublisher.toggleFavorite(id, userId));
     }
 
     @Operation(summary = "즐겨찾기 목록 조회")

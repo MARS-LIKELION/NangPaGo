@@ -28,8 +28,8 @@ public class RecipeLikeMessageConsumer {
     private final ApplicationEventPublisher sseEventPublisher;
 
     @Transactional
-    @RabbitListener(queues = "#{@likeQueue.name}")
-    public void processLikeEvent(RecipeLikeMessageDto recipeLikeMessageDto) {
+    @RabbitListener(queues = "#{@recipeLikeQueue.name}")
+    public void processLikeMessage(RecipeLikeMessageDto recipeLikeMessageDto) {
         toggleLikeStatus(recipeLikeMessageDto.recipeId(), recipeLikeMessageDto.userId());
         publishRecipeLikeEvent(recipeLikeMessageDto);
     }

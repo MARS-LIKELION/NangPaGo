@@ -25,18 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecipeFavoriteService {
 
     private final RecipeFavoriteRepository recipeFavoriteRepository;
-    private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeCommentRepository recipeCommentRepository;
 
-    @Transactional
-    public RecipeFavoriteResponseDto toggleFavorite(Long recipeId, Long userId) {
-        boolean isFavorite = toggleFavoriteStatus(userId, recipeId);
-        return RecipeFavoriteResponseDto.of(recipeId, isFavorite);
-    }
-
-    @Transactional
     public boolean isFavorite(Long recipeId, Long userId) {
         return recipeFavoriteRepository.findByUserIdAndRecipeId(userId, recipeId).isPresent();
     }
@@ -56,24 +48,4 @@ public class RecipeFavoriteService {
         );
     }
 
-    private boolean toggleFavoriteStatus(Long userId, Long recipeId) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
-        Recipe recipe = recipeRepository.findById(recipeId)
-            .orElseThrow(NPGExceptionType.NOT_FOUND_RECIPE::of);
-
-        return recipeFavoriteRepository.findByUserAndRecipe(user, recipe)
-            .map(this::removeFavorite)
-            .orElseGet(() -> addFavorite(user, recipe));
-    }
-
-    private boolean addFavorite(User user, Recipe recipe) {
-        recipeFavoriteRepository.save(RecipeFavorite.of(user, recipe));
-        return true;
-    }
-
-    private boolean removeFavorite(RecipeFavorite recipeFavorite) {
-        recipeFavoriteRepository.delete(recipeFavorite);
-        return false;
-    }
 }

@@ -45,7 +45,7 @@ class RecipeLikeMessagePublisherTest {
         // then
         verify(rabbitTemplate).convertAndSend(
             eq(exchangeName),
-            eq(RabbitMQConfig.LIKE_ROUTING_KEY),
+            eq(RabbitMQConfig.RECIPE_LIKE_ROUTING_KEY),
             any(RecipeLikeMessageDto.class)
         );
 
@@ -70,7 +70,7 @@ class RecipeLikeMessagePublisherTest {
         // then
         verify(rabbitTemplate).convertAndSend(
             eq(exchangeName),
-            eq(RabbitMQConfig.LIKE_ROUTING_KEY),
+            eq(RabbitMQConfig.RECIPE_LIKE_ROUTING_KEY),
             eq(RecipeLikeMessageDto.of(recipeId, userId))
         );
     }

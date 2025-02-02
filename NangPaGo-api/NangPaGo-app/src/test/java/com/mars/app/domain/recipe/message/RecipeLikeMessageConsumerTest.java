@@ -65,7 +65,7 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
 
     @DisplayName("레시피 좋아요 메시지를 처리하고 좋아요를 추가할 수 있다.")
     @Test
-    void processLikeEventAdd() {
+    void processLikeMessageAdd() {
         // given
         User user = createUser("test@nangpago.com");
         Recipe recipe = createRecipe("테스트 레시피");
@@ -76,7 +76,7 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
         RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), user.getId());
 
         // when
-        recipeLikeMessageConsumer.processLikeEvent(messageDto);
+        recipeLikeMessageConsumer.processLikeMessage(messageDto);
 
         // then
         verify(sseEventPublisher).publishEvent(
@@ -94,7 +94,7 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
 
     @DisplayName("레시피 좋아요 메시지를 처리하고 좋아요를 취소할 수 있다.")
     @Test
-    void processLikeEventRemove() {
+    void processLikeMessageRemove() {
         // given
         User user = createUser("test@nangpago.com");
         Recipe recipe = createRecipe("테스트 레시피");
@@ -108,7 +108,7 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
         RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), user.getId());
 
         // when
-        recipeLikeMessageConsumer.processLikeEvent(messageDto);
+        recipeLikeMessageConsumer.processLikeMessage(messageDto);
 
         // then
         verify(sseEventPublisher).publishEvent(
@@ -126,7 +126,7 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
 
     @DisplayName("존재하지 않는 사용자의 좋아요 메시지를 처리할 때 예외가 발생한다.")
     @Test
-    void processLikeEventWithInvalidUser() {
+    void processLikeMessageWithInvalidUser() {
         // given
         Recipe recipe = createRecipe("테스트 레시피");
         recipeRepository.save(recipe);
@@ -134,14 +134,14 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
         RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(recipe.getId(), 9999L);
 
         // when & then
-        assertThatThrownBy(() -> recipeLikeMessageConsumer.processLikeEvent(messageDto))
+        assertThatThrownBy(() -> recipeLikeMessageConsumer.processLikeMessage(messageDto))
             .isInstanceOf(NPGException.class)
             .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
     @DisplayName("존재하지 않는 레시피의 좋아요 메시지를 처리할 때 예외가 발생한다.")
     @Test
-    void processLikeEventWithInvalidRecipe() {
+    void processLikeMessageWithInvalidRecipe() {
         // given
         User user = createUser("test@nangpago.com");
         userRepository.save(user);
@@ -149,7 +149,7 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
         RecipeLikeMessageDto messageDto = RecipeLikeMessageDto.of(999L, user.getId());
 
         // when & then
-        assertThatThrownBy(() -> recipeLikeMessageConsumer.processLikeEvent(messageDto))
+        assertThatThrownBy(() -> recipeLikeMessageConsumer.processLikeMessage(messageDto))
             .isInstanceOf(NPGException.class)
             .hasMessage("레시피를 찾을 수 없습니다.");
     }

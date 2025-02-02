@@ -40,48 +40,6 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         userRepository.deleteAllInBatch();
     }
 
-    @DisplayName("레시피를 즐겨찾기 할 수 있다.")
-    @Test
-    void addRecipeFavorite() {
-        // given
-        User user = createUser("dummy@nangpago.com");
-        Recipe recipe = createRecipe("파스타");
-
-        userRepository.save(user);
-        recipeRepository.save(recipe);
-
-        // when
-        RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipe.getId(),
-            user.getId());
-
-        // then
-        assertThat(favoriteResponseDto)
-            .extracting("favorited", "recipeId")
-            .containsExactly(true, recipe.getId());
-    }
-
-    @DisplayName("등록된 레시피 즐겨찾기를 취소한다.")
-    @Test
-    void cancelRecipeFavorite() {
-        // given
-        User user = createUser("dummy@nangpago.com");
-        Recipe recipe = createRecipe("파스타");
-        RecipeFavorite recipeFavorite = createRecipeFavorite(user, recipe);
-
-        userRepository.save(user);
-        recipeRepository.save(recipe);
-        recipeFavoriteRepository.save(recipeFavorite);
-
-        // when
-        RecipeFavoriteResponseDto favoriteResponseDto = recipeFavoriteService.toggleFavorite(recipe.getId(),
-            user.getId());
-
-        // then
-        assertThat(favoriteResponseDto)
-            .extracting("favorited", "recipeId")
-            .containsExactly(false, recipe.getId());
-    }
-
     @DisplayName("즐겨찾기한 레시피의 즐겨찾기 상태는 true 이다.")
     @Test
     void isFavoriteByUser() {
@@ -145,37 +103,6 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
             .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
             .containsExactly(1, 4L);
         assertThat(recipeFavorites.getContent().get(1).name()).isEqualTo("순대국밥");
-    }
-
-    @DisplayName("사용자를 찾을 수 없을 때 예외를 발생시킬 수 있다.")
-    @Test
-    void NotCorrectUserException() {
-        // given
-        Long nonExistUserId = 9999L;
-
-        Recipe recipe = createRecipe("파스타");
-        recipeRepository.save(recipe);
-
-        // when, then
-        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipe.getId(), nonExistUserId))
-            .isInstanceOf(NPGException.class)
-            .hasMessage("사용자를 찾을 수 없습니다.");
-    }
-
-    @DisplayName("레시피를 찾을 수 없을 때 예외를 발생시킬 수 있다.")
-    @Test
-    void NotFoundRecipeException() {
-        // given
-        User user = createUser("dummy@nangpago.com");
-
-        userRepository.save(user);
-
-        Long recipeId = 1L;
-
-        // when, then
-        assertThatThrownBy(() -> recipeFavoriteService.toggleFavorite(recipeId, user.getId()))
-            .isInstanceOf(NPGException.class)
-            .hasMessage("레시피를 찾을 수 없습니다.");
     }
 
     private User createUser(String email) {
