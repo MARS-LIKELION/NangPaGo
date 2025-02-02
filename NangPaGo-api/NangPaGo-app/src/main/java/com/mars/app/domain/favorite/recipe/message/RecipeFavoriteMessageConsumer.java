@@ -1,9 +1,7 @@
 package com.mars.app.domain.favorite.recipe.message;
 
-import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteMessageDto;
 import com.mars.app.domain.favorite.recipe.repository.RecipeFavoriteRepository;
-import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.common.exception.NPGExceptionType;

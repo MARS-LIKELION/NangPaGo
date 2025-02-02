@@ -51,18 +51,6 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
         userRepository.deleteAllInBatch();
     }
 
-    private User createUser(String email) {
-        return User.builder()
-            .email(email)
-            .build();
-    }
-
-    private Recipe createRecipe(String name) {
-        return Recipe.builder()
-            .name(name)
-            .build();
-    }
-
     @DisplayName("레시피 좋아요 메시지를 처리하고 좋아요를 추가할 수 있다.")
     @Test
     void processLikeMessageAdd() {
@@ -152,5 +140,17 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
         assertThatThrownBy(() -> recipeLikeMessageConsumer.processLikeMessage(messageDto))
             .isInstanceOf(NPGException.class)
             .hasMessage("레시피를 찾을 수 없습니다.");
+    }
+
+    private User createUser(String email) {
+        return User.builder()
+            .email(email)
+            .build();
+    }
+
+    private Recipe createRecipe(String name) {
+        return Recipe.builder()
+            .name(name)
+            .build();
     }
 }
