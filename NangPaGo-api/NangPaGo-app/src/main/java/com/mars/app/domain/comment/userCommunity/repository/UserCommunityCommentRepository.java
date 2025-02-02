@@ -1,6 +1,5 @@
 package com.mars.app.domain.comment.userCommunity.repository;
 
-
 import com.mars.common.model.comment.userRecipe.UserCommunityComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

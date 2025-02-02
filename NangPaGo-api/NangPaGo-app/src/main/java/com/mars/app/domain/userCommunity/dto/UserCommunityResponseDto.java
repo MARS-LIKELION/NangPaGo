@@ -3,8 +3,6 @@ package com.mars.app.domain.userCommunity.dto;
 import com.mars.common.model.userCommunity.UserCommunity;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.mars.common.model.userCommunity.UserCommunityManual;
 import com.mars.common.model.userCommunity.UserCommunityManualImage;
 import lombok.Builder;
 

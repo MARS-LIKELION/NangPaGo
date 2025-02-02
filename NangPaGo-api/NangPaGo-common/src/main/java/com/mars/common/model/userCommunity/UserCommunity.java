@@ -5,7 +5,6 @@ import com.mars.common.model.comment.userRecipe.UserCommunityComment;
 import com.mars.common.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 

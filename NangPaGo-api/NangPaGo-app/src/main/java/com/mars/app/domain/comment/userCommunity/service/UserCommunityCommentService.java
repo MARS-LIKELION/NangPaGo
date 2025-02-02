@@ -1,7 +1,6 @@
 package com.mars.app.domain.comment.userCommunity.service;
 
 import static com.mars.common.exception.NPGExceptionType.*;
-
 import com.mars.app.domain.comment.userCommunity.dto.UserCommunityCommentRequestDto;
 import com.mars.app.domain.comment.userCommunity.dto.UserCommunityCommentResponseDto;
 import com.mars.common.dto.PageDto;

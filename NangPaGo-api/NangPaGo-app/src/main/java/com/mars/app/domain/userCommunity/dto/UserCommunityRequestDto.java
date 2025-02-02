@@ -1,7 +1,6 @@
 package com.mars.app.domain.userCommunity.dto;
 
 import jakarta.validation.constraints.Size;
-
 import java.util.List;
 
 public record UserCommunityRequestDto(
