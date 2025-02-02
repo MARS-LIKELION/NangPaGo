@@ -49,9 +49,9 @@ class CommunityServiceTest extends IntegrationTestSupport {
         userRepository.deleteAllInBatch();
     }
 
-    private User createUser(String email) {
+    private User createUser(String nickname) {
         return User.builder()
-            .email(email)
+            .nickname(nickname)
             .build();
     }
 
@@ -59,7 +59,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @Test
     void createCommunityTest() {
         // given
-        User user = createUser("author@example.com");
+        User user = createUser("kimdonghwan");
         userRepository.save(user);
 
         CommunityRequestDto requestDto = new CommunityRequestDto(
@@ -76,7 +76,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
         assertThat(result.title()).isEqualTo("테스트제목");
         assertThat(result.content()).isEqualTo("테스트내용");
         assertThat(result.imageUrl()).isNotBlank();
-        assertThat(result.email()).isEqualTo("aut***@example.com");
+        assertThat(result.nickname()).isEqualTo("kimdonghwan");
         assertThat(result.isPublic()).isTrue();
         assertThat(result.likeCount()).isZero();
         assertThat(result.commentCount()).isZero();
@@ -87,7 +87,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @Test
     void getCommunityById_public() {
         // given
-        User user = createUser("author@example.com");
+        User user = createUser("kimdonghwan");
         userRepository.save(user);
 
         // of(user, title, content, imageUrl, isPublic)
@@ -108,8 +108,8 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @Test
     void getPagesByCommunity() {
         // given
-        User user = createUser("author@example.com");
-        User userOther = createUser("other@example.com");
+        User user = createUser("kimdonghwan");
+        User userOther = createUser("kimdonghwan");
         userRepository.saveAll(List.of(user, userOther));
 
         Community communityPublic = Community.of(user, "공개제목", "공개내용", null, true);
@@ -143,7 +143,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @Test
     void getCommunityById_private() {
         // given
-        User author = createUser("author@example.com");
+        User author = createUser("kimdonghwan");
         userRepository.save(author);
 
         Community privateCommunity = Community.of(author, "비공개제목", "비공개내용", null, false);
@@ -161,7 +161,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @Test
     void updateCommunityTest() {
         // given
-        User user = createUser("author@example.com");
+        User user = createUser("kimdonghwan");
         userRepository.save(user);
 
         Community community = Community.of(user, "원제목", "원내용", "sample.png", true);
@@ -194,7 +194,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @Test
     void deleteCommunityTest() {
         // given
-        User user = createUser("author@example.com");
+        User user = createUser("kimdonghwan");
         userRepository.save(user);
 
         Community community = Community.of(user, "삭제테스트", "삭제내용", null, true);
@@ -212,7 +212,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
     @Test
     void getPostForEditTest() {
         // given
-        User user = createUser("author@example.com");
+        User user = createUser("kimdonghwan");
         userRepository.save(user);
 
         Community community = Community.of(user, "수정 상세 테스트", "수정 상세 내용", null, true);
