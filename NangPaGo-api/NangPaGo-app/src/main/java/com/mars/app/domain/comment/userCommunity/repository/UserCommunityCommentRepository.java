@@ -10,13 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserCommunityCommentRepository extends JpaRepository<UserCommunityComment, Long> {
 
-    /**
-     * 특정 커뮤니티 게시글의 댓글 목록 조회 (페이징)
-     */
     Page<UserCommunityComment> findByUserCommunityId(Long userCommunityId, Pageable pageable);
 
-    /**
-     * 특정 커뮤니티 게시글의 댓글 개수 조회
-     */
     long countByUserCommunityId(Long userCommunityId);
 }
