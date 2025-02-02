@@ -1,5 +1,4 @@
 import axiosInstance from './axiosInstance';
-import { PAGE_INDEX, PAGE_SIZE } from '../common/constants/pagination'
 
 export const getLikeCount = async (post) => {
   try {

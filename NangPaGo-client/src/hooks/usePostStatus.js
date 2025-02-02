@@ -120,9 +120,16 @@ const usePostStatus = (postType, postId, isLoggedIn) => {
     }
 
     try {
-      const { favorited } = await toggleFavorite(post);
-      setIsStarActive(favorited);
+      // 낙관적 업데이트: 즉시 UI 반영
+      setIsStarActive(prev => !prev);
+
+      // 서버에 토글 요청만 보내고 응답은 무시
+      await toggleFavorite(post);
+      
+      // 서버 요청이 성공하면 낙관적 업데이트를 유지
     } catch (error) {
+      // 에러 발생 시 원래 상태로 복구
+      setIsStarActive(prev => !prev);
       console.error('즐겨찾기 상태 변경 오류:', error);
     }
   };
