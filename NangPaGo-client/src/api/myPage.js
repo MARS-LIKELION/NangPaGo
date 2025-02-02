@@ -45,3 +45,15 @@ export async function getFavorites(page, size) {
     throw error;
   }
 }
+
+export async function getPosts(page, size) {
+  try {
+    const response = await axiosInstance.get('/api/user/community/post', {
+      params: { pageNo: page, pageSize: size },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('게시글 목록 조회 실패:', error);
+    throw error;
+  }
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getLikes, getFavorites, getComments } from '../api/myPage';
+import {getLikes, getFavorites, getComments, getPosts} from '../api/myPage';
 
 function useTabData(activeTab) {
   const [items, setItems] = useState([]);
@@ -12,6 +12,7 @@ function useTabData(activeTab) {
   const fetchTabDataByType = {
     likes: getLikes,
     favorites: getFavorites,
+    posts: getPosts,
     comments: getComments,
   };
 

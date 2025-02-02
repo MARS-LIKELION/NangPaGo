@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
@@ -70,12 +70,33 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
             </div>
             <div>
               <div className="mt-2">
-                <h3 className="text-text-900 text-base line-clamp-4" style={{ whiteSpace: 'pre-line' }}>
+                <h3
+                  className="text-text-900 text-base line-clamp-4"
+                  style={{ whiteSpace: 'pre-line' }}
+                >
                   {item.content}
                 </h3>
               </div>
             </div>
           </div>
+        ) : activeTab === 'posts' ? (
+          <Link
+            key={item.id}
+            to={`/community/${item.id}`}
+            className="block overflow-hidden rounded-md shadow-md hover:shadow-xl transition-shadow duration-300 border"
+          >
+            <img
+              src={item.imageUrl}
+              alt={item.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4 flex flex-col gap-2">
+              <h3 className="text-lg">{item.title}</h3>
+              <p className="text-sm text-gray-600 line-clamp-3">
+                {item.content}
+              </p>
+            </div>
+          </Link>
         ) : (
           <Link
             key={item.id}

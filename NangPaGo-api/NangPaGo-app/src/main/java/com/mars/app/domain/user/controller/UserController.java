@@ -3,6 +3,7 @@ package com.mars.app.domain.user.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.app.domain.community.dto.CommunityResponseDto;
 import com.mars.common.dto.PageDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.auth.service.OAuth2ProviderTokenService;
@@ -111,6 +112,23 @@ public class UserController {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyComments(userId, pageNo - 1, pageSize));
     }
+
+    @AuthenticatedUser
+    @GetMapping("/community/post")
+    public ResponseDto<PageDto<CommunityResponseDto>> getMyPosts(
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "7") int pageSize
+    ) {
+        if (pageNo < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
+        }
+        if (pageSize < 1) {
+            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
+        }
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userService.getMyPosts(userId, pageNo - 1, pageSize));
+    }
+
 
     @AuthenticatedUser
     @GetMapping("/deactivate")

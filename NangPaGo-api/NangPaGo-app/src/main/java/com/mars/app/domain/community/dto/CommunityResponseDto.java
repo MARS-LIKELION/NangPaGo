@@ -10,7 +10,7 @@ public record CommunityResponseDto(
     String title,
     String content,
     String imageUrl,
-    String email,
+    String nickname,
     int likeCount,
     int commentCount,
     boolean isOwnedByUser,
@@ -27,7 +27,7 @@ public record CommunityResponseDto(
             .title(community.getTitle())
             .content(community.getContent())
             .imageUrl(getImageUrlOrDefault(community.getImageUrl()))
-            .email(maskEmail(community.getUser().getEmail()))
+            .nickname(community.getUser().getNickname())
             .isOwnedByUser(community.getUser().getId().equals(userId))
             .isPublic(community.isPublic())
             .createdAt(community.getCreatedAt())
@@ -41,7 +41,7 @@ public record CommunityResponseDto(
             .title(community.getTitle())
             .content(community.getContent())
             .imageUrl(getImageUrlOrDefault(community.getImageUrl()))
-            .email(maskEmail(community.getUser().getEmail()))
+            .nickname(community.getUser().getNickname())
             .likeCount(likeCount)
             .commentCount(commentCount)
             .isOwnedByUser(community.getUser().getId().equals(userId))
@@ -53,12 +53,5 @@ public record CommunityResponseDto(
 
     private static String getImageUrlOrDefault(String imageUrl) {
         return (imageUrl == null || imageUrl.isBlank()) ? DEFAULT_IMAGE_URL : imageUrl;
-    }
-
-    private static String maskEmail(String email) {
-        if (email.indexOf("@") <= 3) {
-            return email.replaceAll("(?<=.).(?=.*@)", "*");
-        }
-        return email.replaceAll("(?<=.{3}).(?=.*@)", "*");
     }
 }

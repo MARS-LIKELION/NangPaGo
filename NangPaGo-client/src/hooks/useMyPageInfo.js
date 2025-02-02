@@ -6,6 +6,7 @@ function useMyPageInfo() {
   const [totalCounts, setTotalCounts] = useState({
     likes: 0,
     favorites: 0,
+    posts: 0,
     comments: 0,
   });
 
@@ -17,6 +18,7 @@ function useMyPageInfo() {
         setTotalCounts({
           likes: info.likeCount || 0,
           favorites: info.favoriteCount || 0,
+          posts: info.postCount || 0,
           comments: info.commentCount || 0,
         });
       } catch (error) {

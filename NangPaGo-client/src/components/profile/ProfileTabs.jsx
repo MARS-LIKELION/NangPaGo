@@ -1,7 +1,7 @@
-import { FaComment, FaHeart, FaStar } from 'react-icons/fa';
+import {FaComment, FaFileAlt, FaHeart, FaStar} from 'react-icons/fa';
 
 const ProfileTabs = ({ activeTab, totalCounts, onTabChange }) => (
-  <div className="grid grid-cols-3 border-b">
+  <div className="grid grid-cols-4 border-b">
     {[
       {
         key: 'likes',
@@ -14,6 +14,12 @@ const ProfileTabs = ({ activeTab, totalCounts, onTabChange }) => (
         label: '즐겨찾기',
         icon: <FaStar className="mb-1 text-yellow-400" />,
         count: totalCounts.favorites,
+      },
+      {
+        key: 'posts',
+        label: "게시글",
+        icon: <FaFileAlt className="mb-1 text-blue-600" />,
+        count: totalCounts.posts,
       },
       {
         key: 'comments',

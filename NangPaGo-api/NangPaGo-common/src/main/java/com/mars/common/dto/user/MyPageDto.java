@@ -9,15 +9,17 @@ public record MyPageDto(
     String providerName,
     int likeCount,
     int favoriteCount,
+    int postCount,
     int commentCount
 ) {
 
-    public static MyPageDto of(User user, int likeCount, int favoriteCount, int commentCount) {
+    public static MyPageDto of(User user, int likeCount, int favoriteCount, int postCount, int commentCount) {
         return MyPageDto.builder()
             .nickName(user.getNickname())
             .providerName(user.getOauth2Provider().name())
             .likeCount(likeCount)
             .favoriteCount(favoriteCount)
+            .postCount(postCount)
             .commentCount(commentCount)
             .build();
     }
