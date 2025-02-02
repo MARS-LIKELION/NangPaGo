@@ -1,4 +1,4 @@
-package com.mars.app.domain.recipe.event;
+package com.mars.app.domain.recipe.message;
 
 import static com.mars.app.config.rabbitmq.RabbitMQConfig.LIKE_ROUTING_KEY;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class RecipeLikeNotificationPublisher {
+public class RecipeLikeMessagePublisher {
 
     private final TopicExchange topicExchange;
     private final RabbitTemplate rabbitTemplate;

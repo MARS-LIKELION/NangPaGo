@@ -1,4 +1,4 @@
-package com.mars.app.domain.recipe.event;
+package com.mars.app.domain.recipe.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -19,7 +19,7 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 @ExtendWith(MockitoExtension.class)
-class RecipeLikeNotificationPublisherTest {
+class RecipeLikeMessagePublisherTest {
 
     @Mock
     private TopicExchange topicExchange;
@@ -27,7 +27,7 @@ class RecipeLikeNotificationPublisherTest {
     private RabbitTemplate rabbitTemplate;
 
     @InjectMocks
-    private RecipeLikeNotificationPublisher recipeLikeNotificationPublisher;
+    private RecipeLikeMessagePublisher recipeLikeMessagePublisher;
 
     @DisplayName("레시피 좋아요 토글 이벤트를 발행할 수 있다.")
     @Test
@@ -40,7 +40,7 @@ class RecipeLikeNotificationPublisherTest {
         when(topicExchange.getName()).thenReturn(exchangeName);
 
         // when
-        RecipeLikeResponseDto result = recipeLikeNotificationPublisher.toggleLike(recipeId, userId);
+        RecipeLikeResponseDto result = recipeLikeMessagePublisher.toggleLike(recipeId, userId);
 
         // then
         verify(rabbitTemplate).convertAndSend(
@@ -65,7 +65,7 @@ class RecipeLikeNotificationPublisherTest {
         when(topicExchange.getName()).thenReturn(exchangeName);
 
         // when
-        recipeLikeNotificationPublisher.toggleLike(recipeId, userId);
+        recipeLikeMessagePublisher.toggleLike(recipeId, userId);
 
         // then
         verify(rabbitTemplate).convertAndSend(

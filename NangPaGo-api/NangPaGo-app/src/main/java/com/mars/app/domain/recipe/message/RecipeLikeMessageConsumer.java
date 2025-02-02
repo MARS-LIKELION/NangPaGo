@@ -1,9 +1,10 @@
-package com.mars.app.domain.recipe.event;
+package com.mars.app.domain.recipe.message;
 
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
 import com.mars.app.domain.recipe.dto.RecipeLikeMessageDto;
+import com.mars.app.domain.recipe.event.RecipeLikeEvent;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class RecipeLikeNotificationConsumer {
+public class RecipeLikeMessageConsumer {
 
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeRepository recipeRepository;
