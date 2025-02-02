@@ -4,7 +4,6 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-
 import com.mars.common.dto.PageDto;
 import com.mars.app.domain.userCommunity.dto.UserCommunityRequestDto;
 import com.mars.app.domain.userCommunity.dto.UserCommunityResponseDto;
@@ -134,7 +133,6 @@ public class UserCommunityService {
         return UserCommunityResponseDto.of(userCommunity, 0, 0, userId);
     }
 
-
     @Transactional
     public UserCommunityResponseDto updateUserCommunity(Long id, UserCommunityRequestDto requestDto,
                                                         MultipartFile mainFile, List<MultipartFile> otherFiles,
@@ -198,9 +196,6 @@ public class UserCommunityService {
 
         return UserCommunityResponseDto.of(userCommunity, 0, 0, userId);
     }
-
-
-
 
     @Transactional
     public void deleteUserCommunity(Long id, Long userId) {
