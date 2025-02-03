@@ -61,22 +61,22 @@ const usePostStatus = (post, isLoggedIn) => {
 
       const eventName = 'RECIPE_LIKE_EVENT';
 
-        eventSource.addEventListener(eventName, (event) => {
-          const eventData = JSON.parse(event.data);
-          if (eventData.userId === userId) {
-            return;
-          }
+      eventSource.addEventListener(eventName, (event) => {
+        const eventData = JSON.parse(event.data);
+        if (eventData.userId === userId) {
+          return;
+        }
 
-          const updatedLikeCount = eventData.likeCount;
+        const updatedLikeCount = eventData.likeCount;
 
-          setLikeCount(updatedLikeCount);
-        });
+        setLikeCount(updatedLikeCount);
+      });
 
-        eventSource.onerror = () => {
-          eventSource.close();
-          handleSseError();
-        };
-      }
+      eventSource.onerror = () => {
+        eventSource.close();
+        handleSseError();
+      };
+    }
 
     return () => {
       if (eventSource) {
