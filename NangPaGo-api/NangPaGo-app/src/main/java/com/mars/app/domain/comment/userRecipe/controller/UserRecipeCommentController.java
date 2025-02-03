@@ -51,7 +51,7 @@ public class UserRecipeCommentController {
         @PathVariable("id") Long id) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userRecipeCommentService.update(commentId, userId, requestDto), "댓글이 성공적으로 수정되었습니다.");
+        return ResponseDto.of(userRecipeCommentService.update(requestDto, userId, id), "댓글이 성공적으로 수정되었습니다.");
     }
 
     @Operation(summary = "댓글 삭제")
