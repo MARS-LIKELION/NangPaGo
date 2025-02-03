@@ -8,10 +8,13 @@ import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import com.mars.app.domain.favorite.recipe.service.RecipeFavoriteService;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGExceptionType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,17 +46,8 @@ public class RecipeFavoriteController {
     @Operation(summary = "즐겨찾기 목록 조회")
     @AuthenticatedUser
     @GetMapping("/favorite/list")
-    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "7") int pageSize
-    ) {
-        if (pageNo < 1) {
-            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
-        }
-        if (pageSize < 1) {
-            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
-        }
+    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(@Valid PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageNo - 1, pageSize));
+        return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageRequestVO));
     }
 }

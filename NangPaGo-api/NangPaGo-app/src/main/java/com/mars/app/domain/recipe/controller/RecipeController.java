@@ -5,6 +5,7 @@ import com.mars.app.domain.recipe.event.RecipeLikeSseService;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.recipe.dto.RecipeEsResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
@@ -14,6 +15,7 @@ import com.mars.app.domain.recipe.service.RecipeEsSynchronizerService;
 import com.mars.app.domain.recipe.service.RecipeLikeService;
 import com.mars.app.domain.recipe.service.RecipeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,19 +70,11 @@ public class RecipeController {
 
     @GetMapping("/search")
     public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
-        @RequestParam(name = "pageNo", defaultValue = "1") int pageNo,
-        @RequestParam(name = "pageSize", defaultValue = "12") int pageSize,
+        @Valid PageRequestVO pageRequestVO,
         @RequestParam(name = "keyword", required = false) String keyword,
         @RequestParam(name = "searchType", defaultValue = "INGREDIENTS") String searchType) {
 
-        if (pageNo < 1) {
-            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_NO.of();
-        }
-        if (pageSize < 1) {
-            throw NPGExceptionType.BAD_REQUEST_INVALID_PAGE_SIZE.of();
-        }
-
-        return ResponseDto.of(recipeEsService.searchRecipes(pageNo - 1, pageSize, keyword, searchType));
+        return ResponseDto.of(recipeEsService.searchRecipes(pageRequestVO, keyword, searchType));
     }
 
     @PostMapping("/bulk-upload/mysql")

@@ -5,6 +5,7 @@ import co.elastic.clients.elasticsearch._types.FieldSort;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.app.domain.recipe.builder.EsRecipeSearchQueryBuilder;
@@ -29,8 +30,8 @@ public class RecipeEsService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeCommentRepository recipeCommentRepository;
 
-    public Page<RecipeEsResponseDto> searchRecipes(int page, int size, String keyword, String searchType) {
-        Pageable pageable = PageRequest.of(Math.max(page, 0), Math.max(size, 1));
+    public Page<RecipeEsResponseDto> searchRecipes(PageRequestVO pageRequestVO, String keyword, String searchType) {
+        Pageable pageable = pageRequestVO.toPageable();
 
         EsRecipeSearchQueryBuilder queryBuilder = new EsRecipeSearchQueryBuilder();
         Query query = queryBuilder.buildSearchQuery(keyword, searchType);

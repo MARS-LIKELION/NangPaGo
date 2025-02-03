@@ -3,6 +3,7 @@ package com.mars.app.domain.favorite.recipe.service;
 import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
@@ -33,12 +34,12 @@ public class RecipeFavoriteService {
         return recipeFavoriteRepository.findByUserIdAndRecipeId(userId, recipeId).isPresent();
     }
 
-    public PageDto<RecipeFavoriteListResponseDto> getFavoriteRecipes(Long userId, int pageNo, int pageSize) {
+    public PageDto<RecipeFavoriteListResponseDto> getFavoriteRecipes(Long userId, PageRequestVO pageRequestVO) {
         User user = userRepository.findById(userId)
             .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
 
         return PageDto.of(
-            recipeFavoriteRepository.findAllByUser(user, PageRequest.of(pageNo, pageSize))
+            recipeFavoriteRepository.findAllByUser(user, pageRequestVO.toPageable())
                 .map(favorite -> {
                     Recipe recipe = favorite.getRecipe();
                     int likeCount = recipeLikeRepository.countByRecipeId(recipe.getId());

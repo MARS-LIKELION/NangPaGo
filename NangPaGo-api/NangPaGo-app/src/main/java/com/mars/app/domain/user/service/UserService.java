@@ -1,10 +1,9 @@
 package com.mars.app.domain.user.service;
 
-import static org.springframework.data.domain.Sort.Direction.DESC;
-
 import com.mars.app.domain.community.dto.CommunityResponseDto;
 import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
@@ -17,14 +16,10 @@ import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;
 import com.mars.common.dto.user.UserInfoResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
-import com.mars.common.model.community.Community;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,25 +51,18 @@ public class UserService {
         int postCount = communityRepository.countByUser(user);
         int commentCount = recipeCommentRepository.countByUser(user);
 
-        return MyPageDto.of(
-            user,
-            likeCount,
-            favoriteCount,
-            postCount,
-            commentCount
-        );
+        return MyPageDto.of(user, likeCount, favoriteCount, postCount, commentCount);
     }
 
-    public PageDto<RecipeResponseDto> getMyLikedRecipes(Long userId, int pageNo, int pageSize) {
+    public PageDto<RecipeResponseDto> getMyLikedRecipes(Long userId, PageRequestVO pageRequestVO) {
         return PageDto.of(
-            recipeLikeRepository.findRecipeLikeByUser(findUserById(userId), PageRequest.of(pageNo, pageSize))
+            recipeLikeRepository.findRecipeLikeByUser(findUserById(userId), pageRequestVO.toPageable())
                 .map(recipeLike -> RecipeResponseDto.from(recipeLike.getRecipe()))
         );
     }
 
-    public PageDto<RecipeFavoriteListResponseDto> getMyFavorites(Long userId, int pageNo, int pageSize) {
-        return PageDto.of(
-            recipeFavoriteRepository.findAllByUser(findUserById(userId), PageRequest.of(pageNo, pageSize))
+    public PageDto<RecipeFavoriteListResponseDto> getMyFavorites(Long userId, PageRequestVO pageRequestVO) {
+        return PageDto.of(recipeFavoriteRepository.findAllByUser(findUserById(userId), pageRequestVO.toPageable())
                 .map(recipeFavorite -> {
                     Recipe recipe = recipeFavorite.getRecipe();
                     int likeCount = recipeLikeRepository.countByRecipeId(recipe.getId());
@@ -84,20 +72,18 @@ public class UserService {
         );
     }
 
-    public PageDto<RecipeCommentResponseDto> getMyComments(Long userId, int pageNo, int pageSize) {
-        return PageDto.of(
-            recipeCommentRepository.findByUserIdWithRecipe(userId, PageRequest.of(pageNo, pageSize))
+    public PageDto<RecipeCommentResponseDto> getMyComments(Long userId, PageRequestVO pageRequestVO) {
+        return PageDto.of(recipeCommentRepository.findByUserIdWithRecipe(userId, pageRequestVO.toPageable())
                 .map(recipeComment -> {
                     return RecipeCommentResponseDto.from(recipeComment, recipeComment.getRecipe(), userId);
                 })
         );
     }
 
-    public PageDto<CommunityResponseDto> getMyPosts(Long userId, int pageNo, int pageSize) {
-        return PageDto.of(communityRepository.findByUserId(userId, PageRequest.of(pageNo, pageSize))
+    public PageDto<CommunityResponseDto> getMyPosts(Long userId, PageRequestVO pageRequestVO) {
+        return PageDto.of(communityRepository.findByUserId(userId, pageRequestVO.toPageable())
             .map(community -> CommunityResponseDto.of(community, userId)));
     }
-
 
     public UserInfoResponseDto getUserDetailInfo(Long userId) {
         return UserInfoResponseDto.from(findUserById(userId));

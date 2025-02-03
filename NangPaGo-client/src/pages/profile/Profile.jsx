@@ -1,11 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  getMyPageInfo,
-  getLikes,
-  getFavorites,
-  getComments,
-} from '../../api/myPage.js';
 
 import Header from '../../components/layout/header/Header';
 import Footer from '../../components/layout/Footer';
@@ -17,10 +11,10 @@ import useTabData from '../../hooks/useTabData';
 
 function Profile() {
   const navigate = useNavigate();
-
   const [activeTab, setActiveTab] = useState('likes');
   const { myPageInfo, totalCounts } = useMyPageInfo();
-  const { items, isLoading, hasMore, fetchTabData } = useTabData(activeTab);
+  const { items, isLoading, hasMore, fetchTabData, currentPage } =
+    useTabData(activeTab);
 
   return (
     <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col justify-between max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
@@ -58,7 +52,7 @@ function Profile() {
 
   function handleLoadMore() {
     if (isLoading || !hasMore) return;
-    fetchTabData({ page: Math.ceil(items.length / 7) + 1 });
+    fetchTabData({ page: currentPage });
   }
 
   function handleItemClick(id) {

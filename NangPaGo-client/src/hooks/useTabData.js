@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import {getLikes, getFavorites, getComments, getPosts} from '../api/myPage';
+import { useEffect, useRef, useState } from 'react';
+import { getComments, getFavorites, getLikes, getPosts } from '../api/myPage';
 
 function useTabData(activeTab) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const abortControllers = useRef({});
   const currentTab = useRef(activeTab);
-  const pendingRequest = useRef(false); // 중복 요청 방지 플래그
+  const pendingRequest = useRef(false);
 
   const fetchTabDataByType = {
     likes: getLikes,
@@ -20,9 +21,8 @@ function useTabData(activeTab) {
     if (pendingRequest.current || (!hasMore && !reset)) return;
 
     setIsLoading(true);
-    pendingRequest.current = true; // 요청 시작
+    pendingRequest.current = true;
 
-    // 이전 요청 중단
     if (abortControllers.current[activeTab]) {
       abortControllers.current[activeTab].abort();
     }
@@ -31,27 +31,30 @@ function useTabData(activeTab) {
 
     try {
       const fetchFunction = fetchTabDataByType[activeTab];
-      const data = await fetchFunction(page, 7, {
+      console.log(`[DEBUG] Fetching data - Tab: ${activeTab}, Page: ${page}`);
+
+      const response = await fetchFunction(page, 12, {
         signal: controller.signal,
       });
 
-      if (currentTab.current !== activeTab) {
-        return; // 탭 변경된 경우 결과 무시
+      if (!response) {
+        throw new Error(
+          `[ERROR] API response is undefined for tab: ${activeTab}`,
+        );
       }
 
-      setItems((prev) => {
-        if (reset) {
-          return data.content;
-        }
-        return [
-          ...prev,
-          ...data.content.filter(
-            (item) => !prev.some((existingItem) => existingItem.id === item.id),
-          ),
-        ];
-      });
+      console.log(`[DEBUG] API Response:`, response);
 
-      setHasMore(!data.last);
+      const { content, last } = response.data;
+
+      console.log(
+        `[DEBUG] Content Length: ${content.length}, Last: ${last}, Current Page: ${page}`,
+      );
+
+      setItems((prev) => (reset ? content : [...prev, ...content]));
+      setHasMore(!last);
+
+      setCurrentPage((prev) => prev + 1);
     } catch (error) {
       if (error.name === 'AbortError') {
         console.warn(`[REQUEST ABORTED] Tab: ${activeTab}`);
@@ -63,30 +66,28 @@ function useTabData(activeTab) {
       }
     } finally {
       setIsLoading(false);
-      pendingRequest.current = false; // 요청 종료 또는 중단
+      pendingRequest.current = false;
     }
   }
 
   useEffect(() => {
     currentTab.current = activeTab;
-
-    // 상태 초기화 및 이전 요청 중단
     setItems([]);
     setHasMore(true);
     setIsLoading(false);
+    setCurrentPage(1);
 
     if (abortControllers.current[activeTab]) {
       abortControllers.current[activeTab].abort();
-      pendingRequest.current = false; // 이전 요청 중단 후 초기화
+      pendingRequest.current = false;
     }
 
-    // 새로운 API 요청 시작
     fetchTabData({ page: 1, reset: true });
 
     return () => {
       if (abortControllers.current[activeTab]) {
         abortControllers.current[activeTab].abort();
-        pendingRequest.current = false; // 정리 단계에서 초기화
+        pendingRequest.current = false;
       }
     };
   }, [activeTab]);
@@ -96,6 +97,7 @@ function useTabData(activeTab) {
     isLoading,
     hasMore,
     fetchTabData,
+    currentPage,
   };
 }
 

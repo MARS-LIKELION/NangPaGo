@@ -9,6 +9,7 @@ import com.mars.app.domain.recipe.dto.RecipeResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;
 import com.mars.common.dto.user.UserInfoResponseDto;
@@ -136,8 +137,10 @@ class UserServiceTest extends IntegrationTestSupport {
         RecipeLike recipeLike2 = RecipeLike.of(user, recipe2);
         recipeLikeRepository.saveAll(List.of(recipeLike1, recipeLike2));
 
+        PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
+
         // when
-        PageDto<RecipeResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), 0, 10);
+        PageDto<RecipeResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), pageRequestVO);
 
         // then
         assertThat(myLikedRecipes)
@@ -166,8 +169,10 @@ class UserServiceTest extends IntegrationTestSupport {
         RecipeFavorite recipeFavorite2 = RecipeFavorite.of(user, recipe2);
         recipeFavoriteRepository.saveAll(List.of(recipeFavorite1, recipeFavorite2));
 
+        PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
+
         // when
-        PageDto<RecipeFavoriteListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), 0, 10);
+        PageDto<RecipeFavoriteListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), pageRequestVO);
 
         // then
         assertThat(myFavorites)
@@ -195,8 +200,10 @@ class UserServiceTest extends IntegrationTestSupport {
         RecipeComment recipeComment2 = RecipeComment.create(recipe, user, "테스트 댓글 2");
         recipeCommentRepository.saveAll(List.of(recipeComment1, recipeComment2));
 
+        PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
+
         // when
-        PageDto<RecipeCommentResponseDto> myComments = userService.getMyComments(user.getId(), 0, 10);
+        PageDto<RecipeCommentResponseDto> myComments = userService.getMyComments(user.getId(), pageRequestVO);
 
         // then
         assertThat(myComments)
