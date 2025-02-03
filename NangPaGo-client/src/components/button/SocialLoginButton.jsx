@@ -14,7 +14,7 @@ function SocialLoginButton({ provider, onClick }) {
         className="h-7 w-7 mr-3"
       />
 
-      <div className="w-3/5">
+      <div className="w-4/5">
         <span className={`text-base font-medium ${currentStyle.text}`}>
           {currentStyle.label}
         </span>

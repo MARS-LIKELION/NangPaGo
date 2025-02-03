@@ -21,7 +21,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Moneygraphy', '맑은 고딕', 'sans-serif'],
+        sans: ['맑은 고딕', 'sans-serif'],
       },
     },
   },

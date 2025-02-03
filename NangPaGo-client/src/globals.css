@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Moneygraphy';
-  font-style: normal;
-  font-weight: 400;
-  src: url(/fonts/Moneygraphy-Rounded.woff) format('woff'),
-  url(/fonts/Moneygraphy-Rounded.ttf) format('truetype');
-}
-
 body {
   @apply min-h-screen text-text-900 font-sans;
 }
