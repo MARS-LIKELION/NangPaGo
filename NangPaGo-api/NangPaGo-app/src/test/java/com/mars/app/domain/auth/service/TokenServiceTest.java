@@ -13,13 +13,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class TokenServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -31,11 +32,6 @@ class TokenServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private TokenService tokenService;
-
-    @AfterEach
-    void tearDown() {
-        refreshTokenRepository.deleteAllInBatch();
-    }
 
     @DisplayName("유효한 Refresh Token으로 Access Token을 재발급할 수 있다.")
     @Test

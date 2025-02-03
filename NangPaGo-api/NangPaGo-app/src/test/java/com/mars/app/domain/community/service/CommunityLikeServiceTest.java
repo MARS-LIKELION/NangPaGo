@@ -6,16 +6,17 @@ import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.model.community.Community;
 import com.mars.common.model.community.CommunityLike;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import com.mars.common.model.user.User;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 class CommunityLikeServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -29,14 +30,6 @@ class CommunityLikeServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private CommunityLikeService communityLikeService;
-
-
-    @AfterEach
-    void tearDown() {
-        communityLikeRepository.deleteAll();
-        communityRepository.deleteAll();
-        userRepository.deleteAll();
-    }
 
     private User createUser(String email) {
         return User.builder()

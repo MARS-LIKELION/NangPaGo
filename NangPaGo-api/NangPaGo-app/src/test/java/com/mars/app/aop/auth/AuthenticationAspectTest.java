@@ -9,13 +9,14 @@ import com.mars.app.service.TestService;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.user.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class AuthenticationAspectTest extends IntegrationTestSupport {
 
     @Autowired
@@ -26,11 +27,6 @@ class AuthenticationAspectTest extends IntegrationTestSupport {
 
     @Autowired
     private TestService testService;
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAllInBatch();
-    }
 
     @DisplayName("인증된 사용자는 @AuthenticatedUser 어노테이션이 붙은 메서드를 실행할 수 있다.")
     @Test

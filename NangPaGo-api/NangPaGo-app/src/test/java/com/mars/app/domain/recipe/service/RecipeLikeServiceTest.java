@@ -1,10 +1,7 @@
 package com.mars.app.domain.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.mars.common.exception.NPGException;
-import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.recipe.RecipeLike;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
@@ -12,13 +9,13 @@ import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
-import jakarta.transaction.Transactional;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class RecipeLikeServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -30,13 +27,6 @@ class RecipeLikeServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RecipeLikeService recipeLikeService;
-
-    @AfterEach
-    void tearDown() {
-        recipeLikeRepository.deleteAllInBatch();
-        recipeRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @DisplayName("좋아요를 누른 레시피는 좋아요 상태가 true 이다.")
     @Test

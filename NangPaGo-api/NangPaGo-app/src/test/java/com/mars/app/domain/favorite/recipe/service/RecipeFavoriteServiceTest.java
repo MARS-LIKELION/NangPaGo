@@ -1,7 +1,6 @@
 package com.mars.app.domain.favorite.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
@@ -15,11 +14,12 @@ import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -31,13 +31,6 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RecipeFavoriteService recipeFavoriteService;
-
-    @AfterEach
-    void tearDown() {
-        recipeFavoriteRepository.deleteAllInBatch();
-        recipeRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @DisplayName("즐겨찾기한 레시피의 즐겨찾기 상태는 true 이다.")
     @Test

@@ -2,7 +2,6 @@ package com.mars.app.domain.refrigerator.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.in;
 
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.ingredient.Ingredient;
@@ -15,11 +14,11 @@ import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Transactional
 class RefrigeratorServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -33,13 +32,6 @@ class RefrigeratorServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RefrigeratorService refrigeratorService;
-
-    @AfterEach
-    void tearDown() {
-        refrigeratorRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-        ingredientRepository.deleteAllInBatch();
-    }
 
     @Transactional
     @DisplayName("냉장고 속 재료 전체 리스트를 조회할 수 있다.")

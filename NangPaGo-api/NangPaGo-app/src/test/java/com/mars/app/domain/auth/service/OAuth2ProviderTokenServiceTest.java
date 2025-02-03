@@ -22,13 +22,14 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class OAuth2ProviderTokenServiceTest extends IntegrationTestSupport {
 
     @MockitoBean
@@ -45,12 +46,6 @@ class OAuth2ProviderTokenServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private OAuth2ProviderTokenService oauth2ProviderTokenService;
-
-    @AfterEach
-    void tearDown() {
-        oauthProviderTokenRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @DisplayName("새로운 OAuth2 Provider 토큰을 저장할 수 있다.")
     @Test

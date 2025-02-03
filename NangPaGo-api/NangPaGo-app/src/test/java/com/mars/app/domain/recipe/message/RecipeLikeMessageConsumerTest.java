@@ -15,7 +15,6 @@ import com.mars.common.exception.NPGException;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.recipe.RecipeLike;
 import com.mars.common.model.user.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,9 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
 
     @Autowired
@@ -42,13 +43,6 @@ class RecipeLikeMessageConsumerTest extends IntegrationTestSupport {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(recipeLikeMessageConsumer, "sseEventPublisher", sseEventPublisher);
-    }
-
-    @AfterEach
-    void tearDown() {
-        recipeLikeRepository.deleteAllInBatch();
-        recipeRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
     }
 
     @DisplayName("레시피 좋아요 메시지를 처리하고 좋아요를 추가할 수 있다.")

@@ -16,11 +16,12 @@ import com.mars.common.model.community.Community;
 import com.mars.common.model.user.User;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class CommunityCommentServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -32,13 +33,6 @@ class CommunityCommentServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private CommunityCommentService communityCommentService;
-
-    @AfterEach
-    void tearDown() {
-        communityCommentRepository.deleteAllInBatch();
-        communityRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @DisplayName("게시글의 모든 댓글을 조회할 수 있다.")
     @Test

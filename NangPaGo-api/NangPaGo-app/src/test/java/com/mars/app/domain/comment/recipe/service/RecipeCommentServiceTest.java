@@ -16,11 +16,12 @@ import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class RecipeCommentServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -32,13 +33,6 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RecipeCommentService recipeCommentService;
-
-    @AfterEach
-    void tearDown() {
-        recipeCommentRepository.deleteAllInBatch();
-        recipeRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     @DisplayName("레시피의 모든 댓글을 조회한다.")
     @Test

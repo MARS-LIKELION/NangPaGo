@@ -11,15 +11,16 @@ import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.dto.page.PageDto;
 import com.mars.common.model.community.Community;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.mars.common.model.user.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Transactional
 class CommunityServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -39,14 +40,6 @@ class CommunityServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private FirebaseStorageService firebaseStorageService;
-
-    @AfterEach
-    void tearDown() {
-        communityLikeRepository.deleteAllInBatch();
-        communityCommentRepository.deleteAllInBatch();
-        communityRepository.deleteAllInBatch();
-        userRepository.deleteAllInBatch();
-    }
 
     private User createUser(String nickname) {
         return User.builder()
