@@ -37,7 +37,7 @@ function DetailPage({ type }) {
       } catch (err) {
         setError(`${type === 'recipe' ? '레시피' : '게시물'}을 불러오는데 실패했습니다.`);
         setTimeout(() => {
-          navigate(`/${type}`);
+          navigate(type === 'recipe' ? `/` : `/${type}`);
         }, 3000);
       } finally {
         setLoading(false);
@@ -50,8 +50,8 @@ function DetailPage({ type }) {
   useEffect(() => {
     const handlePopState = () => {
       const previousUrl = location.state?.from;
-      if (previousUrl && (previousUrl.includes(`/${type}/new`) || previousUrl.includes(`/modify`))) {
-        navigate(`/${type}`);
+      if (previousUrl && (previousUrl.includes(`/new`) || previousUrl.includes(`/modify`))) {
+        navigate(type === 'recipe' ? `/` : `/${type}`);
       }
     };
 
