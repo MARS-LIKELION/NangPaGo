@@ -24,7 +24,7 @@ public class UserRecipeCommentController {
     @GetMapping
     public ResponseDto<PageDto<UserRecipeCommentResponseDto>> list(
         @PathVariable("id") Long id,
-        @RequestParam(defaultValue = "-1") int pageNo,
+        @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "5") int pageSize) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();

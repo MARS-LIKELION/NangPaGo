@@ -1,16 +1,10 @@
 package com.mars.common.model.comment.userRecipe;
 
+import com.mars.common.enums.comment.UserRecipeCommentStatus;
 import com.mars.common.model.BaseEntity;
 import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.user.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +32,10 @@ public class UserRecipeComment extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "comment_status", nullable = false)
+    private UserRecipeCommentStatus commentStatus;
+
     public static UserRecipeComment create(UserRecipe userRecipe, User user, String content) {
         return UserRecipeComment.builder()
             .userRecipe(userRecipe)
@@ -48,5 +46,9 @@ public class UserRecipeComment extends BaseEntity {
 
     public void updateText(String content) {
         this.content = content;
+    }
+
+    public  void softDelete(){
+        this.commentStatus = UserRecipeCommentStatus.DELETED;
     }
 }

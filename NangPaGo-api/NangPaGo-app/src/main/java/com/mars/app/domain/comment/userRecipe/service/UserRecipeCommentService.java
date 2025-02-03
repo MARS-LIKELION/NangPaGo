@@ -31,7 +31,7 @@ public class UserRecipeCommentService {
                                                                            Long userId,
                                                                            int pageNo ,
                                                                            int pageSize) {
-        if (pageNo < -1) throw BAD_REQUEST_INVALID_PAGE_NO.of();
+        if (pageNo < 0) throw BAD_REQUEST_INVALID_PAGE_NO.of();
         if (pageSize <= 0) throw BAD_REQUEST_INVALID_PAGE_SIZE.of();
 
         validateUserRecipe(userRecipeId);
@@ -67,7 +67,8 @@ public class UserRecipeCommentService {
     public void delete(Long commentId, Long userId) {
         UserRecipeComment comment = validateComment(commentId);
         validateOwnership(comment, userId);
-        userRecipeCommentRepository.delete(comment);
+        comment.softDelete();
+        userRecipeCommentRepository.save(comment);
     }
 
     private void validateOwnership(UserRecipeComment comment, Long userId) {
@@ -87,6 +88,6 @@ public class UserRecipeCommentService {
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {
-        return PageRequest.of(Math.max(pageNo, -1) , pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }
