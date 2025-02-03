@@ -1,7 +1,9 @@
 package com.mars.admin.domain.user.sort;
 
+import lombok.Getter;
 import org.springframework.data.domain.Sort;
 
+@Getter
 public enum UserListSortType {
     ID_ASC("id", Sort.Direction.ASC),
     ID_DESC("id", Sort.Direction.DESC),
@@ -16,11 +18,4 @@ public enum UserListSortType {
         this.direction = direction;
     }
 
-    public String getField() {
-        return field;
-    }
-
-    public Sort.Direction getDirection() {
-        return direction;
-    }
 }
