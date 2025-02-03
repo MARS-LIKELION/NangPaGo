@@ -6,6 +6,7 @@ import {
   toggleFavorite,
   toggleLike,
 } from '../api/postStatus';
+import { useSelector } from 'react-redux';
 
 const usePostStatus = (postType, postId, isLoggedIn) => {
   const [isHeartActive, setIsHeartActive] = useState(false);
@@ -15,13 +16,16 @@ const usePostStatus = (postType, postId, isLoggedIn) => {
     type: null,
     data: null,
   });
-
+  const userId = useSelector((state) => state.loginSlice.userId);
   const [isReconnecting, setIsReconnecting] = useState(false);
 
-  const post = useMemo(() => ({
-    type: postType,
-    id: postId
-  }), [postType, postId]);
+  const post = useMemo(
+    () => ({
+      type: postType,
+      id: postId,
+    }),
+    [postType, postId],
+  );
 
   const initializeData = useCallback(async () => {
     try {
@@ -56,17 +60,23 @@ const usePostStatus = (postType, postId, isLoggedIn) => {
 
   useEffect(() => {
     let eventSource = null;
-    
+
     // community 타입일 때는 SSE 구독하지 않음 (개발 중)
     if (postType !== 'community') {
       eventSource = new EventSource(
-        `/api/${postType}/${postId}/like/notification/subscribe`
+        `/api/${postType}/${postId}/like/notification/subscribe`,
       );
 
       const eventName = 'RECIPE_LIKE_EVENT';
-      
+
       eventSource.addEventListener(eventName, (event) => {
-        const updatedLikeCount = parseInt(event.data, 10);
+        const eventData = JSON.parse(event.data);
+        if (eventData.userId === userId) {
+          return;
+        }
+
+        const updatedLikeCount = eventData.likeCount;
+
         setLikeCount(updatedLikeCount);
       });
 
@@ -94,18 +104,18 @@ const usePostStatus = (postType, postId, isLoggedIn) => {
 
     try {
       // 낙관적 업데이트: 즉시 UI 반영
-      setIsHeartActive(prev => !prev);
-      setLikeCount(prev => prev + (isHeartActive ? -1 : 1));
+      setIsHeartActive((prev) => !prev);
+      setLikeCount((prev) => prev + (isHeartActive ? -1 : 1));
 
       // 서버에 토글 요청만 보내고 응답은 기다리지 않음
       await toggleLike(post);
-      
-      // SSE로 최종 상태 업데이트를 받을 것이므로 
+
+      // SSE로 최종 상태 업데이트를 받을 것이므로
       // 추가적인 상태 업데이트는 하지 않음
     } catch (error) {
       // 에러 발생 시 원래 상태로 복구
-      setIsHeartActive(prev => !prev);
-      setLikeCount(prev => prev + (isHeartActive ? 1 : -1));
+      setIsHeartActive((prev) => !prev);
+      setLikeCount((prev) => prev + (isHeartActive ? 1 : -1));
       console.error('좋아요 상태 변경 오류:', error);
     }
   };
@@ -121,25 +131,25 @@ const usePostStatus = (postType, postId, isLoggedIn) => {
 
     try {
       // 낙관적 업데이트: 즉시 UI 반영
-      setIsStarActive(prev => !prev);
+      setIsStarActive((prev) => !prev);
 
       // 서버에 토글 요청만 보내고 응답은 무시
       await toggleFavorite(post);
-      
+
       // 서버 요청이 성공하면 낙관적 업데이트를 유지
     } catch (error) {
       // 에러 발생 시 원래 상태로 복구
-      setIsStarActive(prev => !prev);
+      setIsStarActive((prev) => !prev);
       console.error('즐겨찾기 상태 변경 오류:', error);
     }
   };
 
   return {
     isHeartActive,
-    isStarActive: postType === "recipe" ? isStarActive : undefined,
+    isStarActive: postType === 'recipe' ? isStarActive : undefined,
     likeCount,
     toggleHeart,
-    toggleStar: postType === "recipe" ? toggleStar : undefined,
+    toggleStar: postType === 'recipe' ? toggleStar : undefined,
     modalState,
     setModalState,
   };

@@ -5,6 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record UserResponseDto(
+    Long userId,
     String email,
     String nickname,
     String role,
@@ -13,6 +14,7 @@ public record UserResponseDto(
 
     public static UserResponseDto from(User user) {
         return UserResponseDto.builder()
+            .userId(user.getId())
             .email(user.getEmail())
             .nickname(user.getNickname())
             .role(user.getRole())

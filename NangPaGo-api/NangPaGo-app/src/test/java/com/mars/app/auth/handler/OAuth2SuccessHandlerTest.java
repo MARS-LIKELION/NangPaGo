@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,7 +82,7 @@ class OAuth2SuccessHandlerTest {
 
         User user = createUser(email, provider, role);
         Map<String, Object> attributes = createAttributes(provider);
-        OAuth2UserImpl oauth2User = createOAuth2User(email, attributes);
+        OAuth2UserImpl oauth2User = createOAuth2User(user.getId(), email, attributes);
 
         OAuth2AuthenticationToken oauth2Authentication = mock(OAuth2AuthenticationToken.class);
         when(oauth2Authentication.getPrincipal()).thenReturn(oauth2User);
@@ -121,7 +120,7 @@ class OAuth2SuccessHandlerTest {
         String existingProvider = "KAKAO";
         User user = createUser(email, existingProvider, role);
         Map<String, Object> attributes = createAttributes(attemptProvider);
-        OAuth2UserImpl oauth2User = createOAuth2User(email, attributes);
+        OAuth2UserImpl oauth2User = createOAuth2User(user.getId(), email, attributes);
 
         when(authentication.getPrincipal()).thenReturn(oauth2User);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
@@ -150,8 +149,8 @@ class OAuth2SuccessHandlerTest {
         return attributes;
     }
 
-    private OAuth2UserImpl createOAuth2User(String email, Map<String, Object> attributes) {
-        UserResponseDto userResponseDto = new UserResponseDto(email, "ROLE_USER", null, null);
+    private OAuth2UserImpl createOAuth2User(Long userId, String email, Map<String, Object> attributes) {
+        UserResponseDto userResponseDto = new UserResponseDto(userId, email, "ROLE_USER", null, null);
         return new OAuth2UserImpl(userResponseDto, attributes);
     }
 }
