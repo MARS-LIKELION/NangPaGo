@@ -35,7 +35,7 @@ const usePostStatus = (post, isLoggedIn) => {
     } catch (error) {
       console.error('초기 데이터 가져오기 오류:', error);
     }
-  }, [post, isLoggedIn, post.type]);
+  }, [post, isLoggedIn]);
 
   const handleSseError = useCallback(() => {
     if (!isReconnecting) {
