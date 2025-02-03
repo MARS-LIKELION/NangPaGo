@@ -3,6 +3,7 @@ package com.mars.app.domain.recipe.dto;
 import com.mars.common.model.recipe.Manual;
 import com.mars.common.model.recipe.ManualImage;
 import com.mars.common.model.recipe.Recipe;
+import java.util.Collections;
 import lombok.Builder;
 
 import java.util.List;
@@ -39,8 +40,12 @@ public record RecipeResponseDto(
             .natrium(recipe.getNatrium())
             .mainIngredient(recipe.getMainIngredient())
             .mainImage(recipe.getMainImage())
-            .manuals(recipe.getManuals().stream().map(ManualDto::from).collect(Collectors.toList()))
-            .manualImages(recipe.getManualImages().stream().map(ManualImageDto::from).collect(Collectors.toList()))
+            .manuals(recipe.getManuals() != null ?
+                recipe.getManuals().stream().map(ManualDto::from).collect(Collectors.toList()) :
+                Collections.emptyList())
+            .manualImages(recipe.getManualImages() != null ?
+                recipe.getManualImages().stream().map(ManualImageDto::from).collect(Collectors.toList()) :
+                Collections.emptyList())
             .build();
     }
 

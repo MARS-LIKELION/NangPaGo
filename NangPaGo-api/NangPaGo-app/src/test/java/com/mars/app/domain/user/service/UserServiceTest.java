@@ -26,6 +26,7 @@ import com.mars.app.domain.favorite.recipe.repository.RecipeFavoriteRepository;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -299,6 +300,8 @@ class UserServiceTest extends IntegrationTestSupport {
             .calorie(100)
             .category("레시피 카테고리")
             .cookingMethod("조리방법")
+            .manuals(new ArrayList<>())
+            .manualImages(new ArrayList<>())
             .build();
     }
 }
