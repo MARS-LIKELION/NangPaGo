@@ -1,7 +1,7 @@
-package com.mars.common.model.userCommunity;
+package com.mars.common.model.userRecipe;
 
 import com.mars.common.model.BaseEntity;
-import com.mars.common.model.comment.userRecipe.UserCommunityComment;
+import com.mars.common.model.comment.userRecipe.UserRecipeComment;
 import com.mars.common.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserCommunity extends BaseEntity {
+public class UserRecipe extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,25 +35,25 @@ public class UserCommunity extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String mainImageUrl; // 대표 이미지 (한 장만)
 
-    @OneToMany(mappedBy = "userCommunity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserCommunityManual> manuals; // 조리 과정 리스트
+    @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRecipeManual> manuals; // 조리 과정 리스트
 
-    @OneToMany(mappedBy = "userCommunity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserCommunityIngredient> ingredients; // 재료 리스트
+    @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRecipeIngredient> ingredients; // 재료 리스트
 
-    @OneToMany(mappedBy = "userCommunity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserCommunityComment> comments; // 댓글
+    @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRecipeComment> comments; // 댓글
 
-    @OneToMany(mappedBy = "userCommunity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserCommunityLike> likes; // 좋아요
+    @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRecipeLike> likes; // 좋아요
 
-    public static UserCommunity of(User user,
-                                   String title,
-                                   String content,
-                                   String mainImageUrl,
-                                   boolean isPublic,
-                                   List<UserCommunityIngredient> ingredients) {
-        return UserCommunity.builder()
+    public static UserRecipe of(User user,
+                                String title,
+                                String content,
+                                String mainImageUrl,
+                                boolean isPublic,
+                                List<UserRecipeIngredient> ingredients) {
+        return UserRecipe.builder()
             .user(user)
             .title(title)
             .content(content)
@@ -74,8 +74,8 @@ public class UserCommunity extends BaseEntity {
         return !this.isPublic;
     }
 
-    public UserCommunity newInstanceWithManuals(List<UserCommunityManual> newManuals) {
-        return UserCommunity.builder()
+    public UserRecipe newInstanceWithManuals(List<UserRecipeManual> newManuals) {
+        return UserRecipe.builder()
             .id(this.id)
             .user(this.user)
             .title(this.title)
@@ -89,8 +89,8 @@ public class UserCommunity extends BaseEntity {
             .build();
     }
 
-    public UserCommunity newInstanceWithIngredients(List<UserCommunityIngredient> newIngredients) {
-        return UserCommunity.builder()
+    public UserRecipe newInstanceWithIngredients(List<UserRecipeIngredient> newIngredients) {
+        return UserRecipe.builder()
             .id(this.id)
             .user(this.user)
             .title(this.title)

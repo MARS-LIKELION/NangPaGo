@@ -1,7 +1,7 @@
 package com.mars.common.model.comment.userRecipe;
 
 import com.mars.common.model.BaseEntity;
-import com.mars.common.model.userCommunity.UserCommunity;
+import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,15 +21,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserCommunityComment extends BaseEntity {
+public class UserRecipeComment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_community_id", nullable = false)
-    private UserCommunity userCommunity;
+    @JoinColumn(name = "user_recipe_id", nullable = false)
+    private UserRecipe userRecipe;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -38,9 +38,9 @@ public class UserCommunityComment extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    public static UserCommunityComment create(UserCommunity userCommunity, User user, String content) {
-        return UserCommunityComment.builder()
-            .userCommunity(userCommunity)
+    public static UserRecipeComment create(UserRecipe userRecipe, User user, String content) {
+        return UserRecipeComment.builder()
+            .userRecipe(userRecipe)
             .user(user)
             .content(content)
             .build();

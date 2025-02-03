@@ -1,4 +1,4 @@
-package com.mars.common.model.userCommunity;
+package com.mars.common.model.userRecipe;
 
 import com.mars.common.model.user.User;
 import jakarta.persistence.*;
@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "user_community_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "user_recipe_id"})})
 @Entity
-public class UserCommunityLike {
+public class UserRecipeLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +25,13 @@ public class UserCommunityLike {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_community_id", nullable = false)
-    private UserCommunity userCommunity;
+    @JoinColumn(name = "user_recipe_id", nullable = false)
+    private UserRecipe userRecipe;
 
-    public static UserCommunityLike of(User user, UserCommunity userCommunity) {
-        return UserCommunityLike.builder()
+    public static UserRecipeLike of(User user, UserRecipe userRecipe) {
+        return UserRecipeLike.builder()
             .user(user)
-            .userCommunity(userCommunity)
+            .userRecipe(userRecipe)
             .build();
     }
 }
