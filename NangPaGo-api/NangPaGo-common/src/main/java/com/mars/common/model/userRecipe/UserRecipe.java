@@ -73,34 +73,4 @@ public class UserRecipe extends BaseEntity {
     public boolean isPrivate() {
         return !this.isPublic;
     }
-
-    public UserRecipe newInstanceWithManuals(List<UserRecipeManual> newManuals) {
-        return UserRecipe.builder()
-            .id(this.id)
-            .user(this.user)
-            .title(this.title)
-            .content(this.content)
-            .mainImageUrl(this.mainImageUrl)
-            .isPublic(this.isPublic)
-            .manuals(new ArrayList<>(newManuals))
-            .ingredients(this.ingredients)
-            .comments(this.comments)
-            .likes(this.likes)
-            .build();
-    }
-
-    public UserRecipe newInstanceWithIngredients(List<UserRecipeIngredient> newIngredients) {
-        return UserRecipe.builder()
-            .id(this.id)
-            .user(this.user)
-            .title(this.title)
-            .content(this.content)
-            .mainImageUrl(this.mainImageUrl)
-            .isPublic(this.isPublic)
-            .manuals(this.manuals)
-            .ingredients(new ArrayList<>(newIngredients))
-            .comments(this.comments)
-            .likes(this.likes)
-            .build();
-    }
 }
