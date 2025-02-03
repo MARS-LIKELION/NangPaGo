@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGException;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
@@ -38,30 +39,30 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
     @Test
     void pagedCommentsByRecipe() {
         // given
-        int pageNo = 0;
-        int pageSize = 3;
-
         User user = createUser("dummy@nangpago.com", "TestNickName");
         Recipe recipe = createRecipe("파스타");
         List<RecipeComment> comments = Arrays.asList(
             createRecipeComment(recipe, user, "1번째 댓글"),
             createRecipeComment(recipe, user, "2번째 댓글"),
             createRecipeComment(recipe, user, "3번째 댓글"),
-            createRecipeComment(recipe, user, "4번째 댓글")
+            createRecipeComment(recipe, user, "4번째 댓글"),
+            createRecipeComment(recipe, user, "5번째 댓글")
         );
 
         userRepository.save(user);
         recipeRepository.save(recipe);
         recipeCommentRepository.saveAll(comments);
 
+        PageRequestVO pageRequestVO = new PageRequestVO(1, 5);
+
         // when
         PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipe.getId(),
-            user.getId(), pageNo, pageSize);
+            user.getId(), pageRequestVO);
 
         //then
         assertThat(pageDto)
             .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
-            .containsExactly(2, 4L);
+            .containsExactly(1, 5L);
     }
 
     @DisplayName("레시피에 댓글을 작성할 수 있다.")

@@ -9,6 +9,7 @@ import com.mars.app.domain.firebase.service.FirebaseStorageService;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.community.Community;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -115,12 +116,11 @@ class CommunityServiceTest extends IntegrationTestSupport {
             communityOtherAuthorPrivate
         ));
 
-        int pageNo = 0;
-        int pageSize = 5;
 
+        PageRequestVO pageRequestVO = new PageRequestVO(1, 12);
         // when
-        PageDto<CommunityResponseDto> communityResponseDtoPageDto = communityService.pagesByCommunity(pageNo, pageSize,
-            user.getId());
+        PageDto<CommunityResponseDto> communityResponseDtoPageDto = communityService.pagesByCommunity(
+            user.getId(), pageRequestVO);
 
         // then
         assertThat(communityResponseDtoPageDto)

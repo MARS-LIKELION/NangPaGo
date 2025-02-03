@@ -18,7 +18,7 @@ public record PageRequestVO(int pageNo, int pageSize) {
     public static PageRequestVO of(Integer pageNo, Integer pageSize) {
         return new PageRequestVO(
             Optional.ofNullable(pageNo).orElse(DEFAULT_PAGE_NO),
-            Optional.ofNullable(pageSize).orElse(DEFAULT_PAGE_SIZE)
+            Optional.ofNullable(pageSize).map(PageRequestVO::validatePageSize).orElse(DEFAULT_PAGE_SIZE)
         );
     }
 
@@ -26,12 +26,13 @@ public record PageRequestVO(int pageNo, int pageSize) {
         return PageRequest.of(pageNo - 1, pageSize);
     }
 
-    private int validatePageNo(int pageNo) {
-        return Math.max(pageNo, DEFAULT_PAGE_NO);
+    private static int validatePageNo(int pageNo) {
+        return pageNo >= 1 ? pageNo : DEFAULT_PAGE_NO;
     }
 
-    private int validatePageSize(int pageSize) {
-        return Math.min(Math.max(pageSize, DEFAULT_PAGE_SIZE), MAX_PAGE_SIZE);
+    private static int validatePageSize(int pageSize) {
+        if (pageSize < 1) return DEFAULT_PAGE_SIZE;
+        if (pageSize > MAX_PAGE_SIZE) return MAX_PAGE_SIZE;
+        return pageSize;
     }
-
 }

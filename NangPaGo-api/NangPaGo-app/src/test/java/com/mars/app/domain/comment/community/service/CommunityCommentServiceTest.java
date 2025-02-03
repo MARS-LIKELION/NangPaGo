@@ -10,6 +10,7 @@ import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.comment.community.CommunityComment;
 import com.mars.common.model.community.Community;
@@ -54,9 +55,12 @@ class CommunityCommentServiceTest extends IntegrationTestSupport {
         communityRepository.save(community);
         communityCommentRepository.saveAll(comments);
 
+        PageRequestVO pageRequestVO = PageRequestVO.of(1, 3);
+
         // when
         PageDto<CommunityCommentResponseDto> pageDto = communityCommentService.pagedCommentsByCommunity(
-            community.getId(), user.getId(), pageNo, pageSize);
+            community.getId(), user.getId(), pageRequestVO);
+
 
         // then
         assertThat(pageDto)

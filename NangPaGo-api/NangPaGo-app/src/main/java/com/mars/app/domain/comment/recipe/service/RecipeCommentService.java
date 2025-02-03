@@ -9,6 +9,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import com.mars.common.dto.page.PageDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.comment.recipe.RecipeComment;
 import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
 import com.mars.common.model.recipe.Recipe;
@@ -30,10 +31,9 @@ public class RecipeCommentService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
 
-    public PageDto<RecipeCommentResponseDto> pagedCommentsByRecipe(Long recipeId, Long userId, int pageNo, int pageSize) {
+    public PageDto<RecipeCommentResponseDto> pagedCommentsByRecipe(Long recipeId, Long userId, PageRequestVO pageRequestVO) {
         Recipe recipe = findRecipeById(recipeId);
-        return PageDto.of(
-            recipeCommentRepository.findByRecipeId(recipeId, createPageRequest(pageNo, pageSize))
+        return PageDto.of(recipeCommentRepository.findByRecipeId(recipeId, pageRequestVO.toPageable())
                 .map(comment -> RecipeCommentResponseDto.from(comment, recipe, userId))
         );
     }
@@ -83,9 +83,5 @@ public class RecipeCommentService {
     private RecipeComment findCommentById(Long commentId) {
         return recipeCommentRepository.findById(commentId)
             .orElseThrow(() -> NOT_FOUND_COMMENT.of("댓글을 찾을 수 없습니다."));
-    }
-
-    private PageRequest createPageRequest(int pageNo, int pageSize) {
-        return PageRequest.of(pageNo, pageSize, Sort.by(DESC, "createdAt"));
     }
 }

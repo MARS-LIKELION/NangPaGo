@@ -9,6 +9,7 @@ import com.mars.common.dto.page.PageDto;
 import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
 import com.mars.app.domain.community.dto.CommunityResponseDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.community.Community;
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
@@ -44,11 +45,8 @@ public class CommunityService {
         return CommunityResponseDto.of(community, userId);
     }
 
-    public PageDto<CommunityResponseDto> pagesByCommunity(int pageNo, int pageSize, Long userId) {
-        Pageable pageable = createPageRequest(pageNo, pageSize);
-
-        return PageDto.of(
-            (communityRepository.findByIsPublicTrueOrUserId(userId, pageable))
+    public PageDto<CommunityResponseDto> pagesByCommunity(Long userId, PageRequestVO pageRequestVO) {
+        return PageDto.of((communityRepository.findByIsPublicTrueOrUserId(userId, pageRequestVO.toPageable()))
                 .map(community -> {
                     int likeCount = communityLikeRepository.countByCommunityId(community.getId());
                     int commentCount = communityCommentRepository.countByCommunityId(community.getId());
@@ -129,9 +127,5 @@ public class CommunityService {
         if (!community.getUser().getId().equals(userId)) {
             throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("게시물을 수정/삭제할 권한이 없습니다.");
         }
-    }
-
-    private PageRequest createPageRequest(int pageNo, int pageSize) {
-        return PageRequest.of(pageNo, pageSize, Sort.by(DESC, "createdAt"));
     }
 }

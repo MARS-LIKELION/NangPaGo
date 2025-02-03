@@ -70,7 +70,7 @@ public class RecipeController {
 
     @GetMapping("/search")
     public ResponseDto<Page<RecipeEsResponseDto>> searchRecipes(
-        @Valid PageRequestVO pageRequestVO,
+        PageRequestVO pageRequestVO,
         @RequestParam(name = "keyword", required = false) String keyword,
         @RequestParam(name = "searchType", defaultValue = "INGREDIENTS") String searchType) {
 

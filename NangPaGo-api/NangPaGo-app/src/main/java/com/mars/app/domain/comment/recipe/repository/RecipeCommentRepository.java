@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecipeCommentRepository extends JpaRepository<RecipeComment, Long> {
 
-    Page<RecipeComment> findByRecipeId(Long recipeId, Pageable pageable);
+    @Query("SELECT rc FROM RecipeComment rc WHERE rc.recipe.id = :recipeId ORDER BY rc.updatedAt DESC")
+    Page<RecipeComment> findByRecipeId(@Param("recipeId") Long recipeId, Pageable pageable);
 
     @Query("SELECT rc FROM RecipeComment rc JOIN FETCH rc.recipe WHERE rc.user.id = :userId ORDER BY rc.updatedAt DESC")
     Page<RecipeComment> findByUserIdWithRecipe(@Param("userId") Long userId, Pageable pageable);

@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface CommunityRepository extends JpaRepository<Community, Long> {
-    Page<Community> findByIsPublicTrueOrUserId(Long userId, Pageable pageable);
+
+    @Query("SELECT c FROM Community c WHERE c.isPublic = true OR c.user.id = :userId ORDER BY c.updatedAt DESC")
+    Page<Community> findByIsPublicTrueOrUserId(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT c FROM Community c WHERE c.user.id = :userId ORDER BY c.createdAt DESC")
     Page<Community> findByUserId(@Param("userId") Long userId, Pageable pageable);

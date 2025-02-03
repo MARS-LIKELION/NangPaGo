@@ -7,6 +7,7 @@ import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
 import com.mars.app.domain.comment.community.service.CommunityCommentService;
+import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,10 @@ public class CommunityCommentController {
     @GetMapping
     public ResponseDto<PageDto<CommunityCommentResponseDto>> list(
         @PathVariable("id") Long id,
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "5") int pageSize) {
-
+        PageRequestVO pageRequestVO
+    ) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(id, userId, pageNo, pageSize));
+        return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(id, userId, pageRequestVO));
     }
 
     @Operation(summary = "댓글 작성")

@@ -7,6 +7,7 @@ import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
 import com.mars.app.domain.community.dto.CommunityResponseDto;
 import com.mars.app.domain.community.service.CommunityService;
+import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,12 +32,9 @@ public class CommunityController {
 
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
-    public ResponseDto<PageDto<CommunityResponseDto>> list(
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "10") int pageSize) {
-
+    public ResponseDto<PageDto<CommunityResponseDto>> list(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(communityService.pagesByCommunity(pageNo, pageSize, userId));
+        return ResponseDto.of(communityService.pagesByCommunity(userId, pageRequestVO));
     }
 
     @Operation(summary = "수정 페이지용 게시물 조회")

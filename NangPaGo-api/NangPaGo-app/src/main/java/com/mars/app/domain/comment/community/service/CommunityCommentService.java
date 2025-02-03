@@ -9,6 +9,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import com.mars.common.dto.page.PageDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.comment.community.CommunityComment;
 import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
 import com.mars.common.model.community.Community;
@@ -30,14 +31,13 @@ public class CommunityCommentService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
-    public PageDto<CommunityCommentResponseDto> pagedCommentsByCommunity(Long communityId,
+    public PageDto<CommunityCommentResponseDto> pagedCommentsByCommunity(
+        Long communityId,
         Long userId,
-        int pageNo,
-        int pageSize) {
-
+        PageRequestVO pageRequestVO
+    ) {
         validateCommunity(communityId);
-        return PageDto.of(
-            communityCommentRepository.findByCommunityId(communityId, createPageRequest(pageNo, pageSize))
+        return PageDto.of(communityCommentRepository.findByCommunityId(communityId, pageRequestVO.toPageable())
                 .map(comment -> CommunityCommentResponseDto.of(comment, userId))
         );
     }
@@ -82,7 +82,4 @@ public class CommunityCommentService {
             .orElseThrow(NOT_FOUND_COMMUNITY_COMMENT::of);
     }
 
-    private PageRequest createPageRequest(int pageNo, int pageSize) {
-        return PageRequest.of(pageNo, pageSize, Sort.by(DESC, "createdAt"));
-    }
 }

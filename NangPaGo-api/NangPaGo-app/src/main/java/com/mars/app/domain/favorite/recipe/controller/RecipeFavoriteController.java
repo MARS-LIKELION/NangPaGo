@@ -42,7 +42,7 @@ public class RecipeFavoriteController {
     @Operation(summary = "즐겨찾기 목록 조회")
     @AuthenticatedUser
     @GetMapping("/favorite/list")
-    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(@Valid PageRequestVO pageRequestVO) {
+    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageRequestVO));
     }

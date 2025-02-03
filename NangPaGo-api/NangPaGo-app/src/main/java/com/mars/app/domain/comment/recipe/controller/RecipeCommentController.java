@@ -7,6 +7,7 @@ import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.app.domain.comment.recipe.service.RecipeCommentService;
+import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,9 @@ public class RecipeCommentController {
 
     @GetMapping
     public ResponseDto<PageDto<RecipeCommentResponseDto>> list(
-        @PathVariable("recipeId") Long recipeId,
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "5") int pageSize) {
-
+        @PathVariable("recipeId") Long recipeId, PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-
-        return ResponseDto.of(recipeCommentService.pagedCommentsByRecipe(recipeId, userId, pageNo, pageSize));
+        return ResponseDto.of(recipeCommentService.pagedCommentsByRecipe(recipeId, userId, pageRequestVO));
     }
 
     @AuthenticatedUser
