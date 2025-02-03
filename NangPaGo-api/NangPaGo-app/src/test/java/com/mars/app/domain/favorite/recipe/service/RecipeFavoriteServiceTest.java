@@ -2,7 +2,7 @@ package com.mars.app.domain.favorite.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.common.model.favorite.recipe.RecipeFavorite;
@@ -89,12 +89,12 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageDto<RecipeFavoriteListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
+        PageResponseDto<RecipeFavoriteListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
             user.getId(), pageRequestVO);
 
         //then
         assertThat(recipeFavorites)
-            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 4L);
         assertThat(recipeFavorites.getContent().get(1).name()).isEqualTo("순대국밥");
     }

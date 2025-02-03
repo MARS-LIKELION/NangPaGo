@@ -8,7 +8,7 @@ import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.firebase.service.FirebaseStorageService;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.community.Community;
 import java.util.List;
@@ -119,12 +119,12 @@ class CommunityServiceTest extends IntegrationTestSupport {
 
         PageRequestVO pageRequestVO = new PageRequestVO(1, 12);
         // when
-        PageDto<CommunityResponseDto> communityResponseDtoPageDto = communityService.pagesByCommunity(
+        PageResponseDto<CommunityResponseDto> communityResponseDtoPageDto = communityService.pagesByCommunity(
             user.getId(), pageRequestVO);
 
         // then
         assertThat(communityResponseDtoPageDto)
-            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 3L);
         assertThat(communityResponseDtoPageDto.getContent())
             .extracting(CommunityResponseDto::id)

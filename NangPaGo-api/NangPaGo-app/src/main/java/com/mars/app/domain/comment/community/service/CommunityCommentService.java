@@ -4,9 +4,8 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY_COMMENT;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
@@ -17,8 +16,6 @@ import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +28,13 @@ public class CommunityCommentService {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
-    public PageDto<CommunityCommentResponseDto> pagedCommentsByCommunity(
+    public PageResponseDto<CommunityCommentResponseDto> pagedCommentsByCommunity(
         Long communityId,
         Long userId,
         PageRequestVO pageRequestVO
     ) {
         validateCommunity(communityId);
-        return PageDto.of(communityCommentRepository.findByCommunityId(communityId, pageRequestVO.toPageable())
+        return PageResponseDto.of(communityCommentRepository.findByCommunityId(communityId, pageRequestVO.toPageable())
                 .map(comment -> CommunityCommentResponseDto.of(comment, userId))
         );
     }

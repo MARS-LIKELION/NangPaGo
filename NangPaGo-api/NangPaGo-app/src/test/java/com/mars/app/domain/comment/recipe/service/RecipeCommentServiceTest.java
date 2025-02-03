@@ -3,7 +3,7 @@ package com.mars.app.domain.comment.recipe.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGException;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
@@ -56,12 +56,12 @@ class RecipeCommentServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = new PageRequestVO(1, 5);
 
         // when
-        PageDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipe.getId(),
+        PageResponseDto<RecipeCommentResponseDto> pageDto = recipeCommentService.pagedCommentsByRecipe(recipe.getId(),
             user.getId(), pageRequestVO);
 
         //then
         assertThat(pageDto)
-            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 5L);
     }
 

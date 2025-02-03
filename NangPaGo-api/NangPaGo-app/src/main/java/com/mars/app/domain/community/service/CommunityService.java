@@ -3,9 +3,8 @@ package com.mars.app.domain.community.service;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
 import com.mars.app.domain.community.dto.CommunityResponseDto;
@@ -17,9 +16,6 @@ import com.mars.app.domain.firebase.service.FirebaseStorageService;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,8 +41,8 @@ public class CommunityService {
         return CommunityResponseDto.of(community, userId);
     }
 
-    public PageDto<CommunityResponseDto> pagesByCommunity(Long userId, PageRequestVO pageRequestVO) {
-        return PageDto.of((communityRepository.findByIsPublicTrueOrUserId(userId, pageRequestVO.toPageable()))
+    public PageResponseDto<CommunityResponseDto> pagesByCommunity(Long userId, PageRequestVO pageRequestVO) {
+        return PageResponseDto.of((communityRepository.findByIsPublicTrueOrUserId(userId, pageRequestVO.toPageable()))
                 .map(community -> {
                     int likeCount = communityLikeRepository.countByCommunityId(community.getId());
                     int commentCount = communityCommentRepository.countByCommunityId(community.getId());

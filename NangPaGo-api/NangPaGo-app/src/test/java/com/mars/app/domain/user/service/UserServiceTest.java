@@ -8,7 +8,7 @@ import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.support.IntegrationTestSupport;
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;
@@ -134,11 +134,11 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageDto<RecipeResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), pageRequestVO);
 
         // then
         assertThat(myLikedRecipes)
-            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myLikedRecipes.getContent())
             .extracting(RecipeResponseDto::name)
@@ -166,11 +166,11 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageDto<RecipeFavoriteListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeFavoriteListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), pageRequestVO);
 
         // then
         assertThat(myFavorites)
-            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myFavorites.getContent())
             .extracting(RecipeFavoriteListResponseDto::name)
@@ -197,11 +197,11 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageDto<RecipeCommentResponseDto> myComments = userService.getMyComments(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeCommentResponseDto> myComments = userService.getMyComments(user.getId(), pageRequestVO);
 
         // then
         assertThat(myComments)
-            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myComments.getContent())
             .extracting(RecipeCommentResponseDto::content)

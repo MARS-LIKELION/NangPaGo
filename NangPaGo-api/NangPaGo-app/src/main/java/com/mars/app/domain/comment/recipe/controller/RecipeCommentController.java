@@ -1,6 +1,6 @@
 package com.mars.app.domain.comment.recipe.controller;
 
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
@@ -21,7 +21,7 @@ public class RecipeCommentController {
     private final RecipeCommentService recipeCommentService;
 
     @GetMapping
-    public ResponseDto<PageDto<RecipeCommentResponseDto>> list(
+    public ResponseDto<PageResponseDto<RecipeCommentResponseDto>> list(
         @PathVariable("recipeId") Long recipeId, PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(recipeCommentService.pagedCommentsByRecipe(recipeId, userId, pageRequestVO));

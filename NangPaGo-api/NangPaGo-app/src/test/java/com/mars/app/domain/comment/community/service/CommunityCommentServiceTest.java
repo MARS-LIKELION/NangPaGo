@@ -9,7 +9,7 @@ import com.mars.app.domain.comment.community.repository.CommunityCommentReposito
 import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.comment.community.CommunityComment;
@@ -58,13 +58,13 @@ class CommunityCommentServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 3);
 
         // when
-        PageDto<CommunityCommentResponseDto> pageDto = communityCommentService.pagedCommentsByCommunity(
+        PageResponseDto<CommunityCommentResponseDto> pageDto = communityCommentService.pagedCommentsByCommunity(
             community.getId(), user.getId(), pageRequestVO);
 
 
         // then
         assertThat(pageDto)
-            .extracting(PageDto::getTotalPages, PageDto::getTotalItems)
+            .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(2, 4L);
     }
 

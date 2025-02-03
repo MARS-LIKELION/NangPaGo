@@ -2,7 +2,7 @@ package com.mars.app.domain.comment.community.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class CommunityCommentController {
 
     @Operation(summary = "댓글 목록 조회")
     @GetMapping
-    public ResponseDto<PageDto<CommunityCommentResponseDto>> list(
+    public ResponseDto<PageResponseDto<CommunityCommentResponseDto>> list(
         @PathVariable("id") Long id,
         PageRequestVO pageRequestVO
     ) {

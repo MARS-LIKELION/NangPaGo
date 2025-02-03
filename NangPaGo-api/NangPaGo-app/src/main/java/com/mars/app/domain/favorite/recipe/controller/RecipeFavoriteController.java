@@ -1,7 +1,7 @@
 package com.mars.app.domain.favorite.recipe.controller;
 
 import com.mars.app.domain.favorite.recipe.message.RecipeFavoriteMessagePublisher;
-import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
@@ -11,7 +11,6 @@ import com.mars.app.domain.favorite.recipe.service.RecipeFavoriteService;
 import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +41,7 @@ public class RecipeFavoriteController {
     @Operation(summary = "즐겨찾기 목록 조회")
     @AuthenticatedUser
     @GetMapping("/favorite/list")
-    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(PageRequestVO pageRequestVO) {
+    public ResponseDto<PageResponseDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageRequestVO));
     }

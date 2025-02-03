@@ -10,15 +10,15 @@ import org.springframework.data.domain.Page;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageDto<T> {
+public class PageResponseDto<T> {
     private List<T> content;
     private int currentPage;
     private int totalPages;
     private long totalItems;
     private boolean isLast;
 
-    public static <T> PageDto<T> of(Page<T> page) {
-        return new PageDto<>(
+    public static <T> PageResponseDto<T> of(Page<T> page) {
+        return new PageResponseDto<>(
             page.getContent(),
             page.getNumber(),
             page.getTotalPages(),
