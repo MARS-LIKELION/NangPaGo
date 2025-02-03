@@ -71,7 +71,7 @@ public class UserController {
 
     @Operation(summary = "좋아요 한 레시피 조회")
     @GetMapping("/recipe/like")
-    public ResponseDto<PageDto<RecipeResponseDto>> getMyLikedRecipes(@Valid PageRequestVO pageRequestVO) {
+    public ResponseDto<PageDto<RecipeResponseDto>> getMyLikedRecipes(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyLikedRecipes(userId, pageRequestVO));
     }
@@ -79,7 +79,7 @@ public class UserController {
     @Operation(summary = "즐겨찾기 한 레시피 조회")
     @AuthenticatedUser
     @GetMapping("/recipe/favorite")
-    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getMyFavorites(@Valid PageRequestVO pageRequestVO) {
+    public ResponseDto<PageDto<RecipeFavoriteListResponseDto>> getMyFavorites(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyFavorites(userId, pageRequestVO));
     }
@@ -87,7 +87,7 @@ public class UserController {
     @Operation(summary = "작성한 게시글 조회")
     @AuthenticatedUser
     @GetMapping("/community/post")
-    public ResponseDto<PageDto<CommunityResponseDto>> getMyPosts(@Valid PageRequestVO pageRequestVO) {
+    public ResponseDto<PageDto<CommunityResponseDto>> getMyPosts(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyPosts(userId, pageRequestVO));
     }
@@ -95,7 +95,7 @@ public class UserController {
     @Operation(summary = "댓글 조회")
     @AuthenticatedUser
     @GetMapping("/recipe/comment")
-    public ResponseDto<PageDto<RecipeCommentResponseDto>> getMyComments(@Valid PageRequestVO pageRequestVO) {
+    public ResponseDto<PageDto<RecipeCommentResponseDto>> getMyComments(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyComments(userId, pageRequestVO));
     }
