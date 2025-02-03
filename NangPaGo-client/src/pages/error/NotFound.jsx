@@ -1,4 +1,4 @@
-import ErrorGuidePage from '../../components/page/ErrorGuidePage.jsx';
+import ErrorGuidePage from '../../components/common/ErrorGuidePage.jsx';
 
 function NotFound() {
   const message = `

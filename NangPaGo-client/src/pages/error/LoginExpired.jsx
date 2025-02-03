@@ -1,4 +1,4 @@
-import ErrorGuidePage from '../../components/page/ErrorGuidePage.jsx';
+import ErrorGuidePage from '../../components/common/ErrorGuidePage.jsx';
 
 function LoginExpired() {
   const message = `일정 기간 동안 활동이 없어

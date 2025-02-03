@@ -1,4 +1,4 @@
-import ErrorGuidePage from '../../components/page/ErrorGuidePage.jsx';
+import ErrorGuidePage from '../../components/common/ErrorGuidePage.jsx';
 
 function UnauthenticatedAccess() {
   const message = `이 페이지에 접근하려면
