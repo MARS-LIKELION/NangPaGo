@@ -27,7 +27,6 @@ export async function getLikes(page, size) {
     const response = await axiosInstance.get('/api/user/recipe/like', {
       params: { pageNo: page, pageSize: size },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('좋아요한 레시피 목록 조회 실패:', error);

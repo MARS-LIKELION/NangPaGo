@@ -6,8 +6,8 @@ function useTabData(activeTab) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState(null);
   const abortControllers = useRef({});
-  const currentTab = useRef(activeTab);
   const pendingRequest = useRef(false);
 
   const fetchTabDataByType = {
@@ -21,6 +21,7 @@ function useTabData(activeTab) {
     if (pendingRequest.current || (!hasMore && !reset)) return;
 
     setIsLoading(true);
+    setError(null); // 🔹 새로운 요청 전에 에러 상태 초기화
     pendingRequest.current = true;
 
     if (abortControllers.current[activeTab]) {
@@ -31,37 +32,26 @@ function useTabData(activeTab) {
 
     try {
       const fetchFunction = fetchTabDataByType[activeTab];
-      console.log(`[DEBUG] Fetching data - Tab: ${activeTab}, Page: ${page}`);
 
       const response = await fetchFunction(page, 12, {
         signal: controller.signal,
       });
 
       if (!response) {
-        throw new Error(
-          `[ERROR] API response is undefined for tab: ${activeTab}`,
-        );
+        throw new Error(`API 응답이 없습니다. (탭: ${activeTab})`);
       }
-
-      console.log(`[DEBUG] API Response:`, response);
 
       const { content, last } = response.data;
 
-      console.log(
-        `[DEBUG] Content Length: ${content.length}, Last: ${last}, Current Page: ${page}`,
-      );
-
       setItems((prev) => (reset ? content : [...prev, ...content]));
       setHasMore(!last);
-
       setCurrentPage((prev) => prev + 1);
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.warn(`[REQUEST ABORTED] Tab: ${activeTab}`);
+        setError(`요청이 취소되었습니다. (탭: ${activeTab})`);
       } else {
-        console.error(
-          `[REQUEST FAILED] Tab: ${activeTab}, Page: ${page}`,
-          error,
+        setError(
+          `데이터 로딩 실패: ${error.message} (탭: ${activeTab}, 페이지: ${page})`,
         );
       }
     } finally {
@@ -71,11 +61,11 @@ function useTabData(activeTab) {
   }
 
   useEffect(() => {
-    currentTab.current = activeTab;
     setItems([]);
     setHasMore(true);
     setIsLoading(false);
     setCurrentPage(1);
+    setError(null);
 
     if (abortControllers.current[activeTab]) {
       abortControllers.current[activeTab].abort();
@@ -98,6 +88,7 @@ function useTabData(activeTab) {
     hasMore,
     fetchTabData,
     currentPage,
+    error,
   };
 }
 
