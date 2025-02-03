@@ -1,9 +1,9 @@
 import axiosInstance from './axiosInstance';
-import { COMMENT_SIZE } from '../common/constants/pagination'
+import { COMMENT_SIZE } from '../common/constants/pagination';
 
-export const fetchComments = (post, pageNo = 0) =>
+export const fetchComments = (post, page) =>
   axiosInstance.get(`/api/${post.type}/${post.id}/comment`, {
-    params: { pageNo, COMMENT_SIZE },
+    params: { pageNo: page, pageSize: COMMENT_SIZE },
   });
 
 export const createComment = (post, commentData) =>

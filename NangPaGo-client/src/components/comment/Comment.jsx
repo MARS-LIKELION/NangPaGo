@@ -32,7 +32,7 @@ function Comment({ post, isLoggedIn }) {
   const loadComments = useCallback(
     async (page) => {
       try {
-        const response = await fetchComments(post, page);
+        const response = await fetchComments(post, page + 1);
         const data = response.data.data;
         setComments(data.content);
         setCurrentPage(data.currentPage);
@@ -91,7 +91,9 @@ function Comment({ post, isLoggedIn }) {
   };
 
   const handleDeleteComment = async () => {
-    if (!modalState.data) return;
+    if (!modalState.data) {
+      return;
+    }
     try {
       await deleteComment(post, modalState.data);
       await loadComments(currentPage);

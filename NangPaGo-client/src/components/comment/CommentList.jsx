@@ -1,6 +1,6 @@
 import { FaPen, FaTrash } from 'react-icons/fa';
 import { BsThreeDots } from 'react-icons/bs';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function CommentList({
   comments,
@@ -75,7 +75,7 @@ function CommentList({
                 >
                   <BsThreeDots className="w-5 h-5 text-gray-500" />
                 </button>
-                
+
                 {openDropdownId === comment.id && (
                   <div className="absolute right-0 mt-1 w-24 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                     <button
