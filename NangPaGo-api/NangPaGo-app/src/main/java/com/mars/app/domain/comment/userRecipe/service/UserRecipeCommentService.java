@@ -6,7 +6,6 @@ import com.mars.app.domain.comment.userRecipe.repository.UserRecipeCommentReposi
 import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.common.dto.PageDto;
-import com.mars.common.exception.NPGExceptionType.*;
 import com.mars.common.model.comment.userRecipe.UserRecipeComment;
 import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.user.User;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.mars.common.exception.NPGExceptionType.*;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class UserRecipeCommentService {
