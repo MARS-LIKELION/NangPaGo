@@ -9,6 +9,7 @@ import com.mars.common.dto.PageDto;
 import com.mars.common.model.comment.userRecipe.UserRecipeComment;
 import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.user.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -41,11 +42,7 @@ public class UserRecipeCommentService {
     }
 
     @Transactional
-    public UserRecipeCommentResponseDto create(UserRecipeCommentRequestDto requestDto, Long userId, Long userRecipeId) {
-        if (requestDto.content() == null || requestDto.content().trim().isEmpty()) {
-            throw BAD_REQUEST_INVALID_COMMENT.of();
-        }
-
+    public UserRecipeCommentResponseDto create(@Valid UserRecipeCommentRequestDto requestDto, Long userId, Long userRecipeId) {
         User user = userRepository.findById(userId)
             .orElseThrow(NOT_FOUND_USER::of);
 
@@ -58,10 +55,7 @@ public class UserRecipeCommentService {
     }
 
     @Transactional
-    public UserRecipeCommentResponseDto update(Long commentId, Long userId, UserRecipeCommentRequestDto requestDto) {
-        if (requestDto.content() == null || requestDto.content().trim().isEmpty()) {
-            throw BAD_REQUEST_INVALID_COMMENT.of();
-        }
+    public UserRecipeCommentResponseDto update(@Valid UserRecipeCommentRequestDto requestDto, Long commentId, Long userId) {
 
         UserRecipeComment comment = validateComment(commentId);
         validateOwnership(comment, userId);
