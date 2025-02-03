@@ -71,7 +71,7 @@ function Header({ isBlocked = false }) {
   }
 
   return (
-    <header className="sticky top-0 z-10 bg-white shadow-md w-full px-1 py-2 mb-4">
+    <header className="sticky top-0 z-50 bg-white shadow-md w-full px-1 py-2 mb-4">
       <div className="flex flex-row items-center justify-between px-4">
         <div className="flex items-center justify-center w-17 h-17">
           <img
