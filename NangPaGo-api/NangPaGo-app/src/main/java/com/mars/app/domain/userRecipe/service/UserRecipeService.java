@@ -62,15 +62,16 @@ public class UserRecipeService {
     }
 
     @Transactional
-    public UserRecipeResponseDto createUserRecipe(UserRecipeRequestDto requestDto, MultipartFile mainFile, List<MultipartFile> otherFiles, Long userId) {
+    public UserRecipeResponseDto createUserRecipe(UserRecipeRequestDto requestDto,
+                                                  MultipartFile mainFile,
+                                                  List<MultipartFile> otherFiles,
+                                                  Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(NOT_FOUND_USER::of);
 
-        String mainImageUrl = (mainFile != null && !mainFile.isEmpty())
-            ? firebaseStorageService.uploadFile(mainFile)
-            : UserRecipeResponseDto.DEFAULT_IMAGE_URL;
+        String mainImageUrl = getMainImageUrl(mainFile);
 
-        UserRecipe userRecipe = UserRecipe.builder()
+        UserRecipe recipe = UserRecipe.builder()
             .user(user)
             .title(requestDto.title())
             .content(requestDto.content())
@@ -82,89 +83,38 @@ public class UserRecipeService {
             .likes(new ArrayList<>())
             .build();
 
-        List<UserRecipeIngredient> ingredients = requestDto.ingredients().stream()
-            .map(ingredient -> UserRecipeIngredient.builder()
-                .userRecipe(userRecipe)
-                .name(ingredient)
-                .amount("")
-                .build())
-            .collect(Collectors.toList());
-        userRecipe.getIngredients().addAll(ingredients);
+        recipe.getIngredients().addAll(buildIngredients(requestDto, recipe));
+        recipe.getManuals().addAll(buildManuals(requestDto, otherFiles, recipe));
 
-        List<UserRecipeManual> manuals = new ArrayList<>();
-        for (int i = 0; i < requestDto.manuals().size(); i++) {
-            String manualText = requestDto.manuals().get(i);
-            UserRecipeManual manual = UserRecipeManual.builder()
-                .userRecipe(userRecipe)
-                .step(i + 1)
-                .description(manualText)
-                .images(new ArrayList<>())
-                .build();
-
-            if (otherFiles != null && otherFiles.size() > i && otherFiles.get(i) != null && !otherFiles.get(i).isEmpty()) {
-                String imageUrl = firebaseStorageService.uploadFile(otherFiles.get(i));
-                UserRecipeManualImage manualImage = UserRecipeManualImage.builder()
-                    .userRecipeManual(manual)
-                    .imageUrl(imageUrl)
-                    .build();
-                manual.getImages().add(manualImage);
-            }
-            manuals.add(manual);
-        }
-        userRecipe.getManuals().addAll(manuals);
-
-        userRecipeRepository.save(userRecipe);
-
-        return UserRecipeResponseDto.of(userRecipe, 0, 0, userId);
+        userRecipeRepository.save(recipe);
+        return UserRecipeResponseDto.of(recipe, 0, 0, userId);
     }
 
     @Transactional
     public UserRecipeResponseDto updateUserRecipe(Long id, UserRecipeRequestDto requestDto,
                                                   MultipartFile mainFile, List<MultipartFile> otherFiles,
                                                   Long userId) {
-        UserRecipe userRecipe = getUserRecipe(id);
-        validateOwnership(userRecipe, userId);
+        UserRecipe recipe = getUserRecipe(id);
+        validateOwnership(recipe, userId);
 
-        String mainImageUrl = userRecipe.getMainImageUrl();
-        if (mainFile != null && !mainFile.isEmpty()) {
-            mainImageUrl = firebaseStorageService.uploadFile(mainFile);
-        } else if (mainImageUrl == null || mainImageUrl.isBlank()) {
-            mainImageUrl = UserRecipeResponseDto.DEFAULT_IMAGE_URL;
+        String mainImageUrl = updateMainImage(recipe.getMainImageUrl(), mainFile);
+        recipe.update(requestDto.title(), requestDto.content(), requestDto.isPublic(), mainImageUrl);
+
+        if (requestDto.ingredients() != null && !requestDto.ingredients().isEmpty()) {
+            recipe.getIngredients().clear();
+            recipe.getIngredients().addAll(buildIngredients(requestDto, recipe));
         }
-
-        userRecipe.update(
-            requestDto.title(),
-            requestDto.content(),
-            requestDto.isPublic(),
-            mainImageUrl
-        );
 
         if (requestDto.manuals() != null && !requestDto.manuals().isEmpty()) {
-            userRecipe.getManuals().clear();
-            List<UserRecipeManual> updatedManuals = new ArrayList<>();
-            for (int i = 0; i < requestDto.manuals().size(); i++) {
-                String manualText = requestDto.manuals().get(i);
-                UserRecipeManual manual = UserRecipeManual.builder()
-                    .userRecipe(userRecipe)
-                    .step(i + 1)
-                    .description(manualText)
-                    .images(new ArrayList<>())
-                    .build();
-                if (otherFiles != null && otherFiles.size() > i && otherFiles.get(i) != null && !otherFiles.get(i).isEmpty()) {
-                    String imageUrl = firebaseStorageService.uploadFile(otherFiles.get(i));
-                    UserRecipeManualImage manualImage = UserRecipeManualImage.builder()
-                        .userRecipeManual(manual)
-                        .imageUrl(imageUrl)
-                        .build();
-                    manual.getImages().add(manualImage);
-                }
-                updatedManuals.add(manual);
-            }
-            userRecipe.getManuals().addAll(updatedManuals);
+            recipe.getManuals().clear();
+            recipe.getManuals().addAll(buildManuals(requestDto, otherFiles, recipe));
         }
-        userRecipeRepository.save(userRecipe);
+        userRecipeRepository.save(recipe);
 
-        return UserRecipeResponseDto.of(userRecipe, 0, 0, userId);
+        int likeCount = (int) userRecipeLikeRepository.countByUserRecipeId(recipe.getId());
+        int commentCount = (int) userRecipeCommentRepository.countByUserRecipeId(recipe.getId());
+
+        return UserRecipeResponseDto.of(recipe, likeCount, commentCount, userId);
     }
 
     @Transactional
@@ -183,6 +133,53 @@ public class UserRecipeService {
         if (!userRecipe.getUser().getId().equals(userId)) {
             throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("게시물을 수정/삭제할 권한이 없습니다.");
         }
+    }
+
+    private String getMainImageUrl(MultipartFile mainFile) {
+        return (mainFile != null && !mainFile.isEmpty())
+            ? firebaseStorageService.uploadFile(mainFile)
+            : UserRecipeResponseDto.DEFAULT_IMAGE_URL;
+    }
+
+    private String updateMainImage(String existing, MultipartFile mainFile) {
+        if (mainFile != null && !mainFile.isEmpty()) {
+            return firebaseStorageService.uploadFile(mainFile);
+        }
+        return (existing == null || existing.isBlank())
+            ? UserRecipeResponseDto.DEFAULT_IMAGE_URL
+            : existing;
+    }
+
+    private List<UserRecipeIngredient> buildIngredients(UserRecipeRequestDto dto, UserRecipe recipe) {
+        return dto.ingredients().stream()
+            .map(ing -> UserRecipeIngredient.builder()
+                .userRecipe(recipe)
+                .name(ing)
+                .amount("")
+                .build())
+            .collect(Collectors.toList());
+    }
+
+    private List<UserRecipeManual> buildManuals(UserRecipeRequestDto dto, List<MultipartFile> otherFiles, UserRecipe recipe) {
+        List<UserRecipeManual> manuals = new ArrayList<>();
+        for (int i = 0; i < dto.manuals().size(); i++) {
+            UserRecipeManual manual = UserRecipeManual.builder()
+                .userRecipe(recipe)
+                .step(i + 1)
+                .description(dto.manuals().get(i))
+                .images(new ArrayList<>())
+                .build();
+            if (otherFiles != null && otherFiles.size() > i && otherFiles.get(i) != null && !otherFiles.get(i).isEmpty()) {
+                String imageUrl = firebaseStorageService.uploadFile(otherFiles.get(i));
+                UserRecipeManualImage manualImage = UserRecipeManualImage.builder()
+                    .userRecipeManual(manual)
+                    .imageUrl(imageUrl)
+                    .build();
+                manual.getImages().add(manualImage);
+            }
+            manuals.add(manual);
+        }
+        return manuals;
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {

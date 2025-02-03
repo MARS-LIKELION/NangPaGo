@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import com.mars.common.model.userRecipe.UserRecipeManualImage;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
 public record UserRecipeResponseDto(
