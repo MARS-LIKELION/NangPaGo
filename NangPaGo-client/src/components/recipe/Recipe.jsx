@@ -11,7 +11,7 @@ import LoginModal from '../modal/LoginModal';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-function Recipe({ data: recipe, isLoggedIn }) {
+function Recipe({ post, data: recipe, isLoggedIn }) {
   const {
     isHeartActive,
     isStarActive,
@@ -20,7 +20,7 @@ function Recipe({ data: recipe, isLoggedIn }) {
     toggleStar,
     modalState,
     setModalState,
-  } = usePostStatus("recipe", recipe.id, isLoggedIn);
+  } = usePostStatus(post, isLoggedIn);
 
   const rightSectionRef = useRef(null);
   const imageRef = useRef(null);

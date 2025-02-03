@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
 import { fetchPostById } from '../../api/post';
@@ -24,21 +24,28 @@ function DetailPage({ type }) {
 
   const { isLoggedIn } = useAuth();
 
-  const fetchData = async () => {
-    try {
-      const response = await fetchPostById({ type: type, id: id });
-      setData(response);
-    } catch (err) {
-      setError(`${type === 'recipe' ? '레시피' : '게시물'}을 불러오는데 실패했습니다.`);
-      navigate(`/${type}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const post = useMemo(() => {
+    if (!id) throw new Error('ID is required');
+    return { type, id };
+  }, [type, id]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchPostById(post);
+        setData(response);
+      } catch (err) {
+        setError(`${type === 'recipe' ? '레시피' : '게시물'}을 불러오는데 실패했습니다.`);
+        setTimeout(() => {
+          navigate(`/${type}`);
+        }, 3000);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, [id, type]);
+  }, [post]);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -76,8 +83,8 @@ function DetailPage({ type }) {
     <div className={PAGE_STYLES.wrapper}>
       <Header />
       <main className={PAGE_STYLES.body}>
-        {Component ? <Component data={data} isLoggedIn={isLoggedIn} /> : null}
-        <Comment post={{ type: type, id: data.id }} isLoggedIn={isLoggedIn} />
+        {Component ? <Component post={post} data={data} isLoggedIn={isLoggedIn} /> : null}
+        <Comment post={post} isLoggedIn={isLoggedIn} />
       </main>
       <Footer />
     </div>

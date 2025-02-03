@@ -23,14 +23,14 @@ const renderContentLines = (content) =>
     </Fragment>
   ));
 
-function Community({ data: community, isLoggedIn }) {
+function Community({ post, data: community, isLoggedIn }) {
   const {
     isHeartActive,
     likeCount,
     toggleHeart,
     modalState,
     setModalState,
-  } = usePostStatus("community", community.id, isLoggedIn);
+  } = usePostStatus(post, isLoggedIn);
 
   const navigate = useNavigate();
 
