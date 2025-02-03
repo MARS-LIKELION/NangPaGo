@@ -6,7 +6,7 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
-import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
 import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
 import com.mars.common.model.comment.community.CommunityComment;

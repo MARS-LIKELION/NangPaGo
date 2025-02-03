@@ -15,12 +15,13 @@ import com.mars.common.model.user.User;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class UserServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -28,11 +29,6 @@ class UserServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserService userService;
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAllInBatch();
-    }
 
     private User createUser(String email, String nickname) {
         return User.builder()
@@ -42,7 +38,6 @@ class UserServiceTest extends IntegrationTestSupport {
             .role("ROLE_USER")
             .build();
     }
-
 
     @DisplayName("사용자 정보를 조회할 수 있다.")
     @Test

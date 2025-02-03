@@ -21,7 +21,7 @@ function useTabData(activeTab) {
     if (pendingRequest.current || (!hasMore && !reset)) return;
 
     setIsLoading(true);
-    setError(null); // 🔹 새로운 요청 전에 에러 상태 초기화
+    setError(null);
     pendingRequest.current = true;
 
     if (abortControllers.current[activeTab]) {

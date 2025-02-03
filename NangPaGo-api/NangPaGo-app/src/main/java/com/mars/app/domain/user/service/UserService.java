@@ -2,7 +2,7 @@ package com.mars.app.domain.user.service;
 
 import com.mars.app.domain.community.dto.CommunityResponseDto;
 import com.mars.app.domain.community.repository.CommunityRepository;
-import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;

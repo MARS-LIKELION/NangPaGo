@@ -2,7 +2,7 @@ package com.mars.app.domain.community.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
 import com.mars.app.domain.community.dto.CommunityResponseDto;

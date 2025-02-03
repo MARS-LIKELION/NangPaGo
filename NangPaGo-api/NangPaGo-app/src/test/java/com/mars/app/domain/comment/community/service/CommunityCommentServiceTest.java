@@ -9,7 +9,7 @@ import com.mars.app.domain.comment.community.repository.CommunityCommentReposito
 import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
-import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageDto;
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.comment.community.CommunityComment;
 import com.mars.common.model.community.Community;

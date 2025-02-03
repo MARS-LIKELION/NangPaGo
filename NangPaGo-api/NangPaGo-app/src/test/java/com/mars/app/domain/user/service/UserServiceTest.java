@@ -8,7 +8,7 @@ import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.support.IntegrationTestSupport;
-import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;

@@ -1,4 +1,4 @@
-package com.mars.common.dto;
+package com.mars.common.dto.page;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

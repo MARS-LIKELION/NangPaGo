@@ -8,7 +8,7 @@ import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.firebase.service.FirebaseStorageService;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
-import com.mars.common.dto.PageDto;
+import com.mars.common.dto.page.PageDto;
 import com.mars.common.model.community.Community;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.mars.common.model.user.User;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
