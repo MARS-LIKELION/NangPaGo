@@ -34,7 +34,7 @@ public class UserRecipeController {
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
     public ResponseDto<PageDto<UserRecipeResponseDto>> list(
-        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "-1") int pageNo,
         @RequestParam(defaultValue = "10") int pageSize) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();

@@ -186,6 +186,7 @@ public class UserRecipeService {
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {
+        pageNo = Math.max(pageNo, -1);
         return PageRequest.of(pageNo, pageSize, Sort.by(DESC, "createdAt"));
     }
 }

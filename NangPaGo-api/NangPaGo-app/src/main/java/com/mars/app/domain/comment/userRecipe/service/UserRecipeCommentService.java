@@ -28,9 +28,9 @@ public class UserRecipeCommentService {
 
     public PageDto<UserRecipeCommentResponseDto> pagedCommentsByUserRecipe(Long userRecipeId,
                                                                            Long userId,
-                                                                           int pageNo,
+                                                                           int pageNo ,
                                                                            int pageSize) {
-        if (pageNo < 0) throw BAD_REQUEST_INVALID_PAGE_NO.of();
+        if (pageNo < -1) throw BAD_REQUEST_INVALID_PAGE_NO.of();
         if (pageSize <= 0) throw BAD_REQUEST_INVALID_PAGE_SIZE.of();
 
         validateUserRecipe(userRecipeId);
@@ -93,6 +93,6 @@ public class UserRecipeCommentService {
     }
 
     private PageRequest createPageRequest(int pageNo, int pageSize) {
-        return PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return PageRequest.of(Math.max(pageNo, -1) , pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }
