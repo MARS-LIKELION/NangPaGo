@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "유저 커뮤니티 API", description = "유저 커뮤니티 게시물 좋아요 관련 API")
 @RestController
-@RequestMapping("/api/userRecipe")
+@RequestMapping("/api/user-recipe")
 public class UserRecipeLikeController {
 
     private final UserRecipeLikeService userRecipeLikeService;

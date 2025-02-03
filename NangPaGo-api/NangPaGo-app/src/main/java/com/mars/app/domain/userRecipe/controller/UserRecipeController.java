@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "유저 레시피 API", description = "유저 레시피 게시물 관련 API")
 @RestController
-@RequestMapping("/api/userRecipe")
+@RequestMapping("/api/user-recipe")
 public class UserRecipeController {
 
     private final UserRecipeService userRecipeService;
