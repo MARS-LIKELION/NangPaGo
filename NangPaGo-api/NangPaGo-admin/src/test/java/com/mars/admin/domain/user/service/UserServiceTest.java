@@ -6,7 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
-import com.mars.admin.domain.user.sort.SortType;
+import com.mars.admin.domain.user.sort.UserListSortType;
 import com.mars.admin.support.IntegrationTestSupport;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.user.UserStatus;
@@ -34,28 +34,21 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.deleteAllInBatch();
     }
 
-    private User createUser(String email) {
+    private User createUser(String email, String nickname) {
         return User.builder()
             .email(email)
+            .nickname(nickname)
             .userStatus(UserStatus.ACTIVE)
             .role("ROLE_USER")
             .build();
     }
 
-    private User createUserWithNickname(String email, String nickname) {
-        return User.builder()
-                .email(email)
-                .nickname(nickname)
-                .userStatus(UserStatus.ACTIVE)
-                .role("ROLE_USER")
-                .build();
-    }
 
     @DisplayName("사용자 정보를 조회할 수 있다.")
     @Test
     void getCurrentUser() {
         // given
-        User user = createUser("test@example.com");
+        User user = createUser("test@example.com", "nickname");
         userRepository.save(user);
 
         // when
@@ -79,12 +72,12 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserList() {
         // given
         List<User> users = IntStream.range(0, 15)
-            .mapToObj(i -> createUser("test" + i + "@example.com"))
+            .mapToObj(i -> createUser("test" + i + "@example.com", "nickname"))
             .collect(Collectors.toList());
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> result = userService.getUserList(0, SortType.ID_ASC);
+        Page<UserDetailResponseDto> result = userService.getUserList(0, UserListSortType.ID_ASC);
 
         // then
         assertThat(result.getContent().size()).isEqualTo(10);
@@ -97,13 +90,13 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserListSortedByIdDesc() {
         // given
         List<User> users = IntStream.range(0, 15)
-                .mapToObj(i -> createUser("test" + i + "@example.com"))
+                .mapToObj(i -> createUser("test" + i + "@example.com", "nickname"))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, SortType.ID_DESC);
-        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, SortType.ID_DESC);
+        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, UserListSortType.ID_DESC);
+        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, UserListSortType.ID_DESC);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isGreaterThan(secondPage.getContent().get(4).id());
@@ -114,13 +107,13 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserListSortedByIdAsc() {
         // given
         List<User> users = IntStream.range(0, 15)
-                .mapToObj(i -> createUser("test" + i + "@example.com"))
+                .mapToObj(i -> createUser("test" + i + "@example.com", "nickname"))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, SortType.ID_ASC);
-        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, SortType.ID_ASC);
+        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, UserListSortType.ID_ASC);
+        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, UserListSortType.ID_ASC);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isLessThan(secondPage.getContent().get(4).id());
@@ -131,16 +124,16 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserListSortedByNicknameDesc() {
         // given
         List<User> users = IntStream.range(0, 15)
-                .mapToObj(i -> createUserWithNickname("test" + i + "@example.com"
+                .mapToObj(i -> createUser("test" + i + "@example.com"
                         , "nickname" + i))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
         // when
         Page<UserDetailResponseDto> firstPage = userService
-                .getUserList(0, SortType.NICKNAME_DESC);
+                .getUserList(0, UserListSortType.NICKNAME_DESC);
         Page<UserDetailResponseDto> secondPage = userService
-                .getUserList(1, SortType.NICKNAME_DESC);
+                .getUserList(1, UserListSortType.NICKNAME_DESC);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname14");
@@ -152,16 +145,16 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserListSortedByNicknameAsc() {
         // given
         List<User> users = IntStream.range(0, 15)
-                .mapToObj(i -> createUserWithNickname("test" + i + "@example.com"
+                .mapToObj(i -> createUser("test" + i + "@example.com"
                         , "nickname" + i))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
         // when
         Page<UserDetailResponseDto> firstPage = userService
-                .getUserList(0, SortType.NICKNAME_ASC);
+                .getUserList(0, UserListSortType.NICKNAME_ASC);
         Page<UserDetailResponseDto> secondPage = userService
-                .getUserList(1, SortType.NICKNAME_ASC);
+                .getUserList(1, UserListSortType.NICKNAME_ASC);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname0");
@@ -172,7 +165,7 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void banUser() {
         // given
-        User user = createUser("test@example.com");
+        User user = createUser("test@example.com", "nickname");
         userRepository.save(user);
 
         // when
@@ -190,7 +183,7 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void unbanUser() {
         // given
-        User user = createUser("test@example.com");
+        User user = createUser("test@example.com", "nickname");
         user.updateUserStatus(UserStatus.BANNED);
         userRepository.save(user);
 
