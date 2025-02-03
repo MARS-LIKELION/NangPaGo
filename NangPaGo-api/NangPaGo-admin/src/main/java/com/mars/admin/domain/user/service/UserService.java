@@ -30,8 +30,20 @@ public class UserService {
     }
 
     public Page<UserDetailResponseDto> getUserList(int pageNo, SortType sort) {
-        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(sort.getDirection(), sort.getField()));
-        return userRepository.findByRoleNotAdmin(pageable).map(UserDetailResponseDto::from);
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
+
+        return switch (sort) {
+            case NICKNAME_ASC ->
+                userRepository.findByRoleNotAdminOrderByNicknameAsc(pageable)
+                    .map(UserDetailResponseDto::from);
+            case NICKNAME_DESC ->
+                userRepository.findByRoleNotAdminOrderByNicknameDesc(pageable)
+                    .map(UserDetailResponseDto::from);
+            default ->
+                userRepository.findByRoleNotAdmin(
+                    PageRequest.of(pageNo, PAGE_SIZE, Sort.by(sort.getDirection(), sort.getField()))
+                ).map(UserDetailResponseDto::from);
+        };
     }
 
     @Transactional

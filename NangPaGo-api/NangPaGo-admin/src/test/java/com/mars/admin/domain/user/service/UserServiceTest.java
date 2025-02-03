@@ -143,7 +143,7 @@ class UserServiceTest extends IntegrationTestSupport {
                 .getUserList(1, SortType.NICKNAME_DESC);
 
         // then
-        assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname9");
+        assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname14");
         assertThat(secondPage.getContent().get(4).nickname()).isEqualTo("nickname0");
     }
 
@@ -165,7 +165,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname0");
-        assertThat(secondPage.getContent().get(4).nickname()).isEqualTo("nickname9");
+        assertThat(secondPage.getContent().get(4).nickname()).isEqualTo("nickname14");
     }
 
     @DisplayName("사용자를 차단할 수 있다.")
