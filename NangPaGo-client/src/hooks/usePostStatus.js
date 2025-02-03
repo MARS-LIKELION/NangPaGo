@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 const usePostStatus = (post, isLoggedIn) => {
   const [isHeartActive, setIsHeartActive] = useState(false);
   const [isStarActive, setIsStarActive] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(null);
   const [modalState, setModalState] = useState({
     type: null,
     data: null,

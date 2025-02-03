@@ -17,7 +17,9 @@ function RecipeButton({
         onClick={toggleHeart}
       >
         <FaHeart className="text-2xl" />
-        <span className="text-sm ml-1">{likeCount}</span>
+        {likeCount !== null && (
+          <span className="text-sm ml-1">{likeCount}</span>
+        )}
       </button>
       <button
         className={`bg-white ${
