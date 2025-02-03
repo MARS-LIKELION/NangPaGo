@@ -4,9 +4,10 @@ import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentRequestDto;
 import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentResponseDto;
-import com.mars.common.dto.PageDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.comment.userRecipe.service.UserRecipeCommentService;
+import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,10 @@ public class UserRecipeCommentController {
     @GetMapping
     public ResponseDto<PageDto<UserRecipeCommentResponseDto>> list(
         @PathVariable("id") Long id,
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "5") int pageSize) {
-
+        PageRequestVO pageRequestVO
+    ){
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userRecipeCommentService.pagedCommentsByUserRecipe(id, userId, pageNo, pageSize));
+        return ResponseDto.of(userRecipeCommentService.pagedCommentsByUserRecipe(id, userId, pageRequestVO));
     }
 
     @Operation(summary = "댓글 작성")
@@ -51,7 +51,8 @@ public class UserRecipeCommentController {
         @PathVariable("id") Long id) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userRecipeCommentService.update(requestDto, userId, id), "댓글이 성공적으로 수정되었습니다.");
+        return ResponseDto.of(
+            userRecipeCommentService.update(requestDto, commentId, userId), "댓글이 성공적으로 수정되었습니다.");
     }
 
     @Operation(summary = "댓글 삭제")

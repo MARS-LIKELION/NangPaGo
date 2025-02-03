@@ -2,20 +2,19 @@ package com.mars.app.domain.userRecipe.service;
 
 import static com.mars.common.exception.NPGExceptionType.*;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import com.mars.common.dto.PageDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
 import com.mars.app.domain.userRecipe.repository.UserRecipeLikeRepository;
 import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
 import com.mars.app.domain.comment.userRecipe.repository.UserRecipeCommentRepository;
 import com.mars.app.domain.firebase.service.FirebaseStorageService;
+import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.common.model.userRecipe.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,9 +47,8 @@ public class UserRecipeService {
         return UserRecipeResponseDto.of(userRecipe, likeCount, commentCount, userId);
     }
 
-    public PageDto<UserRecipeResponseDto> getPagedUserRecipes(int pageNo, int pageSize, Long userId) {
-        Pageable pageable = createPageRequest(pageNo, pageSize);
-
+    public PageDto<UserRecipeResponseDto> getPagedUserRecipes(PageRequestVO pageRequestVO, Long userId) {
+        Pageable pageable = pageRequestVO.toPageable();
         return PageDto.of(
             userRecipeRepository.findByIsPublicTrueOrUserId(userId, pageable)
                 .map(recipe -> {
@@ -135,6 +133,14 @@ public class UserRecipeService {
         }
     }
 
+    public UserRecipeResponseDto getPostForEdit(Long id, Long userId) {
+        UserRecipe recipe = getUserRecipe(id);
+        validateOwnership(recipe, userId);
+        int likeCount = (int) userRecipeLikeRepository.countByUserRecipeId(recipe.getId());
+        int commentCount = (int) userRecipeCommentRepository.countByUserRecipeId(recipe.getId());
+        return UserRecipeResponseDto.of(recipe, likeCount, commentCount, userId);
+    }
+
     private String getMainImageUrl(MultipartFile mainFile) {
         return (mainFile != null && !mainFile.isEmpty())
             ? firebaseStorageService.uploadFile(mainFile)
@@ -180,9 +186,5 @@ public class UserRecipeService {
             manuals.add(manual);
         }
         return manuals;
-    }
-
-    private PageRequest createPageRequest(int pageNo, int pageSize) {
-        return PageRequest.of(pageNo, pageSize, Sort.by(DESC, "createdAt"));
     }
 }

@@ -41,6 +41,7 @@ public class UserRecipeComment extends BaseEntity {
             .userRecipe(userRecipe)
             .user(user)
             .content(content)
+            .commentStatus(UserRecipeCommentStatus.ACTIVE)
             .build();
     }
 

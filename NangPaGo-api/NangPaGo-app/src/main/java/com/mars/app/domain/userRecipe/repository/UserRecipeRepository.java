@@ -4,8 +4,16 @@ import com.mars.common.model.userRecipe.UserRecipe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface UserRecipeRepository extends JpaRepository<UserRecipe, Long> {
 
-    Page<UserRecipe> findByIsPublicTrueOrUserId(Long userId, Pageable pageable);
+    @Query("SELECT ur FROM UserRecipe ur WHERE ur.isPublic = true OR ur.user.id = :userId ORDER BY ur.updatedAt DESC")
+    Page<UserRecipe> findByIsPublicTrueOrUserId(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("SELECT ur FROM UserRecipe ur WHERE ur.user.id = :userId ORDER BY ur.createdAt DESC")
+    Page<UserRecipe> findByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    int countByUserId(Long userId);
 }

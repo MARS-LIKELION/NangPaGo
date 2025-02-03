@@ -2,11 +2,12 @@ package com.mars.app.domain.userRecipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.common.dto.PageDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
 import com.mars.app.domain.userRecipe.service.UserRecipeService;
+import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -33,12 +34,9 @@ public class UserRecipeController {
 
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
-    public ResponseDto<PageDto<UserRecipeResponseDto>> list(
-        @RequestParam(defaultValue = "0") int pageNo,
-        @RequestParam(defaultValue = "10") int pageSize) {
-
+    public ResponseDto<PageDto<UserRecipeResponseDto>> list(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userRecipeService.getPagedUserRecipes(pageNo, pageSize, userId));
+        return ResponseDto.of(userRecipeService.getPagedUserRecipes(pageRequestVO, userId));
     }
 
     @Operation(summary = "수정 페이지용 게시물 조회")
@@ -46,7 +44,7 @@ public class UserRecipeController {
     @GetMapping("/edit/{id}")
     public ResponseDto<UserRecipeResponseDto> getPostForEdit(@PathVariable Long id) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userRecipeService.getUserRecipeById(id, userId), "게시물을 성공적으로 가져왔습니다.");
+        return ResponseDto.of(userRecipeService.getPostForEdit(id, userId), "게시물을 성공적으로 가져왔습니다.");
     }
 
     @Operation(summary = "게시물 작성")

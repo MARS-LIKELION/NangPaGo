@@ -5,14 +5,14 @@ import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentResponseDto;
 import com.mars.app.domain.comment.userRecipe.repository.UserRecipeCommentRepository;
 import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
-import com.mars.common.dto.PageDto;
+
+import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.comment.userRecipe.UserRecipeComment;
 import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,22 +27,24 @@ public class UserRecipeCommentService {
     private final UserRecipeRepository userRecipeRepository;
     private final UserRepository userRepository;
 
-    public PageDto<UserRecipeCommentResponseDto> pagedCommentsByUserRecipe(Long userRecipeId,
-                                                                           Long userId,
-                                                                           int pageNo ,
-                                                                           int pageSize) {
-        if (pageNo < 0) throw BAD_REQUEST_INVALID_PAGE_NO.of();
-        if (pageSize <= 0) throw BAD_REQUEST_INVALID_PAGE_SIZE.of();
-
+    public PageDto<UserRecipeCommentResponseDto> pagedCommentsByUserRecipe(
+        Long userRecipeId,
+        Long userId,
+        PageRequestVO pageRequestVO
+    ) {
         validateUserRecipe(userRecipeId);
         return PageDto.of(
-            userRecipeCommentRepository.findByUserRecipeId(userRecipeId, createPageRequest(pageNo, pageSize))
+            userRecipeCommentRepository.findByUserRecipeId(userRecipeId, pageRequestVO.toPageable())
                 .map(comment -> UserRecipeCommentResponseDto.of(comment, userId))
         );
     }
 
     @Transactional
-    public UserRecipeCommentResponseDto create(@Valid UserRecipeCommentRequestDto requestDto, Long userId, Long userRecipeId) {
+    public UserRecipeCommentResponseDto create(
+        @Valid UserRecipeCommentRequestDto requestDto,
+        Long userId,
+        Long userRecipeId
+    ) {
         User user = userRepository.findById(userId)
             .orElseThrow(NOT_FOUND_USER::of);
 
@@ -55,8 +57,11 @@ public class UserRecipeCommentService {
     }
 
     @Transactional
-    public UserRecipeCommentResponseDto update(@Valid UserRecipeCommentRequestDto requestDto, Long commentId, Long userId) {
-
+    public UserRecipeCommentResponseDto update(
+        @Valid UserRecipeCommentRequestDto requestDto,
+        Long commentId,
+        Long userId
+    ) {
         UserRecipeComment comment = validateComment(commentId);
         validateOwnership(comment, userId);
         comment.updateText(requestDto.content());
@@ -85,9 +90,5 @@ public class UserRecipeCommentService {
     private UserRecipeComment validateComment(Long commentId) {
         return userRecipeCommentRepository.findById(commentId)
             .orElseThrow(NOT_FOUND_COMMENT::of);
-    }
-
-    private PageRequest createPageRequest(int pageNo, int pageSize) {
-        return PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }

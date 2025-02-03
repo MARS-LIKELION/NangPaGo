@@ -1,6 +1,8 @@
 package com.mars.app.domain.comment.userRecipe.dto;
 
 import java.time.LocalDateTime;
+
+import com.mars.common.enums.comment.UserRecipeCommentStatus;
 import com.mars.common.model.comment.userRecipe.UserRecipeComment;
 import lombok.Builder;
 
@@ -10,6 +12,7 @@ public record UserRecipeCommentResponseDto(
     Long postId,
     String content,
     String writerName,
+    UserRecipeCommentStatus userRecipeCommentStatus,
     boolean isOwnedByUser,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
@@ -20,6 +23,7 @@ public record UserRecipeCommentResponseDto(
             .postId(userRecipeComment.getUserRecipe().getId())
             .content(userRecipeComment.getContent())
             .writerName(userRecipeComment.getUser().getNickname())
+            .userRecipeCommentStatus(userRecipeComment.getCommentStatus())
             .isOwnedByUser(userRecipeComment.getUser().getId().equals(userId))
             .createdAt(userRecipeComment.getCreatedAt())
             .updatedAt(userRecipeComment.getUpdatedAt())
