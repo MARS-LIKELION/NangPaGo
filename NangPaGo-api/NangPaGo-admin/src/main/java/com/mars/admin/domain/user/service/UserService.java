@@ -4,8 +4,8 @@ import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.sort.UserListSortType;
-import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
@@ -30,7 +30,7 @@ public class UserService {
         return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
     }
 
-    public PageDto<UserDetailResponseDto> getUserList(PageRequestVO pageRequestVO, UserListSortType sort,
+    public PageResponseDto<UserDetailResponseDto> getUserList(PageRequestVO pageRequestVO, UserListSortType sort,
         UserStatus status, OAuth2Provider provider) {
 
         Page<User> users = switch (sort) {
@@ -44,7 +44,7 @@ public class UserService {
             );
         };
 
-        return PageDto.of(users.map(UserDetailResponseDto::from));
+        return PageResponseDto.of(users.map(UserDetailResponseDto::from));
     }
 
     @Transactional

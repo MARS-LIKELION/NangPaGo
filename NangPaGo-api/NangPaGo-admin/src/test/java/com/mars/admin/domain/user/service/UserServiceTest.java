@@ -8,8 +8,8 @@ import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.sort.UserListSortType;
 import com.mars.admin.support.IntegrationTestSupport;
-import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.exception.NPGException;
@@ -74,7 +74,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 10);
         // when
-        PageDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, UserListSortType.ID_ASC, null, null);
+        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, UserListSortType.ID_ASC, null, null);
 
         // then
         assertThat(result.getContent().size()).isEqualTo(10);
@@ -92,8 +92,8 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        PageDto<UserDetailResponseDto> firstPage = userService.getUserList(PageRequestVO.of(1,10), UserListSortType.ID_DESC, null, null);
-        PageDto<UserDetailResponseDto> secondPage = userService.getUserList(PageRequestVO.of(2,10), UserListSortType.ID_DESC, null, null);
+        PageResponseDto<UserDetailResponseDto> firstPage = userService.getUserList(PageRequestVO.of(1,10), UserListSortType.ID_DESC, null, null);
+        PageResponseDto<UserDetailResponseDto> secondPage = userService.getUserList(PageRequestVO.of(2,10), UserListSortType.ID_DESC, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isGreaterThan(secondPage.getContent().get(4).id());
@@ -109,8 +109,8 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        PageDto<UserDetailResponseDto> firstPage = userService.getUserList(PageRequestVO.of(1,10), UserListSortType.ID_ASC, null, null);
-        PageDto<UserDetailResponseDto> secondPage = userService.getUserList(PageRequestVO.of(2,10), UserListSortType.ID_ASC, null, null);
+        PageResponseDto<UserDetailResponseDto> firstPage = userService.getUserList(PageRequestVO.of(1,10), UserListSortType.ID_ASC, null, null);
+        PageResponseDto<UserDetailResponseDto> secondPage = userService.getUserList(PageRequestVO.of(2,10), UserListSortType.ID_ASC, null, null);
 
         // then
         System.out.println(firstPage.getContent().get(0).id());
@@ -129,9 +129,9 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        PageDto<UserDetailResponseDto> firstPage = userService
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
                 .getUserList(PageRequestVO.of(1,10), UserListSortType.NICKNAME_DESC, null, null);
-        PageDto<UserDetailResponseDto> secondPage = userService
+        PageResponseDto<UserDetailResponseDto> secondPage = userService
                 .getUserList(PageRequestVO.of(2,10), UserListSortType.NICKNAME_DESC, null, null);
 
         // then
@@ -150,9 +150,9 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        PageDto<UserDetailResponseDto> firstPage = userService
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
                 .getUserList(PageRequestVO.of(1,10), UserListSortType.NICKNAME_ASC, null, null);
-        PageDto<UserDetailResponseDto> secondPage = userService
+        PageResponseDto<UserDetailResponseDto> secondPage = userService
                 .getUserList(PageRequestVO.of(2,10), UserListSortType.NICKNAME_ASC, null, null);
 
         // then
