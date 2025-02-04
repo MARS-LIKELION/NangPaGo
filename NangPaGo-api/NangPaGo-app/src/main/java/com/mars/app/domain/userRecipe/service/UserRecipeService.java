@@ -75,6 +75,7 @@ public class UserRecipeService {
             .content(requestDto.content())
             .mainImageUrl(mainImageUrl)
             .isPublic(requestDto.isPublic())
+            .recipeStatus(UserRecipeStatus.ACTIVE)
             .ingredients(new ArrayList<>())
             .manuals(new ArrayList<>())
             .comments(new ArrayList<>())

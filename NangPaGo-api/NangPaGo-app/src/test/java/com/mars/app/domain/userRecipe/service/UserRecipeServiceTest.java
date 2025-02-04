@@ -1,12 +1,12 @@
 package com.mars.app.domain.userRecipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
 import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
+import com.mars.common.enums.userRecipe.UserRecipeStatus;
 import com.mars.common.model.user.User;
 import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.userRecipe.UserRecipeIngredient;
@@ -47,6 +47,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
             true,
             List.of("재료1", "재료2"),
             List.of("조리법1", "조리법2")
+
         );
 
         MockMultipartFile mainFile = new MockMultipartFile("mainFile", "", "image/jpeg", new byte[0]);
@@ -63,6 +64,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
         assertThat(responseDto.manuals()).containsExactly("1. 조리법1", "2. 조리법2");
         assertThat(responseDto.likeCount()).isEqualTo(0);
         assertThat(responseDto.commentCount()).isEqualTo(0);
+        assertThat(responseDto.recipeStatus()).isEqualTo(UserRecipeStatus.ACTIVE.name());
         assertThat(userRecipeRepository.findById(responseDto.id())).isPresent();
     }
 
@@ -81,6 +83,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
             .content("초기 내용")
             .mainImageUrl("초기 이미지 URL")
             .isPublic(true)
+            .recipeStatus(UserRecipeStatus.ACTIVE)
             .ingredients(new ArrayList<>())
             .manuals(new ArrayList<>())
             .comments(new ArrayList<>())
@@ -148,6 +151,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
             .content("삭제 내용")
             .mainImageUrl("삭제 이미지 URL")
             .isPublic(true)
+            .recipeStatus(UserRecipeStatus.ACTIVE)
             .ingredients(new ArrayList<>())
             .manuals(new ArrayList<>())
             .comments(new ArrayList<>())
@@ -159,6 +163,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
         userRecipeService.deleteUserRecipe(recipe.getId(), user.getId());
 
         // then
-        assertThat(userRecipeRepository.findById(recipe.getId())).isNotPresent();
+        UserRecipe deletedRecipe = userRecipeRepository.findById(recipe.getId()).orElseThrow();
+        assertThat(deletedRecipe.getRecipeStatus()).isEqualTo(UserRecipeStatus.DELETED);
     }
 }

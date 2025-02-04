@@ -19,6 +19,7 @@ public record UserRecipeResponseDto(
     int commentCount,
     boolean isOwnedByUser,
     boolean isPublic,
+    String recipeStatus,
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
     List<String> ingredients,
@@ -41,6 +42,7 @@ public record UserRecipeResponseDto(
             .commentCount(commentCount)
             .isOwnedByUser(userRecipe.getUser().getId().equals(userId))
             .isPublic(userRecipe.isPublic())
+            .recipeStatus(userRecipe.getRecipeStatus().name())
             .createdAt(userRecipe.getCreatedAt())
             .updatedAt(userRecipe.getUpdatedAt())
             .ingredients(userRecipe.getIngredients().stream().map(ingredient -> ingredient.getName() + " " + ingredient.getAmount()).toList()) // 재료를 "이름 + 수량" 형태로 변환
