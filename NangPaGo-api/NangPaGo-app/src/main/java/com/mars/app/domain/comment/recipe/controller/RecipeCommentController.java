@@ -11,6 +11,7 @@ import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.mars.app.aop.audit.AuditLog;
 
 @RequiredArgsConstructor
 @Tag(name = "레시피 댓글 API", description = "레시피 댓글 관련 API")
@@ -27,6 +28,10 @@ public class RecipeCommentController {
         return ResponseDto.of(recipeCommentService.pagedCommentsByRecipe(recipeId, userId, pageRequestVO));
     }
 
+    @AuditLog(
+        action = "RECIPE_COMMENT_CREATE",
+        dtoType = RecipeCommentRequestDto.class
+    )
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<RecipeCommentResponseDto> create(

@@ -1,6 +1,6 @@
 package com.mars.app.domain.audit.controller;
 
-import com.mars.app.domain.audit.model.AuditLog;
+import com.mars.common.model.audit.AuditLog;
 import com.mars.app.domain.audit.service.AuditLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

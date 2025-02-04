@@ -1,6 +1,6 @@
 package com.mars.app.domain.audit.service;
 
-import com.mars.app.domain.audit.model.AuditLog;
+import com.mars.common.model.audit.AuditLog;
 import com.mars.app.domain.audit.repository.AuditLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,11 @@ public class AuditLogService {
 
     // 감사 로그 생성
     @Transactional
-    public AuditLog createAuditLog(String action, String userId, String details) {
+    public AuditLog createAuditLog(String action, String userId, String requestDto) {
         AuditLog auditLog = AuditLog.builder()
                 .action(action)
                 .userId(userId)
-                .details(details)
+                .requestDto(requestDto)
                 .build();
         
         return auditLogRepository.save(auditLog);

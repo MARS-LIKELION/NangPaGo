@@ -1,6 +1,6 @@
 package com.mars.app.domain.audit.repository;
 
-import com.mars.app.domain.audit.model.AuditLog;
+import com.mars.common.model.audit.AuditLog;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.mars.app.domain.audit.model;
+package com.mars.common.model.audit;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,16 +16,14 @@ public class AuditLog {
     
     private String action;
     private String userId;
-    private String details;
+    private String requestDto;
     private LocalDateTime timestamp;
-    
-    // You can add more fields based on your actual audit_logs structure
 
     @Builder
-    public AuditLog(String action, String userId, String details) {
+    private AuditLog(String action, String userId, String requestDto) {
         this.action = action;
         this.userId = userId;
-        this.details = details;
+        this.requestDto = requestDto;
         this.timestamp = LocalDateTime.now();
     }
-} 
+}
