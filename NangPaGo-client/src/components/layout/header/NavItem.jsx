@@ -12,7 +12,7 @@ function NavItem({ to, isActive, label, Icon, onClick, additionalProps = {} }) {
       {...additionalProps}
     >
       <span className="inline-flex items-center justify-center">
-        <Icon size={24} />
+        <Icon size={23} />
       </span>
       <span>{label}</span>
     </button>
