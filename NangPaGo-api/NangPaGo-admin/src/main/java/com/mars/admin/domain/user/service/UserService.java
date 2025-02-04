@@ -5,6 +5,7 @@ import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.sort.UserListSortType;
 import com.mars.common.dto.user.UserResponseDto;
+import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.model.user.User;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,30 @@ public class UserService {
 
     public UserResponseDto getCurrentUser(Long userId) {
         return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
+    }
+
+    public Page<UserDetailResponseDto> getUserList(int pageNo, UserListSortType sort,
+        UserStatus status,
+        OAuth2Provider provider) {
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
+
+        Page<User> users;
+        switch (sort) {
+            case NICKNAME_ASC:
+                users = userRepository.findByRoleNotAdminWithFiltersOrderByNicknameAsc(status, provider, pageable);
+                break;
+            case NICKNAME_DESC:
+                users = userRepository.findByRoleNotAdminWithFiltersOrderByNicknameDesc(status, provider, pageable);
+                break;
+            default:
+                users = userRepository.findByRoleNotAdminWithFilters(
+                    status,
+                    provider,
+                    PageRequest.of(pageNo, PAGE_SIZE, Sort.by(sort.getDirection(), sort.getField()))
+                );
+        }
+
+        return users.map(UserDetailResponseDto::from);
     }
 
     public Page<UserDetailResponseDto> getUserList(int pageNo, UserListSortType sort) {
