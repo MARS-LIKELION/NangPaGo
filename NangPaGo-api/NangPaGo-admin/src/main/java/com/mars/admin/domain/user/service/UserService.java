@@ -5,6 +5,7 @@ import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.sort.UserListSortType;
 import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
@@ -12,7 +13,6 @@ import com.mars.common.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,33 +24,25 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 @Service
 public class UserService {
 
-    private static final int PAGE_SIZE = 10;
     private final UserRepository userRepository;
 
     public UserResponseDto getCurrentUser(Long userId) {
         return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
     }
 
-    public PageDto<UserDetailResponseDto> getUserList(int pageNo, UserListSortType sort,
-        UserStatus status,
-        OAuth2Provider provider) {
-        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
+    public PageDto<UserDetailResponseDto> getUserList(PageRequestVO pageRequestVO, UserListSortType sort,
+        UserStatus status, OAuth2Provider provider) {
 
-        Page<User> users;
-        switch (sort) {
-            case NICKNAME_ASC:
-                users = userRepository.findByRoleNotAdminWithFiltersOrderByNicknameAsc(status, provider, pageable);
-                break;
-            case NICKNAME_DESC:
-                users = userRepository.findByRoleNotAdminWithFiltersOrderByNicknameDesc(status, provider, pageable);
-                break;
-            default:
-                users = userRepository.findByRoleNotAdminWithFilters(
-                    status,
-                    provider,
-                    PageRequest.of(pageNo, PAGE_SIZE, Sort.by(sort.getDirection(), sort.getField()))
-                );
-        }
+        Page<User> users = switch (sort) {
+            case NICKNAME_ASC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameAsc(
+                status, provider, pageRequestVO.toPageable());
+            case NICKNAME_DESC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameDesc(
+                status, provider, pageRequestVO.toPageable());
+            default -> userRepository.findByRoleNotAdminWithFilters(status, provider,
+                PageRequest.of(pageRequestVO.pageNo() - 1, pageRequestVO.pageSize(),
+                    Sort.by(sort.getDirection(), sort.getField()))
+            );
+        };
 
         return PageDto.of(users.map(UserDetailResponseDto::from));
     }

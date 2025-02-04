@@ -24,12 +24,13 @@ export const unBanUser = async (userId) => {
   }
 };
 
-export const getUserList = async (page, sort, status, provider) => {
+export const getUserList = async (page, sort, status, provider, size = 10) => {
   try {
     const params = new URLSearchParams();
-    
-    params.append('pageNo', page);
+
+    params.append('pageNo', page + 1);
     params.append('sort', sort);
+    params.append('pageSize', size);
     
     if (status) {
       params.append('status', status);

@@ -6,6 +6,7 @@ import com.mars.admin.domain.user.service.UserService;
 import com.mars.admin.domain.user.sort.UserListSortType;
 import com.mars.common.dto.ResponseDto;
 import com.mars.common.dto.page.PageDto;
+import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,11 @@ public class UserController {
 
     @GetMapping
     public ResponseDto<PageDto<UserDetailResponseDto>> userList(
-        @RequestParam(defaultValue = "0") int pageNo,
+        PageRequestVO pageRequestVO,
         @RequestParam(defaultValue = "ID_ASC") UserListSortType sort,
         @RequestParam(required = false) UserStatus status,
         @RequestParam(required = false) OAuth2Provider provider
     ) {
-        return ResponseDto.of(userService.getUserList(pageNo, sort, status, provider));
+        return ResponseDto.of(userService.getUserList(pageRequestVO, sort, status, provider));
     }
 }
