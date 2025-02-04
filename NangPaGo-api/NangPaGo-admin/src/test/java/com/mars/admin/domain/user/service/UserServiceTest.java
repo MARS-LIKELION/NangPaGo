@@ -1,7 +1,12 @@
 package com.mars.admin.domain.user.service;
 
+import static com.mars.common.enums.oauth.OAuth2Provider.GOOGLE;
+import static com.mars.common.enums.oauth.OAuth2Provider.KAKAO;
+import static com.mars.common.enums.oauth.OAuth2Provider.NAVER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
@@ -11,6 +16,7 @@ import com.mars.admin.support.IntegrationTestSupport;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
+import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.user.User;
@@ -31,10 +37,11 @@ class UserServiceTest extends IntegrationTestSupport {
     @Autowired
     private UserService userService;
 
-    private User createUser(String email, String nickname) {
+    private User createUser(String email, String nickname, OAuth2Provider oAuth2Provider) {
         return User.builder()
             .email(email)
             .nickname(nickname)
+            .oauth2Provider(oAuth2Provider)
             .userStatus(UserStatus.ACTIVE)
             .role("ROLE_USER")
             .build();
@@ -44,7 +51,7 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void getCurrentUser() {
         // given
-        User user = createUser("test@example.com", "nickname");
+        User user = createUser("test@example.com", "nickname", GOOGLE);
         userRepository.save(user);
 
         // when
@@ -68,7 +75,7 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserList() {
         // given
         List<User> users = IntStream.range(0, 15)
-            .mapToObj(i -> createUser("test" + i + "@example.com", "nickname"))
+            .mapToObj(i -> createUser("test" + i + "@example.com", "nickname", GOOGLE))
             .collect(Collectors.toList());
         userRepository.saveAll(users);
 
@@ -87,7 +94,7 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserListSortedByIdDesc() {
         // given
         List<User> users = IntStream.range(0, 15)
-                .mapToObj(i -> createUser("test" + i + "@example.com", "nickname"))
+                .mapToObj(i -> createUser("test" + i + "@example.com", "nickname", GOOGLE))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
@@ -104,7 +111,7 @@ class UserServiceTest extends IntegrationTestSupport {
     void getUserListSortedByIdAsc() {
         // given
         List<User> users = IntStream.range(0, 15)
-                .mapToObj(i -> createUser("test" + i + "@example.com", "nickname"))
+                .mapToObj(i -> createUser("test" + i + "@example.com", "nickname", GOOGLE))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
@@ -124,7 +131,7 @@ class UserServiceTest extends IntegrationTestSupport {
         // given
         List<User> users = IntStream.range(0, 15)
                 .mapToObj(i -> createUser("test" + i + "@example.com"
-                        , "nickname" + i))
+                        , "nickname" + i, GOOGLE))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
@@ -145,7 +152,7 @@ class UserServiceTest extends IntegrationTestSupport {
         // given
         List<User> users = IntStream.range(0, 15)
                 .mapToObj(i -> createUser("test" + i + "@example.com"
-                        , "nickname" + i))
+                        , "nickname" + i, GOOGLE))
                 .collect(Collectors.toList());
         userRepository.saveAll(users);
 
@@ -160,11 +167,160 @@ class UserServiceTest extends IntegrationTestSupport {
         assertThat(secondPage.getContent().get(4).nickname()).isEqualTo("nickname14");
     }
 
+    @DisplayName("사용자 목록에서 밴된 유저만 조회할 수 있다.")
+    @Test
+    void getUserListFilterUserStatusBan() {
+        // given
+        List<User> users = IntStream.range(0, 10)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, GOOGLE))
+            .collect(Collectors.toList());
+
+        users.get(7).updateUserStatus(UserStatus.BANNED);
+
+        userRepository.saveAll(users);
+
+        // when
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
+            .getUserList(PageRequestVO.of(1,10), UserListSortType.NICKNAME_ASC, UserStatus.BANNED, null);
+
+        // then
+        assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname7");
+        assertThat(firstPage.getTotalItems()).isEqualTo(1);
+    }
+
+    @DisplayName("사용자 목록에서 네이버 유저만 조회할 수 있다.")
+    @Test
+    void getUserListFilterOAuth2ProviderNaver() {
+        // given
+        List<User> users = IntStream.range(0, 10)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, GOOGLE))
+            .collect(Collectors.toList());
+
+        users.add(createUser("test10@example.com", "nickname10", NAVER));
+        users.add(createUser("test11@example.com", "nickname11", NAVER));
+        users.add(createUser("test12@example.com", "nickname12", GOOGLE));
+        users.add(createUser("test13@example.com", "nickname13", NAVER));
+
+        userRepository.saveAll(users);
+
+        // when
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
+            .getUserList(PageRequestVO.of(1,10), UserListSortType.NICKNAME_ASC, null, NAVER);
+
+        // then
+        assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname10");
+        assertThat(firstPage.getTotalItems()).isEqualTo(3);
+        assertThat(firstPage.getTotalPages()).isEqualTo(1);
+    }
+
+    @DisplayName("사용자 목록에서 카카오이면서 탈퇴한 유저를 조회할 수 있다.")
+    @Test
+    void getUserListFilterOAuth2ProviderKakaoAndUserStatusWithdrawn() {
+        // given
+        List<User> users = IntStream.range(0, 10)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, KAKAO))
+            .collect(Collectors.toList());
+
+        users.add(createUser("test10@example.com", "nickname10", NAVER));
+        users.add(createUser("test11@example.com", "nickname11", NAVER));
+        users.add(createUser("test12@example.com", "nickname12", GOOGLE));
+        users.add(createUser("test13@example.com", "nickname13", NAVER));
+
+        users.get(1).updateUserStatus(UserStatus.WITHDRAWN);
+        users.get(3).updateUserStatus(UserStatus.WITHDRAWN);
+        users.get(7).updateUserStatus(UserStatus.WITHDRAWN);
+
+        userRepository.saveAll(users);
+
+        // when
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
+            .getUserList(PageRequestVO.of(1,10), UserListSortType.NICKNAME_ASC, UserStatus.WITHDRAWN, KAKAO);
+
+        // then
+        assertAll("닉네임 검증",
+            () -> assertEquals("nickname1", firstPage.getContent().get(0).nickname()),
+            () -> assertEquals("nickname3", firstPage.getContent().get(1).nickname()),
+            () -> assertEquals("nickname7", firstPage.getContent().get(2).nickname())
+        );
+        assertThat(firstPage.getTotalItems()).isEqualTo(3);
+        assertThat(firstPage.getTotalPages()).isEqualTo(1);
+    }
+
+    @DisplayName("사용자 목록에서 카카오이면서 탈퇴한 유저를 닉네임 기준 내림차순으로 조회할 수 있다.")
+    @Test
+    void getUserListSortNicknameDescAndFilterOAuth2ProviderKakaoAndUserStatusWithdrawn() {
+        // given
+        List<User> users = IntStream.range(0, 10)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, KAKAO))
+            .collect(Collectors.toList());
+
+        users.add(createUser("test10@example.com", "nickname10", NAVER));
+        users.add(createUser("test11@example.com", "nickname11", NAVER));
+        users.add(createUser("test12@example.com", "nickname12", GOOGLE));
+        users.add(createUser("test13@example.com", "nickname13", NAVER));
+
+        users.get(1).updateUserStatus(UserStatus.WITHDRAWN);
+        users.get(3).updateUserStatus(UserStatus.WITHDRAWN);
+        users.get(7).updateUserStatus(UserStatus.WITHDRAWN);
+
+        userRepository.saveAll(users);
+
+        // when
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
+            .getUserList(PageRequestVO.of(1,10), UserListSortType.NICKNAME_DESC, UserStatus.WITHDRAWN, KAKAO);
+
+        // then
+        assertAll("닉네임 검증",
+            () -> assertEquals("nickname7", firstPage.getContent().get(0).nickname()),
+            () -> assertEquals("nickname3", firstPage.getContent().get(1).nickname()),
+            () -> assertEquals("nickname1", firstPage.getContent().get(2).nickname())
+        );
+        assertThat(firstPage.getTotalItems()).isEqualTo(3);
+        assertThat(firstPage.getTotalPages()).isEqualTo(1);
+    }
+
+    @DisplayName("사용자 목록에서 구글이면서 정상적인 유저를 생성일자 기준 내림차순으로 조회할 수 있다.")
+    @Test
+    void getUserListSortIdDescAndFilterOAuth2ProviderGoogleAndUserStatusActive() {
+        // given
+        List<User> users = IntStream.range(0, 12)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, GOOGLE))
+            .collect(Collectors.toList());
+
+        users.add(createUser("test12@example.com", "nickname12", GOOGLE));
+        users.add(createUser("test13@example.com", "nickname13", NAVER));
+        users.add(createUser("test14@example.com", "nickname14", GOOGLE));
+        users.add(createUser("test15@example.com", "nickname15", NAVER));
+
+        users.get(3).updateUserStatus(UserStatus.WITHDRAWN);
+        users.get(7).updateUserStatus(UserStatus.WITHDRAWN);
+        users.get(10).updateUserStatus(UserStatus.WITHDRAWN);
+
+        userRepository.saveAll(users);
+
+        // when
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
+            .getUserList(PageRequestVO.of(1,10), UserListSortType.ID_DESC, UserStatus.ACTIVE, GOOGLE);
+
+        // then
+        assertAll("닉네임 검증",
+            () -> assertEquals("nickname14", firstPage.getContent().get(0).nickname()),
+            () -> assertEquals("nickname11", firstPage.getContent().get(2).nickname())
+        );
+        assertThat(firstPage.getTotalItems()).isEqualTo(11);
+        assertThat(firstPage.getTotalPages()).isEqualTo(2);
+    }
+
     @DisplayName("사용자를 차단할 수 있다.")
     @Test
     void banUser() {
         // given
-        User user = createUser("test@example.com", "nickname");
+        User user = createUser("test@example.com", "nickname", GOOGLE);
         userRepository.save(user);
 
         // when
@@ -182,7 +338,7 @@ class UserServiceTest extends IntegrationTestSupport {
     @Test
     void unbanUser() {
         // given
-        User user = createUser("test@example.com", "nickname");
+        User user = createUser("test@example.com", "nickname", GOOGLE);
         user.updateUserStatus(UserStatus.BANNED);
         userRepository.save(user);
 
