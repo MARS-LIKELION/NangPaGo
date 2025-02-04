@@ -1,9 +1,9 @@
 package com.mars.admin.domain.user.service;
 
-import static com.mars.admin.domain.user.sort.UserListSortType.ID_ASC;
-import static com.mars.admin.domain.user.sort.UserListSortType.ID_DESC;
-import static com.mars.admin.domain.user.sort.UserListSortType.NICKNAME_ASC;
-import static com.mars.admin.domain.user.sort.UserListSortType.NICKNAME_DESC;
+import static com.mars.admin.domain.user.enums.UserListSortType.ID_ASC;
+import static com.mars.admin.domain.user.enums.UserListSortType.ID_DESC;
+import static com.mars.admin.domain.user.enums.UserListSortType.NICKNAME_ASC;
+import static com.mars.admin.domain.user.enums.UserListSortType.NICKNAME_DESC;
 import static com.mars.common.enums.oauth.OAuth2Provider.GOOGLE;
 import static com.mars.common.enums.oauth.OAuth2Provider.KAKAO;
 import static com.mars.common.enums.oauth.OAuth2Provider.NAVER;
@@ -380,6 +380,25 @@ class UserServiceTest extends IntegrationTestSupport {
         );
         assertThat(firstPage.getTotalItems()).isEqualTo(4);
         assertEquals(WITHDRAWN, firstPage.getContent().get(3).userStatus());
+    }
+
+    @DisplayName("사용자 목록에서 이메일를 검색할 수 있다.")
+    @Test
+    void getUserListSearchEmail() {
+        // given
+        List<User> users = IntStream.range(0, 15)
+            .mapToObj(i -> createUser("test" + i + "@example.com", "nickname", GOOGLE))
+            .collect(Collectors.toList());
+        userRepository.saveAll(users);
+
+        PageRequestVO pageRequestVO = PageRequestVO.of(1, 10);
+        // when
+        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null, null, null );
+
+        // then
+        assertThat(result.getContent().size()).isEqualTo(10);
+        assertThat(result.getTotalItems()).isEqualTo(15);
+        assertThat(result.getTotalPages()).isEqualTo(2);
     }
 
     @DisplayName("사용자를 차단할 수 있다.")

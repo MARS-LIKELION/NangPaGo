@@ -1,4 +1,4 @@
-package com.mars.admin.domain.user.sort;
+package com.mars.admin.domain.user.enums;
 
 import lombok.Getter;
 import org.springframework.data.domain.Sort;

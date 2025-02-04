@@ -3,7 +3,7 @@ package com.mars.admin.domain.user.controller;
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.service.UserService;
-import com.mars.admin.domain.user.sort.UserListSortType;
+import com.mars.admin.domain.user.enums.UserListSortType;
 import com.mars.common.dto.ResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;

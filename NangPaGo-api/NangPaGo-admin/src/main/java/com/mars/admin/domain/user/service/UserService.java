@@ -2,8 +2,9 @@ package com.mars.admin.domain.user.service;
 
 import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
+import com.mars.admin.domain.user.dto.UserSearchRequestDto;
 import com.mars.admin.domain.user.repository.UserRepository;
-import com.mars.admin.domain.user.sort.UserListSortType;
+import com.mars.admin.domain.user.enums.UserListSortType;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
@@ -49,6 +50,27 @@ public class UserService {
         return PageResponseDto.of(users.map(UserDetailResponseDto::from));
     }
 
+/*    public PageResponseDto<UserDetailResponseDto> getUserList(PageRequestVO pageRequestVO, UserListSortType sort,
+        List<UserStatus> statuses, List<OAuth2Provider> providers, UserSearchRequestDto searchRequestDto) {
+
+        Page<User> users = switch (sort) {
+            case NICKNAME_ASC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameAsc(
+                statuses, providers, searchRequestDto.userListSearchType().getType(),
+                searchRequestDto.searchKeyword(), pageRequestVO.toPageable());
+            case NICKNAME_DESC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameDesc(
+                statuses, providers, searchRequestDto.userListSearchType().getType(),
+                searchRequestDto.searchKeyword(), pageRequestVO.toPageable());
+            default -> userRepository.findByRoleNotAdminWithFilters(
+                statuses, providers,
+                searchRequestDto.userListSearchType().getType(), searchRequestDto.searchKeyword(),
+                PageRequest.of(pageRequestVO.pageNo() - 1, pageRequestVO.pageSize(),
+                    Sort.by(sort.getDirection(), sort.getField()))
+            );
+        };
+
+        return PageResponseDto.of(users.map(UserDetailResponseDto::from));
+    }*/
+    
     @Transactional
     public UserBanResponseDto banUser(Long userId) {
         User user = findUserById(userId);
