@@ -17,13 +17,15 @@ public class AuditLog {
     private String action;
     private String userId;
     private String requestDto;
+    private String arguments;
     private LocalDateTime timestamp;
 
     @Builder
-    private AuditLog(String action, String userId, String requestDto) {
+    private AuditLog(String action, String userId, String requestDto, String arguments) {
         this.action = action;
         this.userId = userId;
         this.requestDto = requestDto;
+        this.arguments = arguments;
         this.timestamp = LocalDateTime.now();
     }
 }

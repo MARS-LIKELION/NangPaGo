@@ -13,18 +13,20 @@ import java.util.List;
 @Transactional(readOnly = true)
 @Service
 public class AuditLogService {
+
     private final AuditLogRepository auditLogRepository;
 
     // 감사 로그 생성
     @Transactional
-    public AuditLog createAuditLog(String action, String userId, String requestDto) {
+    public void createAuditLog(String action, String userId, String requestDto, String arguments) {
         AuditLog auditLog = AuditLog.builder()
-                .action(action)
-                .userId(userId)
-                .requestDto(requestDto)
-                .build();
-        
-        return auditLogRepository.save(auditLog);
+            .action(action)
+            .userId(userId)
+            .requestDto(requestDto)
+            .arguments(arguments)
+            .build();
+
+        auditLogRepository.save(auditLog);
     }
 
     // 모든 감사 로그 조회

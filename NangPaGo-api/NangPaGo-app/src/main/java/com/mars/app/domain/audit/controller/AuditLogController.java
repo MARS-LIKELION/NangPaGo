@@ -19,15 +19,6 @@ import java.util.List;
 public class AuditLogController {
     private final AuditLogService auditLogService;
 
-    @Operation(summary = "감사 로그 생성")
-    @PostMapping
-    public ResponseEntity<AuditLog> createAuditLog(
-            @RequestParam String action,
-            @RequestParam String userId,
-            @RequestParam String details) {
-        return ResponseEntity.ok(auditLogService.createAuditLog(action, userId, details));
-    }
-
     @Operation(summary = "전체 감사 로그 조회")
     @GetMapping
     public ResponseEntity<List<AuditLog>> getAllAuditLogs() {

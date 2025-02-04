@@ -12,6 +12,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import java.lang.reflect.Method;
 
@@ -36,7 +38,14 @@ public class AuditLogAspect {
 
         // DTO 찾기 및 JSON 변환
         Object[] args = joinPoint.getArgs();
-        String requestDto = Arrays.stream(args)
+        String requestDto = getRequestDto(args, auditLogAnnotation);
+        String arguments = getOtherArgs(args, auditLogAnnotation, signature);
+
+        auditLogService.createAuditLog(action, userId, requestDto, arguments);
+    }
+
+    private String getRequestDto(Object[] args, AuditLog auditLogAnnotation) {
+        return Arrays.stream(args)
             .filter(arg -> auditLogAnnotation.dtoType().isInstance(arg))
             .findFirst()
             .map(arg -> {
@@ -48,7 +57,14 @@ public class AuditLogAspect {
                 }
             })
             .orElse("{}");
-
-        auditLogService.createAuditLog(action, userId, requestDto);
     }
-} 
+    
+    private String getOtherArgs(Object[] args, AuditLog auditLogAnnotation, MethodSignature signature) {
+        String[] parameterNames = signature.getParameterNames();
+        
+        return IntStream.range(0, args.length)
+            .filter(i -> args[i] != null && !auditLogAnnotation.dtoType().isInstance(args[i]))
+            .mapToObj(i -> parameterNames[i] + ": " + args[i].toString())
+            .collect(Collectors.joining(", "));
+    }
+}
