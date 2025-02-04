@@ -24,13 +24,14 @@ spring:
     username: ${ELASTICSEARCH_USERNAME}
     password: ${ELASTICSEARCH_PASSWORD}
 
+  # RabbitMQ
   rabbitmq:
     host: ${RABBITMQ_HOST}
     port: ${RABBITMQ_PORT}
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
 
-  # 환경변수에서 불러오도록 설정
+  # MySQL
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -43,11 +44,16 @@ spring:
       connection-timeout: 30000
       max-lifetime: 1500000
 
-  # Table 자동 생성 방지
+  # MySQL Table 자동 생성 방지
   jpa:
     hibernate:
       ddl-auto: none
       open-in-view: false
+
+  # MongoDB
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}
 
   security:
     oauth2:
