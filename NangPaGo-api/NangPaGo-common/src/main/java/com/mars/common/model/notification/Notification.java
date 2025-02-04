@@ -8,11 +8,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.sql.Timestamp;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Notification {
 
@@ -22,6 +26,7 @@ public class Notification {
 
     private Long senderId;
     private Long receiverId;
+    private String postType;
     private Long postId;
     private Long commentId;
 
