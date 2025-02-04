@@ -40,11 +40,8 @@ public class CommunityCommentController {
         return ResponseDto.of(communityCommentService.pagedCommentsByCommunity(id, userId, pageRequestVO));
     }
 
-    @AuditLog(
-        action = AuditActionType.COMMUNITY_COMMENT_CREATE,
-        dtoType = CommunityCommentRequestDto.class
-    )
     @Operation(summary = "댓글 작성")
+    @AuditLog(action = AuditActionType.COMMUNITY_COMMENT_CREATE, dtoType = CommunityCommentRequestDto.class)
     @AuthenticatedUser
     @PostMapping
     public ResponseDto<CommunityCommentResponseDto> create(
@@ -55,11 +52,8 @@ public class CommunityCommentController {
         return ResponseDto.of(communityCommentService.create(requestDto, userId, id), "댓글이 성공적으로 추가되었습니다.");
     }
 
-    @AuditLog(
-        action = AuditActionType.COMMUNITY_COMMENT_UPDATE,
-        dtoType = CommunityCommentRequestDto.class
-    )
     @Operation(summary = "댓글 수정")
+    @AuditLog(action = AuditActionType.COMMUNITY_COMMENT_UPDATE, dtoType = CommunityCommentRequestDto.class)
     @AuthenticatedUser
     @PutMapping("/{commentId}")
     public ResponseDto<CommunityCommentResponseDto> update(
@@ -71,10 +65,8 @@ public class CommunityCommentController {
         return ResponseDto.of(communityCommentService.update(commentId, userId, requestDto), "댓글이 성공적으로 수정되었습니다.");
     }
 
-    @AuditLog(
-        action = AuditActionType.COMMUNITY_COMMENT_DELETE
-    )
     @Operation(summary = "댓글 삭제")
+    @AuditLog(action = AuditActionType.COMMUNITY_COMMENT_DELETE)
     @AuthenticatedUser
     @DeleteMapping("/{commentId}")
     public ResponseDto<Void> delete(
