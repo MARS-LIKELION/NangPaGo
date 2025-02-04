@@ -339,6 +339,49 @@ class UserServiceTest extends IntegrationTestSupport {
         assertThat(firstPage.getTotalPages()).isEqualTo(2);
     }
 
+    @DisplayName("사용자 목록에서 구글, 네이버면서 탈퇴,밴 유저를 생성일자 기준 내림차순으로 조회할 수 있다.")
+    @Test
+    void getUserListSortIdDescAndFilterOAuth2ProvidersAndUserStatuses() {
+        // given
+        List<User> users = new ArrayList<>(
+            IntStream.range(0, 4)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, GOOGLE))
+            .toList());
+        users.addAll(IntStream.range(4, 8)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, KAKAO))
+            .toList());
+        users.addAll(IntStream.range(8, 12)
+            .mapToObj(i -> createUser("test" + i + "@example.com"
+                , "nickname" + i, NAVER))
+            .toList());
+
+        users.get(1).updateUserStatus(WITHDRAWN);
+        users.get(2).updateUserStatus(BANNED);
+        users.get(5).updateUserStatus(BANNED);
+        users.get(7).updateUserStatus(WITHDRAWN);
+        users.get(9).updateUserStatus(WITHDRAWN);
+        users.get(10).updateUserStatus(WITHDRAWN);
+
+        userRepository.saveAll(users);
+
+        List<UserStatus> userStatuses = List.of(BANNED, WITHDRAWN);
+        List<OAuth2Provider> oAuth2Providers = List.of(GOOGLE, NAVER);
+
+        // when
+        PageResponseDto<UserDetailResponseDto> firstPage = userService
+            .getUserList(PageRequestVO.of(1, 10), ID_DESC, userStatuses, oAuth2Providers);
+
+        // then
+        assertAll("닉네임 검증",
+            () -> assertEquals("nickname10", firstPage.getContent().get(0).nickname()),
+            () -> assertEquals("nickname2", firstPage.getContent().get(2).nickname())
+        );
+        assertThat(firstPage.getTotalItems()).isEqualTo(4);
+        assertEquals(WITHDRAWN, firstPage.getContent().get(3).userStatus());
+    }
+
     @DisplayName("사용자를 차단할 수 있다.")
     @Test
     void banUser() {
