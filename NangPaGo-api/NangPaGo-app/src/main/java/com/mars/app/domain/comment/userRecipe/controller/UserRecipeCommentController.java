@@ -6,8 +6,8 @@ import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentRequestDto;
 import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.comment.userRecipe.service.UserRecipeCommentService;
-import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.dto.page.PageResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class UserRecipeCommentController {
 
     @Operation(summary = "댓글 목록 조회")
     @GetMapping
-    public ResponseDto<PageDto<UserRecipeCommentResponseDto>> list(
+    public ResponseDto<PageResponseDto<UserRecipeCommentResponseDto>> list(
         @PathVariable("id") Long id,
         PageRequestVO pageRequestVO
     ){

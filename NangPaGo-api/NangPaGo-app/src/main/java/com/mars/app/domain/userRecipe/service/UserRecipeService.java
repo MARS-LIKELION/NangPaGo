@@ -1,15 +1,15 @@
 package com.mars.app.domain.userRecipe.service;
 
 import static com.mars.common.exception.NPGExceptionType.*;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
 import com.mars.app.domain.userRecipe.repository.UserRecipeLikeRepository;
 import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
 import com.mars.app.domain.comment.userRecipe.repository.UserRecipeCommentRepository;
 import com.mars.app.domain.firebase.service.FirebaseStorageService;
-import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.dto.page.PageResponseDto;
+import com.mars.common.enums.userRecipe.UserRecipeStatus;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.common.model.userRecipe.*;
@@ -47,9 +47,9 @@ public class UserRecipeService {
         return UserRecipeResponseDto.of(userRecipe, likeCount, commentCount, userId);
     }
 
-    public PageDto<UserRecipeResponseDto> getPagedUserRecipes(PageRequestVO pageRequestVO, Long userId) {
+    public PageResponseDto<UserRecipeResponseDto> getPagedUserRecipes(PageRequestVO pageRequestVO, Long userId) {
         Pageable pageable = pageRequestVO.toPageable();
-        return PageDto.of(
+        return PageResponseDto.of(
             userRecipeRepository.findByIsPublicTrueOrUserId(userId, pageable)
                 .map(recipe -> {
                     int likeCount = (int) userRecipeLikeRepository.countByUserRecipeId(recipe.getId());
@@ -119,11 +119,12 @@ public class UserRecipeService {
     public void deleteUserRecipe(Long id, Long userId) {
         UserRecipe userRecipe = getUserRecipe(id);
         validateOwnership(userRecipe, userId);
-        userRecipeRepository.deleteById(id);
+        userRecipe.softDelete();
+        userRecipeRepository.save(userRecipe);
     }
 
     private UserRecipe getUserRecipe(Long id) {
-        return userRecipeRepository.findById(id)
+        return userRecipeRepository.findByIdAndRecipeStatus(id, UserRecipeStatus.ACTIVE)
             .orElseThrow(NOT_FOUND_RECIPE::of);
     }
 

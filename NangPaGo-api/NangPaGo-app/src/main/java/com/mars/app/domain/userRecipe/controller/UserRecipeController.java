@@ -6,8 +6,8 @@ import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
 import com.mars.app.domain.userRecipe.service.UserRecipeService;
-import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.dto.page.PageResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class UserRecipeController {
 
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
-    public ResponseDto<PageDto<UserRecipeResponseDto>> list(PageRequestVO pageRequestVO) {
+    public ResponseDto<PageResponseDto<UserRecipeResponseDto>> list(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userRecipeService.getPagedUserRecipes(pageRequestVO, userId));
     }

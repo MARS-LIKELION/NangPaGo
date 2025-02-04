@@ -49,7 +49,7 @@ public class UserRecipeComment extends BaseEntity {
         this.content = content;
     }
 
-    public  void softDelete(){
+    public void softDelete(){
         this.commentStatus = UserRecipeCommentStatus.DELETED;
     }
 }

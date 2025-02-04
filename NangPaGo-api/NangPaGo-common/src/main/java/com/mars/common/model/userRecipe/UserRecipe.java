@@ -1,5 +1,7 @@
 package com.mars.common.model.userRecipe;
 
+import com.mars.common.enums.comment.UserRecipeCommentStatus;
+import com.mars.common.enums.userRecipe.UserRecipeStatus;
 import com.mars.common.model.BaseEntity;
 import com.mars.common.model.comment.userRecipe.UserRecipeComment;
 import com.mars.common.model.user.User;
@@ -47,7 +49,11 @@ public class UserRecipe extends BaseEntity {
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRecipeLike> likes; // 좋아요
 
-    public static UserRecipe of(User user,
+    @Enumerated(EnumType.STRING)
+    @Column(name = "recipe_status", nullable = false)
+    private UserRecipeStatus recipeStatus;
+
+    public static UserRecipe create(User user,
                                 String title,
                                 String content,
                                 String mainImageUrl,
@@ -60,6 +66,7 @@ public class UserRecipe extends BaseEntity {
             .mainImageUrl(mainImageUrl)
             .isPublic(isPublic)
             .ingredients(ingredients)
+            .recipeStatus(UserRecipeStatus.ACTIVE)
             .build();
     }
 
@@ -72,5 +79,9 @@ public class UserRecipe extends BaseEntity {
 
     public boolean isPrivate() {
         return !this.isPublic;
+    }
+
+    public void softDelete(){
+        this.recipeStatus = UserRecipeStatus.DELETED;
     }
 }

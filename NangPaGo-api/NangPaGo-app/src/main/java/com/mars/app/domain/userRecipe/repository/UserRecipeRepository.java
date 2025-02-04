@@ -1,11 +1,14 @@
 package com.mars.app.domain.userRecipe.repository;
 
+import com.mars.common.enums.userRecipe.UserRecipeStatus;
 import com.mars.common.model.userRecipe.UserRecipe;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.Optional;
 
 public interface UserRecipeRepository extends JpaRepository<UserRecipe, Long> {
 
@@ -16,4 +19,6 @@ public interface UserRecipeRepository extends JpaRepository<UserRecipe, Long> {
     Page<UserRecipe> findByUserId(@Param("userId") Long userId, Pageable pageable);
 
     int countByUserId(Long userId);
+
+    Optional<UserRecipe> findByIdAndRecipeStatus(Long id, UserRecipeStatus status);
 }

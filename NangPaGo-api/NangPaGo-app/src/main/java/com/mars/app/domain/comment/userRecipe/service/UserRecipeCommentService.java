@@ -5,9 +5,8 @@ import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentResponseDto;
 import com.mars.app.domain.comment.userRecipe.repository.UserRecipeCommentRepository;
 import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
-
-import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.model.comment.userRecipe.UserRecipeComment;
 import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.user.User;
@@ -27,13 +26,13 @@ public class UserRecipeCommentService {
     private final UserRecipeRepository userRecipeRepository;
     private final UserRepository userRepository;
 
-    public PageDto<UserRecipeCommentResponseDto> pagedCommentsByUserRecipe(
+    public PageResponseDto<UserRecipeCommentResponseDto> pagedCommentsByUserRecipe(
         Long userRecipeId,
         Long userId,
         PageRequestVO pageRequestVO
     ) {
         validateUserRecipe(userRecipeId);
-        return PageDto.of(
+        return PageResponseDto.of(
             userRecipeCommentRepository.findByUserRecipeId(userRecipeId, pageRequestVO.toPageable())
                 .map(comment -> UserRecipeCommentResponseDto.of(comment, userId))
         );
