@@ -8,6 +8,7 @@ import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
 import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
 import com.mars.app.domain.comment.recipe.service.RecipeCommentService;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.enums.audit.AuditActionType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class RecipeCommentController {
     }
 
     @AuditLog(
-        action = "RECIPE_COMMENT_CREATE",
+        action = AuditActionType.RECIPE_COMMENT_CREATE,
         dtoType = RecipeCommentRequestDto.class
     )
     @AuthenticatedUser
@@ -42,6 +43,10 @@ public class RecipeCommentController {
         return ResponseDto.of(recipeCommentService.create(requestDto, userId, recipeId));
     }
 
+    @AuditLog(
+        action = AuditActionType.RECIPE_COMMENT_UPDATE,
+        dtoType = RecipeCommentRequestDto.class
+    )
     @AuthenticatedUser
     @PutMapping("/{commentId}")
     public ResponseDto<RecipeCommentResponseDto> update(
@@ -53,6 +58,7 @@ public class RecipeCommentController {
         return ResponseDto.of(recipeCommentService.update(commentId, userId, requestDto));
     }
 
+    @AuditLog(action = AuditActionType.RECIPE_COMMENT_DELETE)
     @AuthenticatedUser
     @DeleteMapping("/{commentId}")
     public ResponseDto<Void> delete(

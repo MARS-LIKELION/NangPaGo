@@ -34,7 +34,7 @@ public class AuditLogAspect {
         AuditLog auditLogAnnotation = method.getAnnotation(AuditLog.class);
 
         String userId = String.valueOf(AuthenticationHolder.getCurrentUserId());
-        String action = auditLogAnnotation.action();
+        String action = auditLogAnnotation.action().toString();
 
         // DTO 찾기 및 JSON 변환
         Object[] args = joinPoint.getArgs();
