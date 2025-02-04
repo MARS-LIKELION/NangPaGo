@@ -8,8 +8,8 @@ export default function Users() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [actionType, setActionType] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState('');
-  const [selectedProvider, setSelectedProvider] = useState('');
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedProviders, setSelectedProviders] = useState([]);
   const [sortField, setSortField] = useState('ID');
   const [isAscending, setIsAscending] = useState(true);
   const [dataUpdateFlag, setDataUpdateFlag] = useState(0);
@@ -27,12 +27,25 @@ export default function Users() {
     { value: 'NAVER', label: 'Naver' }
   ];
 
-  const handleProviderChange = (e) => {
-    setSelectedProvider(e.target.value);
+  const handleProviderChange = (value) => {
+    setSelectedProviders(prev => {
+      if (prev.includes(value)) {
+        return prev.filter(provider => provider !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+    setCurrentPage(0);
   };
 
-  const handleStatusChange = (e) => {
-    setSelectedStatus(e.target.value);
+  const handleStatusChange = (value) => {
+    setSelectedStatuses(prev => {
+      if (prev.includes(value)) {
+        return prev.filter(status => status !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
     setCurrentPage(0);
   };
 
@@ -71,8 +84,8 @@ export default function Users() {
       const response = await getUserList(
         currentPage,
         sortType,
-        selectedStatus || null,
-        selectedProvider || null
+        selectedStatuses,
+        selectedProviders
       );
       setUsers(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
@@ -83,73 +96,47 @@ export default function Users() {
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, isAscending, sortField, selectedStatus, selectedProvider, dataUpdateFlag]);
+  }, [currentPage, isAscending, sortField, selectedStatuses, selectedProviders, dataUpdateFlag]);
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">사용자 관리</h2>
       <div className="bg-white p-4 rounded-md shadow-md mb-6">
-        <div className="flex flex-col space-y-4">
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">사용자 상태</h3>
-            <div className="flex flex-wrap gap-6">
-              <label className="flex items-center space-x-2">
+      <div className="flex flex-col space-y-4">
+        <div>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">사용자 상태</h3>
+          <div className="flex flex-wrap gap-6">
+            {userStatuses.map(status => (
+              <label key={status.value} className="flex items-center space-x-2">
                 <input
-                  type="radio"
-                  name="status"
-                  value=""
-                  checked={selectedStatus === ''}
-                  onChange={handleStatusChange}
-                  className="text-indigo-600 focus:ring-indigo-500"
+                  type="checkbox"
+                  checked={selectedStatuses.includes(status.value)}
+                  onChange={() => handleStatusChange(status.value)}
+                  className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded"
                 />
-                <span className="text-sm text-gray-700">전체</span>
+                <span className="text-sm text-gray-700">{status.label}</span>
               </label>
-              {userStatuses.map(status => (
-                <label key={status.value} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="status"
-                    value={status.value}
-                    checked={selectedStatus === status.value}
-                    onChange={handleStatusChange}
-                    className="text-indigo-600 focus:ring-indigo-500"
-                  />
-                  <span className="text-sm text-gray-700">{status.label}</span>
-                </label>
-              ))}
-            </div>
+            ))}
           </div>
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">가입 경로</h3>
-            <div className="flex flex-wrap gap-6">
-              <label className="flex items-center space-x-2">
+        </div>
+        <div>
+          <h3 className="text-sm font-medium text-gray-700 mb-2">가입 경로</h3>
+          <div className="flex flex-wrap gap-6">
+            {oAuthProviders.map(provider => (
+              <label key={provider.value} className="flex items-center space-x-2">
                 <input
-                  type="radio"
-                  name="provider"
-                  value=""
-                  checked={selectedProvider === ''}
-                  onChange={handleProviderChange}
-                  className="text-indigo-600 focus:ring-indigo-500"
+                  type="checkbox"
+                  checked={selectedProviders.includes(provider.value)}
+                  onChange={() => handleProviderChange(provider.value)}
+                  className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded"
                 />
-                <span className="text-sm text-gray-700">전체</span>
+                <span className="text-sm text-gray-700">{provider.label}</span>
               </label>
-              {oAuthProviders.map(provider => (
-                <label key={provider.value} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="provider"
-                    value={provider.value}
-                    checked={selectedProvider === provider.value}
-                    onChange={handleProviderChange}
-                    className="text-indigo-600 focus:ring-indigo-500"
-                  />
-                  <span className="text-sm text-gray-700">{provider.label}</span>
-                </label>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </div>
+    </div>
       <div className="bg-white p-4 rounded-md shadow-md flex flex-col">
         <div className="flex-1 overflow-x-auto">
           <table className="w-full table-fixed border-collapse min-w-[800px]">

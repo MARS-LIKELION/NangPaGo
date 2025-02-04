@@ -24,7 +24,7 @@ export const unBanUser = async (userId) => {
   }
 };
 
-export const getUserList = async (page, sort, status, provider, size = 10) => {
+export const getUserList = async (page, sort, statuses = [], providers = [], size = 10) => {
   try {
     const params = new URLSearchParams();
 
@@ -32,12 +32,16 @@ export const getUserList = async (page, sort, status, provider, size = 10) => {
     params.append('sort', sort);
     params.append('pageSize', size);
     
-    if (status) {
-      params.append('status', status);
+    if (statuses.length > 0) {
+      statuses.forEach(status => {
+        params.append('statuses', status);
+      });
     }
     
-    if (provider) {
-      params.append('provider', provider);
+    if (providers.length > 0) {
+      providers.forEach(provider => {
+        params.append('providers', provider);
+      });
     }
     
     const response = await axiosInstance.get(`/api/user?${params.toString()}`);

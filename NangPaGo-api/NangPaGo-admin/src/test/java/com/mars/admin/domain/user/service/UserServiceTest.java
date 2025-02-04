@@ -23,8 +23,10 @@ import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.oauth.OAuth2Provider;
+import com.mars.common.enums.user.UserStatus;
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.user.User;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -189,9 +191,11 @@ class UserServiceTest extends IntegrationTestSupport {
 
         userRepository.saveAll(users);
 
+        List<UserStatus> userStatuses = List.of(BANNED);
+
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, BANNED, null);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, userStatuses, null);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname7");
@@ -214,9 +218,10 @@ class UserServiceTest extends IntegrationTestSupport {
 
         userRepository.saveAll(users);
 
+        List<OAuth2Provider> oAuth2Providers = List.of(NAVER);
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, null, NAVER);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, null, oAuth2Providers);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname10");
@@ -244,9 +249,12 @@ class UserServiceTest extends IntegrationTestSupport {
 
         userRepository.saveAll(users);
 
+        List<UserStatus> userStatuses = List.of(WITHDRAWN);
+        List<OAuth2Provider> oAuth2Providers = List.of(KAKAO);
+
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, WITHDRAWN, KAKAO);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, userStatuses, oAuth2Providers);
 
         // then
         assertAll("닉네임 검증",
@@ -278,9 +286,12 @@ class UserServiceTest extends IntegrationTestSupport {
 
         userRepository.saveAll(users);
 
+        List<UserStatus> userStatuses = List.of(WITHDRAWN);
+        List<OAuth2Provider> oAuth2Providers = List.of(KAKAO);
+
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_DESC, WITHDRAWN, KAKAO);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_DESC, userStatuses, oAuth2Providers);
 
         // then
         assertAll("닉네임 검증",
@@ -312,9 +323,12 @@ class UserServiceTest extends IntegrationTestSupport {
 
         userRepository.saveAll(users);
 
+        List<UserStatus> userStatuses = List.of(ACTIVE);
+        List<OAuth2Provider> oAuth2Providers = List.of(GOOGLE);
+
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), ID_DESC, ACTIVE, GOOGLE);
+            .getUserList(PageRequestVO.of(1, 10), ID_DESC, userStatuses, oAuth2Providers);
 
         // then
         assertAll("닉네임 검증",

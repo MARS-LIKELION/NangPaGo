@@ -10,6 +10,7 @@ import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.model.user.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,14 +32,15 @@ public class UserService {
     }
 
     public PageResponseDto<UserDetailResponseDto> getUserList(PageRequestVO pageRequestVO, UserListSortType sort,
-        UserStatus status, OAuth2Provider provider) {
+        List<UserStatus> statuses, List<OAuth2Provider> providers) {
 
         Page<User> users = switch (sort) {
             case NICKNAME_ASC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameAsc(
-                status, provider, pageRequestVO.toPageable());
+                statuses, providers, pageRequestVO.toPageable());
             case NICKNAME_DESC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameDesc(
-                status, provider, pageRequestVO.toPageable());
-            default -> userRepository.findByRoleNotAdminWithFilters(status, provider,
+                statuses, providers, pageRequestVO.toPageable());
+            default -> userRepository.findByRoleNotAdminWithFilters(
+                statuses, providers,
                 PageRequest.of(pageRequestVO.pageNo() - 1, pageRequestVO.pageSize(),
                     Sort.by(sort.getDirection(), sort.getField()))
             );
