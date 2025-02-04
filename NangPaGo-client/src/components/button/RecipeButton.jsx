@@ -1,4 +1,5 @@
-import { FaHeart, FaStar } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaStar, FaRegStar  } from 'react-icons/fa';
+import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 
 function RecipeButton({
   isHeartActive,
@@ -16,7 +17,11 @@ function RecipeButton({
         }`}
         onClick={toggleHeart}
       >
-        <FaHeart className="text-2xl" />
+        {isHeartActive ? (
+          <FaHeart className="text-2xl" />
+        ) : (
+          <FaRegHeart className="text-2xl" />
+        )}
         {likeCount !== null && (
           <span className="text-sm ml-1">{likeCount}</span>
         )}
@@ -27,7 +32,11 @@ function RecipeButton({
         }`}
         onClick={toggleStar}
       >
-        <FaStar className="text-2xl" />
+        {isStarActive ? (
+          <FaStar className="text-2xl" />
+        ) : (
+          <FaRegStar className="text-2xl" />
+        )}
       </button>
     </div>
   );

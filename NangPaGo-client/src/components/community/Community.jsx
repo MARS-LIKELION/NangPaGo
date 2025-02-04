@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaHeart } from 'react-icons/fa';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import ToggleButton from '../button/ToggleButton';
 import { IMAGE_STYLES } from '../../common/styles/Image';
 import { deleteCommunity } from '../../api/community';
@@ -87,7 +87,11 @@ function Community({ post, data: community, isLoggedIn }) {
           }`}
           onClick={toggleHeart}
         >
-          <FaHeart className="text-2xl" />
+          {isHeartActive ? (
+            <FaHeart className="text-2xl" />
+          ) : (
+            <FaRegHeart className="text-2xl" />
+          )}
           <span className="text-sm ml-1">{likeCount}</span>
         </button>
       </div>
