@@ -53,6 +53,13 @@ const CookingStepsSlider = forwardRef(({ manuals, manualImages }, ref) => {
 
   return (
     <div>
+      <div className="block md:hidden">
+        {manuals.map((step, index) => (
+          <div key={index} className="mt-4">
+            <CookingSteps steps={[step]} stepImages={[manualImages[index]]} />
+          </div>
+        ))}
+      </div>
       <div className="hidden md:block">
         <Slider {...sliderSettings} key={sliderKey} ref={sliderRef}>
           {manuals.map((step, index) => (
