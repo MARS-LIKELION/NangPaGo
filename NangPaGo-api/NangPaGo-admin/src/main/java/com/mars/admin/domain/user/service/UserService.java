@@ -32,15 +32,15 @@ public class UserService {
     }
 
     public PageResponseDto<UserDetailResponseDto> getUserList(PageRequestVO pageRequestVO, UserListSortType sort,
-        List<UserStatus> statuses, List<OAuth2Provider> providers) {
+        List<UserStatus> statuses, List<OAuth2Provider> providers, String searchType, String searchKeyword) {
 
         Page<User> users = switch (sort) {
             case NICKNAME_ASC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameAsc(
-                statuses, providers, pageRequestVO.toPageable());
+                statuses, providers, searchType, searchKeyword, pageRequestVO.toPageable());
             case NICKNAME_DESC -> userRepository.findByRoleNotAdminWithFiltersOrderByNicknameDesc(
-                statuses, providers, pageRequestVO.toPageable());
+                statuses, providers, searchType, searchKeyword, pageRequestVO.toPageable());
             default -> userRepository.findByRoleNotAdminWithFilters(
-                statuses, providers,
+                statuses, providers, searchType, searchKeyword,
                 PageRequest.of(pageRequestVO.pageNo() - 1, pageRequestVO.pageSize(),
                     Sort.by(sort.getDirection(), sort.getField()))
             );

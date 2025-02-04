@@ -37,8 +37,10 @@ public class UserController {
         PageRequestVO pageRequestVO,
         @RequestParam(defaultValue = "ID_ASC") UserListSortType sort,
         @RequestParam(required = false) List<UserStatus> statuses,
-        @RequestParam(required = false) List<OAuth2Provider> providers
+        @RequestParam(required = false) List<OAuth2Provider> providers,
+        @RequestParam(required = false) String searchType,
+        @RequestParam(required = false) String searchKeyword
     ) {
-        return ResponseDto.of(userService.getUserList(pageRequestVO, sort, statuses, providers));
+        return ResponseDto.of(userService.getUserList(pageRequestVO, sort, statuses, providers, searchType, searchKeyword));
     }
 }

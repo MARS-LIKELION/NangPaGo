@@ -18,6 +18,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     WHERE u.role <> 'ROLE_ADMIN'
     AND (:statuses IS NULL OR u.userStatus IN :statuses)
     AND (:providers IS NULL OR u.oauth2Provider IN :providers)
+    AND (:searchType IS NULL OR :searchKeyword IS NULL OR
+        CASE
+            WHEN :searchType = 'nickname' THEN u.nickname LIKE CONCAT('%', :searchKeyword, '%')
+            WHEN :searchType = 'email' THEN u.email LIKE CONCAT('%', :searchKeyword, '%')
+            ELSE 1=1
+        END)
 """;
 
     Optional<User> findByEmail(String email);
@@ -26,6 +32,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByRoleNotAdminWithFilters(
         @Param("statuses") List<UserStatus> statuses,
         @Param("providers") List<OAuth2Provider> providers,
+        @Param("searchType") String searchType,
+        @Param("searchKeyword") String searchKeyword,
         Pageable pageable);
 
     @Query(QUERY_SELECT_USERS +
@@ -37,6 +45,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByRoleNotAdminWithFiltersOrderByNicknameAsc(
         @Param("statuses") List<UserStatus> statuses,
         @Param("providers") List<OAuth2Provider> providers,
+        @Param("searchType") String searchType,
+        @Param("searchKeyword") String searchKeyword,
         Pageable pageable);
 
     @Query(QUERY_SELECT_USERS +
@@ -48,5 +58,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByRoleNotAdminWithFiltersOrderByNicknameDesc(
         @Param("statuses") List<UserStatus> statuses,
         @Param("providers") List<OAuth2Provider> providers,
+        @Param("searchType") String searchType,
+        @Param("searchKeyword") String searchKeyword,
         Pageable pageable);
 }

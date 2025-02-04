@@ -88,7 +88,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 10);
         // when
-        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null);
+        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null, null, null );
 
         // then
         assertThat(result.getContent().size()).isEqualTo(10);
@@ -107,9 +107,9 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService.getUserList(PageRequestVO.of(1, 10), ID_DESC,
-            null, null);
+            null, null, null, null);
         PageResponseDto<UserDetailResponseDto> secondPage = userService.getUserList(PageRequestVO.of(2, 10), ID_DESC,
-            null, null);
+            null, null, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isGreaterThan(secondPage.getContent().get(4).id());
@@ -126,9 +126,9 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService.getUserList(PageRequestVO.of(1, 10), ID_ASC,
-            null, null);
+            null, null, null, null);
         PageResponseDto<UserDetailResponseDto> secondPage = userService.getUserList(PageRequestVO.of(2, 10), ID_ASC,
-            null, null);
+            null, null, null, null);
 
         // then
         System.out.println(firstPage.getContent().get(0).id());
@@ -148,9 +148,9 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_DESC, null, null);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_DESC, null, null, null, null);
         PageResponseDto<UserDetailResponseDto> secondPage = userService
-            .getUserList(PageRequestVO.of(2, 10), NICKNAME_DESC, null, null);
+            .getUserList(PageRequestVO.of(2, 10), NICKNAME_DESC, null, null, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname14");
@@ -169,9 +169,9 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, null, null);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, null, null, null, null);
         PageResponseDto<UserDetailResponseDto> secondPage = userService
-            .getUserList(PageRequestVO.of(2, 10), NICKNAME_ASC, null, null);
+            .getUserList(PageRequestVO.of(2, 10), NICKNAME_ASC, null, null, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname0");
@@ -195,7 +195,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, userStatuses, null);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, userStatuses, null, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname7");
@@ -221,7 +221,7 @@ class UserServiceTest extends IntegrationTestSupport {
         List<OAuth2Provider> oAuth2Providers = List.of(NAVER);
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, null, oAuth2Providers);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, null, oAuth2Providers, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname10");
@@ -254,7 +254,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, userStatuses, oAuth2Providers);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_ASC, userStatuses, oAuth2Providers, null, null);
 
         // then
         assertAll("닉네임 검증",
@@ -291,7 +291,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), NICKNAME_DESC, userStatuses, oAuth2Providers);
+            .getUserList(PageRequestVO.of(1, 10), NICKNAME_DESC, userStatuses, oAuth2Providers, null, null);
 
         // then
         assertAll("닉네임 검증",
@@ -328,7 +328,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), ID_DESC, userStatuses, oAuth2Providers);
+            .getUserList(PageRequestVO.of(1, 10), ID_DESC, userStatuses, oAuth2Providers, null, null);
 
         // then
         assertAll("닉네임 검증",
@@ -371,7 +371,7 @@ class UserServiceTest extends IntegrationTestSupport {
 
         // when
         PageResponseDto<UserDetailResponseDto> firstPage = userService
-            .getUserList(PageRequestVO.of(1, 10), ID_DESC, userStatuses, oAuth2Providers);
+            .getUserList(PageRequestVO.of(1, 10), ID_DESC, userStatuses, oAuth2Providers, null, null);
 
         // then
         assertAll("닉네임 검증",

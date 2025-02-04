@@ -10,9 +10,12 @@ export default function Users() {
   const [actionType, setActionType] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState([]);
   const [selectedProviders, setSelectedProviders] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
   const [sortField, setSortField] = useState('ID');
   const [isAscending, setIsAscending] = useState(true);
   const [dataUpdateFlag, setDataUpdateFlag] = useState(0);
+  const [searchType, setSearchType] = useState('email');
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   const userStatuses = [
     { value: 'ACTIVE', label: '정상' },
@@ -47,6 +50,12 @@ export default function Users() {
       }
     });
     setCurrentPage(0);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setCurrentPage(0);
+    fetchData();
   };
 
   const toggleSort = (field) => {
@@ -85,7 +94,10 @@ export default function Users() {
         currentPage,
         sortType,
         selectedStatuses,
-        selectedProviders
+        selectedProviders,
+        pageSize,
+        searchType,
+        searchKeyword
       );
       setUsers(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
@@ -293,6 +305,31 @@ export default function Users() {
               </svg>
             </button>
           </div>
+        </div>
+        <div className="flex justify-center mb-4">
+          <form onSubmit={handleSearch} className="flex items-center space-x-2">
+            <select
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+              className="border rounded px-3 py-1.5 text-sm"
+            >
+              <option value="email">이메일</option>
+              <option value="nickname">닉네임</option>
+            </select>
+            <input
+              type="text"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              placeholder="검색어를 입력하세요"
+              className="border rounded px-3 py-1.5 text-sm w-64"
+            />
+            <button
+              type="submit"
+              className="bg-indigo-500 text-white px-4 py-1.5 rounded text-sm hover:bg-indigo-600"
+            >
+              검색
+            </button>
+          </form>
         </div>
       </div>
       {showConfirm && (
