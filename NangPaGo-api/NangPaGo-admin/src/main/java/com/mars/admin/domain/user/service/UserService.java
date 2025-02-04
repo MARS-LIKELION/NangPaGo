@@ -4,6 +4,7 @@ import com.mars.admin.domain.user.dto.UserBanResponseDto;
 import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.sort.UserListSortType;
+import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
@@ -30,7 +31,7 @@ public class UserService {
         return UserResponseDto.from(userRepository.findById(userId).orElseThrow(NOT_FOUND_USER::of));
     }
 
-    public Page<UserDetailResponseDto> getUserList(int pageNo, UserListSortType sort,
+    public PageDto<UserDetailResponseDto> getUserList(int pageNo, UserListSortType sort,
         UserStatus status,
         OAuth2Provider provider) {
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
@@ -51,24 +52,7 @@ public class UserService {
                 );
         }
 
-        return users.map(UserDetailResponseDto::from);
-    }
-
-    public Page<UserDetailResponseDto> getUserList(int pageNo, UserListSortType sort) {
-        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE);
-
-        return switch (sort) {
-            case NICKNAME_ASC ->
-                userRepository.findByRoleNotAdminOrderByNicknameAsc(pageable)
-                    .map(UserDetailResponseDto::from);
-            case NICKNAME_DESC ->
-                userRepository.findByRoleNotAdminOrderByNicknameDesc(pageable)
-                    .map(UserDetailResponseDto::from);
-            default ->
-                userRepository.findByRoleNotAdmin(
-                    PageRequest.of(pageNo, PAGE_SIZE, Sort.by(sort.getDirection(), sort.getField()))
-                ).map(UserDetailResponseDto::from);
-        };
+        return PageDto.of(users.map(UserDetailResponseDto::from));
     }
 
     @Transactional

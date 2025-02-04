@@ -8,6 +8,7 @@ import com.mars.admin.domain.user.dto.UserDetailResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.sort.UserListSortType;
 import com.mars.admin.support.IntegrationTestSupport;
+import com.mars.common.dto.page.PageDto;
 import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.exception.NPGException;
@@ -18,7 +19,6 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -72,11 +72,11 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> result = userService.getUserList(0, UserListSortType.ID_ASC);
+        PageDto<UserDetailResponseDto> result = userService.getUserList(0, UserListSortType.ID_ASC, null, null);
 
         // then
         assertThat(result.getContent().size()).isEqualTo(10);
-        assertThat(result.getTotalElements()).isEqualTo(15);
+        assertThat(result.getTotalItems()).isEqualTo(15);
         assertThat(result.getTotalPages()).isEqualTo(2);
     }
 
@@ -90,8 +90,8 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, UserListSortType.ID_DESC);
-        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, UserListSortType.ID_DESC);
+        PageDto<UserDetailResponseDto> firstPage = userService.getUserList(0, UserListSortType.ID_DESC, null, null);
+        PageDto<UserDetailResponseDto> secondPage = userService.getUserList(1, UserListSortType.ID_DESC, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isGreaterThan(secondPage.getContent().get(4).id());
@@ -107,8 +107,8 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService.getUserList(0, UserListSortType.ID_ASC);
-        Page<UserDetailResponseDto> secondPage = userService.getUserList(1, UserListSortType.ID_ASC);
+        PageDto<UserDetailResponseDto> firstPage = userService.getUserList(0, UserListSortType.ID_ASC, null, null);
+        PageDto<UserDetailResponseDto> secondPage = userService.getUserList(1, UserListSortType.ID_ASC, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).id()).isLessThan(secondPage.getContent().get(4).id());
@@ -125,10 +125,10 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService
-                .getUserList(0, UserListSortType.NICKNAME_DESC);
-        Page<UserDetailResponseDto> secondPage = userService
-                .getUserList(1, UserListSortType.NICKNAME_DESC);
+        PageDto<UserDetailResponseDto> firstPage = userService
+                .getUserList(0, UserListSortType.NICKNAME_DESC, null, null);
+        PageDto<UserDetailResponseDto> secondPage = userService
+                .getUserList(1, UserListSortType.NICKNAME_DESC, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname14");
@@ -146,10 +146,10 @@ class UserServiceTest extends IntegrationTestSupport {
         userRepository.saveAll(users);
 
         // when
-        Page<UserDetailResponseDto> firstPage = userService
-                .getUserList(0, UserListSortType.NICKNAME_ASC);
-        Page<UserDetailResponseDto> secondPage = userService
-                .getUserList(1, UserListSortType.NICKNAME_ASC);
+        PageDto<UserDetailResponseDto> firstPage = userService
+                .getUserList(0, UserListSortType.NICKNAME_ASC, null, null);
+        PageDto<UserDetailResponseDto> secondPage = userService
+                .getUserList(1, UserListSortType.NICKNAME_ASC, null, null);
 
         // then
         assertThat(firstPage.getContent().get(0).nickname()).isEqualTo("nickname0");
