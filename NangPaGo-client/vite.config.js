@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
-      allowedHosts: ['nangpago.site'],
+      allowedHosts: ['nangpago.site', '.nangpago.site'],
       port: env.VITE_FRONT_SERVER_PORT,
       host: true,
       watch: {
@@ -17,6 +17,17 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: env.VITE_HOST,
           changeOrigin: true,
+        },
+      },
+    },
+    build: {
+      target: ['es2015', 'safari11'],
+      outDir: 'dist',
+      assetsDir: 'assets',
+      minify: 'esbuild',
+      terserOptions: {
+        compress: {
+          drop_console: true,
         },
       },
     },
