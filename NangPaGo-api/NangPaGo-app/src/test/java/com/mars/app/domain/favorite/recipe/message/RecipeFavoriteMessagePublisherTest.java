@@ -6,9 +6,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.mars.app.config.rabbitmq.RabbitMQConfig;
+import com.mars.app.config.rabbitmq.RecipeFavoriteRabbitConfig;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteMessageDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +22,22 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 @ExtendWith(MockitoExtension.class)
 class RecipeFavoriteMessagePublisherTest {
 
+    private static final String RECIPE_FAVORITE_ROUTING_KEY = "recipe.favorite.*";
+
     @Mock
     private TopicExchange topicExchange;
     @Mock
     private RabbitTemplate rabbitTemplate;
+    @Mock
+    private RecipeFavoriteRabbitConfig rabbitConfig;
 
     @InjectMocks
     private RecipeFavoriteMessagePublisher recipeFavoriteMessagePublisher;
+
+    @BeforeEach
+    void setUp() {
+        when(rabbitConfig.getRoutingKey()).thenReturn(RECIPE_FAVORITE_ROUTING_KEY);
+    }
 
     @DisplayName("레시피 즐겨찾기 토글 이벤트를 발행할 수 있다.")
     @Test
@@ -45,7 +55,7 @@ class RecipeFavoriteMessagePublisherTest {
         // then
         verify(rabbitTemplate).convertAndSend(
             eq(exchangeName),
-            eq(RabbitMQConfig.RECIPE_FAVORITE_ROUTING_KEY),
+            eq(RECIPE_FAVORITE_ROUTING_KEY),
             any(RecipeFavoriteMessageDto.class)
         );
 
@@ -70,7 +80,7 @@ class RecipeFavoriteMessagePublisherTest {
         // then
         verify(rabbitTemplate).convertAndSend(
             eq(exchangeName),
-            eq(RabbitMQConfig.RECIPE_FAVORITE_ROUTING_KEY),
+            eq(RECIPE_FAVORITE_ROUTING_KEY),
             eq(RecipeFavoriteMessageDto.of(recipeId, userId))
         );
     }

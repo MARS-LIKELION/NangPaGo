@@ -1,7 +1,6 @@
 package com.mars.app.domain.favorite.recipe.message;
 
-import static com.mars.app.config.rabbitmq.RabbitMQConfig.*;
-
+import com.mars.app.config.rabbitmq.RecipeFavoriteRabbitConfig;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteMessageDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ public class RecipeFavoriteMessagePublisher {
 
     private final TopicExchange topicExchange;
     private final RabbitTemplate rabbitTemplate;
+    private final RecipeFavoriteRabbitConfig rabbitConfig;
 
     public RecipeFavoriteResponseDto toggleFavorite(Long recipeId, Long userId) {
         sendFavoriteMessage(recipeId, userId);
@@ -23,6 +23,6 @@ public class RecipeFavoriteMessagePublisher {
 
     private void sendFavoriteMessage(Long recipeId, Long userId) {
         RecipeFavoriteMessageDto recipeFavoriteMessageDto = RecipeFavoriteMessageDto.of(recipeId, userId);
-        rabbitTemplate.convertAndSend(topicExchange.getName(), RECIPE_FAVORITE_ROUTING_KEY, recipeFavoriteMessageDto);
+        rabbitTemplate.convertAndSend(topicExchange.getName(), rabbitConfig.getRoutingKey(), recipeFavoriteMessageDto);
     }
 }

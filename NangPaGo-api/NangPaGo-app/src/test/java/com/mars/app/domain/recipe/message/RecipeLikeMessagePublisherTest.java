@@ -6,9 +6,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.mars.app.config.rabbitmq.RabbitMQConfig;
+import com.mars.app.config.rabbitmq.RecipeLikeRabbitConfig;
 import com.mars.app.domain.recipe.dto.RecipeLikeMessageDto;
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +22,22 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 @ExtendWith(MockitoExtension.class)
 class RecipeLikeMessagePublisherTest {
 
+    private static final String RECIPE_LIKE_ROUTING_KEY = "recipe.like.*";
+
     @Mock
     private TopicExchange topicExchange;
     @Mock
     private RabbitTemplate rabbitTemplate;
+    @Mock
+    private RecipeLikeRabbitConfig rabbitConfig;
 
     @InjectMocks
     private RecipeLikeMessagePublisher recipeLikeMessagePublisher;
+
+    @BeforeEach
+    void setUp() {
+        when(rabbitConfig.getRoutingKey()).thenReturn(RECIPE_LIKE_ROUTING_KEY);
+    }
 
     @DisplayName("레시피 좋아요 토글 이벤트를 발행할 수 있다.")
     @Test
@@ -45,7 +55,7 @@ class RecipeLikeMessagePublisherTest {
         // then
         verify(rabbitTemplate).convertAndSend(
             eq(exchangeName),
-            eq(RabbitMQConfig.RECIPE_LIKE_ROUTING_KEY),
+            eq(RECIPE_LIKE_ROUTING_KEY),
             any(RecipeLikeMessageDto.class)
         );
 
@@ -70,7 +80,7 @@ class RecipeLikeMessagePublisherTest {
         // then
         verify(rabbitTemplate).convertAndSend(
             eq(exchangeName),
-            eq(RabbitMQConfig.RECIPE_LIKE_ROUTING_KEY),
+            eq(RECIPE_LIKE_ROUTING_KEY),
             eq(RecipeLikeMessageDto.of(recipeId, userId))
         );
     }

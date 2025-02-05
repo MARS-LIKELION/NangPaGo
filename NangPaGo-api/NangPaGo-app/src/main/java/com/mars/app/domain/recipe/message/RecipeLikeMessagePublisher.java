@@ -1,7 +1,6 @@
 package com.mars.app.domain.recipe.message;
 
-import static com.mars.app.config.rabbitmq.RabbitMQConfig.RECIPE_LIKE_ROUTING_KEY;
-
+import com.mars.app.config.rabbitmq.RecipeLikeRabbitConfig;
 import com.mars.app.domain.recipe.dto.RecipeLikeMessageDto;
 import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ public class RecipeLikeMessagePublisher {
 
     private final TopicExchange topicExchange;
     private final RabbitTemplate rabbitTemplate;
+    private final RecipeLikeRabbitConfig rabbitConfig;
 
     public RecipeLikeResponseDto toggleLike(Long recipeId, Long userId) {
         sendLikeNotification(recipeId, userId);
@@ -25,6 +25,6 @@ public class RecipeLikeMessagePublisher {
     private void sendLikeNotification(Long recipeId, Long userId) {
         // Message 전송 to RabbitMQ
         RecipeLikeMessageDto recipeLikeMessageDto = RecipeLikeMessageDto.of(recipeId, userId);
-        rabbitTemplate.convertAndSend(topicExchange.getName(), RECIPE_LIKE_ROUTING_KEY, recipeLikeMessageDto);
+        rabbitTemplate.convertAndSend(topicExchange.getName(), rabbitConfig.getRoutingKey(), recipeLikeMessageDto);
     }
 }
