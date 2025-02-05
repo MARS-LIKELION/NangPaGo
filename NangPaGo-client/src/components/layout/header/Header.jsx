@@ -9,7 +9,6 @@ import { CgLogIn } from 'react-icons/cg';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import ProfileDropdown from './ProfileDropdown.jsx';
 import NavItem from './NavItem.jsx';
-import { EventSourcePolyfill } from 'event-source-polyfill';
 
 function Header({ isBlocked = false }) {
   const loginState = useSelector((state) => state.loginSlice);
@@ -35,25 +34,10 @@ function Header({ isBlocked = false }) {
     let eventSource = null;
 
     if (loginState.isLoggedIn) {
-      const token = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('access'))
-        ?.split('=')[1];
-
-      if (!token) {
-        console.error('Access token not found');
-        return;
-      }
-
       const baseUrl = import.meta.env.VITE_HOST || '';
-      eventSource = new EventSourcePolyfill(
+      eventSource = new EventSource(
         `${baseUrl}/api/user/notification/subscribe`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        },
+        { withCredentials: true }
       );
 
       const eventName = 'USER_NOTIFICATION_EVENT';

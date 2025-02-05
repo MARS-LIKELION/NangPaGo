@@ -1,10 +1,13 @@
 package com.mars.common.util.web;
 
 import com.mars.common.auth.UserDetailsImpl;
+import com.mars.common.exception.NPGExceptionType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -116,6 +119,25 @@ public class JwtUtil {
             .build();
         
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    }
+
+    public String getAccessTokenFrom(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            throw NPGExceptionType.UNAUTHORIZED_TOKEN_EXPIRED.of("인증 토큰이 없습니다.");
+        }
+
+        String accessToken = Arrays.stream(cookies)
+            .filter(cookie -> "access".equals(cookie.getName()))
+            .map(Cookie::getValue)
+            .findFirst()
+            .orElseThrow(() -> NPGExceptionType.UNAUTHORIZED_TOKEN_EXPIRED.of("인증 토큰이 없습니다."));
+
+        if (Boolean.TRUE.equals(isExpired(accessToken))) {
+            throw NPGExceptionType.UNAUTHORIZED_TOKEN_EXPIRED.of("만료된 토큰입니다.");
+        }
+
+        return accessToken;
     }
 
     private Claims parseClaims(String token) {

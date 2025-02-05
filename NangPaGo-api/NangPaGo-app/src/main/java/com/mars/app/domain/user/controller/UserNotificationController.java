@@ -1,9 +1,9 @@
 package com.mars.app.domain.user.controller;
 
-import com.mars.app.aop.auth.AuthenticatedUser;
-import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.user.event.UserNotificationSseService;
+import com.mars.common.util.web.JwtUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +17,12 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class UserNotificationController {
 
     private final UserNotificationSseService userNotificationSseService;
+    private final JwtUtil jwtUtil;
 
-    @AuthenticatedUser
     @GetMapping("/subscribe")
-    public SseEmitter streamUserNotification() {
-        Long userId = AuthenticationHolder.getCurrentUserId();
+    public SseEmitter streamUserNotification(HttpServletRequest request) {
+        String accessToken = jwtUtil.getAccessTokenFrom(request);
+        Long userId = jwtUtil.getId(accessToken);
         return userNotificationSseService.createEmitter(userId);
     }
 }
