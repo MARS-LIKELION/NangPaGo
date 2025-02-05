@@ -1,5 +1,7 @@
 package com.mars.admin.domain.user.service;
 
+import static com.mars.admin.domain.user.enums.UserListSearchType.EMAIL;
+import static com.mars.admin.domain.user.enums.UserListSearchType.NICKNAME;
 import static com.mars.admin.domain.user.enums.UserListSortType.ID_ASC;
 import static com.mars.admin.domain.user.enums.UserListSortType.ID_DESC;
 import static com.mars.admin.domain.user.enums.UserListSortType.NICKNAME_ASC;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +91,8 @@ class UserServiceTest extends IntegrationTestSupport {
 
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 10);
         // when
-        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null, null, null );
+        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null, null,
+            null);
 
         // then
         assertThat(result.getContent().size()).isEqualTo(10);
@@ -345,9 +349,9 @@ class UserServiceTest extends IntegrationTestSupport {
         // given
         List<User> users = new ArrayList<>(
             IntStream.range(0, 4)
-            .mapToObj(i -> createUser("test" + i + "@example.com"
-                , "nickname" + i, GOOGLE))
-            .toList());
+                .mapToObj(i -> createUser("test" + i + "@example.com"
+                    , "nickname" + i, GOOGLE))
+                .toList());
         users.addAll(IntStream.range(4, 8)
             .mapToObj(i -> createUser("test" + i + "@example.com"
                 , "nickname" + i, KAKAO))
@@ -393,12 +397,63 @@ class UserServiceTest extends IntegrationTestSupport {
 
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 10);
         // when
-        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null, null, null );
+        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null,
+            EMAIL, "test1");
 
         // then
-        assertThat(result.getContent().size()).isEqualTo(10);
-        assertThat(result.getTotalItems()).isEqualTo(15);
-        assertThat(result.getTotalPages()).isEqualTo(2);
+        assertThat(result.getContent().get(0).email()).isEqualTo("test1@example.com");
+    }
+
+    @DisplayName("사용자 목록에서 닉네임를 검색할 수 있다.")
+    @Test
+    void getUserListSearchNickname() {
+        // given
+        List<User> users = IntStream.range(0, 15)
+            .mapToObj(i -> createUser("test" + i + "@example.com", "nickname" + i, GOOGLE))
+            .collect(Collectors.toList());
+        userRepository.saveAll(users);
+
+        PageRequestVO pageRequestVO = PageRequestVO.of(1, 10);
+        // when
+        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_ASC, null, null,
+            NICKNAME, "nickname1");
+
+        // then
+        assertThat(result.getContent().get(1).nickname()).isEqualTo("nickname10");
+    }
+
+    @DisplayName("사용자 목록에서 닉네임를 검색하며 여러 검색 필터를 내림차순 하여 적용할 수 있다.")
+    @Test
+    void getUserListSearchNicknameAndFiltersDesc() {
+        // given
+        List<User> users = Stream.of(GOOGLE, KAKAO, NAVER)
+            .flatMap(provider -> IntStream.range(0, 4)
+                .mapToObj(i -> {
+                    int index = provider.ordinal() * 4 + i;
+                    User user = createUser("test" + index + "@example.com", "nickname" + index, provider);
+                    UserStatus status = Stream.of(ACTIVE, BANNED, WITHDRAWN)
+                        .skip(index % 3)
+                        .findFirst()
+                        .orElse(ACTIVE);
+                    user.updateUserStatus(status);
+                    return user;
+                }))
+            .toList();
+        userRepository.saveAll(users);
+
+        PageRequestVO pageRequestVO = PageRequestVO.of(1, 10);
+
+        List<UserStatus> userStatuses = List.of(ACTIVE, WITHDRAWN);
+        List<OAuth2Provider> oAuth2Providers = List.of(GOOGLE, KAKAO);
+
+        // when
+        PageResponseDto<UserDetailResponseDto> result = userService.getUserList(pageRequestVO, ID_DESC,
+            userStatuses, oAuth2Providers, NICKNAME, "nickname");
+
+        // then
+        assertThat(result.getTotalItems()).isEqualTo(5);
+        assertThat(result.getContent().get(1).oAuth2Provider()).isEqualTo(KAKAO);
+        assertThat(result.getContent().get(1).userStatus()).isEqualTo(WITHDRAWN);
     }
 
     @DisplayName("사용자를 차단할 수 있다.")
