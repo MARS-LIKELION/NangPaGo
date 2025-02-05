@@ -63,6 +63,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         renewOauth2ProviderToken(authentication, user.getId());
         issueAccessAndRefreshTokens(response, user, email, authentication);
+        // TODO: 로그인 감사 로그 추가 예정
         response.sendRedirect(clientHost);
     }
 

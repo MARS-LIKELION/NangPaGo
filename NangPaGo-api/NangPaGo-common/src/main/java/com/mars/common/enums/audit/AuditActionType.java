@@ -17,5 +17,9 @@ public enum AuditActionType {
     COMMUNITY_COMMENT_UPDATE,
     COMMUNITY_COMMENT_DELETE,
 
+    // User Info
+    USER_INFO_UPDATE,
+    USER_DEACTIVATE,
+
     ;
 }

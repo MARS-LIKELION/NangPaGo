@@ -1,6 +1,7 @@
 package com.mars.app.domain.user.controller;
 
 
+import com.mars.app.aop.audit.AuditLog;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.community.dto.CommunityResponseDto;
@@ -15,6 +16,7 @@ import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;
 import com.mars.common.dto.user.UserInfoResponseDto;
 import com.mars.app.domain.user.service.UserService;
+import com.mars.common.enums.audit.AuditActionType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
@@ -47,7 +49,7 @@ public class UserController {
         return ResponseDto.of(myPageDto);
     }
 
-    @Operation(summary = "마이페이지 수정")
+    @Operation(summary = "마이페이지 조회")
     @AuthenticatedUser
     @GetMapping("/profile")
     public ResponseDto<UserInfoResponseDto> findUserInfo() {
@@ -61,7 +63,9 @@ public class UserController {
         return ResponseDto.of(userService.isNicknameAvailable(nickname));
     }
 
+    @Operation(summary = "마이페이지 중 닉네임 수정")
     @AuthenticatedUser
+    @AuditLog(action = AuditActionType.USER_INFO_UPDATE, dtoType = UserInfoRequestDto.class)
     @PutMapping("/profile")
     public ResponseDto<UserInfoResponseDto> updateUserInfo(@RequestBody UserInfoRequestDto requestDto) {
         Long userId = AuthenticationHolder.getCurrentUserId();
@@ -100,6 +104,7 @@ public class UserController {
     }
 
     @AuthenticatedUser
+    @AuditLog(action = AuditActionType.USER_DEACTIVATE)
     @GetMapping("/deactivate")
     public ResponseDto<String> deactivateUser() throws IOException, InterruptedException {
         Long userId = AuthenticationHolder.getCurrentUserId();
