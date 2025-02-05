@@ -422,7 +422,7 @@ class UserServiceTest extends IntegrationTestSupport {
         assertThat(result.getContent().get(1).nickname()).isEqualTo("nickname10");
     }
 
-    @DisplayName("사용자 목록에서 닉네임를 검색하며 여러 검색 필터를 내림차순 하여 적용할 수 있다.")
+    @DisplayName("사용자 목록에서 여러 조건 필터를 적용한 상태로 닉네임을 내림차순으로 검색할 수 있다.")
     @Test
     void getUserListSearchNicknameAndFiltersDesc() {
         // given
