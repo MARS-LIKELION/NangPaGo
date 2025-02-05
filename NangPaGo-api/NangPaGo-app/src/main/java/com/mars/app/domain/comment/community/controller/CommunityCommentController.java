@@ -49,17 +49,17 @@ public class CommunityCommentController {
     @PostMapping
     public ResponseDto<CommunityCommentResponseDto> create(
         @RequestBody CommunityCommentRequestDto requestDto,
-        @PathVariable("id") Long id) {
+        @PathVariable("id") Long postId) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();
         CommunityCommentResponseDto communityCommentResponseDto = communityCommentService.create(requestDto, userId,
-            id);
+            postId);
 
         // 유저 알림 발송
         userNotificationMessagePublisher.createUserNotification(
             UserNotificationEventCode.USER_RECIPE_COMMENT,
             userId,
-            id
+            postId
         );
 
         return ResponseDto.of(communityCommentResponseDto, "댓글이 성공적으로 추가되었습니다.");
