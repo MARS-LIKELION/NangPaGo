@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.mars.app.config.rabbitmq.RecipeFavoriteRabbitConfig;
+import com.mars.app.config.rabbitmq.impl.RecipeFavoriteRabbitConfig;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteMessageDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import org.junit.jupiter.api.BeforeEach;

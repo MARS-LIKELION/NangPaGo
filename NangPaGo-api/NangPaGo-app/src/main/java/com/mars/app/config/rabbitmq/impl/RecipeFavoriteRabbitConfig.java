@@ -1,5 +1,7 @@
-package com.mars.app.config.rabbitmq;
+package com.mars.app.config.rabbitmq.impl;
 
+import com.mars.app.config.rabbitmq.RabbitMQCommonConfig;
+import com.mars.app.config.rabbitmq.RabbitMQConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -10,19 +12,19 @@ import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Configuration
-public class RecipeLikeRabbitConfig implements RabbitMQConfig {
+public class RecipeFavoriteRabbitConfig implements RabbitMQConfig {
 
-    private static final String ROUTING_KEY = "recipe.like.*";
+    private static final String ROUTING_KEY = "recipe.favorite.*";
     private final RabbitMQCommonConfig rabbitMQCommonConfig;
 
     @Override
-    @Bean(name = "recipeLikeQueue")
+    @Bean(name = "recipeFavoriteQueue")
     public Queue queue() {
         return new Queue(getQueueName());
     }
 
     @Override
-    @Bean(name = "recipeLikeKeyBinding")
+    @Bean(name = "recipeFavoriteKeyBinding")
     public Binding binding(TopicExchange exchange) {
         return BindingBuilder.bind(queue()).to(exchange).with(getRoutingKey());
     }
@@ -34,6 +36,6 @@ public class RecipeLikeRabbitConfig implements RabbitMQConfig {
 
     @Override
     public String getQueueName() {
-        return "recipe-like-notification-queue-" + rabbitMQCommonConfig.getDeveloper();
+        return "recipe-favorite-notification-queue-" + rabbitMQCommonConfig.getDeveloper();
     }
 }

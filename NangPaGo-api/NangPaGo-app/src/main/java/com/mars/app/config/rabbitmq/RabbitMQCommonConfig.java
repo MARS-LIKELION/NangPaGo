@@ -1,5 +1,6 @@
 package com.mars.app.config.rabbitmq;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Getter
 @RequiredArgsConstructor
 @Configuration
 public class RabbitMQCommonConfig {
@@ -32,9 +34,5 @@ public class RabbitMQCommonConfig {
 
     private String getExchangeName() {
         return "notification-exchange-" + developer;
-    }
-
-    protected String getDeveloper() {
-        return developer;
     }
 }

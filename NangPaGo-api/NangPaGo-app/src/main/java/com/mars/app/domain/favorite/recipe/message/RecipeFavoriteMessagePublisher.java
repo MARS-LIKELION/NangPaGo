@@ -1,6 +1,6 @@
 package com.mars.app.domain.favorite.recipe.message;
 
-import com.mars.app.config.rabbitmq.RecipeFavoriteRabbitConfig;
+import com.mars.app.config.rabbitmq.impl.RecipeFavoriteRabbitConfig;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteMessageDto;
 import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
 import lombok.RequiredArgsConstructor;
