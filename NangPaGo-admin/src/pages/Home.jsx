@@ -91,7 +91,6 @@ export default function Home() {
         const firstIndex = stats.findIndex(item => item.posts !== 0);
         
         let filteredStats = firstIndex !== -1 ? stats.slice(firstIndex) : [];
-        
 
         if (!filteredStats.some(item => item.name === currentMonth)) {
           filteredStats.push({ name: currentMonth, posts: monthData[currentMonth] || 0 });
