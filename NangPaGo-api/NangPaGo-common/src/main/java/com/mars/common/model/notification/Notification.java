@@ -28,7 +28,6 @@ public class Notification {
     private Long receiverId;
     private String postType;
     private Long postId;
-    private Long commentId;
 
     @Enumerated(EnumType.STRING)
     private EventCode eventCode;
