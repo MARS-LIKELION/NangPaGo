@@ -21,7 +21,7 @@ public class DashboardController {
     }
 
 
-    @GetMapping("/month/post")
+    @GetMapping("/stats/post")
     public ResponseDto<Map<String, Long>> monthPostCountTotals(){
         return ResponseDto.of(chartService.getPostMonthCountTotals());
     }
