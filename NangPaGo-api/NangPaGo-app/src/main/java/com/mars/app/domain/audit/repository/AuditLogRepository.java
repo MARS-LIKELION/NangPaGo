@@ -9,7 +9,5 @@ import java.util.List;
 
 @Repository
 public interface AuditLogRepository extends MongoRepository<AuditLog, String> {
-    List<AuditLog> findByUserIdOrderByTimestampDesc(String userId);
-    List<AuditLog> findByTimestampBetween(LocalDateTime start, LocalDateTime end);
-    List<AuditLog> findByAction(String action);
+
 } 
