@@ -14,8 +14,11 @@ export default function Users() {
   const [sortField, setSortField] = useState('ID');
   const [isAscending, setIsAscending] = useState(true);
   const [dataUpdateFlag, setDataUpdateFlag] = useState(0);
+
   const [searchType, setSearchType] = useState('EMAIL');
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [appliedSearchType, setAppliedSearchType] = useState('');
+  const [appliedSearchKeyword, setAppliedSearchKeyword] = useState('');
 
   const userStatuses = [
     { value: 'ACTIVE', label: '정상' },
@@ -54,8 +57,9 @@ export default function Users() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    setAppliedSearchType(searchType);
+    setAppliedSearchKeyword(searchKeyword);
     setCurrentPage(0);
-    fetchData();
   };
 
   const toggleSort = (field) => {
@@ -96,8 +100,8 @@ export default function Users() {
         selectedStatuses,
         selectedProviders,
         pageSize,
-        searchType,
-        searchKeyword
+        appliedSearchType,
+        appliedSearchKeyword
       );
       setUsers(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
@@ -108,7 +112,7 @@ export default function Users() {
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, isAscending, sortField, selectedStatuses, selectedProviders, dataUpdateFlag]);
+  }, [currentPage, isAscending, sortField, selectedStatuses, selectedProviders, dataUpdateFlag, appliedSearchType, appliedSearchKeyword]);
 
   return (
     <div className="p-6">
