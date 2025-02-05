@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../slices/loginSlice.js';
 import axiosInstance from '../../../api/axiosInstance.js';
 import { CgSmartHomeRefrigerator } from 'react-icons/cg';
-import { CgList } from "react-icons/cg";
-import { CgProfile } from "react-icons/cg";
-import { CgLogIn } from "react-icons/cg";
-import { useState, useRef, useEffect } from 'react';
+import { CgList } from 'react-icons/cg';
+import { CgProfile } from 'react-icons/cg';
+import { CgLogIn } from 'react-icons/cg';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import ProfileDropdown from './ProfileDropdown.jsx';
 import NavItem from './NavItem.jsx';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 function Header({ isBlocked = false }) {
   const loginState = useSelector((state) => state.loginSlice);
@@ -17,10 +18,69 @@ function Header({ isBlocked = false }) {
   const dropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const [isReconnecting, setIsReconnecting] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const handleSseError = useCallback(() => {
+    if (!isReconnecting) {
+      setIsReconnecting(true);
+      setTimeout(() => {
+        setIsReconnecting(false);
+      }, 3000);
+    }
+  }, [isReconnecting]);
+
+  // SSE 구독 설정
+  useEffect(() => {
+    let eventSource = null;
+
+    if (loginState.isLoggedIn) {
+      const token = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('access'))
+        ?.split('=')[1];
+
+      if (!token) {
+        console.error('Access token not found');
+        return;
+      }
+
+      const baseUrl = import.meta.env.VITE_HOST || '';
+      eventSource = new EventSourcePolyfill(
+        `${baseUrl}/api/user/notification/subscribe`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        },
+      );
+
+      const eventName = 'USER_NOTIFICATION_EVENT';
+
+      eventSource.addEventListener(eventName, (event) => {
+        const eventData = JSON.parse(event.data);
+        setNotifications((prev) => [...prev, eventData]);
+      });
+
+      eventSource.onerror = () => {
+        eventSource.close();
+        handleSseError();
+      };
+    }
+
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
+  }, [loginState.isLoggedIn, handleSseError]);
 
   const handleUnsavedChanges = (isBlocked) => {
     if (isBlocked) {
-      const confirmed = window.confirm('작성 중인 내용을 저장하지 않고 이동하시겠습니까?');
+      const confirmed = window.confirm(
+        '작성 중인 내용을 저장하지 않고 이동하시겠습니까?',
+      );
       return confirmed;
     }
     return true;
@@ -104,12 +164,13 @@ function Header({ isBlocked = false }) {
               dropdownRef={dropdownRef}
               dropdownOpen={dropdownOpen}
               toggleDropdown={toggleDropdown}
-              profileBadgeCount={3} // TODO: notifications 구현 후, notifications.length로 변경
+              profileBadgeCount={notifications.length}
               handleLogout={handleLogout}
               handleLinkClick={handleLinkClick}
               isActive={isActive('/my-page')}
               icon={CgProfile}
               nickname={loginState.nickname}
+              notifications={notifications}
             />
           ) : (
             <NavItem
