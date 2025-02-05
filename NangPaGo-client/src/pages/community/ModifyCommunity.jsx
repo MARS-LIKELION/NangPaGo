@@ -7,7 +7,7 @@ import Footer from '../../components/layout/Footer';
 import TextInput from '../../components/community/TextInput';
 import TextArea from '../../components/community/TextArea';
 import FileUpload from '../../components/community/FileUpload';
-import {ERROR_STYLES} from '../../common/styles/ErrorMessage';
+import { ERROR_STYLES } from '../../common/styles/ErrorMessage';
 import SubmitButton from '../../components/button/SubmitButton';
 import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
@@ -40,12 +40,12 @@ function ModifyCommunity() {
   useEffect(() => {
     const fetchCommunity = async () => {
       try {
-        const { data } = await fetchPostById({type: "community", id: id});
-        console.log(data);
+        const { data } = await fetchPostById({ type: 'community', id: id });
         if (!data.isOwnedByUser) {
           navigate(`/community/${id}`, { replace: true });
           return;
         }
+
         setTitle(data.title);
         setContent(data.content);
         setIsPublic(data.isPublic);
@@ -75,13 +75,16 @@ function ModifyCommunity() {
     }
   }, [file]);
 
-  const handleFileChange = useCallback((e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile !== file) {
-      setFile(selectedFile);
-      setIsBlocked(true);
-    }
-  }, [file]);
+  const handleFileChange = useCallback(
+    (e) => {
+      const selectedFile = e.target.files[0];
+      if (selectedFile && selectedFile !== file) {
+        setFile(selectedFile);
+        setIsBlocked(true);
+      }
+    },
+    [file],
+  );
 
   useEffect(() => {
     const handleRefreshUnload = (e) => {
@@ -93,7 +96,9 @@ function ModifyCommunity() {
 
     const handleBackNavigation = (e) => {
       if (isBlocked) {
-        const confirmed = window.confirm('작성 중인 내용을 저장하지 않고 이동하시겠습니까?');
+        const confirmed = window.confirm(
+          '작성 중인 내용을 저장하지 않고 이동하시겠습니까?',
+        );
         if (confirmed) {
           setIsBlocked(false);
           navigate(prevPath);
@@ -128,12 +133,15 @@ function ModifyCommunity() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content', content);
-      console.log('전송할 content 데이터:', content);
       formData.append('isPublic', isPublic);
-      if (file) formData.append('file', file);
+      if (file) {
+        formData.append('file', file);
+      }
       await updateCommunity(id, formData);
       setIsBlocked(false);
-      navigate(`/community/${id}` , { state: { from: `/community/${id}/modify` } });
+      navigate(`/community/${id}`, {
+        state: { from: `/community/${id}/modify` },
+      });
     } catch (err) {
       console.error('게시글 수정 중 오류 발생:', err);
       setError(err.message);

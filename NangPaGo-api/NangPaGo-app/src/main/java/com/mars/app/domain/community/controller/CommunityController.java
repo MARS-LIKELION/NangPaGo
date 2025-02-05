@@ -67,10 +67,10 @@ public class CommunityController {
     public ResponseDto<CommunityResponseDto> update(
         @ModelAttribute @Valid CommunityRequestDto requestDto,
         @RequestParam(value = "file", required = false) MultipartFile file,
-        @PathVariable("id") Long id) {
+        @PathVariable("id") Long communityId) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(communityService.updateCommunity(id, requestDto, file, userId), "게시물이 성공적으로 수정되었습니다.");
+        return ResponseDto.of(communityService.updateCommunity(communityId, requestDto, file, userId), "게시물이 성공적으로 수정되었습니다.");
     }
 
     @AuditLog(action = AuditActionType.COMMUNITY_DELETE)

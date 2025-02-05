@@ -33,7 +33,7 @@ function DetailPage({ type }) {
     const fetchData = async () => {
       try {
         const response = await fetchPostById(post);
-        setData(response);
+        setData(response.data);
       } catch (err) {
         setError(`${type === 'recipe' ? '레시피' : '게시물'}을 불러오는데 실패했습니다.`);
         setTimeout(() => {
