@@ -1,4 +1,4 @@
-package com.mars.common.enums.event;
+package com.mars.common.enums.user;
 
 import static com.mars.common.exception.NPGExceptionType.BAD_REQUEST_INVALID_EVENTCODE;
 
@@ -11,16 +11,23 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum EventCode {
+public enum UserNotificationEventCode {
 
-    LIKE("A01"), FAVORITE("F02"), COMMENT("C01");
+    // Like
+    USER_RECIPE_LIKE("L01", "USER_RECIPE"),
 
-    private static final Map<String, EventCode> CODE_MAP = Stream.of(values())
-        .collect(Collectors.toMap(EventCode::getCode, e -> e));
+    // Comment
+    USER_RECIPE_COMMENT("C01", "USER_RECIPE"),
+
+    ;
+
+    private static final Map<String, UserNotificationEventCode> CODE_MAP = Stream.of(values())
+        .collect(Collectors.toMap(UserNotificationEventCode::getCode, e -> e));
 
     private final String code;
+    private final String postType;
 
-    public static EventCode from(String code) {
+    public static UserNotificationEventCode from(String code) {
         return Optional.ofNullable(CODE_MAP.get(code))
             .orElseThrow(() -> invalidEventCodeException(code));
     }
