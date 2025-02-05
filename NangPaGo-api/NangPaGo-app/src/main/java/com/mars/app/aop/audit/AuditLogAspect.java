@@ -1,6 +1,6 @@
 package com.mars.app.aop.audit;
 
-import com.mars.app.domain.audit.service.AuditLogService;
+import com.mars.app.domain.audit.message.AuditLogMessagePublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 @Component
 public class AuditLogAspect {
 
-    private final AuditLogService auditLogService;
+    private final AuditLogMessagePublisher auditLogMessagePublisher;
     private final ObjectMapper objectMapper;
 
     @AfterReturning(pointcut = "@annotation(com.mars.app.aop.audit.AuditLog)")
@@ -41,7 +41,7 @@ public class AuditLogAspect {
         String requestDto = getRequestDto(args, auditLogAnnotation);
         String arguments = getOtherArgs(args, auditLogAnnotation, signature);
 
-        auditLogService.createAuditLog(action, userId, requestDto, arguments);
+        auditLogMessagePublisher.createAuditLog(action, userId, requestDto, arguments);
     }
 
     private String getRequestDto(Object[] args, AuditLog auditLogAnnotation) {
