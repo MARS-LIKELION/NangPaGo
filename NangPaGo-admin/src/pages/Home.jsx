@@ -1,9 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
 import { useState, useEffect } from 'react';
-import {
-  getTotals
-} from '../api/total';
+import { getTotals, getMonthPostTotals } from '../api/total';
 
 // 더미 데이터
 const userStats = [
@@ -13,15 +11,6 @@ const userStats = [
   { name: '4월', users: 800 },
   { name: '5월', users: 1000 },
   { name: '6월', users: 1200 },
-];
-
-const postStats = [
-  { name: '1월', posts: 200 },
-  { name: '2월', posts: 400 },
-  { name: '3월', posts: 300 },
-  { name: '4월', posts: 600 },
-  { name: '5월', posts: 800 },
-  { name: '6월', posts: 1000 },
 ];
 
 const dailyUserStats = [
@@ -79,19 +68,45 @@ const monthlyAverageLoginStats = [
 ];
 
 export default function Home() {
-const [totalData, setTotalData] = useState({});
+  const [totalData, setTotalData] = useState({});
+  const [postStats, setPostStats] = useState([]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await getTotals();
-          setTotalData(response.data)
-        } catch (error) {
-          console.error('데이터 가져오기 에러: ', error);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getTotals();
+        setTotalData(response.data);
+      } catch (error) {
+        console.error('데이터 가져오기 에러: ', error);
+      }
+    };
+
+    const fetchMonthPostStats = async () => {
+      try {
+        const response = await getMonthPostTotals();
+        const monthData = response.data;
+        const stats = Object.entries(monthData).map(([month, count]) => ({ name: month, posts: count }));
+    
+        const currentMonth = `${("0" + (new Date().getMonth() + 1)).slice(-2)}월`;
+        const firstIndex = stats.findIndex(item => item.posts !== 0);
+        
+        let filteredStats = firstIndex !== -1 ? stats.slice(firstIndex) : [];
+        
+
+        if (!filteredStats.some(item => item.name === currentMonth)) {
+          filteredStats.push({ name: currentMonth, posts: monthData[currentMonth] || 0 });
         }
-      };
-      fetchData();
-    }, []);
+        
+        setPostStats(filteredStats);
+      } catch (error) {
+        console.error('월별 게시글 통계 가져오기 오류: ', error);
+      }
+    };
+
+    fetchData();
+    fetchMonthPostStats();
+  }, []);
+  
   return (
     <div className="p-6">
       {/* 통계 카드 */}
