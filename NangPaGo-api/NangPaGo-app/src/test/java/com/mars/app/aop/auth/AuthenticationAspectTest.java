@@ -58,20 +58,4 @@ class AuthenticationAspectTest extends IntegrationTestSupport {
             .hasMessage("인증 정보가 존재하지 않습니다.");
     }
 
-//    @DisplayName("존재하지 않는 사용자는 @AuthenticatedUser 어노테이션이 붙은 메서드 실행 시 예외가 발생한다.")
-//    @Test
-//    void nonExistentUserThrowsException() {
-//        // given
-//        User nonExistentUser = User.builder()
-//            .id(9999L)
-//            .email("nonexistent@example.com")
-//            .role("ROLE_USER")
-//            .build();
-//        setAuthenticationAsUserWithToken(nonExistentUser);
-//
-//        // when & then
-//        assertThatThrownBy(() -> testService.testMethodReturnSuccess())
-//            .isInstanceOf(NPGException.class)
-//            .hasMessage("사용자를 찾을 수 없습니다.");
-//    }
 }

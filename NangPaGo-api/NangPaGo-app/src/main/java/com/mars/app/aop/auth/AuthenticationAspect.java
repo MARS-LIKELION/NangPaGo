@@ -24,10 +24,6 @@ public class AuthenticationAspect {
             throw NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of();
         }
 
-//        if (Boolean.FALSE.equals(userRepository.existsById(userId))) {
-//            throw NPGExceptionType.NOT_FOUND_USER.of();
-//        }
-
         return joinPoint.proceed();
     }
 }
