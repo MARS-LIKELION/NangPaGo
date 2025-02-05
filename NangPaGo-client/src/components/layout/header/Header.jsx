@@ -104,6 +104,7 @@ function Header({ isBlocked = false }) {
               dropdownRef={dropdownRef}
               dropdownOpen={dropdownOpen}
               toggleDropdown={toggleDropdown}
+              profileBadgeCount={3} // TODO: notifications 구현 후, notifications.length로 변경
               handleLogout={handleLogout}
               handleLinkClick={handleLinkClick}
               isActive={isActive('/my-page')}
