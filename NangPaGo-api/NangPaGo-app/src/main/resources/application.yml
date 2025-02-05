@@ -193,3 +193,8 @@ spring:
         highlight_sql: true
         format_sql: true
         use_sql_comments: true
+
+  # MongoDB
+  data:
+    mongodb:
+      uri: mongodb://${TEST_MONGODB_USERNAME}:${TEST_MONGODB_PASSWORD}@${TEST_MONGODB_HOST}:${TEST_MONGODB_PORT}/${TEST_MONGODB_DATABASE}?retryWrites=false

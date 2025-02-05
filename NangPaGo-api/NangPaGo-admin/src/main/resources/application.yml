@@ -37,6 +37,11 @@ spring:
       ddl-auto: none
       open-in-view: false
 
+  # MongoDB
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}
+
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
 
@@ -113,3 +118,8 @@ spring:
         highlight_sql: true
         format_sql: true
         use_sql_comments: true
+
+  # MongoDB
+  data:
+    mongodb:
+      uri: mongodb://${TEST_MONGODB_USERNAME}:${TEST_MONGODB_PASSWORD}@${TEST_MONGODB_HOST}:${TEST_MONGODB_PORT}/${TEST_MONGODB_DATABASE}?retryWrites=false
