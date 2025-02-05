@@ -1,5 +1,6 @@
 package com.mars.admin.domain.user.repository;
 
+import com.mars.admin.domain.user.enums.UserListSearchType;
 import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.model.user.User;

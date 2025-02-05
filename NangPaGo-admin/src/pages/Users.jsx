@@ -14,7 +14,7 @@ export default function Users() {
   const [sortField, setSortField] = useState('ID');
   const [isAscending, setIsAscending] = useState(true);
   const [dataUpdateFlag, setDataUpdateFlag] = useState(0);
-  const [searchType, setSearchType] = useState('email');
+  const [searchType, setSearchType] = useState('EMAIL');
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const userStatuses = [
@@ -313,8 +313,8 @@ export default function Users() {
               onChange={(e) => setSearchType(e.target.value)}
               className="border rounded px-3 py-1.5 text-sm"
             >
-              <option value="email">이메일</option>
-              <option value="nickname">닉네임</option>
+              <option value="EMAIL">이메일</option>
+              <option value="NICKNAME">닉네임</option>
             </select>
             <input
               type="text"

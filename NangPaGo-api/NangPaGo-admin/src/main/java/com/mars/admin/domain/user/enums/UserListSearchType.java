@@ -7,9 +7,9 @@ public enum UserListSearchType {
     EMAIL("email"),
     NICKNAME("nickname");
 
-    private final String type;
+    private final String key;
 
-    UserListSearchType(String type) {
-        this.type = type;
+    UserListSearchType(String key) {
+        this.key = key;
     }
 }
