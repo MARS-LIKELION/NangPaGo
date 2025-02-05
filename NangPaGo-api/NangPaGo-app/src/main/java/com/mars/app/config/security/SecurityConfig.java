@@ -34,6 +34,7 @@ public class SecurityConfig {
     private String clientHost;
 
     private static final String[] WHITE_LIST = {
+        "/api/user/notification/subscribe",
         "/api/common/version",
         "/api/oauth2/authorization/**",
         "/api/login/oauth2/code/**",
