@@ -20,6 +20,8 @@ public enum AuditActionType {
     // User Info
     USER_INFO_UPDATE,
     USER_DEACTIVATE,
+    USER_LOGIN,
+    USER_SIGNUP, // TODO: 사용자 회원가입 구분 (현재는 사용자 로그인과 사용자 회원가입의 구분이 없음)
 
     ;
 }
