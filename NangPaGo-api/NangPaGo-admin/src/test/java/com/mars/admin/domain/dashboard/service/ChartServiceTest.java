@@ -1,6 +1,5 @@
 package com.mars.admin.domain.dashboard.service;
 
-import static com.mars.common.enums.user.UserStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
@@ -31,15 +30,15 @@ class ChartServiceTest extends IntegrationTestSupport {
     private ChartService chartService;
     @Autowired
     private UserService userService;
-    
-    private User createUser(){
+
+    private User createUser() {
         return User.builder()
             .email("test@example.com")
             .build();
     }
 
     private Community createCommunity(User user) {
-        return Community.of(user, "제목", "내용", "",true);
+        return Community.of(user, "제목", "내용", "", true);
     }
 
     @DisplayName("이번 달 게시글 총합 수를 조회할 수 있다.")
@@ -51,7 +50,7 @@ class ChartServiceTest extends IntegrationTestSupport {
         userRepository.save(user);
 
         List<Community> posts = new ArrayList<>();
-        for(int i=0; i <5; i++){
+        for (int i = 0; i < 5; i++) {
             posts.add(createCommunity(user));
         }
         communityRepository.saveAll(posts);

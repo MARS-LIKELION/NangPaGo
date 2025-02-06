@@ -13,7 +13,7 @@ export const getTotals = async () => {
 
 export const getMonthPostTotals = async () => {
   try {
-    const response = await axiosInstance.get('/api/dashboard/month/post');
+    const response = await axiosInstance.get('/api/dashboard/stats/post');
     return response.data;
   } catch (error) {
     throw new Error(
