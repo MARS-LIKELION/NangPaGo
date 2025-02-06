@@ -1,4 +1,3 @@
-import React from 'react';
 import Modal from '../common/Modal';
 
 function LogoutModal({ isOpen, onClose, onConfirm }) {

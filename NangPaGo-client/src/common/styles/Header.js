@@ -1,17 +1,17 @@
 export const HEADER_STYLES = {
-  // 공통 스타일
-  responsiveButton: "group flex flex-col items-center justify-center space-y-1 px-3 py-2 rounded-md text-xs bg-transparent transition-colors duration-200 sm:flex-row sm:space-y-0 sm:space-x-2 sm:text-sm",
-  activeButton: "text-primary font-semibold",
-  inactiveButton: "text-text-900 hover:text-primary",
-  buttonIcon: "transition-colors duration-200",
-  buttonText: "transition-colors duration-200",
-
   // Header 관련 스타일
   header: "sticky top-0 z-50 w-full px-1 mb-4 border-b bg-white h-16",
   headerContainer: "flex flex-row items-center justify-between px-4 h-full",
   logoContainer: "flex items-center justify-center h-full bg-white",
   logo: "h-full w-auto cursor-pointer py-2",
   navContainer: "flex items-center justify-center",
+
+  // Button 관련 스타일
+  responsiveButton: "group flex flex-col items-center justify-center space-y-1 px-3 py-2 rounded-md text-xs bg-transparent transition-colors duration-200 sm:flex-row sm:space-y-0 sm:space-x-2 sm:text-sm",
+  activeButton: "text-primary font-semibold",
+  inactiveButton: "text-text-900 hover:text-primary",
+  buttonIcon: "transition-colors duration-200",
+  buttonText: "transition-colors duration-200",
 
   // UserMenu 관련 스타일
   dropdownContainer: "absolute right-0 mt-2 rounded-md overflow-visible bg-white border border-secondary",

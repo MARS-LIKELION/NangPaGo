@@ -4,13 +4,13 @@ import { HEADER_STYLES } from '../../../common/styles/Header';
 import { BiChevronLeft } from "react-icons/bi";
 import LogoutModal from '../../modal/LogoutModal';
 
-const UserMenu = ({
-  nickname,
-  onLogout,
-  onLinkClick,
+const ProfileDropdown = ({
   isActive,
   Icon,
-  notifications
+  nickname,
+  notifications,
+  onLogout,
+  onLinkClick,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -166,4 +166,4 @@ const NotificationPanel = ({ onBack, notificationCount, notifications }) => (
   </DropdownContainer>
 );
 
-export default UserMenu;
+export default ProfileDropdown;

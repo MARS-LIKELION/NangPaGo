@@ -10,7 +10,7 @@ import {
   CgLogIn
 } from 'react-icons/cg';
 import NavItem from './NavItem.jsx';
-import UserMenu from './UserMenu.jsx';
+import ProfileDropdown from './ProfileDropdown.jsx';
 import { HEADER_STYLES } from '../../../common/styles/Header';
 
 function Header({ isBlocked = false }) {
@@ -125,13 +125,13 @@ function Header({ isBlocked = false }) {
             onClick={() => handleLinkClick('/community')}
           />
           {loginState.isLoggedIn ? (
-            <UserMenu
+            <ProfileDropdown
+              isActive={isActive('/my-page')}
+              Icon={CgProfile}
               nickname={loginState.nickname}
               notifications={notifications}
               onLogout={handleLogout}
               onLinkClick={handleLinkClick}
-              isActive={isActive('/my-page')}
-              Icon={CgProfile}
             />
           ) : (
             <NavItem
