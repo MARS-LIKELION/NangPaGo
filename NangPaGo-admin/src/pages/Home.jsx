@@ -60,11 +60,12 @@ const monthlyAverageLoginStats = [
 
 export default function Home() {
   const [dashboardData, setDashboardData] = useState({});
+  const [months, setMonths] = useState(11);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getDashboardData();
+      const response = await getDashboardData(months);
         setDashboardData(response.data);
       } catch (error) {
         console.error('대시보드 데이터 가져오기 에러: ', error);
@@ -130,7 +131,7 @@ export default function Home() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 게시글 통계</h3>
-            <BarChart width={500} height={300} data={dashboardData.communityCountData}>
+            <BarChart width={500} height={300} data={dashboardData.monthPostCountData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />

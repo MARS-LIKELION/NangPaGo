@@ -1,6 +1,6 @@
 import axiosInstance from './axiosInstance';
 
-export const getDashboardData = async (months = 12) => {
+export const getDashboardData = async (months) => {
   try {
     const response = await axiosInstance.get(`/api/dashboard?months=${months}`);
     return response.data;

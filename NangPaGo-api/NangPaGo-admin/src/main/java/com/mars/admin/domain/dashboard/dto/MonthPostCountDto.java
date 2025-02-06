@@ -5,13 +5,13 @@ import java.time.format.DateTimeFormatter;
 import lombok.Builder;
 
 @Builder
-public record MonthCommunityCountDto(
+public record MonthPostCountDto(
     String month,
     long count
 ) {
 
-    public static MonthCommunityCountDto of(YearMonth yearMonth, long count) {
-        return MonthCommunityCountDto.builder()
+    public static MonthPostCountDto of(YearMonth yearMonth, long count) {
+        return MonthPostCountDto.builder()
             .month(yearMonth.format(DateTimeFormatter.ofPattern("MM")) + "월")
             .count(count)
             .build();

@@ -13,13 +13,13 @@ public record DashboardResponseDto(Integer year, Integer month, Long userCount) 
     public static class DashboardData {
         private Map<String, Long> totals;
         private List<DashboardResponseDto> monthlyData;
-        private List<MonthCommunityCountDto> communityCountData;
+        private List<MonthPostCountDto> monthPostCountData;
 
         public DashboardData(Map<String, Long> totals, List<DashboardResponseDto> monthlyData,
-            List<MonthCommunityCountDto> communityCountData) {
+            List<MonthPostCountDto> monthPostCountData) {
             this.totals = totals;
             this.monthlyData = monthlyData;
-            this.communityCountData = communityCountData;
+            this.monthPostCountData = monthPostCountData;
         }
     }
 }

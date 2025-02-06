@@ -3,7 +3,7 @@ package com.mars.admin.domain.dashboard.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
-import com.mars.admin.domain.dashboard.dto.MonthCommunityCountDto;
+import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.service.UserService;
 import com.mars.admin.support.IntegrationTestSupport;
@@ -43,7 +43,7 @@ class ChartServiceTest extends IntegrationTestSupport {
 
     @DisplayName("이번 달 게시글 총합 수를 조회할 수 있다.")
     @Test
-    void getPostMonthCountTotals() {
+    void getMonthPostCountTotals() {
         // given
         User user = createUser();
 
@@ -58,7 +58,7 @@ class ChartServiceTest extends IntegrationTestSupport {
         String currentMonthKey = YearMonth.now().format(DateTimeFormatter.ofPattern("MM")) + "월";
 
         // when
-        List<MonthCommunityCountDto> totals = chartService.getPostMonthCountTotals();
+        List<MonthPostCountDto> totals = chartService.getMonthPostCountTotals();
 
         // then
         assertThat(totals.size()).isEqualTo(1);

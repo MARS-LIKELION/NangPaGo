@@ -2,7 +2,7 @@ package com.mars.admin.domain.dashboard.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
 import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
-import com.mars.admin.domain.dashboard.dto.MonthCommunityCountDto;
+import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -40,15 +40,14 @@ public class ChartService {
             int year = ((Number) row[0]).intValue();
             int month = ((Number) row[1]).intValue();
             long userCount = ((Number) row[2]).longValue();
-            System.out.println(year + "-" + month + "-" + userCount);
+
             userCountDto.add(new DashboardResponseDto(year, month, userCount));
         }
 
-        System.out.println(userCountDto);
         return userCountDto;
     }
 
-    public List<MonthCommunityCountDto> getPostMonthCountTotals() {
+    public List<MonthPostCountDto> getMonthPostCountTotals() {
         List<YearMonth> months = resetMonths();
         Map<YearMonth, Long> postCounts = getMonthPostCounts().stream()
             .collect(Collectors.toMap(
@@ -56,7 +55,7 @@ public class ChartService {
                 result -> (Long) result[1]
             ));
 
-        List<MonthCommunityCountDto> result = new ArrayList<>();
+        List<MonthPostCountDto> result = new ArrayList<>();
 
         boolean foundPosts = false;
         for (YearMonth month : months) {
@@ -65,7 +64,7 @@ public class ChartService {
                 foundPosts = true;
             }
             if (foundPosts) {
-                result.add(MonthCommunityCountDto.of(month, count));
+                result.add(MonthPostCountDto.of(month, count));
             }
         }
 
@@ -89,13 +88,5 @@ public class ChartService {
         LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
 
         return communityRepository.getMonthPostCounts(start, end);
-    }
-
-    private long getUserTotalCount() {
-        return userRepository.count();
-    }
-
-    private long getCommunityTotalCount() {
-        return communityRepository.count();
     }
 }
