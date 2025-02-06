@@ -43,7 +43,7 @@ export default function Audit() {
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold border-b">Action</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold border-b">User
-                  ID
+                  Email
                 </th>
                 <th className="px-4 py-3 text-left text-sm font-semibold border-b">Request
                   DTO
@@ -64,7 +64,7 @@ export default function Audit() {
                       {log.actionDescription}
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">
-                      {log.userId}
+                      {log.email}
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">
                       {log.requestDto}
