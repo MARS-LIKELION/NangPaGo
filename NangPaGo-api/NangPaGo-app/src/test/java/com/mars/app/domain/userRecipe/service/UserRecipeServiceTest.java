@@ -45,9 +45,8 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
             "레시피 제목",
             "레시피 내용",
             true,
-            List.of("재료1", "재료2"),
-            List.of("조리법1", "조리법2")
-
+            List.of("재료1"),
+            List.of("조리법1")
         );
 
         MockMultipartFile mainFile = new MockMultipartFile("mainFile", "", "image/jpeg", new byte[0]);
@@ -60,8 +59,8 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
         assertThat(responseDto.title()).isEqualTo("레시피 제목");
         assertThat(responseDto.content()).isEqualTo("레시피 내용");
         assertThat(responseDto.isPublic()).isTrue();
-        assertThat(responseDto.ingredients()).containsExactlyInAnyOrder("재료1 ", "재료2 ");
-        assertThat(responseDto.manuals()).containsExactly("1. 조리법1", "2. 조리법2");
+        assertThat(responseDto.ingredients()).containsExactlyInAnyOrder("재료1");
+        assertThat(responseDto.manuals()).containsExactly("1. 조리법1");
         assertThat(responseDto.likeCount()).isEqualTo(0);
         assertThat(responseDto.commentCount()).isEqualTo(0);
         assertThat(responseDto.recipeStatus()).isEqualTo(UserRecipeStatus.ACTIVE.name());
@@ -93,7 +92,6 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
         UserRecipeIngredient ingredient = UserRecipeIngredient.builder()
             .userRecipe(recipe)
             .name("초기 재료")
-            .amount("")
             .build();
         recipe.getIngredients().add(ingredient);
 
@@ -125,7 +123,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
         assertThat(updatedResponse.content()).isEqualTo("수정 내용");
         assertThat(updatedResponse.isPublic()).isFalse();
         assertThat(updatedResponse.mainImageUrl()).isNotEqualTo("초기 이미지 URL");
-        assertThat(updatedResponse.ingredients()).containsExactly("수정 재료 ");
+        assertThat(updatedResponse.ingredients()).containsExactly("수정 재료");
         assertThat(updatedResponse.manuals()).containsExactly("1. 수정 매뉴얼");
         assertThat(updatedResponse.likeCount()).isEqualTo(0);
         assertThat(updatedResponse.commentCount()).isEqualTo(0);
