@@ -1,8 +1,10 @@
 package com.mars.admin.domain.dashboard.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
+import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
@@ -25,6 +27,25 @@ public class ChartService {
             "userCount", userRepository.count(),
             "communityCount", communityRepository.count()
         );
+    }
+
+    public List<DashboardResponseDto> getMonthlyRegisterCounts(int months) {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusMonths(months);
+
+        List<Object[]> monthlyRegisterCounts = userRepository.getMonthRegisterCount(startDate, endDate);
+        List<DashboardResponseDto> userCountDto = new ArrayList<>();
+
+        for (Object[] row : monthlyRegisterCounts) {
+            int year = ((Number) row[0]).intValue();
+            int month = ((Number) row[1]).intValue();
+            long userCount = ((Number) row[2]).longValue();
+            System.out.println(year + "-" + month + "-" + userCount);
+            userCountDto.add(new DashboardResponseDto(year, month, userCount));
+        }
+
+        System.out.println(userCountDto);
+        return userCountDto;
     }
 
     public Map<String, Long> getPostMonthCountTotals() {

@@ -1,18 +1,9 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
 import { useState, useEffect } from 'react';
-import { getTotals, getMonthPostTotals } from '../api/total';
+import { getDashboardData, getMonthPostTotals } from '../api/total';
 
 // 더미 데이터
-const userStats = [
-  { name: '1월', users: 400 },
-  { name: '2월', users: 300 },
-  { name: '3월', users: 600 },
-  { name: '4월', users: 800 },
-  { name: '5월', users: 1000 },
-  { name: '6월', users: 1200 },
-];
-
 const dailyUserStats = [
   { name: '6/7', users: 0 },
   { name: '6/8', users: 445 },
@@ -68,16 +59,16 @@ const monthlyAverageLoginStats = [
 ];
 
 export default function Home() {
-  const [totalData, setTotalData] = useState({});
+  const [dashboardData, setDashboardData] = useState({});
   const [postStats, setPostStats] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getTotals();
-        setTotalData(response.data);
+        const response = await getDashboardData();
+        setDashboardData(response.data);
       } catch (error) {
-        console.error('데이터 가져오기 에러: ', error);
+        console.error('대시보드 데이터 가져오기 에러: ', error);
       }
     };
 
@@ -86,16 +77,16 @@ export default function Home() {
         const response = await getMonthPostTotals();
         const monthData = response.data;
         const stats = Object.entries(monthData).map(([month, count]) => ({ name: month, posts: count }));
-    
+
         const currentMonth = `${("0" + (new Date().getMonth() + 1)).slice(-2)}월`;
         const firstIndex = stats.findIndex(item => item.posts !== 0);
-        
+
         let filteredStats = firstIndex !== -1 ? stats.slice(firstIndex) : [];
 
         if (!filteredStats.some(item => item.name === currentMonth)) {
           filteredStats.push({ name: currentMonth, posts: monthData[currentMonth] || 0 });
         }
-        
+
         setPostStats(filteredStats);
       } catch (error) {
         console.error('월별 게시글 통계 가져오기 오류: ', error);
@@ -105,7 +96,7 @@ export default function Home() {
     fetchData();
     fetchMonthPostStats();
   }, []);
-  
+
   return (
     <div className="p-6">
       {/* 통계 카드 */}
@@ -119,7 +110,7 @@ export default function Home() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">총 사용자</dt>
-                  <dd className="text-3xl font-semibold text-gray-900">{totalData.userCount || 0}</dd>
+                  <dd className="text-3xl font-semibold text-gray-900">{dashboardData.totals?.userCount || 0}</dd>
                 </dl>
               </div>
             </div>
@@ -135,7 +126,7 @@ export default function Home() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">총 게시글</dt>
-                  <dd className="text-3xl font-semibold text-gray-900">{totalData.communityCount || 0}</dd>
+                  <dd className="text-3xl font-semibold text-gray-900">{dashboardData.totals?.communityCount || 0}</dd>
                 </dl>
               </div>
             </div>
@@ -147,15 +138,15 @@ export default function Home() {
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 사용자 통계</h3>
-            <LineChart width={500} height={300} data={userStats}>
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입 통계</h3>
+            <BarChart width={500} height={300} data={dashboardData.monthlyData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="users" stroke="#8884d8" />
-            </LineChart>
+              <Bar dataKey="userCount" name="사용자 수" fill="#82ca9d" />
+            </BarChart>
           </div>
         </div>
 
@@ -215,4 +206,4 @@ export default function Home() {
       </div>
     </div>
   )
-} 
+}

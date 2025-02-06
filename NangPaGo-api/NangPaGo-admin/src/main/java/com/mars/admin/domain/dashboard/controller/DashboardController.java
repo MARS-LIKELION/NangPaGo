@@ -1,11 +1,15 @@
 package com.mars.admin.domain.dashboard.controller;
 
+import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
+import com.mars.admin.domain.dashboard.dto.DashboardResponseDto.DashboardData;
 import com.mars.admin.domain.dashboard.service.ChartService;
 import com.mars.common.dto.ResponseDto;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -16,8 +20,12 @@ public class DashboardController {
     private final ChartService chartService;
 
     @GetMapping
-    public ResponseDto<Map<String, Long>> dashboard() {
-        return ResponseDto.of(chartService.getTotals(), "");
+    public ResponseDto<DashboardData> getDashboardData(@RequestParam(defaultValue = "12") int months) {
+        Map<String, Long> totals = chartService.getTotals();
+        List<DashboardResponseDto> monthlyData = chartService.getMonthlyRegisterCounts(months);
+
+        DashboardData dashboardData = new DashboardData(totals, monthlyData);
+        return ResponseDto.of(dashboardData, "Dashboard data retrieved successfully");
     }
 
     @GetMapping("/stats/post")

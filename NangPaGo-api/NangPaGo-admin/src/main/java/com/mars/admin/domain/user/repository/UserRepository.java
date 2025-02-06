@@ -1,9 +1,9 @@
 package com.mars.admin.domain.user.repository;
 
-import com.mars.admin.domain.user.enums.UserListSearchType;
 import com.mars.common.enums.oauth.OAuth2Provider;
 import com.mars.common.enums.user.UserStatus;
 import com.mars.common.model.user.User;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -62,4 +62,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
         @Param("searchType") String searchType,
         @Param("searchKeyword") String searchKeyword,
         Pageable pageable);
+
+    @Query("""
+    SELECT FUNCTION('YEAR', u.createdAt) AS year, FUNCTION('MONTH', u.createdAt) AS month, COUNT(u) AS userCount
+    FROM User u
+    WHERE u.createdAt >= :startDate AND u.createdAt < :endDate
+    GROUP BY FUNCTION('YEAR', u.createdAt), FUNCTION('MONTH', u.createdAt)
+    ORDER BY year, month
+""")
+    List<Object[]> getMonthRegisterCount(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
