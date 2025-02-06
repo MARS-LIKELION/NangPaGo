@@ -117,7 +117,7 @@ export default function Home() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입 통계</h3>
-            <BarChart width={500} height={300} data={dashboardData.monthlyData}>
+            <BarChart width={500} height={300} data={dashboardData.monthlyRegisterData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
@@ -137,7 +137,7 @@ export default function Home() {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="count" fill="#82ca9d" />
+              <Bar dataKey="count" name="게시글 수" fill="#82ca9d" />
             </BarChart>
           </div>
         </div>

@@ -1,12 +1,12 @@
 package com.mars.admin.domain.dashboard.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
-import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
 import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
+import com.mars.admin.domain.dashboard.dto.MonthRegisterCountDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.util.ArrayList;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,25 +29,31 @@ public class ChartService {
         );
     }
 
-    public List<DashboardResponseDto> getMonthlyRegisterCounts(int months) {
+    public List<MonthRegisterCountDto> getMonthlyRegisterCounts(int months) {
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusMonths(months);
 
         List<Object[]> monthlyRegisterCounts = userRepository.getMonthRegisterCount(startDate, endDate);
-        List<DashboardResponseDto> userCountDto = new ArrayList<>();
+        Map<YearMonth, Long> registerCounts = monthlyRegisterCounts.stream()
+            .collect(Collectors.toMap(
+                row -> YearMonth.of(((Number) row[0]).intValue(), ((Number) row[1]).intValue()),
+                row -> ((Number) row[2]).longValue()
+            ));
 
-        for (Object[] row : monthlyRegisterCounts) {
-            int year = ((Number) row[0]).intValue();
-            int month = ((Number) row[1]).intValue();
-            long userCount = ((Number) row[2]).longValue();
+        List<MonthRegisterCountDto> result = new ArrayList<>();
+        YearMonth current = YearMonth.from(startDate);
+        YearMonth end = YearMonth.from(endDate);
 
-            userCountDto.add(new DashboardResponseDto(year, month, userCount));
+        while (!current.isAfter(end)) {
+            long count = registerCounts.getOrDefault(current, 0L);
+            result.add(MonthRegisterCountDto.of(current, count));
+            current = current.plusMonths(1);
         }
 
-        return userCountDto;
+        return result;
     }
 
-    public List<MonthPostCountDto> getMonthPostCountTotals() {
+    public List<MonthPostCountDto> getPostMonthCountTotals() {
         List<YearMonth> months = resetMonths();
         Map<YearMonth, Long> postCounts = getMonthPostCounts().stream()
             .collect(Collectors.toMap(

@@ -1,8 +1,8 @@
 package com.mars.admin.domain.dashboard.controller;
 
 import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
-import com.mars.admin.domain.dashboard.dto.DashboardResponseDto.DashboardData;
 import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
+import com.mars.admin.domain.dashboard.dto.MonthRegisterCountDto;
 import com.mars.admin.domain.dashboard.service.ChartService;
 import com.mars.common.dto.ResponseDto;
 import java.util.List;
@@ -21,12 +21,12 @@ public class DashboardController {
     private final ChartService chartService;
 
     @GetMapping
-    public ResponseDto<DashboardData> getDashboardData(@RequestParam(defaultValue = "11") int months) {
+    public ResponseDto<DashboardResponseDto> getDashboardData(int months) {
         Map<String, Long> totals = chartService.getTotals();
-        List<DashboardResponseDto> monthlyData = chartService.getMonthlyRegisterCounts(months);
-        List<MonthPostCountDto> monthPostCountData = chartService.getMonthPostCountTotals();
+        List<MonthRegisterCountDto> monthlyRegisterData = chartService.getMonthlyRegisterCounts(months);
+        List<MonthPostCountDto> monthPostCountData = chartService.getPostMonthCountTotals();
 
-        DashboardData dashboardData = new DashboardData(totals, monthlyData, monthPostCountData);
-        return ResponseDto.of(dashboardData, "");
+        DashboardResponseDto dashboardResponseDto = DashboardResponseDto.of(totals, monthlyRegisterData, monthPostCountData);
+        return ResponseDto.of(dashboardResponseDto);
     }
 }
