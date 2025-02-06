@@ -1,20 +1,22 @@
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../slices/loginSlice.js';
 import axiosInstance from '../../../api/axiosInstance.js';
-import { CgSmartHomeRefrigerator } from 'react-icons/cg';
-import { CgList } from 'react-icons/cg';
-import { CgProfile } from 'react-icons/cg';
-import { CgLogIn } from 'react-icons/cg';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import ProfileDropdown from './ProfileDropdown.jsx';
+import {
+  CgSmartHomeRefrigerator,
+  CgList,
+  CgProfile,
+  CgLogIn
+} from 'react-icons/cg';
 import NavItem from './NavItem.jsx';
+import UserMenu from './UserMenu.jsx';
+
+const HEADER_ICON_SIZE = 23;
 
 function Header({ isBlocked = false }) {
   const loginState = useSelector((state) => state.loginSlice);
   const dispatch = useDispatch();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const [isReconnecting, setIsReconnecting] = useState(false);
@@ -62,10 +64,9 @@ function Header({ isBlocked = false }) {
 
   const handleUnsavedChanges = (isBlocked) => {
     if (isBlocked) {
-      const confirmed = window.confirm(
+      return window.confirm(
         '작성 중인 내용을 저장하지 않고 이동하시겠습니까?',
       );
-      return confirmed;
     }
     return true;
   };
@@ -74,35 +75,16 @@ function Header({ isBlocked = false }) {
     if (!handleUnsavedChanges(isBlocked)) {
       return;
     }
-
     try {
+      navigate('/'); // 로그아웃 전 루트로 이동 (unauthenticated 페이지 방지)
       await axiosInstance.post('/api/logout');
       dispatch(logout());
-      setTimeout(() => {
-        navigate('/');
-      }, 0);
     } catch (error) {
       console.error('로그아웃 실패:', error.response?.data || error.message);
     }
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
-  };
-
   const isActive = (path) => location.pathname.startsWith(path);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const handleLinkClick = (path) => {
     if (!handleUnsavedChanges(isBlocked)) {
@@ -132,7 +114,7 @@ function Header({ isBlocked = false }) {
               to="/refrigerator"
               isActive={isActive('/refrigerator')}
               label="냉장고"
-              Icon={CgSmartHomeRefrigerator}
+              Icon={<CgSmartHomeRefrigerator size={HEADER_ICON_SIZE} />}
               onClick={() => handleLinkClick('/refrigerator')}
             />
           )}
@@ -140,28 +122,23 @@ function Header({ isBlocked = false }) {
             to="/community"
             isActive={isActive('/community')}
             label="커뮤니티"
-            Icon={CgList}
+            Icon={<CgList size={HEADER_ICON_SIZE} />}
             onClick={() => handleLinkClick('/community')}
           />
           {loginState.isLoggedIn ? (
-            <ProfileDropdown
-              dropdownRef={dropdownRef}
-              dropdownOpen={dropdownOpen}
-              toggleDropdown={toggleDropdown}
-              profileBadgeCount={notifications.length}
-              handleLogout={handleLogout}
-              handleLinkClick={handleLinkClick}
-              isActive={isActive('/my-page')}
-              icon={CgProfile}
+            <UserMenu
               nickname={loginState.nickname}
               notifications={notifications}
+              onLogout={handleLogout}
+              onLinkClick={handleLinkClick}
+              Icon={<CgProfile size={HEADER_ICON_SIZE} />}
             />
           ) : (
             <NavItem
               to="/login"
               isActive={isActive('/login')}
               label="로그인"
-              Icon={CgLogIn}
+              Icon={<CgLogIn size={HEADER_ICON_SIZE} />}
               onClick={() => handleLinkClick('/login')}
             />
           )}
