@@ -6,6 +6,11 @@ export default function Audit() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(10);
+  const [expandedRow, setExpandedRow] = useState(null);
+
+  const handleRowClick = (index) => {
+    setExpandedRow(expandedRow === index ? null : index);
+  };
 
   const fetchData = async () => {
     try {
@@ -54,11 +59,12 @@ export default function Audit() {
               </thead>
               <tbody>
               {auditLogs.map((log, index) => (
+                <React.Fragment key={index}>
                   <tr
-                      key={index}
-                      className={`${
-                          index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-                      } hover:bg-blue-50 border-b`}
+                    onClick={() => handleRowClick(index)}
+                    className={`${
+                      index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+                    } hover:bg-blue-50 border-b cursor-pointer`}
                   >
                     <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">
                       {log.actionDescription}
@@ -76,6 +82,47 @@ export default function Audit() {
                       {log.timestamp}
                     </td>
                   </tr>
+                  {expandedRow === index && (
+                    <tr className="bg-gray-50">
+                      <td colSpan="5" className="px-4 py-4">
+                        <div className="space-y-2">
+                          <div>
+                            <span className="font-semibold">Action: </span>
+                            <span>{log.action}</span>
+                          </div>
+                          <div>
+                            <span className="font-semibold">Description: </span>
+                            <span>{log.actionDescription}</span>
+                          </div>
+                          <div>
+                            <span className="font-semibold">User ID: </span>
+                            <span>{log.userId}</span>
+                          </div>
+                          <div>
+                            <span className="font-semibold">Email: </span>
+                            <span>{log.email}</span>
+                          </div>
+                          <div>
+                            <span className="font-semibold">Request DTO: </span>
+                            <pre className="mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
+                              {JSON.stringify(JSON.parse(log.requestDto || "{}"), null, 2)}
+                            </pre>
+                          </div>
+                          <div>
+                            <span className="font-semibold">Arguments: </span>
+                            <pre className="mt-1 p-2 bg-gray-100 rounded overflow-x-auto">
+                              {log.arguments}
+                            </pre>
+                          </div>
+                          <div>
+                            <span className="font-semibold">Timestamp: </span>
+                            <span>{new Date(log.timestamp).toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))}
               </tbody>
             </table>
