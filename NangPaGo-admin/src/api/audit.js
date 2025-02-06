@@ -11,4 +11,4 @@ export const getAuditLogs = async (page, pageSize = 10) => {
   } catch (error) {
     throw error;
   }
-}; 
+};
