@@ -50,7 +50,7 @@ public class UserRecipeService {
     public PageResponseDto<UserRecipeResponseDto> getPagedUserRecipes(PageRequestVO pageRequestVO, Long userId) {
         Pageable pageable = pageRequestVO.toPageable();
         return PageResponseDto.of(
-            userRecipeRepository.findByIsPublicTrueOrUserId(userId, pageable)
+            userRecipeRepository.findByIsPublicTrueOrUserIdAndRecipeStatus(userId, pageable)
                 .map(recipe -> {
                     int likeCount = (int) userRecipeLikeRepository.countByUserRecipeId(recipe.getId());
                     int commentCount = (int) userRecipeCommentRepository.countByUserRecipeId(recipe.getId());
@@ -160,10 +160,9 @@ public class UserRecipeService {
 
     private List<UserRecipeIngredient> buildIngredients(UserRecipeRequestDto dto, UserRecipe recipe) {
         return dto.ingredients().stream()
-            .map(ing -> UserRecipeIngredient.builder()
+            .map(name -> UserRecipeIngredient.builder()
                 .userRecipe(recipe)
-                .name(ing)
-                .amount("")
+                .name(name)
                 .build())
             .collect(Collectors.toList());
     }

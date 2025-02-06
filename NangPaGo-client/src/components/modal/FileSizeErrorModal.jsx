@@ -15,6 +15,7 @@ function FileSizeErrorModal({ isOpen, onClose }) {
           },
       }}
     >
+      <div></div>
     </Modal>
   );
 }

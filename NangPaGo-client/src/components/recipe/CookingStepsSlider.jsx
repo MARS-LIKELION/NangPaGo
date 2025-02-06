@@ -5,7 +5,7 @@ import { useEffect, useState, useRef, forwardRef } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-const CookingStepsSlider = forwardRef(({ manuals, manualImages }, ref) => {
+const CookingStepsSlider = forwardRef(({ manuals = [], manualImages = [], isUserRecipe = false }, ref) => {
   const [sliderKey, setSliderKey] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef(null);
@@ -28,6 +28,14 @@ const CookingStepsSlider = forwardRef(({ manuals, manualImages }, ref) => {
     }
   }, [sliderKey, currentSlide]);
 
+  const formattedManuals = isUserRecipe
+    ? manuals.map((step) => ({ manual: step }))  // 문자열을 객체 형태로 변환
+    : manuals;
+
+  const formattedImages = isUserRecipe
+    ? manualImages.map((img) => ({ imageUrl: img }))  // 문자열을 객체 형태로 변환
+    : manualImages;
+
   const sliderSettings = {
     dots: true,
     infinite: false,
@@ -39,14 +47,14 @@ const CookingStepsSlider = forwardRef(({ manuals, manualImages }, ref) => {
       <SliderArrowButton
         direction="left"
         currentStep={currentSlide + 1}
-        totalSteps={manuals.length}
+        totalSteps={formattedManuals.length}
       />
     ),
     nextArrow: (
       <SliderArrowButton
         direction="right"
         currentStep={currentSlide + 1}
-        totalSteps={manuals.length}
+        totalSteps={formattedManuals.length}
       />
     ),
   };
@@ -54,17 +62,17 @@ const CookingStepsSlider = forwardRef(({ manuals, manualImages }, ref) => {
   return (
     <div>
       <div className="block md:hidden">
-        {manuals.map((step, index) => (
+        {formattedManuals.map((step, index) => (
           <div key={index} className="mt-4">
-            <CookingSteps steps={[step]} stepImages={[manualImages[index]]} />
+            <CookingSteps steps={[step]} stepImages={[formattedImages[index]]} />
           </div>
         ))}
       </div>
       <div className="hidden md:block">
         <Slider {...sliderSettings} key={sliderKey} ref={sliderRef}>
-          {manuals.map((step, index) => (
+          {formattedManuals.map((step, index) => (
             <div key={index}>
-              <CookingSteps steps={[step]} stepImages={[manualImages[index]]} />
+              <CookingSteps steps={[step]} stepImages={[formattedImages[index]]} />
             </div>
           ))}
         </Slider>

@@ -2,16 +2,19 @@ import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
 import { fetchPostById } from '../../api/post';
+import { fetchUserRecipeById } from '../../api/userRecipe';
 import Header from '../../components/layout/header/Header';
 import Footer from '../../components/layout/Footer';
 import { PAGE_STYLES } from '../../common/styles/ListPage';
 import Comment from '../../components/comment/Comment';
 import Recipe from '../../components/recipe/Recipe';
 import Community from '../../components/community/Community';
-
+import UserRecipeDetail from '../../components/userRecipe/UserRecipeDetail';
+// CreateButton aside 제거 (user-recipe 타입에 대해)
 const pageComponents = {
   recipe: Recipe,
   community: Community,
+  "user-recipe": UserRecipeDetail,
 };
 
 function DetailPage({ type }) {
@@ -19,9 +22,9 @@ function DetailPage({ type }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isTopButtonVisible, setIsTopButtonVisible] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
   const { isLoggedIn } = useAuth();
 
   const post = useMemo(() => {
@@ -32,10 +35,19 @@ function DetailPage({ type }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchPostById(post);
-        setData(response.data);
+        let response;
+        if (type === "user-recipe") {
+          response = await fetchUserRecipeById(id);
+          setData(response);
+        } else {
+          response = await fetchPostById({ type, id });
+          const fetchedData = response.data.data ? response.data.data : response.data;
+          setData(fetchedData);
+        }
       } catch (err) {
-        setError(`${type === 'recipe' ? '레시피' : '게시물'}을 불러오는데 실패했습니다.`);
+        setError(
+          `${type === 'recipe' ? '레시피' : type === 'user-recipe' ? '유저 레시피' : '게시물'}을 불러오는데 실패했습니다.`
+        );
         setTimeout(() => {
           navigate(type === 'recipe' ? `/` : `/${type}`);
         }, 3000);
@@ -45,7 +57,13 @@ function DetailPage({ type }) {
     };
 
     fetchData();
-  }, [post]);
+  }, [id, type, navigate]);
+
+  useEffect(() => {
+    const handleScroll = () => setIsTopButtonVisible(window.scrollY > 100);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -56,9 +74,7 @@ function DetailPage({ type }) {
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [navigate, location.state, type]);
 
   if (loading) {
@@ -86,6 +102,7 @@ function DetailPage({ type }) {
         {Component ? <Component post={post} data={data} isLoggedIn={isLoggedIn} /> : null}
         <Comment post={post} isLoggedIn={isLoggedIn} />
       </main>
+      {/* user-recipe 타입에 대해서는 DetailPage에서 CreateButton aside를 제거 */}
       <Footer />
     </div>
   );

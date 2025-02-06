@@ -10,10 +10,12 @@ import RecipeListContent from '../../components/recipe/RecipeListContent';
 import CommunityListContent from '../../components/community/CommunityListContent';
 import RecipeListTab from '../../components/recipe/RecipeListTab';
 import SearchBar from '../../components/search/SearchBar';
+import UserRecipeListContent from '../../components/userRecipe/UserRecipeListContent';
 
 const contentComponents = {
   recipe: RecipeListContent,
   community: CommunityListContent,
+  "user-recipe": UserRecipeListContent,
 };
 
 function ListPage({ type }) {
@@ -54,31 +56,31 @@ function ListPage({ type }) {
         </>
       );
     }
+    if (type === 'user-recipe') {
+      return <div className={PAGE_STYLES.header}>유저 레시피</div>;
+    }
     return <div className={PAGE_STYLES.header}>커뮤니티</div>;
   };
 
-  const renderButton = () => {
-    if (type === 'recipe') {
-      return (
-        <aside className={BUTTON_STYLES.wrapper}>
-          {isTopButtonVisible && <TopButton />}
-        </aside>
-      );
-    }
-    return (
-      <aside className={BUTTON_STYLES.wrapper}>
-        <div className={BUTTON_STYLES.body}>
+  const renderButton = () => (
+    <aside className={BUTTON_STYLES.wrapper}>
+      <div className={BUTTON_STYLES.body}>
+        {type === 'user-recipe' && (
           <CreateButton
-            onClick={() => {
-              navigate('/community/new', { state: { from: window.location.pathname } });
-            }}
+            onClick={() => navigate('/user-recipe/create')}
             isTopButtonVisible={isTopButtonVisible}
           />
-          {isTopButtonVisible && <TopButton />}
-        </div>
-      </aside>
-    );
-  };
+        )}
+        {type === 'community' && (
+          <CreateButton
+            onClick={() => navigate('/community/new')}
+            isTopButtonVisible={isTopButtonVisible}
+          />
+        )}
+        {isTopButtonVisible && <TopButton />}
+      </div>
+    </aside>
+  );
 
   const ContentComponent = contentComponents[type];
 

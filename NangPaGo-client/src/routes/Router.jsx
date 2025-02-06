@@ -14,6 +14,8 @@ import AuthenticatedRoute from './AuthenticatedRoute';
 import UnauthenticatedAccess from '../pages/error/UnauthenticatedAccess';
 import NotFound from '../pages/error/NotFound';
 import LoginExpired from '../pages/error/LoginExpired.jsx';
+import UserRecipeListContent from '../components/userRecipe/UserRecipeListContent.jsx';
+import CreateUserRecipe from '../pages/userRecipe/CreateUserRecipe.jsx';
 
 const router = createBrowserRouter([
   {
@@ -80,6 +82,23 @@ const router = createBrowserRouter([
       {
         path: ':id/modify',
         element: <AuthenticatedRoute><ModifyCommunity /></AuthenticatedRoute>,
+      },
+    ],
+  },
+  {
+    path: '/user-recipe',
+    children: [
+      {
+        path: 'list',
+        element: <AuthenticatedRoute><ListPage type="user-recipe" /></AuthenticatedRoute>,
+      },
+      {
+        path: '/user-recipe/:id',
+        element: <DetailPage type="user-recipe" />,
+      },
+      {
+        path: 'create',
+        element: <AuthenticatedRoute><CreateUserRecipe /></AuthenticatedRoute>,
       },
     ],
   },

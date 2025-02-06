@@ -21,14 +21,10 @@ public class UserRecipeIngredient {
     @Column(nullable = false)
     private String name; // 재료 이름
 
-    @Column(nullable = false)
-    private String amount; // 재료 양
-
-    public static UserRecipeIngredient of(UserRecipe userRecipe, String name, String amount) {
+    public static UserRecipeIngredient of(UserRecipe userRecipe, String name) {
         return UserRecipeIngredient.builder()
             .userRecipe(userRecipe)
             .name(name)
-            .amount(amount)
             .build();
     }
 }

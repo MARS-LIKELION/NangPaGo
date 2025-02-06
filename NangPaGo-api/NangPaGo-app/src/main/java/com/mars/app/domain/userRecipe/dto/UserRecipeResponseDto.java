@@ -45,7 +45,9 @@ public record UserRecipeResponseDto(
             .recipeStatus(userRecipe.getRecipeStatus().name())
             .createdAt(userRecipe.getCreatedAt())
             .updatedAt(userRecipe.getUpdatedAt())
-            .ingredients(userRecipe.getIngredients().stream().map(ingredient -> ingredient.getName() + " " + ingredient.getAmount()).toList()) // 재료를 "이름 + 수량" 형태로 변환
+            .ingredients(userRecipe.getIngredients().stream()
+                .map(ingredient -> ingredient.getName())
+                .toList())
             .manuals(userRecipe.getManuals().stream().map(manual -> manual.getStep() + ". " + manual.getDescription()).toList())
             .build();
     }
