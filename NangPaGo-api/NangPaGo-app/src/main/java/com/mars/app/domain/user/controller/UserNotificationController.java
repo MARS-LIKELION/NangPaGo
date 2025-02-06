@@ -1,10 +1,13 @@
 package com.mars.app.domain.user.controller;
 
 import com.mars.app.domain.user.event.UserNotificationSseService;
+import com.mars.common.exception.NPGException;
 import com.mars.common.util.web.JwtUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +23,15 @@ public class UserNotificationController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/subscribe")
-    public SseEmitter streamUserNotification(HttpServletRequest request) {
-        String accessToken = jwtUtil.getAccessTokenFrom(request);
-        Long userId = jwtUtil.getId(accessToken);
-        return userNotificationSseService.createEmitter(userId);
+    public ResponseEntity<SseEmitter> streamUserNotification(HttpServletRequest request) {
+        try {
+            String accessToken = jwtUtil.getAccessTokenFrom(request);
+            Long userId = jwtUtil.getId(accessToken);
+            SseEmitter emitter = userNotificationSseService.createEmitter(userId);
+            return ResponseEntity.ok(emitter);
+        } catch (NPGException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
     }
 }
