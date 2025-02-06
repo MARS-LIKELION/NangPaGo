@@ -19,12 +19,16 @@ public class UserRecipeIngredient {
     private UserRecipe userRecipe;
 
     @Column(nullable = false)
-    private String name; // 재료 이름
+    private String name;
 
-    public static UserRecipeIngredient of(UserRecipe userRecipe, String name) {
+    @Column(nullable = false)
+    private String amount;
+
+    public static UserRecipeIngredient of(UserRecipe userRecipe, String name, String amount) {
         return UserRecipeIngredient.builder()
             .userRecipe(userRecipe)
             .name(name)
+            .amount(amount)
             .build();
     }
 }

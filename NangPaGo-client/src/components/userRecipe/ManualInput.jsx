@@ -1,4 +1,3 @@
-// src/components/userRecipe/ManualInput.jsx
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import TextArea from "./TextArea";
@@ -6,16 +5,18 @@ import FileUpload from "./FileUpload";
 
 function ManualInput({ manuals, setManuals }) {
   const addManual = () => {
-    setManuals([...manuals, { description: "", image: null }]);
+    setManuals([...manuals, { description: "", image: null, preview: null }]);
   };
 
   const updateManual = (index, field, value) => {
     const updatedManuals = [...manuals];
-    // 만약 요소가 문자열이면 객체로 변환
     if (typeof updatedManuals[index] === 'string') {
-      updatedManuals[index] = { description: updatedManuals[index], image: null };
+      updatedManuals[index] = { description: updatedManuals[index], image: null, preview: null };
     }
     updatedManuals[index][field] = value;
+    if (field === "image" && !value) {
+      updatedManuals[index].preview = null;
+    }
     setManuals(updatedManuals);
   };
 
@@ -23,14 +24,11 @@ function ManualInput({ manuals, setManuals }) {
     const file = e.target.files[0];
     if (file) {
       const updatedManuals = [...manuals];
-  
-      // ✅ 기존 URL이 있으면 유지, 새 파일이 있으면 덮어쓰기
       updatedManuals[index].image = file;
+      updatedManuals[index].preview = URL.createObjectURL(file);
       setManuals(updatedManuals);
     }
   };
-  
-  
 
   const removeManual = (index) => {
     const updatedManuals = manuals.filter((_, i) => i !== index);
@@ -50,7 +48,7 @@ function ManualInput({ manuals, setManuals }) {
             transition={{ duration: 0.3 }}
             className="relative flex flex-col gap-2 mt-10"
           >
-            {/* 단계 번호는 별도로 표시 */}
+            {/* 단계 번호 */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -78,20 +76,15 @@ function ManualInput({ manuals, setManuals }) {
                 </motion.button>
               )}
               <TextArea
-                value={manual.description}  // 원본 값을 그대로 사용
+                value={manual.description || ""}
                 onChange={(e) => updateManual(index, "description", e.target.value)}
                 placeholder="조리 과정 입력"
                 rows={2}
               />
+              
               <FileUpload
                 file={manual.image}
-                imagePreview={
-                  manual.image
-                    ? (typeof manual.image === 'string'
-                        ? manual.image  // ✅ 기존 URL 유지
-                        : URL.createObjectURL(manual.image))
-                    : null
-                }
+                imagePreview={manual.preview || (typeof manual.image === 'string' ? manual.image : null)}
                 onChange={(e) => handleManualImageChange(index, e)}
                 onCancel={() => updateManual(index, "image", null)}
               />

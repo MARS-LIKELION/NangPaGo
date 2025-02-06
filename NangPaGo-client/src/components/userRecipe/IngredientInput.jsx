@@ -1,23 +1,18 @@
-// src/components/userRecipe/IngredientInput.jsx
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
 function IngredientInput({ ingredients, setIngredients }) {
-  // 재료 추가
   const addIngredient = () => {
     setIngredients([...ingredients, { name: '', amount: '' }]);
   };
 
-  // 재료 삭제
   const removeIngredient = (index) => {
     const updatedIngredients = ingredients.filter((_, i) => i !== index);
     setIngredients(updatedIngredients);
   };
 
-  // 재료 업데이트
   const updateIngredient = (index, field, value) => {
     const updatedIngredients = [...ingredients];
-    // 만약 요소가 문자열이면 객체로 변환
     if (typeof updatedIngredients[index] === 'string') {
       updatedIngredients[index] = { name: updatedIngredients[index], amount: '' };
     }

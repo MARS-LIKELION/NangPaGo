@@ -38,39 +38,29 @@ function ModifyCommunity() {
   }, [location.state?.from]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCommunity = async () => {
       try {
-        const data = await fetchUserRecipeById(id);
-        console.log('Fetched manuals:', data.manuals); // ✅ API 응답 확인용
-  
+        const { data } = await fetchPostById({ type: 'community', id: id });
+        if (!data.isOwnedByUser) {
+          navigate(`/community/${id}`, { replace: true });
+          return;
+        }
+
         setTitle(data.title);
         setContent(data.content);
         setIsPublic(data.isPublic);
-  
-        // ✅ 기존 이미지 URL이 유지되도록 변경
-        setManuals(
-          (data.manuals || []).map((manual) => ({
-            description: typeof manual === 'string'
-              ? manual.replace(/^\d+\.\s*\d*\.\s*/, '') // ✅ 숫자가 여러 번 반복되면 모두 제거
-              : manual.description.replace(/^\d+\.\s*\d*\.\s*/, ''),
-            image: manual.image && typeof manual.image === 'string'
-              ? manual.image  // ✅ 기존 이미지 URL 유지
-              : null,
-          }))
-        );
-        
-  
-        if (data.mainImageUrl) {
-          setExistingImageUrl(data.mainImageUrl);
-          setImagePreview(data.mainImageUrl);
+        if (data.imageUrl && data.imageUrl !== DEFAULT_IMAGE_URL) {
+          setImagePreview(data.imageUrl);
+        } else {
+          setImagePreview(null);
         }
       } catch (err) {
-        console.error('레시피 데이터를 불러오는 중 오류 발생:', err);
-        setError('수정할 레시피 데이터를 불러오는데 실패했습니다.');
+        console.error('게시글 데이터를 가져오는 중 오류 발생:', err);
+        setError('게시글 데이터를 불러오는 중 문제가 발생했습니다.');
       }
     };
-    fetchData();
-  }, [id]);
+    fetchCommunity();
+  }, [id, navigate]);
 
   useEffect(() => {
     if (file) {
@@ -144,12 +134,8 @@ function ModifyCommunity() {
       formData.append('title', title);
       formData.append('content', content);
       formData.append('isPublic', isPublic);
-      // 파일 선택 여부에 따라 처리: 
-      // 새 파일(file)이 있으면 전송, 없으면 기존 이미지 URL을 함께 전송
       if (file) {
         formData.append('file', file);
-      } else {
-        formData.append('existingImageUrl', imagePreview || '');
       }
       await updateCommunity(id, formData);
       setIsBlocked(false);
@@ -161,7 +147,6 @@ function ModifyCommunity() {
       setError(err.message);
     }
   };
-  
 
   return (
     <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">

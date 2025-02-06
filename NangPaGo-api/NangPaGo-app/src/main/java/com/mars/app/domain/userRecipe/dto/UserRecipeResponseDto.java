@@ -1,9 +1,13 @@
 package com.mars.app.domain.userRecipe.dto;
 
+import com.mars.common.model.recipe.Manual;
 import com.mars.common.model.userRecipe.UserRecipe;
 import java.time.LocalDateTime;
 import java.util.List;
-import com.mars.common.model.userRecipe.UserRecipeManualImage;
+import java.util.stream.Collectors;
+
+import com.mars.common.model.userRecipe.UserRecipeIngredient;
+import com.mars.common.model.userRecipe.UserRecipeManual;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,7 +17,6 @@ public record UserRecipeResponseDto(
     String title,
     String content,
     String mainImageUrl,
-    List<String> imageUrls,
     String email,
     int likeCount,
     int commentCount,
@@ -22,8 +25,8 @@ public record UserRecipeResponseDto(
     String recipeStatus,
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
-    List<String> ingredients,
-    List<String> manuals
+    List<IngredientDto> ingredients,
+    List<ManualDto> manuals
 ) {
     public static final String DEFAULT_IMAGE_URL =
         "https://storage.googleapis.com/nangpago-9d371.firebasestorage.app/dc137676-6240-4920-97d3-727c4b7d6d8d_360_F_517535712_q7f9QC9X6TQxWi6xYZZbMmw5cnLMr279.jpg";
@@ -34,9 +37,6 @@ public record UserRecipeResponseDto(
             .title(userRecipe.getTitle())
             .content(userRecipe.getContent())
             .mainImageUrl(getImageUrlOrDefault(userRecipe.getMainImageUrl()))
-            .imageUrls(userRecipe.getManuals().stream()
-                .flatMap(manual -> manual.getImages().stream().map(UserRecipeManualImage::getImageUrl))
-                .toList())
             .email(maskEmail(userRecipe.getUser().getEmail()))
             .likeCount(likeCount)
             .commentCount(commentCount)
@@ -46,9 +46,11 @@ public record UserRecipeResponseDto(
             .createdAt(userRecipe.getCreatedAt())
             .updatedAt(userRecipe.getUpdatedAt())
             .ingredients(userRecipe.getIngredients().stream()
-                .map(ingredient -> ingredient.getName())
+                .map(IngredientDto::of)
                 .toList())
-            .manuals(userRecipe.getManuals().stream().map(manual -> manual.getStep() + ". " + manual.getDescription()).toList())
+            .manuals(userRecipe.getManuals().stream()
+                .map(ManualDto::of)
+                .toList())
             .build();
     }
 
@@ -61,5 +63,33 @@ public record UserRecipeResponseDto(
             return email.replaceAll("(?<=.).(?=.*@)", "*");
         }
         return email.replaceAll("(?<=.{3}).(?=.*@)", "*");
+    }
+
+    @Builder
+    public record ManualDto(
+        int step,
+        String description,
+        String imageUrl
+    ){
+        public static ManualDto of(UserRecipeManual manual){
+            return ManualDto.builder()
+               .step(manual.getStep())
+               .description(manual.getDescription())
+               .imageUrl(getImageUrlOrDefault(manual.getImageUrl()))
+               .build();
+        }
+    }
+
+    @Builder
+    public record IngredientDto(
+        String name,
+        String amount
+    ){
+        public static IngredientDto of(UserRecipeIngredient ingredient){
+            return IngredientDto.builder()
+               .name(ingredient.getName())
+               .amount(ingredient.getAmount())
+               .build();
+        }
     }
 }

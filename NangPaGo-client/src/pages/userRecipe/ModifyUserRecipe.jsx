@@ -12,7 +12,6 @@ import SubmitButton from '../../components/button/SubmitButton';
 import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const DEFAULT_IMAGE_URL = '';
 
 function ModifyUserRecipe() {
   const navigate = useNavigate();
@@ -23,12 +22,12 @@ function ModifyUserRecipe() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
-  const [manuals, setManuals] = useState([{ description: '', image: null }]);
+  const [manuals, setManuals] = useState([{ step: 1, description: '', image: null, preview: '' }]);
   const [mainFile, setMainFile] = useState(null);
-  const [existingImageUrl, setExistingImageUrl] = useState(null);
+  const [existingImageUrl, setExistingImageUrl] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [error, setError] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [showFileSizeError, setShowFileSizeError] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
 
@@ -43,38 +42,27 @@ function ModifyUserRecipe() {
     const fetchData = async () => {
       try {
         const data = await fetchUserRecipeById(id);
-        console.log('Fetched manuals:', data.manuals); // 🔍 API 응답 확인용
-  
         setTitle(data.title);
         setContent(data.content);
         setIsPublic(data.isPublic);
-  
-        // ✅ 기존 이미지 URL이 유지되도록 변경
+        setIngredients(data.ingredients || []);
         setManuals(
-          (data.manuals || []).map((manual) => ({
-            description: typeof manual === 'string'
-  ? manual.replace(/^[\d.\s]+/, '')  // ✅ 숫자, 점(.), 공백을 모두 제거
-  : manual.description.replace(/^[\d.\s]+/, ''),
-
-            image: manual.image && typeof manual.image === 'string'
-              ? manual.image
-              : null,
+          (data.manuals || []).map((man) => ({
+            step: man.step,
+            description: man.description,
+            image: null,
+            preview: man.imageUrl || ''
           }))
         );
-        
-  
-        if (data.mainImageUrl) {
-          setExistingImageUrl(data.mainImageUrl);
-          setImagePreview(data.mainImageUrl);
-        }
+        setExistingImageUrl(data.mainImageUrl || '');
+        setImagePreview(data.mainImageUrl || '');
       } catch (err) {
-        console.error('레시피 데이터를 불러오는 중 오류 발생:', err);
+        console.error(err);
         setError('수정할 레시피 데이터를 불러오는데 실패했습니다.');
       }
     };
     fetchData();
   }, [id]);
-  
 
   useEffect(() => {
     if (mainFile) {
@@ -99,7 +87,6 @@ function ModifyUserRecipe() {
       setIsBlocked(true);
       const objectUrl = URL.createObjectURL(selectedFile);
       setImagePreview(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
     }
   }, []);
 
@@ -110,36 +97,44 @@ function ModifyUserRecipe() {
   };
 
   const handleSubmit = async () => {
-    if (!title || !content || ingredients.length === 0 || manuals.length === 0) {
+    if (
+      !title ||
+      !content ||
+      ingredients.filter((ing) => ing.name || ing.amount).length === 0 ||
+      manuals.filter((manual) => manual.description).length === 0
+    ) {
       setError('제목, 내용, 재료, 조리 과정을 모두 입력해주세요.');
       return;
     }
+
+    const requestDto = {
+      title,
+      content,
+      isPublic,
+      mainImageUrl: existingImageUrl,
+      ingredients,
+      manuals: manuals.map(manual => ({
+        step: manual.step,
+        description: manual.description,
+        imageUrl: manual.preview || ""
+      }))
+    };
+
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', content);
-    formData.append('isPublic', isPublic);
-  
-    ingredients.forEach((ingredient) => {
-      const ingredientText = `${ingredient.name} ${ingredient.amount}`.trim();
-      formData.append('ingredients', ingredientText);
-    });
-  
-    manuals.forEach((manual, index) => {
-      formData.append(`manuals[${index}]`, `${manual.description}`);  // ✅ 숫자 없이 저장
-    
-      
-      // 기존 이미지가 URL인 경우 유지
-      if (manual.image && typeof manual.image === 'string') {
-        formData.append(`manualImages[${index}]`, manual.image);
-      } else if (manual.image && manual.image instanceof File) {
-        formData.append('otherFiles', manual.image);
-      }
-    });
-  
+    formData.append('requestDto', new Blob([JSON.stringify(requestDto)], { type: "application/json" }));
+
     if (mainFile) {
       formData.append('mainFile', mainFile);
     }
-  
+
+    manuals.forEach((manual, index) => {
+      if (manual.image && manual.image instanceof File) {
+        formData.append('otherFiles', manual.image);
+      } else {
+        formData.append('otherFiles', new Blob([]), `placeholder-${index}`);
+      }
+    });
+    
     try {
       const responseData = await updateUserRecipe(id, formData);
       if (responseData.data?.id) {
@@ -149,11 +144,10 @@ function ModifyUserRecipe() {
         setError('레시피 수정 후 ID를 가져올 수 없습니다.');
       }
     } catch (err) {
-      console.error('레시피 수정 중 오류 발생:', err);
+      console.error(err);
       setError(err.message);
     }
   };
-  
 
   return (
     <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
@@ -190,10 +184,7 @@ function ModifyUserRecipe() {
         {error && <p className="mt-2 text-red-500">{error}</p>}
       </div>
       <Footer />
-      <FileSizeErrorModal
-        isOpen={showFileSizeError}
-        onClose={() => setShowFileSizeError(false)}
-      />
+      <FileSizeErrorModal isOpen={showFileSizeError} onClose={() => setShowFileSizeError(false)} />
     </div>
   );
 }

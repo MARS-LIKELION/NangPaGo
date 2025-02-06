@@ -59,14 +59,15 @@ public class UserRecipeController {
         return ResponseDto.of(userRecipeService.createUserRecipe(requestDto, mainFile, otherFiles, userId), "게시물이 성공적으로 생성되었습니다.");
     }
 
+
     @Operation(summary = "게시물 수정")
     @AuthenticatedUser
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
     public ResponseDto<UserRecipeResponseDto> update(
-        @ModelAttribute @Valid UserRecipeRequestDto requestDto,
-        @RequestParam(value = "mainFile", required = false) MultipartFile mainFile,
-        @RequestParam(value = "otherFiles", required = false) List<MultipartFile> otherFiles,
-        @PathVariable Long id) {
+        @PathVariable Long id,
+        @RequestPart("requestDto") @Valid UserRecipeRequestDto requestDto,
+        @RequestPart(value = "mainFile", required = false) MultipartFile mainFile,
+        @RequestPart(value = "otherFiles", required = false) List<MultipartFile> otherFiles) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userRecipeService.updateUserRecipe(id, requestDto, mainFile, otherFiles, userId), "게시물이 성공적으로 수정되었습니다.");

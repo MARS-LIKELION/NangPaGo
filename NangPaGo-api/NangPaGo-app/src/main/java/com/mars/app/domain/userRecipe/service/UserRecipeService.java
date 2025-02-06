@@ -18,8 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,56 +57,10 @@ public class UserRecipeService {
         );
     }
 
-    @Transactional
-    public UserRecipeResponseDto createUserRecipe(UserRecipeRequestDto requestDto,
-                                                  MultipartFile mainFile,
-                                                  List<MultipartFile> otherFiles,
-                                                  Long userId) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(NOT_FOUND_USER::of);
-
-        String mainImageUrl = getMainImageUrl(mainFile);
-
-        UserRecipe recipe = UserRecipe.builder()
-            .user(user)
-            .title(requestDto.title())
-            .content(requestDto.content())
-            .mainImageUrl(mainImageUrl)
-            .isPublic(requestDto.isPublic())
-            .recipeStatus(UserRecipeStatus.ACTIVE)
-            .ingredients(new ArrayList<>())
-            .manuals(new ArrayList<>())
-            .comments(new ArrayList<>())
-            .likes(new ArrayList<>())
-            .build();
-
-        recipe.getIngredients().addAll(buildIngredients(requestDto, recipe));
-        recipe.getManuals().addAll(buildManuals(requestDto, otherFiles, recipe));
-
-        userRecipeRepository.save(recipe);
-        return UserRecipeResponseDto.of(recipe, 0, 0, userId);
-    }
-
-    @Transactional
-    public UserRecipeResponseDto updateUserRecipe(Long id, UserRecipeRequestDto requestDto,
-                                                  MultipartFile mainFile, List<MultipartFile> otherFiles,
-                                                  Long userId) {
+    @Transactional(readOnly = true)
+    public UserRecipeResponseDto getPostForEdit(Long id, Long userId) {
         UserRecipe recipe = getUserRecipe(id);
         validateOwnership(recipe, userId);
-
-        String mainImageUrl = updateMainImage(recipe.getMainImageUrl(), mainFile);
-        recipe.update(requestDto.title(), requestDto.content(), requestDto.isPublic(), mainImageUrl);
-
-        if (requestDto.ingredients() != null && !requestDto.ingredients().isEmpty()) {
-            recipe.getIngredients().clear();
-            recipe.getIngredients().addAll(buildIngredients(requestDto, recipe));
-        }
-
-        if (requestDto.manuals() != null && !requestDto.manuals().isEmpty()) {
-            recipe.getManuals().clear();
-            recipe.getManuals().addAll(buildManuals(requestDto, otherFiles, recipe));
-        }
-        userRecipeRepository.save(recipe);
 
         int likeCount = (int) userRecipeLikeRepository.countByUserRecipeId(recipe.getId());
         int commentCount = (int) userRecipeCommentRepository.countByUserRecipeId(recipe.getId());
@@ -135,57 +87,91 @@ public class UserRecipeService {
         }
     }
 
-    public UserRecipeResponseDto getPostForEdit(Long id, Long userId) {
-        UserRecipe recipe = getUserRecipe(id);
-        validateOwnership(recipe, userId);
-        int likeCount = (int) userRecipeLikeRepository.countByUserRecipeId(recipe.getId());
-        int commentCount = (int) userRecipeCommentRepository.countByUserRecipeId(recipe.getId());
-        return UserRecipeResponseDto.of(recipe, likeCount, commentCount, userId);
+    @Transactional
+    public UserRecipeResponseDto createUserRecipe(UserRecipeRequestDto requestDto,
+                                                  MultipartFile mainFile,
+                                                  List<MultipartFile> otherFiles,
+                                                  Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        String mainImageUrl = getUploadedImage(mainFile, UserRecipeResponseDto.DEFAULT_IMAGE_URL);
+
+        UserRecipe recipe = userRecipeRepository.save(UserRecipe.builder()
+            .user(user)
+            .title(requestDto.getTitle())
+            .content(requestDto.getContent())
+            .mainImageUrl(mainImageUrl)
+            .isPublic(requestDto.isPublic())
+            .recipeStatus(UserRecipeStatus.ACTIVE)
+            .build());
+
+        recipe.getIngredients().addAll(buildIngredients(requestDto, recipe));
+        recipe.getManuals().addAll(buildManuals(requestDto, otherFiles, recipe));
+
+        return UserRecipeResponseDto.of(userRecipeRepository.save(recipe), 0, 0, userId);
     }
 
-    private String getMainImageUrl(MultipartFile mainFile) {
-        return (mainFile != null && !mainFile.isEmpty())
-            ? firebaseStorageService.uploadFile(mainFile)
-            : UserRecipeResponseDto.DEFAULT_IMAGE_URL;
-    }
-
-    private String updateMainImage(String existing, MultipartFile mainFile) {
-        if (mainFile != null && !mainFile.isEmpty()) {
-            return firebaseStorageService.uploadFile(mainFile);
+    private String getUploadedImage(MultipartFile file, String existingImageUrl) {
+        if (file != null && !file.isEmpty()) {
+            return firebaseStorageService.uploadFile(file);
         }
-        return (existing == null || existing.isBlank())
+        return (existingImageUrl == null || existingImageUrl.isBlank())
             ? UserRecipeResponseDto.DEFAULT_IMAGE_URL
-            : existing;
+            : existingImageUrl;
+    }
+
+    @Transactional
+    public UserRecipeResponseDto updateUserRecipe(Long id, UserRecipeRequestDto requestDto,
+                                                  MultipartFile mainFile, List<MultipartFile> otherFiles,
+                                                  Long userId) {
+        UserRecipe recipe = userRecipeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("레시피를 찾을 수 없습니다."));
+
+        if (!recipe.getUser().getId().equals(userId)) {
+            throw new RuntimeException("권한이 없습니다.");
+        }
+
+        String mainImageUrl = (mainFile != null && !mainFile.isEmpty()) ?
+            firebaseStorageService.uploadFile(mainFile) :
+            recipe.getMainImageUrl();
+
+        recipe.update(requestDto.getTitle(), requestDto.getContent(), requestDto.isPublic(), mainImageUrl);
+        recipe.getIngredients().clear();
+        recipe.getIngredients().addAll(buildIngredients(requestDto, recipe));
+        recipe.getManuals().clear();
+        recipe.getManuals().addAll(buildManuals(requestDto, otherFiles, recipe));
+
+        return UserRecipeResponseDto.of(userRecipeRepository.save(recipe), 0, 0, userId);
     }
 
     private List<UserRecipeIngredient> buildIngredients(UserRecipeRequestDto dto, UserRecipe recipe) {
-        return dto.ingredients().stream()
-            .map(name -> UserRecipeIngredient.builder()
+        return dto.getIngredients().stream()
+            .map(ing -> UserRecipeIngredient.builder()
                 .userRecipe(recipe)
-                .name(name)
+                .name(ing.getName())
+                .amount(ing.getAmount())
                 .build())
             .collect(Collectors.toList());
     }
 
     private List<UserRecipeManual> buildManuals(UserRecipeRequestDto dto, List<MultipartFile> otherFiles, UserRecipe recipe) {
-        List<UserRecipeManual> manuals = new ArrayList<>();
-        for (int i = 0; i < dto.manuals().size(); i++) {
-            UserRecipeManual manual = UserRecipeManual.builder()
-                .userRecipe(recipe)
-                .step(i + 1)
-                .description(dto.manuals().get(i))
-                .images(new ArrayList<>())
-                .build();
-            if (otherFiles != null && otherFiles.size() > i && otherFiles.get(i) != null && !otherFiles.get(i).isEmpty()) {
-                String imageUrl = firebaseStorageService.uploadFile(otherFiles.get(i));
-                UserRecipeManualImage manualImage = UserRecipeManualImage.builder()
-                    .userRecipeManual(manual)
+        return dto.getManuals().stream()
+            .map(manualDto -> {
+                int index = manualDto.getStep() - 1;
+
+                String imageUrl = getUploadedImage(
+                    (otherFiles != null && index < otherFiles.size()) ? otherFiles.get(index) : null,
+                    manualDto.getImageUrl()
+                );
+
+                return UserRecipeManual.builder()
+                    .userRecipe(recipe)
+                    .step(manualDto.getStep())
+                    .description(manualDto.getDescription())
                     .imageUrl(imageUrl)
                     .build();
-                manual.getImages().add(manualImage);
-            }
-            manuals.add(manual);
-        }
-        return manuals;
+            })
+            .collect(Collectors.toList());
     }
 }

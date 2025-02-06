@@ -35,19 +35,21 @@ public class UserRecipe extends BaseEntity {
     private boolean isPublic;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String mainImageUrl; // 대표 이미지 (한 장만)
+    private String mainImageUrl;
 
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRecipeManual> manuals; // 조리 과정 리스트
+    @Builder.Default
+    private List<UserRecipeManual> manuals = new ArrayList<>();
 
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRecipeIngredient> ingredients; // 재료 리스트
+    @Builder.Default
+    private List<UserRecipeIngredient> ingredients = new ArrayList<>();
 
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRecipeComment> comments; // 댓글
+    private List<UserRecipeComment> comments;
 
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRecipeLike> likes; // 좋아요
+    private List<UserRecipeLike> likes;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "recipe_status", nullable = false)

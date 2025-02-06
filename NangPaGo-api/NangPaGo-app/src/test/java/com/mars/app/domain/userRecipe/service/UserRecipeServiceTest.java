@@ -1,6 +1,7 @@
 package com.mars.app.domain.userRecipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
 import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
@@ -35,32 +36,32 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
     @DisplayName("유저는 본인의 레시피를 작성할 수 있다.")
     @Test
     void createUserRecipe() {
-        // given
-        User user = User.builder()
-            .email("email@example.com")
-            .build();
+        User user = User.builder().email("email@example.com").build();
         userRepository.save(user);
 
-        UserRecipeRequestDto requestDto = new UserRecipeRequestDto(
-            "레시피 제목",
-            "레시피 내용",
-            true,
-            List.of("재료1"),
-            List.of("조리법1")
-        );
+        UserRecipeRequestDto requestDto = UserRecipeRequestDto.builder()
+            .title("레시피 제목")
+            .content("레시피 내용")
+            .isPublic(true)
+            .mainImageUrl("")
+            .ingredients(List.of(
+                UserRecipeRequestDto.IngredientDto.builder().name("재료1").amount("1개").build()
+            ))
+            .manuals(List.of(
+                UserRecipeRequestDto.ManualDto.builder().step(1).description("조리법1").imageUrl("").build()
+            ))
+            .build();
 
-        MockMultipartFile mainFile = new MockMultipartFile("mainFile", "", "image/jpeg", new byte[0]);
-        List<MultipartFile> otherFiles = List.of();
+        MockMultipartFile mainFile = new MockMultipartFile("mainFile", "image.jpg", "image/jpeg", new byte[10]);
+        List<MultipartFile> otherFiles = List.of(new MockMultipartFile("otherFile", "other.jpg", "image/jpeg", new byte[10]));
 
-        // when
         UserRecipeResponseDto responseDto = userRecipeService.createUserRecipe(requestDto, mainFile, otherFiles, user.getId());
 
-        // then
         assertThat(responseDto.title()).isEqualTo("레시피 제목");
         assertThat(responseDto.content()).isEqualTo("레시피 내용");
         assertThat(responseDto.isPublic()).isTrue();
-        assertThat(responseDto.ingredients()).containsExactlyInAnyOrder("재료1");
-        assertThat(responseDto.manuals()).containsExactly("1. 조리법1");
+        assertThat(responseDto.ingredients()).extracting("name").containsExactly("재료1");
+        assertThat(responseDto.manuals()).extracting("description").containsExactly("조리법1");
         assertThat(responseDto.likeCount()).isEqualTo(0);
         assertThat(responseDto.commentCount()).isEqualTo(0);
         assertThat(responseDto.recipeStatus()).isEqualTo(UserRecipeStatus.ACTIVE.name());
@@ -70,10 +71,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
     @DisplayName("유저는 본인의 레시피를 수정할 수 있다.")
     @Test
     void updateUserRecipe() {
-        // given
-        User user = User.builder()
-            .email("email@example.com")
-            .build();
+        User user = User.builder().email("email@example.com").build();
         userRepository.save(user);
 
         UserRecipe recipe = UserRecipe.builder()
@@ -92,6 +90,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
         UserRecipeIngredient ingredient = UserRecipeIngredient.builder()
             .userRecipe(recipe)
             .name("초기 재료")
+            .amount("1개")
             .build();
         recipe.getIngredients().add(ingredient);
 
@@ -99,32 +98,35 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
             .userRecipe(recipe)
             .step(1)
             .description("초기 매뉴얼")
-            .images(new ArrayList<>())
+            .imageUrl("초기 매뉴얼 이미지 URL")
             .build();
         recipe.getManuals().add(manual);
         userRecipeRepository.save(recipe);
 
-        UserRecipeRequestDto updateDto = new UserRecipeRequestDto(
-            "수정 제목",
-            "수정 내용",
-            false,
-            List.of("수정 재료"),
-            List.of("수정 매뉴얼")
-        );
+        UserRecipeRequestDto updateDto = UserRecipeRequestDto.builder()
+            .title("수정 제목")
+            .content("수정 내용")
+            .isPublic(false)
+            .mainImageUrl("")
+            .ingredients(List.of(
+                UserRecipeRequestDto.IngredientDto.builder().name("수정 재료").amount("2개").build()
+            ))
+            .manuals(List.of(
+                UserRecipeRequestDto.ManualDto.builder().step(1).description("수정 매뉴얼").imageUrl("").build()
+            ))
+            .build();
 
         MockMultipartFile newMainFile = new MockMultipartFile("mainFile", "newImage.jpg", "image/jpeg", "dummy image content".getBytes());
-        List<MultipartFile> newOtherFiles = List.of();
+        List<MultipartFile> newOtherFiles = List.of(new MockMultipartFile("otherFile", "newOther.jpg", "image/jpeg", "dummy other image".getBytes()));
 
-        // when
         UserRecipeResponseDto updatedResponse = userRecipeService.updateUserRecipe(recipe.getId(), updateDto, newMainFile, newOtherFiles, user.getId());
 
-        // then
         assertThat(updatedResponse.title()).isEqualTo("수정 제목");
         assertThat(updatedResponse.content()).isEqualTo("수정 내용");
         assertThat(updatedResponse.isPublic()).isFalse();
         assertThat(updatedResponse.mainImageUrl()).isNotEqualTo("초기 이미지 URL");
-        assertThat(updatedResponse.ingredients()).containsExactly("수정 재료");
-        assertThat(updatedResponse.manuals()).containsExactly("1. 수정 매뉴얼");
+        assertThat(updatedResponse.ingredients()).extracting("name").containsExactly("수정 재료");
+        assertThat(updatedResponse.manuals()).extracting("description").containsExactly("수정 매뉴얼");
         assertThat(updatedResponse.likeCount()).isEqualTo(0);
         assertThat(updatedResponse.commentCount()).isEqualTo(0);
 
@@ -137,10 +139,7 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
     @DisplayName("유저는 본인의 레시피를 삭제할 수 있다.")
     @Test
     void deleteUserRecipe() {
-        // given
-        User user = User.builder()
-            .email("email@example.com")
-            .build();
+        User user = User.builder().email("email@example.com").build();
         userRepository.save(user);
 
         UserRecipe recipe = UserRecipe.builder()
@@ -157,10 +156,8 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
             .build();
         userRecipeRepository.save(recipe);
 
-        // when
         userRecipeService.deleteUserRecipe(recipe.getId(), user.getId());
 
-        // then
         UserRecipe deletedRecipe = userRecipeRepository.findById(recipe.getId()).orElseThrow();
         assertThat(deletedRecipe.getRecipeStatus()).isEqualTo(UserRecipeStatus.DELETED);
     }

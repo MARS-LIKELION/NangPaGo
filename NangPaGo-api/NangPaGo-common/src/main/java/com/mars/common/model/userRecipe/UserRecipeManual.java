@@ -2,8 +2,6 @@ package com.mars.common.model.userRecipe;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Builder
@@ -21,25 +19,25 @@ public class UserRecipeManual {
     private UserRecipe userRecipe;
 
     @Column(nullable = false)
-    private Integer step; // 단계 번호
+    private Integer step;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String description; // 설명
+    private String description;
 
-    @OneToMany(mappedBy = "userRecipeManual", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<UserRecipeManualImage> images = new ArrayList<>();
+    @Column(columnDefinition = "TEXT", nullable = true)
+    private String imageUrl;
 
-    public static UserRecipeManual of(UserRecipe userRecipe, Integer step, String description) {
+    public static UserRecipeManual of(UserRecipe userRecipe, Integer step, String description, String imageUrl) {
         return UserRecipeManual.builder()
             .userRecipe(userRecipe)
             .step(step)
             .description(description)
-            .images(new ArrayList<>())
+            .imageUrl(imageUrl)
             .build();
     }
 
-    public void addImage(UserRecipeManualImage image) {
-        this.images.add(image);
+    public void update(String description, String imageUrl) {
+        this.description = description;
+        this.imageUrl = imageUrl;
     }
 }

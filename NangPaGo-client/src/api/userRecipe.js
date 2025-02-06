@@ -15,18 +15,17 @@ export const fetchPosts = async (pageNo = PAGE_INDEX.zero, pageSize = PAGE_SIZE.
 export const fetchUserRecipeById = async (id) => {
   try {
     const response = await axiosInstance.get(`/api/user-recipe/${id}`);
-    return response.data?.data ?? response.data;  // API 응답에서 `data` 속성 추출
+    return response.data?.data ?? response.data;
   } catch (error) {
     console.error(`유저 레시피를 불러오는 중 오류가 발생했습니다: ${error.message}`);
     throw error;
   }
 };
 
+
 export const createUserRecipe = async (formData) => {
   try {
-    const response = await axiosInstance.post('/api/user-recipe', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const response = await axiosInstance.post('/api/user-recipe', formData);
     return response.data;
   } catch (error) {
     console.error(`유저 레시피 생성 오류: ${error.message}`);
@@ -46,7 +45,7 @@ export const deleteUserRecipe = async (id) => {
 export const updateUserRecipe = async (id, formData) => {
   try {
     const response = await axiosInstance.put(`/api/user-recipe/${id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Content-Type': 'multipart/form-data' }
     });
     return response.data;
   } catch (error) {
@@ -54,4 +53,3 @@ export const updateUserRecipe = async (id, formData) => {
     throw error;
   }
 };
-
