@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login'
 import Home from './pages/Home'
 import Users from './pages/Users'
-import Security from './pages/Security'
 import Audit from './pages/Audit'
 import ProtectedRoute from './components/ProtectedRoute'
 import DashboardLayout from './components/DashboardLayout'
@@ -28,16 +27,6 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <Users />
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/security"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <Security />
               </DashboardLayout>
             </ProtectedRoute>
           }

@@ -66,9 +66,6 @@ export default function DashboardLayout({ children }) {
                 <NavLink to="/dashboard/users" icon={UserGroupIcon}>
                   Users
                 </NavLink>
-                <NavLink to="/dashboard/security" icon={ShieldCheckIcon}>
-                  Security
-                </NavLink>
                 <NavLink to="/dashboard/audit" icon={ClipboardDocumentListIcon}>
                   Audit
                 </NavLink>
