@@ -22,9 +22,15 @@ function ManualInput({ manuals, setManuals }) {
   const handleManualImageChange = (index, e) => {
     const file = e.target.files[0];
     if (file) {
-      updateManual(index, "image", file);
+      const updatedManuals = [...manuals];
+  
+      // ✅ 기존 URL이 있으면 유지, 새 파일이 있으면 덮어쓰기
+      updatedManuals[index].image = file;
+      setManuals(updatedManuals);
     }
   };
+  
+  
 
   const removeManual = (index) => {
     const updatedManuals = manuals.filter((_, i) => i !== index);
@@ -79,14 +85,14 @@ function ManualInput({ manuals, setManuals }) {
               />
               <FileUpload
                 file={manual.image}
-                onChange={(e) => handleManualImageChange(index, e)}
                 imagePreview={
                   manual.image
                     ? (typeof manual.image === 'string'
-                        ? manual.image
+                        ? manual.image  // ✅ 기존 URL 유지
                         : URL.createObjectURL(manual.image))
                     : null
                 }
+                onChange={(e) => handleManualImageChange(index, e)}
                 onCancel={() => updateManual(index, "image", null)}
               />
             </motion.div>

@@ -16,7 +16,7 @@ function FileUpload({ file, onChange, imagePreview, onCancel }) {
         {imagePreview ? (
           <>
             <img
-              src={imagePreview}
+              src={typeof imagePreview === 'string' ? imagePreview : URL.createObjectURL(imagePreview)}
               alt="Uploaded Preview"
               className={`${IMAGE_STYLES.mainImage} object-contain`}
             />
@@ -37,7 +37,6 @@ function FileUpload({ file, onChange, imagePreview, onCancel }) {
           accept="image/*"
           className="absolute inset-0 opacity-0 cursor-pointer"
           onChange={onChange}
-          key={file ? file.name : 'file-upload'}
         />
       </label>
     </div>

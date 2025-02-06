@@ -23,7 +23,6 @@ function ModifyUserRecipe() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
-  // manuals는 { description, image } 객체 배열 그대로 저장 (API에서 내려온 값을 그대로 사용)
   const [manuals, setManuals] = useState([{ description: '', image: null }]);
   const [mainFile, setMainFile] = useState(null);
   const [existingImageUrl, setExistingImageUrl] = useState(null);
@@ -44,35 +43,38 @@ function ModifyUserRecipe() {
     const fetchData = async () => {
       try {
         const data = await fetchUserRecipeById(id);
+        console.log('Fetched manuals:', data.manuals); // 🔍 API 응답 확인용
+  
         setTitle(data.title);
         setContent(data.content);
         setIsPublic(data.isPublic);
-        setIngredients(
-          (data.ingredients || []).map((ing) =>
-            typeof ing === 'string' ? { name: ing, amount: '' } : ing
-          )
-        );
+  
+        // ✅ 기존 이미지 URL이 유지되도록 변경
         setManuals(
-          (data.manuals || []).map((manual) =>
-            typeof manual === 'string'
-              ? { description: manual, image: null }
-              : manual
-          )
+          (data.manuals || []).map((manual) => ({
+            description: typeof manual === 'string'
+  ? manual.replace(/^[\d.\s]+/, '')  // ✅ 숫자, 점(.), 공백을 모두 제거
+  : manual.description.replace(/^[\d.\s]+/, ''),
+
+            image: manual.image && typeof manual.image === 'string'
+              ? manual.image
+              : null,
+          }))
         );
-        if (data.mainImageUrl && data.mainImageUrl !== '') {
+        
+  
+        if (data.mainImageUrl) {
           setExistingImageUrl(data.mainImageUrl);
           setImagePreview(data.mainImageUrl);
-        } else {
-          setExistingImageUrl(null);
-          setImagePreview(null);
         }
       } catch (err) {
-        console.error(err);
+        console.error('레시피 데이터를 불러오는 중 오류 발생:', err);
         setError('수정할 레시피 데이터를 불러오는데 실패했습니다.');
       }
     };
     fetchData();
   }, [id]);
+  
 
   useEffect(() => {
     if (mainFile) {
@@ -103,7 +105,6 @@ function ModifyUserRecipe() {
 
   const handleCancelFile = () => {
     setMainFile(null);
-    // 취소 시 기존 이미지 URL(existingImageUrl)이 있으면 그대로 유지
     setImagePreview(existingImageUrl);
     setIsBlocked(true);
   };
@@ -117,22 +118,28 @@ function ModifyUserRecipe() {
     formData.append('title', title);
     formData.append('content', content);
     formData.append('isPublic', isPublic);
+  
     ingredients.forEach((ingredient) => {
       const ingredientText = `${ingredient.name} ${ingredient.amount}`.trim();
       formData.append('ingredients', ingredientText);
     });
+  
     manuals.forEach((manual, index) => {
-      formData.append(`manuals[${index}]`, manual.description);
-      if (manual.image && typeof manual.image !== 'string') {
+      formData.append(`manuals[${index}]`, `${manual.description}`);  // ✅ 숫자 없이 저장
+    
+      
+      // 기존 이미지가 URL인 경우 유지
+      if (manual.image && typeof manual.image === 'string') {
+        formData.append(`manualImages[${index}]`, manual.image);
+      } else if (manual.image && manual.image instanceof File) {
         formData.append('otherFiles', manual.image);
       }
     });
-    // 만약 새 대표 이미지 파일이 있으면 전송하고, 없으면 아무 것도 전송하지 않음
+  
     if (mainFile) {
       formData.append('mainFile', mainFile);
     }
-    // (백엔드에서 새 파일이 없으면 기존 이미지를 유지하도록 처리)
-
+  
     try {
       const responseData = await updateUserRecipe(id, formData);
       if (responseData.data?.id) {
@@ -146,6 +153,7 @@ function ModifyUserRecipe() {
       setError(err.message);
     }
   };
+  
 
   return (
     <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
