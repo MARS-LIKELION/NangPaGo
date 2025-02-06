@@ -1,5 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react"; // Lucide-react 아이콘 사용
+// src/components/userRecipe/IngredientInput.jsx
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 
 function IngredientInput({ ingredients, setIngredients }) {
   // 재료 추가
@@ -16,6 +17,10 @@ function IngredientInput({ ingredients, setIngredients }) {
   // 재료 업데이트
   const updateIngredient = (index, field, value) => {
     const updatedIngredients = [...ingredients];
+    // 만약 요소가 문자열이면 객체로 변환
+    if (typeof updatedIngredients[index] === 'string') {
+      updatedIngredients[index] = { name: updatedIngredients[index], amount: '' };
+    }
     updatedIngredients[index][field] = value;
     setIngredients(updatedIngredients);
   };
@@ -23,8 +28,6 @@ function IngredientInput({ ingredients, setIngredients }) {
   return (
     <div className="mt-4">
       <h2 className="text-xl font-semibold mb-2">재료</h2>
-
-      {/* 재료 목록 */}
       <AnimatePresence>
         {ingredients.map((ingredient, index) => (
           <motion.div
@@ -39,17 +42,16 @@ function IngredientInput({ ingredients, setIngredients }) {
               type="text"
               className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
               placeholder="재료 입력"
-              value={ingredient.name}
+              value={ingredient.name || ''}
               onChange={(e) => updateIngredient(index, 'name', e.target.value)}
             />
             <input
               type="text"
               className="w-1/4 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
               placeholder="수량"
-              value={ingredient.amount}
+              value={ingredient.amount || ''}
               onChange={(e) => updateIngredient(index, 'amount', e.target.value)}
             />
-            {/* 입력 필드가 하나 이상일 때만 삭제 버튼 보이게 설정 */}
             {ingredients.length > 1 && (
               <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -63,8 +65,6 @@ function IngredientInput({ ingredients, setIngredients }) {
           </motion.div>
         ))}
       </AnimatePresence>
-
-      {/* 재료 추가 버튼 */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

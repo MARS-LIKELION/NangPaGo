@@ -1,22 +1,24 @@
+// src/components/userRecipe/ManualInput.jsx
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import TextArea from "./TextArea";
 import FileUpload from "./FileUpload";
 
 function ManualInput({ manuals, setManuals }) {
-  // 조리 과정 추가
   const addManual = () => {
     setManuals([...manuals, { description: "", image: null }]);
   };
 
-  // 조리 과정 업데이트
   const updateManual = (index, field, value) => {
     const updatedManuals = [...manuals];
+    // 만약 요소가 문자열이면 객체로 변환
+    if (typeof updatedManuals[index] === 'string') {
+      updatedManuals[index] = { description: updatedManuals[index], image: null };
+    }
     updatedManuals[index][field] = value;
     setManuals(updatedManuals);
   };
 
-  // 이미지 변경 핸들러
   const handleManualImageChange = (index, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -24,7 +26,6 @@ function ManualInput({ manuals, setManuals }) {
     }
   };
 
-  // 조리 과정 삭제
   const removeManual = (index) => {
     const updatedManuals = manuals.filter((_, i) => i !== index);
     setManuals(updatedManuals);
@@ -33,7 +34,6 @@ function ManualInput({ manuals, setManuals }) {
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-4">조리 과정</h2>
-
       <AnimatePresence>
         {manuals.map((manual, index) => (
           <motion.div
@@ -44,7 +44,7 @@ function ManualInput({ manuals, setManuals }) {
             transition={{ duration: 0.3 }}
             className="relative flex flex-col gap-2 mt-10"
           >
-            {/* 스텝 번호 (작은 둥근 회색 배경, 조리 과정 박스 위쪽에 배치) */}
+            {/* 단계 번호는 별도로 표시 */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -54,8 +54,6 @@ function ManualInput({ manuals, setManuals }) {
             >
               Step {index + 1}
             </motion.div>
-
-            {/* 조리 과정 박스 */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -63,7 +61,6 @@ function ManualInput({ manuals, setManuals }) {
               transition={{ duration: 0.3 }}
               className="relative flex flex-col gap-3 p-4 border border-gray-300 rounded-lg bg-white shadow-sm"
             >
-              {/* X 삭제 버튼 */}
               {manuals.length > 1 && (
                 <motion.button
                   whileHover={{ scale: 1.1 }}
@@ -74,28 +71,28 @@ function ManualInput({ manuals, setManuals }) {
                   <X className="w-4 h-4 text-gray-600" />
                 </motion.button>
               )}
-
-              {/* 조리 과정 입력 */}
               <TextArea
-                value={manual.description}
+                value={manual.description}  // 원본 값을 그대로 사용
                 onChange={(e) => updateManual(index, "description", e.target.value)}
                 placeholder="조리 과정 입력"
                 rows={2}
               />
-
-              {/* 파일 업로드 */}
               <FileUpload
                 file={manual.image}
                 onChange={(e) => handleManualImageChange(index, e)}
-                imagePreview={manual.image ? URL.createObjectURL(manual.image) : null}
+                imagePreview={
+                  manual.image
+                    ? (typeof manual.image === 'string'
+                        ? manual.image
+                        : URL.createObjectURL(manual.image))
+                    : null
+                }
                 onCancel={() => updateManual(index, "image", null)}
               />
             </motion.div>
           </motion.div>
         ))}
       </AnimatePresence>
-
-      {/* 조리 과정 추가 버튼 */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}

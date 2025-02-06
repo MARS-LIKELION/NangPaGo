@@ -134,8 +134,12 @@ function ModifyCommunity() {
       formData.append('title', title);
       formData.append('content', content);
       formData.append('isPublic', isPublic);
+      // 파일 선택 여부에 따라 처리: 
+      // 새 파일(file)이 있으면 전송, 없으면 기존 이미지 URL을 함께 전송
       if (file) {
         formData.append('file', file);
+      } else {
+        formData.append('existingImageUrl', imagePreview || '');
       }
       await updateCommunity(id, formData);
       setIsBlocked(false);
@@ -147,7 +151,7 @@ function ModifyCommunity() {
       setError(err.message);
     }
   };
-
+  
   return (
     <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen flex flex-col max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <Header isBlocked={isBlocked} />

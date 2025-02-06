@@ -42,3 +42,16 @@ export const deleteUserRecipe = async (id) => {
     throw new Error(`유저 레시피 삭제 중 오류가 발생했습니다: ${error.message}`);
   }
 };
+
+export const updateUserRecipe = async (id, formData) => {
+  try {
+    const response = await axiosInstance.put(`/api/user-recipe/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`유저 레시피 수정 오류: ${error.message}`);
+    throw error;
+  }
+};
+
