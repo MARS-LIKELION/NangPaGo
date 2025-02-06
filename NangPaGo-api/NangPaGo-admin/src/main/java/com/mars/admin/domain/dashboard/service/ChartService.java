@@ -2,14 +2,15 @@ package com.mars.admin.domain.dashboard.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
 import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
+import com.mars.admin.domain.dashboard.dto.MonthCommunityCountDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,24 +49,37 @@ public class ChartService {
         return userCountDto;
     }
 
-    public Map<String, Long> getPostMonthCountTotals() {
-        Map<String, Long> monthlyPostCounts = new LinkedHashMap<>();
-        resetMap(monthlyPostCounts);
+    public List<MonthCommunityCountDto> getPostMonthCountTotals() {
+        List<YearMonth> months = resetMonths();
+        Map<YearMonth, Long> postCounts = getMonthPostCounts().stream()
+            .collect(Collectors.toMap(
+                result -> YearMonth.parse(((String) result[0]).substring(0, 7)),
+                result -> (Long) result[1]
+            ));
 
-        getMonthPostCounts().forEach(result -> {
-            String monthStr = ((String) result[0]).substring(5, 7) + "월";
-            Long count = (Long) result[1];
-            monthlyPostCounts.put(monthStr, count);
-        });
+        List<MonthCommunityCountDto> result = new ArrayList<>();
 
-        return monthlyPostCounts;
+        boolean foundPosts = false;
+        for (YearMonth month : months) {
+            long count = postCounts.getOrDefault(month, 0L);
+            if (count > 0) {
+                foundPosts = true;
+            }
+            if (foundPosts) {
+                result.add(MonthCommunityCountDto.of(month, count));
+            }
+        }
+
+        return result;
     }
 
-    private void resetMap(Map<String, Long> map) {
-        for (int i = 11; i >= 0; i--) {
-            String monthKey = YearMonth.now().minusMonths(i).format(DateTimeFormatter.ofPattern("MM")) + "월";
-            map.put(monthKey, 0L);
+    private List<YearMonth> resetMonths() {
+        YearMonth now = YearMonth.now();
+        List<YearMonth> months = new ArrayList<>();
+        for (YearMonth month = now.minusMonths(11); !month.isAfter(now); month = month.plusMonths(1)) {
+            months.add(month);
         }
+        return months;
     }
 
     private List<Object[]> getMonthPostCounts() {

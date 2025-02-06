@@ -3,6 +3,7 @@ package com.mars.admin.domain.dashboard.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
+import com.mars.admin.domain.dashboard.dto.MonthCommunityCountDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import com.mars.admin.domain.user.service.UserService;
 import com.mars.admin.support.IntegrationTestSupport;
@@ -12,7 +13,6 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +58,11 @@ class ChartServiceTest extends IntegrationTestSupport {
         String currentMonthKey = YearMonth.now().format(DateTimeFormatter.ofPattern("MM")) + "월";
 
         // when
-        Map<String, Long> totals = chartService.getPostMonthCountTotals();
+        List<MonthCommunityCountDto> totals = chartService.getPostMonthCountTotals();
 
         // then
-        assertThat(totals.size()).isEqualTo(12);
-        assertThat(totals).containsKey(currentMonthKey);
-        assertThat(totals.get(currentMonthKey)).isEqualTo(5L);
+        assertThat(totals.size()).isEqualTo(1);
+        assertThat(totals.get(0).month()).contains(currentMonthKey);
+        assertThat(totals.get(0).count()).isEqualTo(5L);
     }
 }

@@ -75,19 +75,11 @@ export default function Home() {
     const fetchMonthPostStats = async () => {
       try {
         const response = await getMonthPostTotals();
-        const monthData = response.data;
-        const stats = Object.entries(monthData).map(([month, count]) => ({ name: month, posts: count }));
-
-        const currentMonth = `${("0" + (new Date().getMonth() + 1)).slice(-2)}월`;
-        const firstIndex = stats.findIndex(item => item.posts !== 0);
-
-        let filteredStats = firstIndex !== -1 ? stats.slice(firstIndex) : [];
-
-        if (!filteredStats.some(item => item.name === currentMonth)) {
-          filteredStats.push({ name: currentMonth, posts: monthData[currentMonth] || 0 });
-        }
-
-        setPostStats(filteredStats);
+        const stats = response.data.map(item => ({
+          month: `${item.month}`,
+          count: item.count
+        }));
+        setPostStats(stats);
       } catch (error) {
         console.error('월별 게시글 통계 가져오기 오류: ', error);
       }
@@ -155,11 +147,11 @@ export default function Home() {
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 게시글 통계</h3>
             <BarChart width={500} height={300} data={postStats}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="posts" fill="#82ca9d" />
+              <Bar dataKey="count" fill="#82ca9d" />
             </BarChart>
           </div>
         </div>

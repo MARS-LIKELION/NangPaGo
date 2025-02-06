@@ -2,6 +2,7 @@ package com.mars.admin.domain.dashboard.controller;
 
 import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
 import com.mars.admin.domain.dashboard.dto.DashboardResponseDto.DashboardData;
+import com.mars.admin.domain.dashboard.dto.MonthCommunityCountDto;
 import com.mars.admin.domain.dashboard.service.ChartService;
 import com.mars.common.dto.ResponseDto;
 import java.util.List;
@@ -29,7 +30,7 @@ public class DashboardController {
     }
 
     @GetMapping("/stats/post")
-    public ResponseDto<Map<String, Long>> monthPostCountTotals() {
+    public ResponseDto<List<MonthCommunityCountDto>> monthPostCountTotals() {
         return ResponseDto.of(chartService.getPostMonthCountTotals());
     }
 }
