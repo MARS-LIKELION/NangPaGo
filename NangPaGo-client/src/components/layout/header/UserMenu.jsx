@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { HEADER_STYLES } from '../../../common/styles/Header';
 import { BiChevronLeft } from "react-icons/bi";
+import LogoutModal from '../../modal/LogoutModal';
 
 const UserMenu = ({
   nickname,
@@ -12,6 +13,7 @@ const UserMenu = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -44,8 +46,13 @@ const UserMenu = ({
   };
 
   const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
     setIsOpen(false);
+  };
+
+  const handleLogoutConfirm = () => {
     onLogout();
+    setIsLogoutModalOpen(false);
   };
 
   return (
@@ -81,6 +88,11 @@ const UserMenu = ({
           <NotificationPanel onBack={handleBackClick} notifications={notifications} />
         )}
       </div>
+      <LogoutModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogoutConfirm}
+      />
     </>
   );
 };
