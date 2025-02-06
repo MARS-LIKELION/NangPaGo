@@ -5,7 +5,7 @@ export const getAuditLogs = async (page, pageSize = 10) => {
     const params = new URLSearchParams();
     params.append('pageNo', page + 1);
     params.append('pageSize', pageSize);
-    
+
     const response = await axiosInstance.get(`/api/audit?${params.toString()}`);
     return response;
   } catch (error) {

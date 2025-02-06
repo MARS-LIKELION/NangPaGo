@@ -61,7 +61,7 @@ export default function Audit() {
                       } hover:bg-blue-50 border-b`}
                   >
                     <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">
-                      {log.action}
+                      {log.actionDescription}
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">
                       {log.userId}
