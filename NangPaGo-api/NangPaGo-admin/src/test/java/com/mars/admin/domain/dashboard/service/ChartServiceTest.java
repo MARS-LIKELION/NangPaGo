@@ -58,7 +58,7 @@ class ChartServiceTest extends IntegrationTestSupport {
         String currentMonthKey = YearMonth.now().format(DateTimeFormatter.ofPattern("MM")) + "월";
 
         // when
-        List<MonthPostCountDto> totals = chartService.getMonthPostCountTotals();
+        List<MonthPostCountDto> totals = chartService.getPostMonthCountTotals();
 
         // then
         assertThat(totals.size()).isEqualTo(1);

@@ -30,31 +30,51 @@ public class ChartService {
     }
 
     public List<MonthRegisterCountDto> getMonthlyRegisterCounts(int months) {
-        LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusMonths(months);
-
-        List<Object[]> monthlyRegisterCounts = userRepository.getMonthRegisterCount(startDate, endDate);
-        Map<YearMonth, Long> registerCounts = monthlyRegisterCounts.stream()
+        List<YearMonth> monthRange = resetMonths(months);
+        Map<YearMonth, Long> registerCounts = getMonthRegisterCounts().stream()
             .collect(Collectors.toMap(
                 row -> YearMonth.of(((Number) row[0]).intValue(), ((Number) row[1]).intValue()),
                 row -> ((Number) row[2]).longValue()
             ));
 
         List<MonthRegisterCountDto> result = new ArrayList<>();
-        YearMonth current = YearMonth.from(startDate);
-        YearMonth end = YearMonth.from(endDate);
 
-        while (!current.isAfter(end)) {
-            long count = registerCounts.getOrDefault(current, 0L);
-            result.add(MonthRegisterCountDto.of(current, count));
-            current = current.plusMonths(1);
+        boolean foundRegisters = false;
+        for (YearMonth month : monthRange) {
+            long count = registerCounts.getOrDefault(month, 0L);
+            if (count > 0) {
+                foundRegisters = true;
+            }
+            if (foundRegisters) {
+                result.add(MonthRegisterCountDto.of(month, count));
+            }
         }
 
         return result;
     }
 
+    private List<YearMonth> resetMonths(int months) {
+        YearMonth now = YearMonth.now();
+        List<YearMonth> monthRange = new ArrayList<>();
+        for (YearMonth month = now.minusMonths(months - 1); !month.isAfter(now); month = month.plusMonths(1)) {
+            monthRange.add(month);
+        }
+        return monthRange;
+    }
+
+    private List<Object[]> getMonthRegisterCounts() {
+        YearMonth now = YearMonth.now();
+        YearMonth startMonth = now.minusMonths(11);
+
+        LocalDateTime start = startMonth.atDay(1).atStartOfDay();
+        LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
+
+        return userRepository.getMonthRegisterCount(start, end);
+    }
+
+
     public List<MonthPostCountDto> getPostMonthCountTotals() {
-        List<YearMonth> months = resetMonths();
+        List<YearMonth> monthRange = resetMonths();
         Map<YearMonth, Long> postCounts = getMonthPostCounts().stream()
             .collect(Collectors.toMap(
                 result -> YearMonth.parse(((String) result[0]).substring(0, 7)),
@@ -62,9 +82,8 @@ public class ChartService {
             ));
 
         List<MonthPostCountDto> result = new ArrayList<>();
-
         boolean foundPosts = false;
-        for (YearMonth month : months) {
+        for (YearMonth month : monthRange) {
             long count = postCounts.getOrDefault(month, 0L);
             if (count > 0) {
                 foundPosts = true;

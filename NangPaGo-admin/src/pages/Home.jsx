@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ComposedChart, } from 'recharts';
 import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
 import { useState, useEffect } from 'react';
 import { getDashboardData } from '../api/total';
@@ -87,8 +87,12 @@ export default function Home() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">총 사용자</dt>
-                  <dd className="text-3xl font-semibold text-gray-900">{dashboardData.totals?.userCount || 0}</dd>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    총 사용자
+                  </dt>
+                  <dd className="text-3xl font-semibold text-gray-900">
+                    {dashboardData.totals?.userCount || 0}
+                  </dd>
                 </dl>
               </div>
             </div>
@@ -103,8 +107,12 @@ export default function Home() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">총 게시글</dt>
-                  <dd className="text-3xl font-semibold text-gray-900">{dashboardData.totals?.communityCount || 0}</dd>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    총 게시글
+                  </dt>
+                  <dd className="text-3xl font-semibold text-gray-900">
+                    {dashboardData.totals?.communityCount || 0}
+                  </dd>
                 </dl>
               </div>
             </div>
@@ -116,22 +124,23 @@ export default function Home() {
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입 통계</h3>
-            <BarChart width={500} height={300} data={dashboardData.monthlyRegisterData}>
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입통계</h3>
+            <ComposedChart width={600} height={300} data={dashboardData.monthlyRegisterData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="userCount" name="사용자 수" fill="#82ca9d" />
-            </BarChart>
+              <Bar dataKey="userCount" name="사용자 수" fill="#87CEEB" />
+              <Line type="monotone" dataKey="userCount" stroke="#8884d8" />
+            </ComposedChart>
           </div>
         </div>
 
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 게시글 통계</h3>
-            <BarChart width={500} height={300} data={dashboardData.monthPostCountData}>
+            <BarChart width={600} height={300} data={dashboardData.monthPostCountData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
@@ -145,7 +154,7 @@ export default function Home() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">일일 접속자 통계</h3>
-            <LineChart width={500} height={300} data={dailyUserStats}>
+            <LineChart width={600} height={300} data={dailyUserStats}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -155,10 +164,11 @@ export default function Home() {
             </LineChart>
           </div>
         </div>
+
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월 평균 시간대별 사용자 활동 현황</h3>
-            <LineChart width={500} height={300} data={monthlyAverageLoginStats}>
+            <LineChart width={600} height={300} data={monthlyAverageLoginStats}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="time"
@@ -183,5 +193,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  )
+  );
 }
