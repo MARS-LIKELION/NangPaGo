@@ -5,7 +5,6 @@ import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
 import com.mars.admin.domain.dashboard.dto.MonthCommunityCountDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;

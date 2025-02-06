@@ -1,7 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
 import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
 import { useState, useEffect } from 'react';
-import { getDashboardData, getMonthPostTotals } from '../api/total';
+import { getDashboardData } from '../api/total';
 
 // 더미 데이터
 const dailyUserStats = [
@@ -60,7 +60,6 @@ const monthlyAverageLoginStats = [
 
 export default function Home() {
   const [dashboardData, setDashboardData] = useState({});
-  const [postStats, setPostStats] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,21 +71,7 @@ export default function Home() {
       }
     };
 
-    const fetchMonthPostStats = async () => {
-      try {
-        const response = await getMonthPostTotals();
-        const stats = response.data.map(item => ({
-          month: `${item.month}`,
-          count: item.count
-        }));
-        setPostStats(stats);
-      } catch (error) {
-        console.error('월별 게시글 통계 가져오기 오류: ', error);
-      }
-    };
-
     fetchData();
-    fetchMonthPostStats();
   }, []);
 
   return (
@@ -145,7 +130,7 @@ export default function Home() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 게시글 통계</h3>
-            <BarChart width={500} height={300} data={postStats}>
+            <BarChart width={500} height={300} data={dashboardData.communityCountData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />

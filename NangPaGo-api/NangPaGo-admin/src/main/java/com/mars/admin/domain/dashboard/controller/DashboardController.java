@@ -24,13 +24,9 @@ public class DashboardController {
     public ResponseDto<DashboardData> getDashboardData(@RequestParam(defaultValue = "12") int months) {
         Map<String, Long> totals = chartService.getTotals();
         List<DashboardResponseDto> monthlyData = chartService.getMonthlyRegisterCounts(months);
+        List<MonthCommunityCountDto> monthCommunityCountData = chartService.getPostMonthCountTotals();
 
-        DashboardData dashboardData = new DashboardData(totals, monthlyData);
+        DashboardData dashboardData = new DashboardData(totals, monthlyData, monthCommunityCountData);
         return ResponseDto.of(dashboardData, "Dashboard data retrieved successfully");
-    }
-
-    @GetMapping("/stats/post")
-    public ResponseDto<List<MonthCommunityCountDto>> monthPostCountTotals() {
-        return ResponseDto.of(chartService.getPostMonthCountTotals());
     }
 }
