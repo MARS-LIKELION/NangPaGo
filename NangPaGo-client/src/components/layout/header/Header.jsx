@@ -11,8 +11,7 @@ import {
 } from 'react-icons/cg';
 import NavItem from './NavItem.jsx';
 import UserMenu from './UserMenu.jsx';
-
-const HEADER_ICON_SIZE = 23;
+import { HEADER_STYLES } from '../../../common/styles/Header';
 
 function Header({ isBlocked = false }) {
   const loginState = useSelector((state) => state.loginSlice);
@@ -98,23 +97,23 @@ function Header({ isBlocked = false }) {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md w-full px-1 py-2 mb-4">
-      <div className="flex flex-row items-center justify-between px-4">
-        <div className="flex items-center justify-center w-17 h-17">
+    <header className={HEADER_STYLES.header}>
+      <div className={HEADER_STYLES.headerContainer}>
+        <div className={HEADER_STYLES.logoContainer}>
           <img
             src="/logo.png"
             alt="냉파고"
-            className="h-12 w-auto cursor-pointer"
+            className={HEADER_STYLES.logo}
             onClick={() => handleLinkClick('/')}
           />
         </div>
-        <div className="flex items-center justify-center space-x-4">
+        <div className={HEADER_STYLES.navContainer}>
           {loginState.isLoggedIn && (
             <NavItem
               to="/refrigerator"
               isActive={isActive('/refrigerator')}
               label="냉장고"
-              Icon={<CgSmartHomeRefrigerator size={HEADER_ICON_SIZE} />}
+              Icon={CgSmartHomeRefrigerator}
               onClick={() => handleLinkClick('/refrigerator')}
             />
           )}
@@ -122,7 +121,7 @@ function Header({ isBlocked = false }) {
             to="/community"
             isActive={isActive('/community')}
             label="커뮤니티"
-            Icon={<CgList size={HEADER_ICON_SIZE} />}
+            Icon={CgList}
             onClick={() => handleLinkClick('/community')}
           />
           {loginState.isLoggedIn ? (
@@ -131,14 +130,15 @@ function Header({ isBlocked = false }) {
               notifications={notifications}
               onLogout={handleLogout}
               onLinkClick={handleLinkClick}
-              Icon={<CgProfile size={HEADER_ICON_SIZE} />}
+              isActive={isActive('/my-page')}
+              Icon={CgProfile}
             />
           ) : (
             <NavItem
               to="/login"
               isActive={isActive('/login')}
               label="로그인"
-              Icon={<CgLogIn size={HEADER_ICON_SIZE} />}
+              Icon={CgLogIn}
               onClick={() => handleLinkClick('/login')}
             />
           )}
