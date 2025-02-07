@@ -1,4 +1,4 @@
-package com.mars.app.domain.favorite.recipe.dto;
+package com.mars.app.domain.recipe.dto.favorite;
 
 import com.mars.common.model.recipe.Recipe;
 import lombok.Builder;

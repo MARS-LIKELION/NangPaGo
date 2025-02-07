@@ -2,11 +2,12 @@ package com.mars.app.domain.favorite.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.mars.app.domain.recipe.service.favorite.RecipeFavoriteService;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
-import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
+import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
 import com.mars.common.model.favorite.recipe.RecipeFavorite;
-import com.mars.app.domain.favorite.recipe.repository.RecipeFavoriteRepository;
+import com.mars.app.domain.recipe.repository.favorite.RecipeFavoriteRepository;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.common.model.user.User;

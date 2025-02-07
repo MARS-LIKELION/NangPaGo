@@ -1,6 +1,6 @@
 package com.mars.app.domain.recipe.event;
 
-import com.mars.app.domain.recipe.dto.RecipeLikeSseDto;
+import com.mars.app.domain.recipe.dto.like.RecipeLikeSseDto;
 import com.mars.common.sse.AbstractSseEmitterService;
 import org.springframework.stereotype.Service;
 

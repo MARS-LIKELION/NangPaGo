@@ -1,4 +1,4 @@
-package com.mars.app.domain.favorite.recipe.repository;
+package com.mars.app.domain.recipe.repository.favorite;
 
 import com.mars.common.model.favorite.recipe.RecipeFavorite;
 import com.mars.common.model.recipe.Recipe;

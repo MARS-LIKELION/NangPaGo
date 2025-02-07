@@ -7,8 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.mars.app.config.rabbitmq.impl.RecipeFavoriteRabbitConfig;
-import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteMessageDto;
-import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
+import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteMessageDto;
+import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteResponseDto;
+import com.mars.app.domain.recipe.message.favorite.RecipeFavoriteMessagePublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

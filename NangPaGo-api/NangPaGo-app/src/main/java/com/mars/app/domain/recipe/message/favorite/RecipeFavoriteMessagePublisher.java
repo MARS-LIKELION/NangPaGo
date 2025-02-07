@@ -1,8 +1,8 @@
-package com.mars.app.domain.favorite.recipe.message;
+package com.mars.app.domain.recipe.message.favorite;
 
 import com.mars.app.config.rabbitmq.impl.RecipeFavoriteRabbitConfig;
-import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteMessageDto;
-import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
+import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteMessageDto;
+import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

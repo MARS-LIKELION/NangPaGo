@@ -1,13 +1,13 @@
-package com.mars.app.domain.favorite.recipe.controller;
+package com.mars.app.domain.recipe.controller.favorite;
 
-import com.mars.app.domain.favorite.recipe.message.RecipeFavoriteMessagePublisher;
+import com.mars.app.domain.recipe.message.favorite.RecipeFavoriteMessagePublisher;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteListResponseDto;
-import com.mars.app.domain.favorite.recipe.dto.RecipeFavoriteResponseDto;
-import com.mars.app.domain.favorite.recipe.service.RecipeFavoriteService;
+import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
+import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteResponseDto;
+import com.mars.app.domain.recipe.service.favorite.RecipeFavoriteService;
 import com.mars.common.dto.page.PageRequestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

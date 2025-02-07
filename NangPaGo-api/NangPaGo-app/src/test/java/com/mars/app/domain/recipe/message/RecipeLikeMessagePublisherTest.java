@@ -7,8 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.mars.app.config.rabbitmq.impl.RecipeLikeRabbitConfig;
-import com.mars.app.domain.recipe.dto.RecipeLikeMessageDto;
-import com.mars.app.domain.recipe.dto.RecipeLikeResponseDto;
+import com.mars.app.domain.recipe.dto.like.RecipeLikeMessageDto;
+import com.mars.app.domain.recipe.dto.like.RecipeLikeResponseDto;
+import com.mars.app.domain.recipe.message.like.RecipeLikeMessagePublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

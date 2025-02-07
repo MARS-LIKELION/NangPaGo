@@ -1,11 +1,11 @@
-package com.mars.app.domain.recipe.message;
+package com.mars.app.domain.recipe.message.like;
 
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_RECIPE;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 
-import com.mars.app.domain.recipe.dto.RecipeLikeMessageDto;
+import com.mars.app.domain.recipe.dto.like.RecipeLikeMessageDto;
 import com.mars.app.domain.recipe.event.RecipeLikeEvent;
-import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
+import com.mars.app.domain.recipe.repository.like.RecipeLikeRepository;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.common.model.recipe.Recipe;
