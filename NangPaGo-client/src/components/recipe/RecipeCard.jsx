@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaRegHeart, FaRegComment } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaRegComment } from 'react-icons/fa';
 import { IMAGE_STYLES } from '../../common/styles/Image';
 import { PAGE_STYLES } from '../../common/styles/ListPage';
 
@@ -17,7 +17,11 @@ function RecipeCard({ recipe }) {
       <div className="p-4 flex flex-col gap-2">
         <div className="text-sm text-text-400 flex items-center gap-4">
           <div className="flex items-center gap-1 text-gray-600">
-            <FaRegHeart className="text-xl" />
+            {recipe.isLiked ? (
+              <FaHeart className="text-xl text-red-500" />
+            ) : (
+              <FaRegHeart className="text-xl" />
+            )}
             {recipe.likeCount}
           </div>
           <div className="flex items-center gap-1 text-gray-600">
