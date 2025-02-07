@@ -158,7 +158,11 @@ public class UserRecipeService {
     private List<UserRecipeManual> buildManuals(UserRecipeRequestDto dto, List<MultipartFile> otherFiles, UserRecipe recipe) {
         return dto.getManuals().stream()
             .map(manualDto -> {
-                int index = manualDto.getStep() - 1;
+                int stepValue = manualDto.getStep();
+                if (stepValue < 1) {
+                    stepValue = 1;
+                }
+                int index = stepValue - 1;
 
                 String imageUrl = getUploadedImage(
                     (otherFiles != null && index < otherFiles.size()) ? otherFiles.get(index) : null,
@@ -167,11 +171,12 @@ public class UserRecipeService {
 
                 return UserRecipeManual.builder()
                     .userRecipe(recipe)
-                    .step(manualDto.getStep())
+                    .step(stepValue)
                     .description(manualDto.getDescription())
                     .imageUrl(imageUrl)
                     .build();
             })
             .collect(Collectors.toList());
     }
+
 }
