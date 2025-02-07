@@ -25,14 +25,14 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
     if (searchTerm) {
       return (
         <BiX
-          className="absolute right-3 text-secondary text-3xl cursor-pointer"
+          className="absolute right-3 text-text-400 text-3xl cursor-pointer"
           onClick={clearSearchTerm}
         />
       );
     }
 
     return (
-      <BiSearch className="absolute right-3 text-secondary text-2xl cursor-pointer" />
+      <BiSearch className="absolute right-3 text-text-400 text-2xl cursor-pointer" />
     );
   };
 

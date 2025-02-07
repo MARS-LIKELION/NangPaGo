@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegComment } from 'react-icons/fa';
 import { IMAGE_STYLES } from '../../common/styles/Image';
+import { PAGE_STYLES } from '../../common/styles/ListPage';
 
 function RecipeCard({ recipe }) {
   return (
@@ -30,7 +31,7 @@ function RecipeCard({ recipe }) {
           {recipe.ingredientsDisplayTag.map((tag, index) => (
             <span
               key={index}
-              className="bg-white border text-text-400 text-xs px-2 py-1 rounded"
+              className={PAGE_STYLES.tag}
             >
               {tag}
             </span>

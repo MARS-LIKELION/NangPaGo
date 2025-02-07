@@ -17,14 +17,14 @@ function SearchInput({ value, onChange, onClear, onSubmit }) {
       {value ? (
         <button
           type="button"
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary bg-white text-3xl"
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-400 bg-white text-3xl"
           onClick={onClear}
           aria-label="검색어 삭제"
         >
           <BiX />
         </button>
       ) : (
-        <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary text-2xl" />
+        <BiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-400 text-2xl" />
       )}
     </form>
   );

@@ -9,7 +9,7 @@ function RecipeListTab({ activeTab, setActiveTab, isLoggedIn }) {
       {tabs.map((tab) => (
         <button
           key={tab.key}
-          className={`flex-1 py-3 text-center font-medium border-b-2 transition-colors duration-200 ${
+          className={`flex-1 py-3 text-center font-semibold border-b-2 transition-colors duration-200 ${
             activeTab === tab.key
               ? 'border-primary rounded-b-none bg-white text-primary'
               : 'bg-white border-transparent text-text-400 rounded-b-none'

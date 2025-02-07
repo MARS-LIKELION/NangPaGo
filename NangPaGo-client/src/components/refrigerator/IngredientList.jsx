@@ -59,7 +59,7 @@ const IngredientList = ({
             </label>
             <button
               onClick={() => onDelete(ingredient.ingredientName)}
-              className="ml-2 text-sm bg-white text-secondary"
+              className="ml-2 text-sm bg-white text-text-400"
             >
               <FaTimes />
             </button>

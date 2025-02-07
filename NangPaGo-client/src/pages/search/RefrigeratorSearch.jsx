@@ -65,7 +65,7 @@ function RefrigeratorSearch() {
     <div className="bg-white shadow-md mx-auto min-w-80 min-h-screen max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <div className="sticky top-0 bg-white px-4 py-2 flex items-center gap-2 border-b">
         <button onClick={() => navigate(-1)} className="p-2 rounded-full bg-white">
-          <BiArrowBack className="text-2xl text-secondary" />
+          <BiArrowBack className="text-2xl text-text-400" />
         </button>
 
         <div className="relative flex-1">
@@ -83,7 +83,7 @@ function RefrigeratorSearch() {
             <BiX
               className="absolute right-3 top-1/2
                         transform -translate-y-1/2
-                        text-secondary
+                        text-text-400
                         cursor-pointer text-3xl"
               onClick={clearKeyword}
             />
@@ -91,7 +91,7 @@ function RefrigeratorSearch() {
             <BiSearch
               className="absolute right-3 top-1/2 transform
                          -translate-y-1/2 cursor-pointer
-                         text-secondary text-2xl"
+                         text-text-400 text-2xl"
             />
           )}
         </div>

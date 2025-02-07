@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { PAGE_STYLES } from '../../common/styles/ListPage';
 
 const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
   const observerRef = useRef(null);
@@ -91,7 +92,7 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
               className="w-full h-48 object-cover"
             />
             <div className="p-4 flex flex-col gap-2">
-              <h3 className="text-lg">{item.title}</h3>
+              <h3 className="text-lg font-semibold">{item.title}</h3>
               <p className="text-sm text-gray-600 line-clamp-3">
                 {item.content}
               </p>
@@ -109,22 +110,22 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
               className="w-full h-48 object-cover"
             />
             <div className="p-4 flex flex-col gap-2">
-              <h3 className="text-lg">{item.name}</h3>
+              <h3 className="text-lg font-semibold">{item.name}</h3>
               <div className="flex flex-row gap-2 text-sm">
                 {item.cookingMethod && (
-                  <span className="py-1 px-2 bg-secondary rounded-md flex-row">
+                  <span className={PAGE_STYLES.tag}>
                     {item.cookingMethod}
                   </span>
                 )}
 
                 {item.category && (
-                  <span className="py-1 px-2 bg-secondary rounded-md">
+                  <span className={PAGE_STYLES.tag}>
                     {item.category}
                   </span>
                 )}
 
                 {item.mainIngredient && (
-                  <span className="py-1 px-2 bg-secondary rounded-md">
+                    <span className={PAGE_STYLES.tag}>
                     {item.mainIngredient}
                   </span>
                 )}
@@ -133,7 +134,7 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
                 {item.ingredientsDisplayTag?.map((tag, idx) => (
                   <span
                     key={idx}
-                    className="text-sm py-1 px-2 rounded-md bg-secondary text-text-900 "
+                    className={PAGE_STYLES.tag}
                   >
                     {tag}
                   </span>

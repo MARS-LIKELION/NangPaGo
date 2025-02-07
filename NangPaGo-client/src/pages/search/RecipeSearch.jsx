@@ -44,7 +44,7 @@ function RecipeSearch() {
           className="bg-white p-2 rounded-full transition"
           aria-label="뒤로가기"
         >
-          <BiArrowBack className="text-secondary text-2xl" />
+          <BiArrowBack className="text-text-400 text-2xl" />
         </button>
         <SearchInput
           value={keyword}
