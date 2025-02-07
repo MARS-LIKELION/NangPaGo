@@ -120,7 +120,7 @@ function Header({ isBlocked = false }) {
             />
             <NavItem
                 to="/user-recipe"
-                isActive={isActive('/user-recipe/list')}
+                isActive={isActive('/user-recipe')}
                 label="유저 레시피"
                 Icon={BiBlanket}
                 onClick={() => handleLinkClick('/user-recipe/list')}
