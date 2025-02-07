@@ -10,6 +10,7 @@ import {
   CgLogIn
 } from 'react-icons/cg';
 import NavItem from './NavItem.jsx';
+import { BiBlanket } from 'react-icons/bi';
 import ProfileDropdown from './ProfileDropdown.jsx';
 import { HEADER_STYLES } from '../../../common/styles/Header';
 
