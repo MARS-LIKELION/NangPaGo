@@ -45,8 +45,9 @@ class ChartServiceTest extends IntegrationTestSupport {
     @Test
     void getMonthPostCountTotals() {
         // given
-        User user = createUser();
+        int month = 12;
 
+        User user = createUser();
         userRepository.save(user);
 
         List<Community> posts = new ArrayList<>();
@@ -58,7 +59,7 @@ class ChartServiceTest extends IntegrationTestSupport {
         String currentMonthKey = YearMonth.now().format(DateTimeFormatter.ofPattern("MM")) + "월";
 
         // when
-        List<MonthPostCountDto> totals = chartService.getPostMonthCountTotals();
+        List<MonthPostCountDto> totals = chartService.getPostMonthCountTotals(month - 1);
 
         // then
         assertThat(totals.size()).isEqualTo(1);

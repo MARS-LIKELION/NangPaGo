@@ -5,8 +5,8 @@ import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
 import com.mars.admin.domain.dashboard.dto.MonthRegisterCountDto;
 import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,88 +30,74 @@ public class ChartService {
     }
 
     public List<MonthRegisterCountDto> getMonthlyRegisterCounts(int months) {
-        List<YearMonth> monthRange = resetMonths(months);
-        Map<YearMonth, Long> registerCounts = getMonthRegisterCounts().stream()
-            .collect(Collectors.toMap(
-                row -> YearMonth.of(((Number) row[0]).intValue(), ((Number) row[1]).intValue()),
-                row -> ((Number) row[2]).longValue()
-            ));
+        YearMonth now = YearMonth.now();
+        Map<YearMonth, Long> map = MonthRegisterToMap(months);
+        List<MonthRegisterCountDto> monthPostCountDtos = new ArrayList<>();
 
-        List<MonthRegisterCountDto> result = new ArrayList<>();
+        YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
 
-        boolean foundRegisters = false;
-        for (YearMonth month : monthRange) {
-            long count = registerCounts.getOrDefault(month, 0L);
-            if (count > 0) {
-                foundRegisters = true;
-            }
-            if (foundRegisters) {
-                result.add(MonthRegisterCountDto.of(month, count));
-            }
+        if (startDate == null) {
+            return monthPostCountDtos;
         }
 
-        return result;
-    }
-
-    private List<YearMonth> resetMonths(int months) {
-        YearMonth now = YearMonth.now();
-        List<YearMonth> monthRange = new ArrayList<>();
-        for (YearMonth month = now.minusMonths(months - 1); !month.isAfter(now); month = month.plusMonths(1)) {
-            monthRange.add(month);
+        for (YearMonth month = startDate; !month.isAfter(now); month = month.plusMonths(1)) {
+            monthPostCountDtos.add(MonthRegisterCountDto.of(month, map.getOrDefault(month, 0L)));
         }
-        return monthRange;
+
+        return monthPostCountDtos;
     }
 
-    private List<Object[]> getMonthRegisterCounts() {
+    public List<MonthPostCountDto> getPostMonthCountTotals(int months) {
         YearMonth now = YearMonth.now();
-        YearMonth startMonth = now.minusMonths(11);
+        Map<YearMonth, Long> map = MonthPostCountToMap(months);
+        List<MonthPostCountDto> monthPostCountDtos = new ArrayList<>();
 
-        LocalDateTime start = startMonth.atDay(1).atStartOfDay();
-        LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
+        YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
 
-        return userRepository.getMonthRegisterCount(start, end);
+        if (startDate == null) {
+            return monthPostCountDtos;
+        }
+
+        for (YearMonth month = startDate; !month.isAfter(now); month = month.plusMonths(1)) {
+            monthPostCountDtos.add(MonthPostCountDto.of(month, map.getOrDefault(month, 0L)));
+        }
+
+        return monthPostCountDtos;
     }
 
-
-    public List<MonthPostCountDto> getPostMonthCountTotals() {
-        List<YearMonth> monthRange = resetMonths();
-        Map<YearMonth, Long> postCounts = getMonthPostCounts().stream()
+    private Map<YearMonth, Long> MonthPostCountToMap(int months) {
+        return getMonthPostCounts(months).stream()
             .collect(Collectors.toMap(
                 result -> YearMonth.parse(((String) result[0]).substring(0, 7)),
                 result -> (Long) result[1]
             ));
-
-        List<MonthPostCountDto> result = new ArrayList<>();
-        boolean foundPosts = false;
-        for (YearMonth month : monthRange) {
-            long count = postCounts.getOrDefault(month, 0L);
-            if (count > 0) {
-                foundPosts = true;
-            }
-            if (foundPosts) {
-                result.add(MonthPostCountDto.of(month, count));
-            }
-        }
-
-        return result;
     }
 
-    private List<YearMonth> resetMonths() {
+    private List<Object[]> getMonthPostCounts(int months) {
         YearMonth now = YearMonth.now();
-        List<YearMonth> months = new ArrayList<>();
-        for (YearMonth month = now.minusMonths(11); !month.isAfter(now); month = month.plusMonths(1)) {
-            months.add(month);
-        }
-        return months;
-    }
-
-    private List<Object[]> getMonthPostCounts() {
-        YearMonth now = YearMonth.now();
-        YearMonth startMonth = now.minusMonths(11);
+        YearMonth startMonth = now.minusMonths(months);
 
         LocalDateTime start = startMonth.atDay(1).atStartOfDay();
         LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
 
         return communityRepository.getMonthPostCounts(start, end);
+    }
+
+    private Map<YearMonth, Long> MonthRegisterToMap(int months) {
+        return getMonthRegisterCounts(months).stream()
+            .collect(Collectors.toMap(
+                result -> YearMonth.of(((Number) result[0]).intValue(), ((Number) result[1]).intValue()),
+                result -> ((Number) result[2]).longValue()
+            ));
+    }
+
+    private List<Object[]> getMonthRegisterCounts(int months) {
+        YearMonth now = YearMonth.now();
+        YearMonth startMonth = now.minusMonths(months);
+
+        LocalDateTime start = startMonth.atDay(1).atStartOfDay();
+        LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
+
+        return userRepository.getMonthRegisterCount(start, end);
     }
 }

@@ -24,9 +24,9 @@ public class DashboardController {
     public ResponseDto<DashboardResponseDto> getDashboardData(int months) {
         Map<String, Long> totals = chartService.getTotals();
         List<MonthRegisterCountDto> monthlyRegisterData = chartService.getMonthlyRegisterCounts(months);
-        List<MonthPostCountDto> monthPostCountData = chartService.getPostMonthCountTotals();
-
-        DashboardResponseDto dashboardResponseDto = DashboardResponseDto.of(totals, monthlyRegisterData, monthPostCountData);
+        List<MonthPostCountDto> monthPostCountData = chartService.getPostMonthCountTotals(months);
+        DashboardResponseDto dashboardResponseDto = DashboardResponseDto.of(totals, monthlyRegisterData,
+            monthPostCountData);
         return ResponseDto.of(dashboardResponseDto);
     }
 }
