@@ -91,7 +91,7 @@ const CookingStepsSlider = forwardRef(
             </div>
           ))}
         </Slider>
-        <style jsx global>{`
+        <style jsx global="true">{`
           .slick-list {
             overflow-x: hidden !important;
             overflow-y: visible !important;

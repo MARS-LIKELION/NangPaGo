@@ -1,5 +1,6 @@
 import { IMAGE_STYLES } from '../../common/styles/Image';
 import { FaTimes } from 'react-icons/fa';
+import React from 'react';
 
 function FileUpload({ file, onChange, imagePreview, onCancel }) {
   const handleCancel = (e) => {
@@ -7,16 +8,32 @@ function FileUpload({ file, onChange, imagePreview, onCancel }) {
     onCancel();
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      onChange({ target: { files: e.dataTransfer.files } });
+      e.dataTransfer.clearData();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center mb-4">
       <label
         htmlFor="file-upload"
         className="w-full h-40 border border-text-400 rounded-md flex items-center justify-center bg-gray-100 cursor-pointer relative overflow-hidden"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
         {imagePreview ? (
           <>
             <img
-              src={typeof imagePreview === 'string' ? imagePreview : URL.createObjectURL(imagePreview)}
+              src={imagePreview}
               alt="Uploaded Preview"
               className={`${IMAGE_STYLES.mainImage} object-contain`}
             />
@@ -37,6 +54,7 @@ function FileUpload({ file, onChange, imagePreview, onCancel }) {
           accept="image/*"
           className="absolute inset-0 opacity-0 cursor-pointer"
           onChange={onChange}
+          key={file ? file.name : 'file-upload'}
         />
       </label>
     </div>
