@@ -31,7 +31,7 @@ public class ChartService {
 
     public List<MonthRegisterCountDto> getMonthlyRegisterCounts(int months) {
         YearMonth now = YearMonth.now();
-        Map<YearMonth, Long> map = MonthRegisterToMap(months);
+        Map<YearMonth, Long> map = monthRegisterToMap(months);
         List<MonthRegisterCountDto> monthPostCountDtos = new ArrayList<>();
 
         YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
@@ -49,7 +49,7 @@ public class ChartService {
 
     public List<MonthPostCountDto> getPostMonthCountTotals(int months) {
         YearMonth now = YearMonth.now();
-        Map<YearMonth, Long> map = MonthPostCountToMap(months);
+        Map<YearMonth, Long> map = monthPostCountToMap(months);
         List<MonthPostCountDto> monthPostCountDtos = new ArrayList<>();
 
         YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
@@ -65,7 +65,7 @@ public class ChartService {
         return monthPostCountDtos;
     }
 
-    private Map<YearMonth, Long> MonthPostCountToMap(int months) {
+    private Map<YearMonth, Long> monthPostCountToMap(int months) {
         return getMonthPostCounts(months).stream()
             .collect(Collectors.toMap(
                 result -> YearMonth.parse(((String) result[0]).substring(0, 7)),
@@ -83,7 +83,7 @@ public class ChartService {
         return communityRepository.getMonthPostCounts(start, end);
     }
 
-    private Map<YearMonth, Long> MonthRegisterToMap(int months) {
+    private Map<YearMonth, Long> monthRegisterToMap(int months) {
         return getMonthRegisterCounts(months).stream()
             .collect(Collectors.toMap(
                 result -> YearMonth.of(((Number) result[0]).intValue(), ((Number) result[1]).intValue()),
