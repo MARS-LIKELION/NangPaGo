@@ -37,7 +37,7 @@ export function useRefrigerator(recipeSize = 10) {
     if (location.pathname === '/refrigerator/recipe') {
       reFetchRefrigeratorRecipes();
     }
-  }, [location.pathname, ingredients]);
+  }, [ingredients]);
 
   useEffect(() => {
     syncLocalStorage();
