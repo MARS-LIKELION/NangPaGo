@@ -57,7 +57,8 @@ public class RecipeController {
         @RequestParam(name = "keyword", required = false) String keyword,
         @RequestParam(name = "searchType", defaultValue = "INGREDIENTS") String searchType) {
 
-        return ResponseDto.of(recipeEsService.searchRecipes(pageRequestVO, keyword, searchType));
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeEsService.searchRecipes(pageRequestVO, keyword, searchType, userId));
     }
 
     @Operation(summary = "좋아요 상태 조회")

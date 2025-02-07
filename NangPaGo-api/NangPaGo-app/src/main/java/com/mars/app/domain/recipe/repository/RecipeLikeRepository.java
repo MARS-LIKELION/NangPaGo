@@ -3,6 +3,7 @@ package com.mars.app.domain.recipe.repository;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.recipe.RecipeLike;
 import com.mars.common.model.user.User;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +18,10 @@ public interface RecipeLikeRepository extends JpaRepository<RecipeLike, Long> {
     @Query("SELECT rl FROM RecipeLike rl WHERE rl.user.id = :userId AND rl.recipe.id = :recipeId")
     Optional<RecipeLike> findByUserIdAndRecipeId(@Param("userId") Long userId, @Param("recipeId") Long recipeId);
 
-    Page<RecipeLike> findRecipeLikeByUser(User user, Pageable pageable);
-
     @Query("SELECT COUNT(rl) FROM RecipeLike rl WHERE rl.recipe.id = :recipeId")
     int countByRecipeId(@Param("recipeId") Long recipeId);
 
+    Page<RecipeLike> findRecipeLikeByUser(User user, Pageable pageable);
+    List<RecipeLike> findRecipeLikesByUserId(Long userId);
     int countByUser(User user);
 }

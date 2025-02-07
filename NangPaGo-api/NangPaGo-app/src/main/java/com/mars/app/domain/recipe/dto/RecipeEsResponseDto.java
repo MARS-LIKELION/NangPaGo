@@ -1,6 +1,7 @@
 package com.mars.app.domain.recipe.dto;
 
 import com.mars.common.model.recipe.RecipeEs;
+import com.mars.common.model.recipe.RecipeLike;
 import lombok.Builder;
 import java.util.List;
 
@@ -12,16 +13,19 @@ public record RecipeEsResponseDto(
     String recipeImageUrl,
     int likeCount,
     int commentCount,
+    boolean isLiked,
     List<String> ingredients,
     List<String> ingredientsTag,
     List<String> ingredientsDisplayTag,
     float matchScore
 ) {
+
     public static RecipeEsResponseDto of(RecipeEs recipeEs,
-                                         String highlightedName,
-                                         int likeCount,
-                                         int commentCount,
-                                         float score) {
+        String highlightedName,
+        int likeCount,
+        int commentCount,
+        List<RecipeLike> recipeLikesByUserId,
+        float score) {
         return RecipeEsResponseDto.builder()
             .id(recipeEs.getId())
             .name(recipeEs.getName())
@@ -29,6 +33,8 @@ public record RecipeEsResponseDto(
             .recipeImageUrl(recipeEs.getRecipeImageUrl())
             .likeCount(likeCount)
             .commentCount(commentCount)
+            .isLiked(recipeLikesByUserId.stream()
+                .anyMatch(recipe -> recipeEs.getId().equals(String.valueOf(recipe.getRecipe().getId()))))
             .ingredients(recipeEs.getIngredients())
             .ingredientsTag(recipeEs.getIngredientsTag())
             .ingredientsDisplayTag(recipeEs.getIngredientsDisplayTag())

@@ -3,6 +3,7 @@ package com.mars.app.domain.recipe.repository;
 import com.mars.common.model.recipe.RecipeLike;
 import com.mars.app.support.AbstractRepositoryTestSupport;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,5 +44,20 @@ class RecipeLikeRepositoryTest extends AbstractRepositoryTestSupport {
         findRecipeLike.ifPresent(recipeLike ->
             System.out.println(recipeLike.getUser().getName())
         );
+    }
+    
+    @DisplayName("findRecipeLikesByUserId 쿼리 확인")
+    @Test
+    void findRecipeLikesByUserId() {
+        // given
+        Long userId = 6L;
+        
+        // when
+        List<RecipeLike> recipeLikesByUserId = recipeLikeRepository.findRecipeLikesByUserId(userId);
+
+        // then
+        for (RecipeLike recipeLike : recipeLikesByUserId) {
+            System.out.println("recipeLike.getRecipe().getName() = " + recipeLike.getRecipe().getName());
+        }
     }
 }

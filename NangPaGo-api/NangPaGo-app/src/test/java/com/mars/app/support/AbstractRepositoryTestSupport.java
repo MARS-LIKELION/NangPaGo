@@ -1,10 +1,13 @@
 package com.mars.app.support;
 
 import com.google.firebase.FirebaseApp;
+import com.mars.app.support.extend.RepositoryTestCondition;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+@ExtendWith(RepositoryTestCondition.class)
 @ActiveProfiles("local")
 @SpringBootTest
 public abstract class AbstractRepositoryTestSupport {
