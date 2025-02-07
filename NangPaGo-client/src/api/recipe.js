@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance';
-import { PAGE_INDEX, PAGE_SIZE } from '../common/constants/pagination'
+import { PAGE_INDEX, PAGE_SIZE } from '../common/constants/pagination';
 
 export const searchPostsByKeyword = async (
   keyword,
@@ -45,7 +45,9 @@ export const fetchFavoritePosts = async (page, size) => {
       pageNo: page,
       pageSize: size,
     };
-    const response = await axiosInstance.get('/api/recipe/favorite/list', { params });
+    const response = await axiosInstance.get('/api/recipe/favorite/list', {
+      params,
+    });
     const { content, last, number } = response.data.data;
     return { content: content || [], last, number };
   } catch (error) {

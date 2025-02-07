@@ -14,10 +14,8 @@ import AuthenticatedRoute from './AuthenticatedRoute';
 import UnauthenticatedAccess from '../pages/error/UnauthenticatedAccess';
 import NotFound from '../pages/error/NotFound';
 import LoginExpired from '../pages/error/LoginExpired.jsx';
-import UserRecipeListContent from '../components/userRecipe/UserRecipeListContent.jsx';
 import CreateUserRecipe from '../pages/userRecipe/CreateUserRecipe.jsx';
 import ModifyUserRecipe from '../pages/userRecipe/ModifyUserRecipe';
-
 
 const router = createBrowserRouter([
   {
@@ -30,11 +28,19 @@ const router = createBrowserRouter([
   },
   {
     path: '/my-page',
-    element: <AuthenticatedRoute><Profile /></AuthenticatedRoute>,
+    element: (
+      <AuthenticatedRoute>
+        <Profile />
+      </AuthenticatedRoute>
+    ),
   },
   {
     path: '/my-page/modify',
-    element: <AuthenticatedRoute><Modify /></AuthenticatedRoute>,
+    element: (
+      <AuthenticatedRoute>
+        <Modify />
+      </AuthenticatedRoute>
+    ),
   },
   {
     path: '/recipe',
@@ -54,15 +60,27 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AuthenticatedRoute><Refrigerator /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <Refrigerator />
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: 'recipe',
-        element: <AuthenticatedRoute><Refrigerator /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <Refrigerator />
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: 'search',
-        element: <AuthenticatedRoute><RefrigeratorSearch /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <RefrigeratorSearch />
+          </AuthenticatedRoute>
+        ),
       },
     ],
   },
@@ -79,11 +97,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'new',
-        element: <AuthenticatedRoute><CreateCommunity /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <CreateCommunity />
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: ':id/modify',
-        element: <AuthenticatedRoute><ModifyCommunity /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <ModifyCommunity />
+          </AuthenticatedRoute>
+        ),
       },
     ],
   },
@@ -92,7 +118,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'list',
-        element: <AuthenticatedRoute><ListPage type="user-recipe" /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <ListPage type="user-recipe" />
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: '/user-recipe/:id',
@@ -100,11 +130,19 @@ const router = createBrowserRouter([
       },
       {
         path: 'create',
-        element: <AuthenticatedRoute><CreateUserRecipe /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <CreateUserRecipe />
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: '/user-recipe/:id/modify',
-        element: <AuthenticatedRoute><ModifyUserRecipe /></AuthenticatedRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <ModifyUserRecipe />
+          </AuthenticatedRoute>
+        ),
       },
     ],
   },

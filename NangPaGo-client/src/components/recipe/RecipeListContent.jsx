@@ -1,10 +1,7 @@
 import RecipeCard from './RecipeCard';
-import { useEffect, useState, useRef } from 'react';
-import {
-  fetchRecommendedPosts,
-  fetchFavoritePosts,
-} from '../../api/recipe';
-import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination'
+import { useEffect, useRef, useState } from 'react';
+import { fetchFavoritePosts, fetchRecommendedPosts } from '../../api/recipe';
+import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
 
 function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   const [recipes, setRecipes] = useState({

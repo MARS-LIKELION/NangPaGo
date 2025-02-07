@@ -1,107 +1,89 @@
-import { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  getRefrigerator,
   addIngredient,
   deleteIngredient,
+  getRefrigerator,
   searchPostsByIngredient,
 } from '../api/refrigerator';
 
-export function useRefrigerator(recipeSize = 10) {
+export function useRefrigerator(recipeSize = 12) {
   const [ingredients, setIngredients] = useState([]);
   const [recipes, setRecipes] = useState(
     () => JSON.parse(localStorage.getItem('recipes')) || [],
   );
   const [recipePage, setRecipePage] = useState(
-    () => parseInt(localStorage.getItem('recipePage'), 10) || 1,
+    () => parseInt(localStorage.getItem('recipePage'), 12) || 1,
   );
   const [hasMoreRecipes, setHasMoreRecipes] = useState(
     () => localStorage.getItem('hasMoreRecipes') === 'true',
   );
-  const [isLoading, setIsLoading] = useState(false);
 
+  const isFetching = useRef(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const observerRef = useRef(null);
-  const isMounted = useRef(false);
+  const observerInstance = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem('recipes', JSON.stringify(recipes));
+    localStorage.setItem('recipePage', recipePage.toString());
+    localStorage.setItem('hasMoreRecipes', hasMoreRecipes.toString());
+  }, [recipes, recipePage, hasMoreRecipes]);
 
   useEffect(() => {
     fetchRefrigerator();
   }, []);
 
   useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      return;
-    }
-    if (location.pathname === '/refrigerator/recipe') {
-      reFetchRefrigeratorRecipes();
-    }
-  }, [ingredients]);
+    if (observerInstance.current) observerInstance.current.disconnect();
 
-  useEffect(() => {
-    syncLocalStorage();
-  }, [recipes, recipePage, hasMoreRecipes]);
+    observerInstance.current = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasMoreRecipes && !isFetching.current) {
+          loadMoreRecipes();
+        }
+      },
+      { threshold: 1.0 },
+    );
 
-  const syncLocalStorage = () => {
-    localStorage.setItem('recipes', JSON.stringify(recipes));
-    localStorage.setItem('recipePage', recipePage.toString());
-    localStorage.setItem('hasMoreRecipes', hasMoreRecipes.toString());
-  };
+    if (observerRef.current)
+      observerInstance.current.observe(observerRef.current);
 
-  const handleApiError = (message, error) => {
-    console.error(message, error);
-  };
+    return () => {
+      if (observerInstance.current) observerInstance.current.disconnect();
+    };
+  }, [recipes.length, hasMoreRecipes]);
 
-  const fetchRefrigerator = async () => {
-    try {
-      const data = await getRefrigerator();
-      setIngredients(data.map((item) => ({ ...item, checked: false })));
-    } catch (error) {
-      handleApiError('Failed to fetch refrigerator data.', error);
-      setIngredients([]);
-    }
-  };
+  const fetchRefrigerator = useCallback(() => {
+    getRefrigerator()
+      .then((data) =>
+        setIngredients(data.map((item) => ({ ...item, checked: false }))),
+      )
+      .catch(() => setIngredients([]));
+  }, []);
 
-  const reFetchRefrigeratorRecipes = async () => {
-    setRecipePage(1);
-    setHasMoreRecipes(true);
-    try {
-      const ingredientNames = ingredients
-        .map((i) => i.ingredientName)
-        .filter(Boolean);
-      const recipeData = await searchPostsByIngredient(ingredientNames, 1, recipeSize);
-      setRecipes(recipeData.content);
-      setHasMoreRecipes(!recipeData.last);
-    } catch (error) {
-      handleApiError('Error fetching recipes.', error);
-    }
-  };
+  const handleAddIngredient = useCallback((ingredientName) => {
+    addIngredient(ingredientName)
+      .then((addedIngredient) =>
+        setIngredients((prev) => [
+          ...prev,
+          { ...addedIngredient, checked: false },
+        ]),
+      )
+      .catch(() => alert('아이템 추가에 실패했습니다. 다시 시도해주세요.'));
+  }, []);
 
-  const handleAddIngredient = async (ingredientName) => {
-    try {
-      const addedIngredient = await addIngredient(ingredientName);
-      setIngredients((prev) => [
-        ...prev,
-        { ...addedIngredient, checked: false },
-      ]);
-    } catch (error) {
-      handleApiError('Error adding ingredient.', error);
-    }
-  };
+  const handleDeleteIngredient = useCallback((ingredientName) => {
+    deleteIngredient(ingredientName)
+      .then(() =>
+        setIngredients((prev) =>
+          prev.filter((item) => item.ingredientName !== ingredientName),
+        ),
+      )
+      .catch(() => alert('아이템 삭제에 실패했습니다. 다시 시도해주세요.'));
+  }, []);
 
-  const handleDeleteIngredient = async (ingredientName) => {
-    try {
-      await deleteIngredient(ingredientName);
-      setIngredients((prev) =>
-        prev.filter((item) => item.ingredientName !== ingredientName),
-      );
-    } catch (error) {
-      handleApiError('Error deleting ingredient.', error);
-    }
-  };
-
-  const handleToggleChecked = (name) => {
+  const handleToggleChecked = useCallback((name) => {
     setIngredients((prev) =>
       prev.map((item) =>
         item.ingredientName === name
@@ -109,57 +91,70 @@ export function useRefrigerator(recipeSize = 10) {
           : item,
       ),
     );
-  };
+  }, []);
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     setIngredients((prev) => prev.map((item) => ({ ...item, checked: true })));
-  };
+  }, []);
 
-  const handleDeselectAll = () => {
+  const handleDeselectAll = useCallback(() => {
     setIngredients((prev) => prev.map((item) => ({ ...item, checked: false })));
-  };
+  }, []);
 
-  const handleFindRecipes = async () => {
+  const handleFindRecipes = useCallback(() => {
+    if (isFetching.current) return;
+    isFetching.current = true;
+
     const checkedItems = ingredients.filter((i) => i.checked);
-    if (checkedItems.length === 0) return;
+    if (checkedItems.length === 0) {
+      isFetching.current = false;
+      return;
+    }
 
     setRecipePage(1);
     setHasMoreRecipes(true);
-    try {
-      const ingredientNames = checkedItems.map((i) => i.ingredientName);
-      // const recipeData = await getPosts(ingredientNames, 1, recipeSize);
-      const recipeData = await searchPostsByIngredient(ingredientNames, 1, recipeSize);
-      setRecipes(recipeData.content);
-      setHasMoreRecipes(!recipeData.last);
-      navigate('/refrigerator/recipe');
-    } catch (error) {
-      handleApiError('Error finding recipes.', error);
-    }
-  };
 
-  const loadMoreRecipes = async () => {
-    if (!hasMoreRecipes || isLoading) return;
-    setIsLoading(true);
+    searchPostsByIngredient(
+      checkedItems.map((i) => i.ingredientName),
+      1,
+      recipeSize,
+    )
+      .then((recipeData) => {
+        setRecipes(recipeData.data.content);
+        setHasMoreRecipes(!recipeData.data.last);
+        navigate('/refrigerator/recipe');
+        setTimeout(loadMoreRecipes, 300);
+      })
+      .catch(() => alert('레시피 검색에 실패했습니다. 다시 시도해주세요.'))
+      .finally(() => {
+        isFetching.current = false;
+      });
+  }, [ingredients, recipeSize, navigate]);
+
+  const loadMoreRecipes = useCallback(() => {
+    if (!hasMoreRecipes || isFetching.current) return;
+    isFetching.current = true;
+
     const nextPage = recipePage + 1;
-    try {
-      const checkedItems = ingredients.filter((i) => i.checked);
-      const ingredientNames = checkedItems.map((i) => i.ingredientName);
-      const recipeData = await searchPostsByIngredient(
-        ingredientNames,
-        nextPage,
-        recipeSize,
-      );
-      setRecipes((prev) => [...prev, ...recipeData.content]);
-      setRecipePage(nextPage);
-      setHasMoreRecipes(!recipeData.last);
-    } catch (error) {
-      handleApiError('Error loading more recipes.', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const checkedIngredients = ingredients
+      .filter((i) => i.checked)
+      .map((i) => i.ingredientName);
 
-  const resetAndGoBack = () => {
+    searchPostsByIngredient(checkedIngredients, nextPage, recipeSize)
+      .then((recipeData) => {
+        setRecipes((prev) => [...prev, ...recipeData.data.content]);
+        setRecipePage(nextPage);
+        setHasMoreRecipes(!recipeData.data.last);
+      })
+      .catch(() =>
+        alert('레시피 더 불러오기에 실패했습니다. 다시 시도해주세요.'),
+      )
+      .finally(() => {
+        isFetching.current = false;
+      });
+  }, [hasMoreRecipes, ingredients, recipePage, recipeSize]);
+
+  const resetAndGoBack = useCallback(() => {
     setRecipes([]);
     setRecipePage(1);
     setHasMoreRecipes(true);
@@ -167,7 +162,7 @@ export function useRefrigerator(recipeSize = 10) {
     localStorage.removeItem('recipePage');
     localStorage.removeItem('hasMoreRecipes');
     navigate('/refrigerator');
-  };
+  }, [navigate]);
 
   return {
     ingredients,

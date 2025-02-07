@@ -59,7 +59,7 @@ function Refrigerator() {
                   </p>
                 )}
               </div>
-              {hasMoreRecipes && <div ref={observerRef}></div>}
+              {hasMoreRecipes && <div ref={observerRef} />}
             </div>
           </>
         )}

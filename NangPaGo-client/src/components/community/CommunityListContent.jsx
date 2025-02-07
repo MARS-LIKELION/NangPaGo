@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fetchPosts } from '../../api/community';
 import CommunityCard from '../../components/community/CommunityCard';
-import { PAGE_STYLES, BUTTON_STYLES } from '../../common/styles/ListPage';
-import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination'
+import { PAGE_STYLES } from '../../common/styles/ListPage';
+import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
 
 function CommunityListContent() {
   const [communityList, setCommunityList] = useState([]);
@@ -32,7 +32,7 @@ function CommunityListContent() {
       setHasMore(!last);
     } catch (error) {
       console.error('커뮤니티 목록을 가져오는 중 오류 발생:', error);
-//       console.error(`Error loading ${type} recipeList:`, error);
+      //       console.error(`Error loading ${type} recipeList:`, error);
     } finally {
       isFetching.current = false;
     }
