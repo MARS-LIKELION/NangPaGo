@@ -1,5 +1,6 @@
+// UserRecipeDetail.jsx
 import { useState } from 'react';
-import { AiFillHeart, AiOutlineEdit } from 'react-icons/ai';
+import { AiFillHeart } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import CookingStepsSlider from '../userRecipe/CookingStepsSlider';
 import ToggleButton from '../button/ToggleButton';
@@ -20,7 +21,6 @@ function UserRecipeDetail({ data, isLoggedIn }) {
   const handleEditClick = () => {
     navigate(`/user-recipe/${data.id}/modify`, { state: { from: window.location.pathname } });
   };
-
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
   };
@@ -49,9 +49,12 @@ function UserRecipeDetail({ data, isLoggedIn }) {
       ]
     : [{ label: '글작성', onClick: handleCreateClick }];
 
+  const hasManuals = Array.isArray(data.manuals) && data.manuals.length > 0;
+
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 relative">
       <div className="md:flex md:items-start gap-8">
+        {/* 좌측 열: 대표이미지만 표시 */}
         <div className="md:w-1/2">
           <img
             src={data.mainImageUrl}
@@ -60,6 +63,7 @@ function UserRecipeDetail({ data, isLoggedIn }) {
           />
         </div>
 
+        {/* 우측 열: 제목, 내용, 재료 등 */}
         <div className="md:w-1/2">
           <div className="flex justify-between items-center mt-6 relative">
             <h1 className="text-3xl font-bold">{data.title}</h1>
@@ -83,20 +87,18 @@ function UserRecipeDetail({ data, isLoggedIn }) {
         </div>
       </div>
 
+      {/* 조리 과정 영역 – 모든 메뉴얼(조리 과정)을 슬라이더로 표시 */}
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-2">조리 과정</h2>
-        {Array.isArray(data.manuals) && data.manuals.length > 0 ? (
-          <>
-            <CookingStepsSlider 
-              manuals={data.manuals.map(manual => ({
-                step: manual.step,
-                description: manual.description,
-                imageUrl: manual.imageUrl
-              }))} 
-              manualImages={data.manuals.map(manual => manual.imageUrl)}
-              isUserRecipe={true}  
-            />
-          </>
+        {hasManuals ? (
+          <CookingStepsSlider 
+            manuals={data.manuals.map(manual => ({
+              description: manual.description,
+              imageUrl: manual.imageUrl
+            }))}
+            manualImages={data.manuals.map(manual => manual.imageUrl)}
+            isUserRecipe={true}  
+          />
         ) : (
           <p className="text-gray-500">조리 과정 정보가 없습니다.</p>
         )}

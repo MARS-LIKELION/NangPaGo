@@ -1,3 +1,4 @@
+// DetailPage.jsx
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
@@ -10,7 +11,7 @@ import Comment from '../../components/comment/Comment';
 import Recipe from '../../components/recipe/Recipe';
 import Community from '../../components/community/Community';
 import UserRecipeDetail from '../../components/userRecipe/UserRecipeDetail';
-// CreateButton aside 제거 (user-recipe 타입에 대해)
+
 const pageComponents = {
   recipe: Recipe,
   community: Community,
@@ -102,7 +103,6 @@ function DetailPage({ type }) {
         {Component ? <Component post={post} data={data} isLoggedIn={isLoggedIn} /> : null}
         <Comment post={post} isLoggedIn={isLoggedIn} />
       </main>
-      {/* user-recipe 타입에 대해서는 DetailPage에서 CreateButton aside를 제거 */}
       <Footer />
     </div>
   );

@@ -1,17 +1,17 @@
-function CookingSteps({ steps, stepImages }) {
+import React from 'react';
+import CookingStepCard from './CookingStepCard';
+
+function CookingSteps({ steps, stepImages, slideIndex = 0 }) {
   return (
-    <div className="cooking-steps mt-1">
-      {steps.map((step, index) => (
-        <div key={index} className={`mb-4 ${index === 0 ? 'mt-1' : 'mt-2'}`}>
-          <p className="text-text-600 text-sm mb-1">{step.description}</p>
-          {stepImages[index] && (
-            <img
-              src={stepImages[index]}
-              alt={`Step ${index + 1}`}
-              className="w-full rounded-md"
-            />
-          )}
-        </div>
+    <div className="flex flex-col space-y-4">
+      {steps.map((step, idx) => (
+        // slideIndex를 활용해 전체 순서가 변경될 수 있도록 합니다.
+        <CookingStepCard
+          key={idx}
+          step={step}
+          image={stepImages[idx]}
+          index={slideIndex + idx}
+        />
       ))}
     </div>
   );
