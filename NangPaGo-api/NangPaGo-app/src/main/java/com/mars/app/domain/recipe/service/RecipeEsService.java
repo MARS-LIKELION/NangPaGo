@@ -71,7 +71,7 @@ public class RecipeEsService {
     }
 
     private List<RecipeEsResponseDto> getResponseDtos(SearchResponse<RecipeEs> response, Long userId) {
-        List<RecipeLike> recipeLikesByUserId = getRecipeLikesBy(userId);
+        List<RecipeLike> recipeLikes = getRecipeLikesBy(userId);
 
         return response.hits().hits().stream()
             .filter(hit -> hit.source() != null)
@@ -92,7 +92,7 @@ public class RecipeEsService {
                     highlightedName,
                     likeCount,
                     commentCount,
-                    recipeLikesByUserId,
+                    recipeLikes,
                     matchScore
                 );
             })

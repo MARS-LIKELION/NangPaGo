@@ -26,6 +26,7 @@ public record RecipeEsResponseDto(
         int commentCount,
         List<RecipeLike> recipeLikesByUserId,
         float score) {
+
         return RecipeEsResponseDto.builder()
             .id(recipeEs.getId())
             .name(recipeEs.getName())
@@ -34,7 +35,7 @@ public record RecipeEsResponseDto(
             .likeCount(likeCount)
             .commentCount(commentCount)
             .isLiked(recipeLikesByUserId.stream()
-                .anyMatch(recipe -> recipeEs.getId().equals(String.valueOf(recipe.getRecipe().getId()))))
+                .anyMatch(recipeLike -> recipeEs.getId().equals(String.valueOf(recipeLike.getRecipe().getId()))))
             .ingredients(recipeEs.getIngredients())
             .ingredientsTag(recipeEs.getIngredientsTag())
             .ingredientsDisplayTag(recipeEs.getIngredientsDisplayTag())

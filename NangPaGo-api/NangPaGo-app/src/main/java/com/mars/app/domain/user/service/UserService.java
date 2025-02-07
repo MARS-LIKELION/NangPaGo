@@ -19,6 +19,7 @@ import com.mars.common.dto.user.UserResponseDto;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +68,7 @@ public class UserService {
                     Recipe recipe = recipeFavorite.getRecipe();
                     int likeCount = recipeLikeRepository.countByRecipeId(recipe.getId());
                     int commentCount = recipeCommentRepository.countByRecipeId(recipe.getId());
-                    return RecipeFavoriteListResponseDto.of(recipe, likeCount, commentCount);
+                    return RecipeFavoriteListResponseDto.of(recipe, likeCount, commentCount, new ArrayList<>());
                 })
         );
     }

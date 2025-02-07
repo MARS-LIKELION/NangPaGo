@@ -8,8 +8,11 @@ import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.recipe.repository.favorite.RecipeFavoriteRepository;
 import com.mars.common.model.recipe.Recipe;
+import com.mars.common.model.recipe.RecipeLike;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,7 @@ public class RecipeFavoriteService {
     public PageResponseDto<RecipeFavoriteListResponseDto> getFavoriteRecipes(Long userId, PageRequestVO pageRequestVO) {
         User user = userRepository.findById(userId)
             .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
+        List<RecipeLike> recipeLikes = getRecipeLikesBy(userId);
 
         return PageResponseDto.of(
             recipeFavoriteRepository.findAllByUser(user, pageRequestVO.toPageable())
@@ -38,9 +42,14 @@ public class RecipeFavoriteService {
                     Recipe recipe = favorite.getRecipe();
                     int likeCount = recipeLikeRepository.countByRecipeId(recipe.getId());
                     int commentCount = recipeCommentRepository.countByRecipeId(recipe.getId());
-                    return RecipeFavoriteListResponseDto.of(recipe, likeCount, commentCount);
+                    return RecipeFavoriteListResponseDto.of(recipe, likeCount, commentCount, recipeLikes);
                 })
         );
     }
 
+    private List<RecipeLike> getRecipeLikesBy(Long userId) {
+        return userId.equals(User.ANONYMOUS_USER_ID)
+            ? new ArrayList<>()
+            : recipeLikeRepository.findRecipeLikesByUserId(userId);
+    }
 }

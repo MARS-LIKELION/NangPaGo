@@ -23,6 +23,14 @@ public class RecipeFavoriteController {
     private final RecipeFavoriteService recipeFavoriteService;
     private final RecipeFavoriteMessagePublisher recipeFavoriteMessagePublisher;
 
+    @Operation(summary = "즐겨찾기 목록 조회")
+    @AuthenticatedUser
+    @GetMapping("/favorite/list")
+    public ResponseDto<PageResponseDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(PageRequestVO pageRequestVO) {
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageRequestVO));
+    }
+
     @Operation(summary = "즐겨찾기 상태 확인")
     @GetMapping("/{id}/favorite/status")
     public ResponseDto<Boolean> isFavorite(@PathVariable("id") Long id) {
@@ -36,13 +44,5 @@ public class RecipeFavoriteController {
     public ResponseDto<RecipeFavoriteResponseDto> toggleFavorite(@PathVariable("id") Long id) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(recipeFavoriteMessagePublisher.toggleFavorite(id, userId));
-    }
-
-    @Operation(summary = "즐겨찾기 목록 조회")
-    @AuthenticatedUser
-    @GetMapping("/favorite/list")
-    public ResponseDto<PageResponseDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(PageRequestVO pageRequestVO) {
-        Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageRequestVO));
     }
 }
