@@ -1,5 +1,4 @@
 import { FaHeart, FaRegHeart, FaStar, FaRegStar  } from 'react-icons/fa';
-import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 
 function RecipeButton({
   isHeartActive,

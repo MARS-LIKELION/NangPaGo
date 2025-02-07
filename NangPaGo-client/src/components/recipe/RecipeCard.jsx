@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { AiFillHeart } from 'react-icons/ai';
-import { FaCommentAlt } from 'react-icons/fa';
+import { FaHeart, FaRegComment } from 'react-icons/fa';
 import { IMAGE_STYLES } from '../../common/styles/Image';
 
 function RecipeCard({ recipe }) {
@@ -17,11 +16,11 @@ function RecipeCard({ recipe }) {
       <div className="p-4 flex flex-col gap-2">
         <div className="text-sm text-text-400 flex items-center gap-4">
           <div className="flex items-center gap-1">
-            <AiFillHeart className="text-red-500 text-xl" />
+            <FaHeart className="text-red-500 text-2xl" />
             {recipe.likeCount}
           </div>
           <div className="flex items-center gap-1">
-            <FaCommentAlt className="text-text-400 text-xl" />
+            <FaRegComment className="text-text-400 text-2xl" />
             {recipe.commentCount}
           </div>
         </div>
