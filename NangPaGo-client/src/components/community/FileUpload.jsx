@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { IMAGE_STYLES } from '../../common/styles/Image';
 import { FaTimes } from 'react-icons/fa';
+import OnlyImageUploadModal from '../../components/modal/OnlyImageUploadModal';
 
 const IMAGE_ALLOWED_EXTENSIONS = [
   "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "tiff", "tif", "bmp", "raw", "cr2", "nef", "arw", "dng", "rw2", "orf", "sr2"
 ];
 
 function FileUpload({ file, onChange, imagePreview, onCancel }) {
+  const [showOnlyImageUpload, setShowOnlyImageUpload] = useState(false);
   const handleCancel = (e) => {
     e.preventDefault();
     onCancel();
@@ -17,7 +20,7 @@ function FileUpload({ file, onChange, imagePreview, onCancel }) {
     if (selectedFile) {
       const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
       if (!IMAGE_ALLOWED_EXTENSIONS.includes(fileExtension)) {
-        alert('이미지 파일만 업로드 가능합니다.');
+        setShowOnlyImageUpload(true);
         e.target.value = '';
         return;
       }
@@ -58,6 +61,11 @@ function FileUpload({ file, onChange, imagePreview, onCancel }) {
           key={file ? file.name : 'file-upload'}
         />
       </label>
+
+      <OnlyImageUploadModal
+        isOpen={showOnlyImageUpload}
+        onClose={() => setShowOnlyImageUpload(false)}
+      />
     </div>
   );
 }

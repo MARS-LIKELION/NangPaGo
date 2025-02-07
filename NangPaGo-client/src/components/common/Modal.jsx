@@ -29,7 +29,7 @@ function Modal({ isOpen, onClose, title, description, children, buttons }) {
       onClick={handleBackgroundClick}
     >
       <div
-        className="bg-white p-8 rounded-lg relative flex flex-col items-center max-w-[300px] w-[calc(100%-32px)]"
+        className="bg-white p-8 rounded-lg relative flex flex-col items-center max-w-[350px] w-[calc(100%-32px)]"
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
