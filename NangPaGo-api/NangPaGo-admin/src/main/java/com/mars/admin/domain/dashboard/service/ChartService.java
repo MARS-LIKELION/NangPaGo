@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChartService {
 
+    private static int MONTHS = 12;
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
 
@@ -29,9 +30,9 @@ public class ChartService {
         );
     }
 
-    public List<MonthRegisterCountDto> getMonthlyRegisterCounts(int months) {
+    public List<MonthRegisterCountDto> getMonthlyRegisterCounts() {
         YearMonth now = YearMonth.now();
-        Map<YearMonth, Long> map = monthRegisterToMap(months);
+        Map<YearMonth, Long> map = monthRegisterToMap();
         List<MonthRegisterCountDto> monthPostCountDtos = new ArrayList<>();
 
         YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
@@ -47,9 +48,9 @@ public class ChartService {
         return monthPostCountDtos;
     }
 
-    public List<MonthPostCountDto> getPostMonthCountTotals(int months) {
+    public List<MonthPostCountDto> getPostMonthCountTotals() {
         YearMonth now = YearMonth.now();
-        Map<YearMonth, Long> map = monthPostCountToMap(months);
+        Map<YearMonth, Long> map = monthPostCountToMap();
         List<MonthPostCountDto> monthPostCountDtos = new ArrayList<>();
 
         YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
@@ -65,17 +66,17 @@ public class ChartService {
         return monthPostCountDtos;
     }
 
-    private Map<YearMonth, Long> monthPostCountToMap(int months) {
-        return getMonthPostCounts(months).stream()
+    private Map<YearMonth, Long> monthPostCountToMap() {
+        return getMonthPostCounts().stream()
             .collect(Collectors.toMap(
                 result -> YearMonth.parse(((String) result[0]).substring(0, 7)),
                 result -> (Long) result[1]
             ));
     }
 
-    private List<Object[]> getMonthPostCounts(int months) {
+    private List<Object[]> getMonthPostCounts() {
         YearMonth now = YearMonth.now();
-        YearMonth startMonth = now.minusMonths(months);
+        YearMonth startMonth = now.minusMonths(MONTHS - 1);
 
         LocalDateTime start = startMonth.atDay(1).atStartOfDay();
         LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
@@ -83,17 +84,17 @@ public class ChartService {
         return communityRepository.getMonthPostCounts(start, end);
     }
 
-    private Map<YearMonth, Long> monthRegisterToMap(int months) {
-        return getMonthRegisterCounts(months).stream()
+    private Map<YearMonth, Long> monthRegisterToMap() {
+        return getMonthRegisterCounts().stream()
             .collect(Collectors.toMap(
                 result -> YearMonth.of(((Number) result[0]).intValue(), ((Number) result[1]).intValue()),
                 result -> ((Number) result[2]).longValue()
             ));
     }
 
-    private List<Object[]> getMonthRegisterCounts(int months) {
+    private List<Object[]> getMonthRegisterCounts() {
         YearMonth now = YearMonth.now();
-        YearMonth startMonth = now.minusMonths(months);
+        YearMonth startMonth = now.minusMonths(MONTHS - 1);
 
         LocalDateTime start = startMonth.atDay(1).atStartOfDay();
         LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
