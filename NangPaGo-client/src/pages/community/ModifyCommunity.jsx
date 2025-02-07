@@ -191,7 +191,7 @@ function ModifyCommunity() {
             className="mr-2 w-4 h-4 appearance-none border border-text-400 rounded-md checked:bg-primary"
           />
           <label htmlFor="is-public" className="text-sm text-text-600">
-            비공개 (체크 시 로그인한 사용자만 볼 수 있습니다.)
+            비공개
           </label>
         </div>
         <p className={ERROR_STYLES.community}>{error}</p>
