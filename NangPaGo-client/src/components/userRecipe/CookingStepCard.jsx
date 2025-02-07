@@ -3,8 +3,8 @@ import React from 'react';
 function CookingStepCard({ step, image, index, extraClassName = '' }) {
   return (
     <div className={`relative cooking-step-card p-10 border rounded-lg bg-white shadow-md mx-2 ${extraClassName}`}>
-      {/* Step 배지 */}
-      <div className="absolute top-0 left-0 mt-4 ml-4 bg-green-800 text-white px-3 py-1 rounded-full text-sm font-bold">
+
+      <div className="absolute top-0 left-0 mt-2 ml-3 bg-green-800 text-white px-3 py-1 rounded-full text-sm font-bold">
         Step {index + 1}
       </div>
       
