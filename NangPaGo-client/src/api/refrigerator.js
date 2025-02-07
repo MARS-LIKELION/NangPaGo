@@ -6,7 +6,6 @@ export async function getRefrigerator(page, size) {
     const response = await axiosInstance.get('/api/refrigerator', {
       params: { page, size },
     });
-    console.log('냉장고 API 호출');
     return response.data.data;
   } catch (error) {
     console.error('냉장고 조회 실패:', error);
@@ -64,7 +63,6 @@ export async function searchPostsByIngredient(
         keyword,
       },
     });
-    console.log('결과: ', response.data);
     return response.data;
   } catch (error) {
     throw new Error(
