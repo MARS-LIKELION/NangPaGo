@@ -1,4 +1,3 @@
-// CreateUserRecipe.jsx
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { createUserRecipe } from '../../api/userRecipe';
@@ -12,18 +11,15 @@ import ManualInput from '../../components/userRecipe/ManualInput';
 import SubmitButton from '../../components/button/SubmitButton';
 import FileSizeErrorModal from '../../components/modal/FileSizeErrorModal';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 function CreateUserRecipe() {
   const navigate = useNavigate();
   const location = useLocation();
   const prevPath = sessionStorage.getItem('prevPath') || '/user-recipe';
-
-  // 상태 관리
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
-  // manuals: 각 객체에 description과 image (파일)를 저장합니다.
   const [manuals, setManuals] = useState([{ description: '', image: null }]);
   const [mainFile, setMainFile] = useState(null);
   const [isPublic, setIsPublic] = useState(true);
@@ -32,7 +28,6 @@ function CreateUserRecipe() {
   const [showFileSizeError, setShowFileSizeError] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
 
-  // 이전 경로 저장
   useEffect(() => {
     if (location.state?.from) {
       sessionStorage.setItem('prevPath', location.state.from);
@@ -40,7 +35,6 @@ function CreateUserRecipe() {
     return () => sessionStorage.removeItem('prevPath');
   }, [location.state?.from]);
 
-  // 대표 이미지 미리보기 처리
   useEffect(() => {
     if (mainFile) {
       if (mainFile.size > MAX_FILE_SIZE) {
@@ -53,7 +47,6 @@ function CreateUserRecipe() {
     }
   }, [mainFile]);
 
-  // 대표 이미지 파일 변경 핸들러
   const handleFileChange = useCallback((e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -75,7 +68,6 @@ function CreateUserRecipe() {
   };
 
   const handleSubmit = async () => {
-    // 필수값 체크 (재료와 조리과정 중 빈 객체는 제외)
     if (
       !title ||
       !content ||
@@ -86,32 +78,26 @@ function CreateUserRecipe() {
       return;
     }
 
-    // FormData 구성 (각 필드를 개별적으로 추가)
     const formData = new FormData();
 
-    // 기본 필드 전송
     formData.append('title', title);
     formData.append('content', content);
-    formData.append('isPublic', String(isPublic)); // boolean은 문자열로 전송
+    formData.append('isPublic', String(isPublic));
 
-    // 재료 배열 전송: ingredients[0].name, ingredients[0].amount, ...
     ingredients.forEach((ing, index) => {
       formData.append(`ingredients[${index}].name`, ing.name);
       formData.append(`ingredients[${index}].amount`, ing.amount);
     });
 
-    // 조리 과정 배열 전송: manuals[0].step, manuals[0].description, manuals[0].imageUrl (빈 문자열)
     manuals.forEach((manual, index) => {
       formData.append(`manuals[${index}].step`, String(index + 1));
       formData.append(`manuals[${index}].description`, manual.description);
-      formData.append(`manuals[${index}].imageUrl`, ""); // 파일은 따로 전송
+      formData.append(`manuals[${index}].imageUrl`, "");
     });
 
-    // 파일 전송
     if (mainFile) {
       formData.append('mainFile', mainFile);
     }
-    // 기타 파일(조리 과정 이미지) 전송 (여러 파일인 경우 모두 추가)
     manuals
       .filter((manual) => manual.description && manual.image)
       .forEach((manual) => {

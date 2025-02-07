@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import TextArea from "./TextArea";
 import FileUpload from "./FileUpload";
 
-function ManualInput({ manuals, setManuals }) {
+function ManualInput({ manuals, setManuals, maxFileSize, onFileSizeError }) {
   const addManual = () => {
     setManuals([...manuals, { description: "", image: null, preview: null }]);
   };
@@ -23,6 +23,10 @@ function ManualInput({ manuals, setManuals }) {
   const handleManualImageChange = (index, e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > maxFileSize) {
+        onFileSizeError();
+        return;
+      }
       const updatedManuals = [...manuals];
       updatedManuals[index].image = file;
       updatedManuals[index].preview = URL.createObjectURL(file);
@@ -48,7 +52,6 @@ function ManualInput({ manuals, setManuals }) {
             transition={{ duration: 0.3 }}
             className="relative flex flex-col gap-2 mt-10"
           >
-            {/* 단계 번호 */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}

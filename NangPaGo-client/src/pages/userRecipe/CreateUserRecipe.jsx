@@ -28,7 +28,6 @@ function CreateUserRecipe() {
   const [showFileSizeError, setShowFileSizeError] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
 
-  // 이전 경로 저장
   useEffect(() => {
     if (location.state?.from) {
       sessionStorage.setItem('prevPath', location.state.from);
@@ -72,8 +71,8 @@ function CreateUserRecipe() {
     if (
       !title ||
       !content ||
-      ingredients.filter(ing => ing.name || ing.amount).length === 0 ||
-      manuals.filter(manual => manual.description).length === 0
+      ingredients.filter((ing) => ing.name || ing.amount).length === 0 ||
+      manuals.filter((manual) => manual.description).length === 0
     ) {
       setError('제목, 내용, 재료, 조리 과정을 모두 입력해주세요.');
       return;
@@ -99,10 +98,9 @@ function CreateUserRecipe() {
     if (mainFile) {
       formData.append('mainFile', mainFile);
     }
-
     manuals
-      .filter(manual => manual.description && manual.image)
-      .forEach(manual => {
+      .filter((manual) => manual.description && manual.image)
+      .forEach((manual) => {
         formData.append('otherFiles', manual.image);
       });
 
@@ -127,39 +125,44 @@ function CreateUserRecipe() {
       <Header isBlocked={isBlocked} />
       <div className="flex-1 p-4">
         {error && <p className="text-red-500">{error}</p>}
-        <TextInput 
-          value={title} 
+        <TextInput
+          value={title}
           onChange={(e) => {
             setTitle(e.target.value);
             setIsBlocked(true);
-          }} 
-          placeholder="레시피 제목" 
+          }}
+          placeholder="레시피 제목"
         />
-        <FileUpload 
-          file={mainFile} 
-          onChange={handleFileChange} 
-          imagePreview={imagePreview} 
-          onCancel={handleCancelFile} 
+        <FileUpload
+          file={mainFile}
+          onChange={handleFileChange}
+          imagePreview={imagePreview}
+          onCancel={handleCancelFile}
         />
-        <TextArea 
-          value={content} 
+        <TextArea
+          value={content}
           onChange={(e) => {
             setContent(e.target.value);
             setIsBlocked(true);
-          }} 
-          placeholder="레시피 설명" 
-          rows={5} 
+          }}
+          placeholder="레시피 설명"
+          rows={5}
         />
         <IngredientInput ingredients={ingredients} setIngredients={setIngredients} />
-        <ManualInput manuals={manuals} setManuals={setManuals} />
+        <ManualInput
+          manuals={manuals}
+          setManuals={setManuals}
+          maxFileSize={MAX_FILE_SIZE}
+          onFileSizeError={() => setShowFileSizeError(true)}
+        />
         <div className="mt-5">
           <SubmitButton onClick={handleSubmit} label="레시피 추가" />
         </div>
       </div>
       <Footer />
-      <FileSizeErrorModal 
-        isOpen={showFileSizeError} 
-        onClose={() => setShowFileSizeError(false)} 
+      <FileSizeErrorModal
+        isOpen={showFileSizeError}
+        onClose={() => setShowFileSizeError(false)}
       />
     </div>
   );
