@@ -52,31 +52,33 @@ const usePostStatus = (post, isLoggedIn) => {
 
   useEffect(() => {
     let eventSource = null;
-    
-    // community 타입일 때는 SSE 구독하지 않음 (개발 중)
-    if (post.type !== 'community') {
-      eventSource = new EventSource(
-        `/api/${post.type}/${post.id}/like/notification/subscribe`
-      );
 
-      const eventName = 'RECIPE_LIKE_EVENT';
+    eventSource = new EventSource(
+      `/api/${post.type}/${post.id}/like/notification/subscribe`,
+    );
 
-      eventSource.addEventListener(eventName, (event) => {
-        const eventData = JSON.parse(event.data);
-        if (eventData.userId === userId) {
-          return;
-        }
-
-        const updatedLikeCount = eventData.likeCount;
-
-        setLikeCount(updatedLikeCount);
-      });
-
-      eventSource.onerror = () => {
-        eventSource.close();
-        handleSseError();
-      };
+    let eventName = '';
+    if (post.type === 'community') {
+      eventName = 'COMMUNITY_LIKE_EVENT';
+    } else if (post.type === 'recipe') {
+      eventName = 'RECIPE_LIKE_EVENT';
     }
+
+    eventSource.addEventListener(eventName, (event) => {
+      const eventData = JSON.parse(event.data);
+      if (eventData.userId === userId) {
+        return;
+      }
+
+      const updatedLikeCount = eventData.likeCount;
+
+      setLikeCount(updatedLikeCount);
+    });
+
+    eventSource.onerror = () => {
+      eventSource.close();
+      handleSseError();
+    };
 
     return () => {
       if (eventSource) {
@@ -138,10 +140,10 @@ const usePostStatus = (post, isLoggedIn) => {
 
   return {
     isHeartActive,
-    isStarActive: post.type === "recipe" ? isStarActive : undefined,
+    isStarActive: post.type === 'recipe' ? isStarActive : undefined,
     likeCount,
     toggleHeart,
-    toggleStar: post.type === "recipe" ? toggleStar : undefined,
+    toggleStar: post.type === 'recipe' ? toggleStar : undefined,
     modalState,
     setModalState,
   };

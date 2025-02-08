@@ -1,6 +1,7 @@
 package com.mars.app.domain.community.message.like;
 
 import com.mars.app.domain.community.dto.like.CommunityLikeMessageDto;
+import com.mars.app.domain.community.event.CommunityLikeEvent;
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.repository.UserRepository;
@@ -10,6 +11,7 @@ import com.mars.common.model.community.CommunityLike;
 import com.mars.common.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +22,13 @@ public class CommunityLikeMessageConsumer {
     private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
 
+    private final ApplicationEventPublisher sseEventPublisher;
+
     @Transactional
     @RabbitListener(queues = "#{@communityLikeQueue.name}")
     public void processLikeMessage(CommunityLikeMessageDto communityLikeMessageDto) {
         toggleLikeStatus(communityLikeMessageDto.communityId(), communityLikeMessageDto.userId());
-
+        publishCommunityLikeEvent(communityLikeMessageDto);
     }
 
     private void toggleLikeStatus(Long id, Long userId) {
@@ -46,5 +50,21 @@ public class CommunityLikeMessageConsumer {
     private boolean addLike(User user, Community community) {
         communityLikeRepository.save(CommunityLike.of(user, community));
         return true;
+    }
+
+    private void publishCommunityLikeEvent(CommunityLikeMessageDto communityLikeMessageDto) {
+        int likeCount = getLikeCount(communityLikeMessageDto.communityId());
+        sseEventPublisher.publishEvent(
+            CommunityLikeEvent.of(
+                this,
+                communityLikeMessageDto.communityId(),
+                communityLikeMessageDto.userId(),
+                likeCount
+            )
+        );
+    }
+
+    private int getLikeCount(Long communityId) {
+        return communityLikeRepository.countByCommunityId(communityId);
     }
 }
