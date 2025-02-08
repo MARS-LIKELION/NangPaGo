@@ -8,7 +8,6 @@ import { FaRegUser, FaSignOutAlt, FaRegBell } from 'react-icons/fa';
 const ProfileDropdown = ({
   isActive,
   Icon,
-  nickname,
   notifications,
   onLogout,
   onLinkClick,
@@ -91,7 +90,6 @@ const ProfileDropdown = ({
         </button>
         {isOpen && !notificationOpen && (
           <DropdownMenu
-            nickname={nickname}
             notificationCount={notificationCount}
             onNicknameClick={handleNicknameClick}
             onMyPageClick={() => onLinkClick('/my-page')}
@@ -123,7 +121,7 @@ const DropdownContainer = ({ children, width = 'w-48' }) => (
   </div>
 );
 
-const DropdownMenu = ({ nickname, notificationCount, onNicknameClick, onMyPageClick, onLogout }) => (
+const DropdownMenu = ({ notificationCount, onNicknameClick, onMyPageClick, onLogout }) => (
   <DropdownContainer>
     <div className={HEADER_STYLES.dropdownContent}>
       <div className="group">
@@ -135,7 +133,7 @@ const DropdownMenu = ({ nickname, notificationCount, onNicknameClick, onMyPageCl
           <FaRegBell />
           알림
           {notificationCount > 0 && (
-            <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+            <span className="inline-flex items-center justify-center bg-red-500 text-white text-xs w-5 h-5 rounded-full">
               {notificationCount}
             </span>
           )}
