@@ -26,7 +26,26 @@ function RecipeButton({
           )}
         </div>
         {likeCount !== null && (
-          <span className="text-sm ml-1">{likeCount}</span>
+          <div className="relative ml-1.5 min-w-[20px] flex items-center">
+            <span 
+              className={`absolute left-0 text-sm transition-all duration-300 ${
+                isHeartActive 
+                  ? 'opacity-100 transform translate-y-0' 
+                  : 'opacity-0 transform -translate-y-2'
+              }`}
+            >
+              {likeCount}
+            </span>
+            <span 
+              className={`absolute left-0 text-sm transition-all duration-300 ${
+                !isHeartActive 
+                  ? 'opacity-100 transform translate-y-0' 
+                  : 'opacity-0 transform translate-y-2'
+              }`}
+            >
+              {likeCount}
+            </span>
+          </div>
         )}
       </button>
       <button
