@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import ToggleButton from '../button/ToggleButton';
@@ -29,6 +29,16 @@ function Community({ post, data: community, isLoggedIn }) {
     likeCount,
     toggleHeart,
   } = usePostStatus(post, isLoggedIn);
+
+  const [prevCount, setPrevCount] = useState(likeCount);
+  const [isIncreasing, setIsIncreasing] = useState(true);
+
+  useEffect(() => {
+    if (prevCount !== likeCount) {
+      setIsIncreasing(likeCount > prevCount);
+      setPrevCount(likeCount);
+    }
+  }, [likeCount, prevCount]);
 
   const navigate = useNavigate();
 
@@ -82,15 +92,40 @@ function Community({ post, data: community, isLoggedIn }) {
         <button
           className={`flex items-center bg-white ${
             isHeartActive ? 'text-red-500' : 'text-gray-600'
-          }`}
+          } transition-all duration-300`}
           onClick={toggleHeart}
         >
-          {isHeartActive ? (
-            <FaHeart className="text-2xl" />
-          ) : (
-            <FaRegHeart className="text-2xl" />
+          <div className={`transform transition-transform duration-300 ${
+            isHeartActive ? 'animate-heart-bounce' : ''
+          }`}>
+            {isHeartActive ? (
+              <FaHeart className="text-2xl" />
+            ) : (
+              <FaRegHeart className="text-2xl" />
+            )}
+          </div>
+          {likeCount !== null && (
+            <div className="relative ml-1.5 min-w-[20px] flex items-center">
+              <span 
+                className={`absolute left-0 text-sm transition-all duration-300 ${
+                  isIncreasing 
+                    ? 'opacity-100 transform translate-y-0' 
+                    : 'opacity-0 transform -translate-y-2'
+                }`}
+              >
+                {likeCount}
+              </span>
+              <span 
+                className={`absolute left-0 text-sm transition-all duration-300 ${
+                  !isIncreasing 
+                    ? 'opacity-100 transform translate-y-0' 
+                    : 'opacity-0 transform translate-y-2'
+                }`}
+              >
+                {likeCount}
+              </span>
+            </div>
           )}
-          <span className="text-sm ml-1">{likeCount}</span>
         </button>
       </div>
       <div className="mt-4 px-4">
