@@ -1,10 +1,11 @@
-package com.mars.app.domain.community.controller;
+package com.mars.app.domain.community.controller.like;
 
+import com.mars.app.domain.community.message.like.CommunityLikeMessagePublisher;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.app.domain.community.dto.CommunityLikeResponseDto;
-import com.mars.app.domain.community.service.CommunityLikeService;
+import com.mars.app.domain.community.dto.like.CommunityLikeResponseDto;
+import com.mars.app.domain.community.service.like.CommunityLikeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@Tag(name = "커뮤니티 API", description = "커뮤니티 게시물 '좋아요' 관련 API")
+@Tag(name = "커뮤니티 좋아요 API", description = "커뮤니티 게시물 좋아요, SSE 구독")
 @RequestMapping("/api/community")
 @RestController
 public class CommunityLikeController {
 
+    private final CommunityLikeMessagePublisher communityLikeMessagePublisher;
     private final CommunityLikeService communityLikeService;
 
     @Operation(summary = "게시물 좋아요 상태 조회")
@@ -35,7 +37,7 @@ public class CommunityLikeController {
     @PostMapping("/{id}/like/toggle")
     public ResponseDto<CommunityLikeResponseDto> toggleCommunityLike(@PathVariable Long id) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(communityLikeService.toggleLike(id, userId));
+        return ResponseDto.of(communityLikeMessagePublisher.toggleLike(id, userId));
     }
 
     @Operation(summary = "게시물 좋아요 개수 조회")
