@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { HEADER_STYLES } from '../../../common/styles/Header';
 import { BiChevronLeft } from "react-icons/bi";
 import LogoutModal from '../../modal/LogoutModal';
+import { FaRegUser, FaSignOutAlt, FaRegBell } from 'react-icons/fa';
 
 const ProfileDropdown = ({
   isActive,
@@ -116,7 +117,6 @@ const ProfileDropdown = ({
 
 const DropdownContainer = ({ children, width = 'w-48' }) => (
   <div className={clsx(HEADER_STYLES.dropdownContainer, HEADER_STYLES.dropdownVisible, width)}>
-    <div className={HEADER_STYLES.arrowContainer}></div>
     <div className={HEADER_STYLES.dropdownContent}>
       {children}
     </div>
@@ -124,22 +124,33 @@ const DropdownContainer = ({ children, width = 'w-48' }) => (
 );
 
 const DropdownMenu = ({ nickname, notificationCount, onNicknameClick, onMyPageClick, onLogout }) => (
-  <DropdownContainer width="w-40">
-    <button onClick={onNicknameClick} className={clsx(HEADER_STYLES.dropdownItem, "flex items-center justify-between w-full")}>
-      <span>{nickname}</span>
-      {notificationCount > 0 && (
-        <span className="ml-2 inline-flex items-center justify-center w-4 h-4 bg-red-500 text-[0.6rem] text-white font-bold rounded-full">
-          {notificationCount}
-        </span>
-      )}
-    </button>
-    <div className="overflow-hidden">
+  <DropdownContainer>
+    <div className={HEADER_STYLES.dropdownContent}>
+      <div className="group">
+        <div className={HEADER_STYLES.arrowContainer}></div>
+        <button 
+          onClick={onNicknameClick} 
+          className={clsx(HEADER_STYLES.dropdownItem, "font-medium")}
+        >
+          <FaRegBell />
+          알림
+          {notificationCount > 0 && (
+            <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              {notificationCount}
+            </span>
+          )}
+        </button>
+      </div>
       <button onClick={onMyPageClick} className={HEADER_STYLES.dropdownItem}>
+        <FaRegUser />
         마이페이지
       </button>
-      <button onClick={onLogout} className={HEADER_STYLES.dropdownItem}>
-        로그아웃
-      </button>
+      <div className="border-t border-gray-200">
+        <button onClick={onLogout} className={clsx(HEADER_STYLES.dropdownItem, "text-red-400")}>
+          <FaSignOutAlt />
+          로그아웃
+        </button>
+      </div>
     </div>
   </DropdownContainer>
 );
