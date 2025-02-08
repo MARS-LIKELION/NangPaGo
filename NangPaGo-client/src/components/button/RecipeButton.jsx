@@ -1,4 +1,5 @@
 import { FaHeart, FaRegHeart, FaStar, FaRegStar  } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 function RecipeButton({
   isHeartActive,
@@ -8,6 +9,16 @@ function RecipeButton({
   toggleStar,
   className = '',
 }) {
+  const [prevCount, setPrevCount] = useState(likeCount);
+  const [isIncreasing, setIsIncreasing] = useState(true);
+
+  useEffect(() => {
+    if (prevCount !== likeCount) {
+      setIsIncreasing(likeCount > prevCount);
+      setPrevCount(likeCount);
+    }
+  }, [likeCount, prevCount]);
+
   return (
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       <button
@@ -29,7 +40,7 @@ function RecipeButton({
           <div className="relative ml-1.5 min-w-[20px] flex items-center">
             <span 
               className={`absolute left-0 text-sm transition-all duration-300 ${
-                isHeartActive 
+                isIncreasing 
                   ? 'opacity-100 transform translate-y-0' 
                   : 'opacity-0 transform -translate-y-2'
               }`}
@@ -38,7 +49,7 @@ function RecipeButton({
             </span>
             <span 
               className={`absolute left-0 text-sm transition-all duration-300 ${
-                !isHeartActive 
+                !isIncreasing 
                   ? 'opacity-100 transform translate-y-0' 
                   : 'opacity-0 transform translate-y-2'
               }`}
