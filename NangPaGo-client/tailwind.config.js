@@ -23,6 +23,15 @@ export default {
       fontFamily: {
         sans: ['맑은 고딕', 'sans-serif'],
       },
+      keyframes: {
+        'heart-bounce': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.3)' }
+        }
+      },
+      animation: {
+        'heart-bounce': 'heart-bounce 0.3s ease-in-out'
+      }
     },
   },
   plugins: [require('@tailwindcss/forms')],

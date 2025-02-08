@@ -13,14 +13,18 @@ function RecipeButton({
       <button
         className={`flex items-center bg-white ${
           isHeartActive ? 'text-red-500' : 'text-gray-600'
-        }`}
+        } transition-all duration-300`}
         onClick={toggleHeart}
       >
-        {isHeartActive ? (
-          <FaHeart className="text-2xl" />
-        ) : (
-          <FaRegHeart className="text-2xl" />
-        )}
+        <div className={`transform transition-transform duration-300 ${
+          isHeartActive ? 'animate-heart-bounce' : ''
+        }`}>
+          {isHeartActive ? (
+            <FaHeart className="text-2xl" />
+          ) : (
+            <FaRegHeart className="text-2xl" />
+          )}
+        </div>
         {likeCount !== null && (
           <span className="text-sm ml-1">{likeCount}</span>
         )}
