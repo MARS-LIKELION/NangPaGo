@@ -28,7 +28,6 @@ public class CommunityLikeController {
     private final CommunityLikeService communityLikeService;
     private final CommunityLikeMessagePublisher communityLikeMessagePublisher;
     private final CommunityLikeSseService communityLikeSseService;
-    private final UserNotificationMessagePublisher userNotificationMessagePublisher;
 
     @Operation(summary = "게시물 좋아요 상태 조회")
     @AuthenticatedUser
@@ -45,12 +44,6 @@ public class CommunityLikeController {
         Long userId = AuthenticationHolder.getCurrentUserId();
 
         CommunityLikeResponseDto communityLikeResponseDto = communityLikeMessagePublisher.toggleLike(postId, userId);
-
-        userNotificationMessagePublisher.createUserNotification(
-            UserNotificationEventCode.COMMUNITY_LIKE,
-            userId,
-            postId
-        );
         return ResponseDto.of(communityLikeResponseDto);
     }
 

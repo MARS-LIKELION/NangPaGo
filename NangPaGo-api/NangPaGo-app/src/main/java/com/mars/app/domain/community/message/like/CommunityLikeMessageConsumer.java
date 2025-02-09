@@ -4,7 +4,9 @@ import com.mars.app.domain.community.dto.like.CommunityLikeMessageDto;
 import com.mars.app.domain.community.event.CommunityLikeEvent;
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
+import com.mars.app.domain.user.message.UserNotificationMessagePublisher;
 import com.mars.app.domain.user.repository.UserRepository;
+import com.mars.common.enums.user.UserNotificationEventCode;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.common.model.community.Community;
 import com.mars.common.model.community.CommunityLike;
@@ -23,6 +25,8 @@ public class CommunityLikeMessageConsumer {
     private final UserRepository userRepository;
 
     private final ApplicationEventPublisher sseEventPublisher;
+
+    private final UserNotificationMessagePublisher userNotificationMessagePublisher;
 
     @Transactional
     @RabbitListener(queues = "#{@communityLikeQueue.name}")
@@ -49,6 +53,11 @@ public class CommunityLikeMessageConsumer {
 
     private boolean addLike(User user, Community community) {
         communityLikeRepository.save(CommunityLike.of(user, community));
+        userNotificationMessagePublisher.createUserNotification(
+            UserNotificationEventCode.COMMUNITY_LIKE,
+            user.getId(),
+            community.getId()
+        );
         return true;
     }
 

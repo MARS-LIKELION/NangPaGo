@@ -24,10 +24,10 @@ public class UserNotificationMessageConsumer {
 
     @Transactional
     @RabbitListener(queues = "#{@userNotificationQueue.name}")
-    public void processUserNotificationMessage(UserNotificationMessageDto userNotificationMessageDto) {
-        Long receiverId = findReceiverId(userNotificationMessageDto);
-        saveAndPublishNotification(userNotificationMessageDto, receiverId);
-        publishUserNotificationEvent(userNotificationMessageDto, receiverId);
+    public void processUserNotificationMessage(UserNotificationMessageDto messageDto) {
+        Long receiverId = findReceiverId(messageDto);
+        saveAndPublishNotification(messageDto, receiverId);
+        publishUserNotificationEvent(messageDto, receiverId);
     }
 
     private Long findReceiverId(UserNotificationMessageDto dto) {
