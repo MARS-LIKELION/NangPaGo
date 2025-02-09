@@ -17,7 +17,9 @@ function CommunityListContent() {
   const pageSize = PAGE_SIZE.list;
 
   const loadCommunityList = async (page) => {
-    if (isFetching.current || !hasMore) return;
+    if (isFetching.current || !hasMore) {
+      return;
+    }
 
     isFetching.current = true;
 
@@ -32,29 +34,67 @@ function CommunityListContent() {
       setHasMore(!last);
     } catch (error) {
       console.error('커뮤니티 목록을 가져오는 중 오류 발생:', error);
-      //       console.error(`Error loading ${type} recipeList:`, error);
     } finally {
       isFetching.current = false;
     }
   };
 
+  // 초기 데이터 로드
   useEffect(() => {
     loadCommunityList(1);
   }, []);
 
+  // 스크롤 이벤트 핸들러
   useEffect(() => {
-    if (!observerRef.current) return;
+    const checkAndLoadMore = () => {
+      if (!observerRef.current || isFetching.current || !hasMore) {
+        return;
+      }
 
-    observerInstance.current = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+      const container = document.documentElement;
+      const scrollHeight = container.scrollHeight;
+      const scrollTop = container.scrollTop;
+      const clientHeight = container.clientHeight;
+
+      // 스크롤이 없는 경우에도 다음 페이지 로드
+      if (
+        scrollHeight <= clientHeight ||
+        scrollHeight - (scrollTop + clientHeight) < 100
+      ) {
         loadCommunityList(currentPage + PAGE_INDEX.one);
       }
-    });
+    };
+
+    // 초기 화면에서 컨텐츠가 화면을 채우지 못하는 경우 추가 로드
+    checkAndLoadMore();
+
+    // Intersection Observer 설정
+    if (!observerRef.current) {
+      return;
+    }
+
+    observerInstance.current = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          checkAndLoadMore();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '100px', // 하단에서 100px 전에 미리 로드 시작
+      },
+    );
 
     observerInstance.current.observe(observerRef.current);
 
+    // 스크롤 이벤트 리스너 추가
+    window.addEventListener('scroll', checkAndLoadMore);
+
     return () => {
-      if (observerInstance.current) observerInstance.current.disconnect();
+      if (observerInstance.current) {
+        observerInstance.current.disconnect();
+      }
+      window.removeEventListener('scroll', checkAndLoadMore);
     };
   }, [currentPage, hasMore]);
 
@@ -67,7 +107,9 @@ function CommunityListContent() {
           onClick={() => navigate(`/community/${community.id}`)}
         />
       ))}
-      <div ref={observerRef}></div>
+      {hasMore && (
+        <div ref={observerRef} style={{ height: '20px', opacity: 0 }}></div>
+      )}
     </ul>
   );
 }
