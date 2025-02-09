@@ -1,4 +1,4 @@
-import { FaRegHeart, FaRegComment } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaRegComment } from 'react-icons/fa';
 import { IMAGE_STYLES } from '../../common/styles/Image';
 
 function CommunityCard({ item, onClick }) {
@@ -11,7 +11,11 @@ function CommunityCard({ item, onClick }) {
       <div className="p-4 space-y-2">
         <div className="flex items-center gap-4 text-text-400">
           <div className="flex items-center gap-1 text-gray-600">
-            <FaRegHeart className="text-xl" />
+            {item.isLiked ? (
+              <FaHeart className="text-xl text-red-500" />
+            ) : (
+              <FaRegHeart className="text-xl" />
+            )}
             <span>{item.likeCount}</span>
           </div>
           <div className="flex items-center gap-1 text-gray-600">

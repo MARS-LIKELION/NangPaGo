@@ -1,7 +1,9 @@
 package com.mars.app.domain.community.dto;
 
 import com.mars.common.model.community.Community;
+import com.mars.common.model.community.CommunityLike;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 
 @Builder
@@ -13,6 +15,7 @@ public record CommunityResponseDto(
     String nickname,
     int likeCount,
     int commentCount,
+    boolean isLiked,
     boolean isOwnedByUser,
     boolean isPublic,
     LocalDateTime createdAt,
@@ -35,7 +38,7 @@ public record CommunityResponseDto(
             .build();
     }
 
-    public static CommunityResponseDto of(Community community, int likeCount, int commentCount, Long userId) {
+    public static CommunityResponseDto of(Community community, int likeCount, int commentCount, Long userId, List<CommunityLike> communityLikes) {
         return CommunityResponseDto.builder()
             .id(community.getId())
             .title(community.getTitle())
@@ -44,6 +47,8 @@ public record CommunityResponseDto(
             .nickname(community.getUser().getNickname())
             .likeCount(likeCount)
             .commentCount(commentCount)
+            .isLiked(communityLikes.stream()
+                .anyMatch(communityLike -> community.getId().equals(communityLike.getCommunity().getId())))
             .isOwnedByUser(community.getUser().getId().equals(userId))
             .isPublic(community.isPublic())
             .createdAt(community.getCreatedAt())

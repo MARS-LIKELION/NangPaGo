@@ -13,8 +13,11 @@ import com.mars.common.model.community.Community;
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.firebase.service.FirebaseStorageService;
+import com.mars.common.model.community.CommunityLike;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +45,13 @@ public class CommunityService {
     }
 
     public PageResponseDto<CommunityResponseDto> pagesByCommunity(Long userId, PageRequestVO pageRequestVO) {
+        List<CommunityLike> communityLikes = getCommunityLikesBy(userId);
+
         return PageResponseDto.of((communityRepository.findByIsPublicTrueOrUserId(userId, pageRequestVO.toPageable()))
                 .map(community -> {
                     int likeCount = communityLikeRepository.countByCommunityId(community.getId());
                     int commentCount = communityCommentRepository.countByCommunityId(community.getId());
-                    return CommunityResponseDto.of(community, likeCount, commentCount, userId);
+                    return CommunityResponseDto.of(community, likeCount, commentCount, userId, communityLikes);
                 })
         );
     }
@@ -112,6 +117,12 @@ public class CommunityService {
         Community community = getCommunity(id);
         validateOwnership(community, userId);
         communityRepository.deleteById(id);
+    }
+
+    private List<CommunityLike> getCommunityLikesBy(Long userId) {
+        return userId.equals(User.ANONYMOUS_USER_ID)
+            ? new ArrayList<>()
+            : communityLikeRepository.findCommunityLikesByUserId(userId);
     }
 
     private Community getCommunity(Long id) {
