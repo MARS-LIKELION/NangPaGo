@@ -9,13 +9,3 @@ export async function getNotificationList() {
     throw error;
   }
 }
-
-export async function markNotificationsAsRead() {
-  try {
-    const response = await axiosInstance.put('/api/user/notification/state/read');
-    return response.data.data;
-  } catch (error) {
-    console.error('알림 읽음 처리 실패:', error);
-    throw error;
-  }
-}

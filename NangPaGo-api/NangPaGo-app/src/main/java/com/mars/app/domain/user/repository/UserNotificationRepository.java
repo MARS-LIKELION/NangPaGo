@@ -23,7 +23,7 @@ public interface UserNotificationRepository extends MongoRepository<UserNotifica
     @Query(value = "{ 'userId': ?0, 'isRead': false }", count = true)
     long countByUserIdAndIsReadFalse(Long userId);
 
-    @Query(value = "{ 'userId': ?0, 'isRead': false }", delete = false, count = true)
+    @Query(value = "{ 'userId': ?0, 'isRead': false }", delete = false)
     @Update("{ '$set': { 'isRead': true }}")
-    long markAllAsReadByUserId(Long userId);
+    void markAllAsReadByUserId(Long userId);
 }

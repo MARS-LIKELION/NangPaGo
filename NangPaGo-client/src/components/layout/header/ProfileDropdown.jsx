@@ -4,7 +4,7 @@ import { HEADER_STYLES } from '../../../common/styles/Header';
 import { BiChevronLeft } from "react-icons/bi";
 import LogoutModal from '../../modal/LogoutModal';
 import { FaRegUser, FaSignOutAlt, FaRegBell } from 'react-icons/fa';
-import { getNotificationList, markNotificationsAsRead } from '../../../api/notification';
+import { getNotificationList } from '../../../api/notification';
 
 const ProfileDropdown = ({
   isActive,
@@ -112,7 +112,6 @@ const ProfileDropdown = ({
         {notificationOpen && (
           <NotificationPanel
             onBack={handleBackClick}
-            notificationCount={notificationCount}
             notifications={notifications}
             onNotificationsRead={onNotificationsRead}
           />
@@ -167,15 +166,10 @@ const DropdownMenu = ({ notificationCount, onNicknameClick, onMyPageClick, onLog
   </DropdownContainer>
 );
 
-const NotificationPanel = ({ onBack, notificationCount, notifications, onNotificationsRead }) => {
+const NotificationPanel = ({ onBack, notifications, onNotificationsRead }) => {
   useEffect(() => {
     const markAsRead = async () => {
-      try {
-        await markNotificationsAsRead();
-        onNotificationsRead();
-      } catch (error) {
-        console.error('Failed to mark notifications as read:', error);
-      }
+      onNotificationsRead();  
     };
 
     if (notifications.length > 0) {

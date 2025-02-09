@@ -61,12 +61,4 @@ public class UserNotificationController {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userNotificationService.getUnreadNotificationCount(userId));
     }
-
-    @Operation(summary = "알림 읽음 상태 업데이트")
-    @AuthenticatedUser
-    @PutMapping("/state/read")
-    public ResponseDto<UserNotificationCountResponseDto> updateNotificationState() {
-        Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userNotificationService.markAsReadToAllNotification(userId));
-    }
 }

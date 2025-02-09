@@ -18,10 +18,14 @@ public class UserNotificationService {
 
     private final UserNotificationRepository userNotificationRepository;
 
+    @Transactional
     public List<UserNotificationResponseDto> getRecentNotifications(Long userId) {
         LocalDateTime fourteenDaysAgo = LocalDateTime.now().minusDays(NOTIFICATION_RETENTION_DAYS);
         List<UserNotification> notificationsSince = userNotificationRepository.findNotificationsSince(fourteenDaysAgo,
             userId);
+
+        // 리스트 조회와 동시에 읽음 처리
+        userNotificationRepository.markAllAsReadByUserId(userId);
 
         return notificationsSince.stream()
             .map(UserNotificationResponseDto::from)
@@ -32,14 +36,6 @@ public class UserNotificationService {
         long countIsReadFalse = userNotificationRepository.countByUserIdAndIsReadFalse(userId);
         return UserNotificationCountResponseDto.builder()
             .count(countIsReadFalse)
-            .build();
-    }
-
-    @Transactional
-    public UserNotificationCountResponseDto markAsReadToAllNotification(Long userId) {
-        long countUpdated = userNotificationRepository.markAllAsReadByUserId(userId);
-        return UserNotificationCountResponseDto.builder()
-            .count(countUpdated)
             .build();
     }
 }
