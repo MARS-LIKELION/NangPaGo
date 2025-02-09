@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "user_notification")
 public class UserNotification {
@@ -21,6 +22,8 @@ public class UserNotification {
     private String userNotificationEventCode;
 
     @NotNull
+    private Long userId;
+    @NotNull
     private Long senderId;
 
     private String postType;
@@ -30,13 +33,14 @@ public class UserNotification {
     private LocalDateTime timestamp;
 
     @Builder
-    private UserNotification(UserNotificationEventCode userNotificationEventCode, Long senderId, Long postId) {
+    private UserNotification(UserNotificationEventCode userNotificationEventCode, Long userId, Long senderId, Long postId, LocalDateTime timestamp) {
         this.userNotificationEventCode = userNotificationEventCode.getCode();
+        this.userId = userId;
         this.senderId = senderId;
         this.postType = userNotificationEventCode.getPostType();
         this.postId = postId;
         this.isRead = false;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = timestamp;
     }
 
     public void markAsRead() {
