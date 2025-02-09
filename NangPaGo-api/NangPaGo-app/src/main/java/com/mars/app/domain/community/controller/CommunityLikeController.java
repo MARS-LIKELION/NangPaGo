@@ -1,4 +1,4 @@
-package com.mars.app.domain.community.controller.like;
+package com.mars.app.domain.community.controller;
 
 import com.mars.app.domain.community.event.CommunityLikeSseService;
 import com.mars.app.domain.community.message.like.CommunityLikeMessagePublisher;
@@ -6,7 +6,7 @@ import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.community.dto.like.CommunityLikeResponseDto;
-import com.mars.app.domain.community.service.like.CommunityLikeService;
+import com.mars.app.domain.community.service.CommunityLikeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

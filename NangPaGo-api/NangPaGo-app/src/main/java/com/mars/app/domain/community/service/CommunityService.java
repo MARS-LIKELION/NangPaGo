@@ -5,7 +5,7 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 
 import com.mars.common.dto.page.PageResponseDto;
-import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
+import com.mars.app.domain.community.repository.CommunityCommentRepository;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
 import com.mars.app.domain.community.dto.CommunityResponseDto;
 import com.mars.common.dto.page.PageRequestVO;

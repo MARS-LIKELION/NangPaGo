@@ -1,4 +1,4 @@
-package com.mars.app.domain.comment.community.service;
+package com.mars.app.domain.community.service;
 
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY_COMMENT;
@@ -6,11 +6,11 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 
 import com.mars.common.dto.page.PageResponseDto;
-import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
-import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
+import com.mars.app.domain.community.dto.comment.CommunityCommentRequestDto;
+import com.mars.app.domain.community.dto.comment.CommunityCommentResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.model.comment.community.CommunityComment;
-import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
+import com.mars.app.domain.community.repository.CommunityCommentRepository;
 import com.mars.common.model.community.Community;
 import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.common.model.user.User;

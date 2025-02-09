@@ -1,6 +1,6 @@
 package com.mars.app.domain.community.service;
 
-import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
+import com.mars.app.domain.community.repository.CommunityCommentRepository;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
 import com.mars.app.domain.community.dto.CommunityResponseDto;
 import com.mars.app.domain.community.repository.CommunityLikeRepository;

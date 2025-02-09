@@ -1,4 +1,4 @@
-package com.mars.app.domain.comment.community.repository;
+package com.mars.app.domain.community.repository;
 
 import com.mars.common.model.comment.community.CommunityComment;
 import org.springframework.data.domain.Page;

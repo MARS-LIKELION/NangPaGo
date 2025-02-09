@@ -2,7 +2,6 @@ package com.mars.app.domain.community.service;
 
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
-import com.mars.app.domain.community.service.like.CommunityLikeService;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.model.community.Community;

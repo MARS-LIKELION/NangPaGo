@@ -1,4 +1,4 @@
-package com.mars.app.domain.community.service.like;
+package com.mars.app.domain.community.service;
 
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.mars.app.domain.comment.community.dto;
+package com.mars.app.domain.community.dto.comment;
 
 import jakarta.validation.constraints.NotEmpty;
 

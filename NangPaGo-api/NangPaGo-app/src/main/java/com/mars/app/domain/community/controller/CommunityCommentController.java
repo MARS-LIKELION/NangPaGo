@@ -1,4 +1,4 @@
-package com.mars.app.domain.comment.community.controller;
+package com.mars.app.domain.community.controller;
 
 import com.mars.app.aop.audit.AuditLog;
 import com.mars.app.aop.auth.AuthenticatedUser;
@@ -6,9 +6,9 @@ import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.user.message.UserNotificationMessagePublisher;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
-import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
-import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
-import com.mars.app.domain.comment.community.service.CommunityCommentService;
+import com.mars.app.domain.community.dto.comment.CommunityCommentRequestDto;
+import com.mars.app.domain.community.dto.comment.CommunityCommentResponseDto;
+import com.mars.app.domain.community.service.CommunityCommentService;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.enums.audit.AuditActionType;
 import com.mars.common.enums.user.UserNotificationEventCode;

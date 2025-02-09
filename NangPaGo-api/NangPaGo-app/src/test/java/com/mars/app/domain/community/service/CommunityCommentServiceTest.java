@@ -1,11 +1,11 @@
-package com.mars.app.domain.comment.community.service;
+package com.mars.app.domain.community.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import com.mars.app.domain.comment.community.dto.CommunityCommentRequestDto;
-import com.mars.app.domain.comment.community.dto.CommunityCommentResponseDto;
-import com.mars.app.domain.comment.community.repository.CommunityCommentRepository;
+import com.mars.app.domain.community.dto.comment.CommunityCommentRequestDto;
+import com.mars.app.domain.community.dto.comment.CommunityCommentResponseDto;
+import com.mars.app.domain.community.repository.CommunityCommentRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
