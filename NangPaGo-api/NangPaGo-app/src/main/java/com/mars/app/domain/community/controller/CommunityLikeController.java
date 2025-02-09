@@ -2,11 +2,13 @@ package com.mars.app.domain.community.controller;
 
 import com.mars.app.domain.community.event.CommunityLikeSseService;
 import com.mars.app.domain.community.message.like.CommunityLikeMessagePublisher;
+import com.mars.app.domain.user.message.UserNotificationMessagePublisher;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.community.dto.like.CommunityLikeResponseDto;
 import com.mars.app.domain.community.service.CommunityLikeService;
+import com.mars.common.enums.user.UserNotificationEventCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class CommunityLikeController {
     private final CommunityLikeService communityLikeService;
     private final CommunityLikeMessagePublisher communityLikeMessagePublisher;
     private final CommunityLikeSseService communityLikeSseService;
+    private final UserNotificationMessagePublisher userNotificationMessagePublisher;
 
     @Operation(summary = "게시물 좋아요 상태 조회")
     @AuthenticatedUser
@@ -38,9 +41,17 @@ public class CommunityLikeController {
     @Operation(summary = "게시물 좋아요 토글 버튼")
     @AuthenticatedUser
     @PostMapping("/{id}/like/toggle")
-    public ResponseDto<CommunityLikeResponseDto> toggleCommunityLike(@PathVariable Long id) {
+    public ResponseDto<CommunityLikeResponseDto> toggleCommunityLike(@PathVariable Long postId) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(communityLikeMessagePublisher.toggleLike(id, userId));
+
+        CommunityLikeResponseDto communityLikeResponseDto = communityLikeMessagePublisher.toggleLike(postId, userId);
+
+        userNotificationMessagePublisher.createUserNotification(
+            UserNotificationEventCode.COMMUNITY_LIKE,
+            userId,
+            postId
+        );
+        return ResponseDto.of(communityLikeResponseDto);
     }
 
     @Operation(summary = "게시물 좋아요 개수 조회")
