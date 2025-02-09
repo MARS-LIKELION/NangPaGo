@@ -2,11 +2,10 @@ package com.mars.app.domain.user_recipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.app.domain.user.message.UserNotificationMessagePublisher;
+import com.mars.app.domain.user_recipe.message.UserRecipeLikeMessagePublisher;
 import com.mars.common.dto.ResponseDto;
-import com.mars.app.domain.user_recipe.dto.UserRecipeLikeResponseDto;
+import com.mars.app.domain.user_recipe.dto.like.UserRecipeLikeResponseDto;
 import com.mars.app.domain.user_recipe.service.UserRecipeLikeService;
-import com.mars.common.enums.user.UserNotificationEventCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserRecipeLikeController {
 
     private final UserRecipeLikeService userRecipeLikeService;
-    private final UserNotificationMessagePublisher userNotificationMessagePublisher;
+    private final UserRecipeLikeMessagePublisher userRecipeLikeMessagePublisher;
 
     @Operation(summary = "게시물 좋아요 상태 조회")
     @AuthenticatedUser
@@ -34,13 +33,8 @@ public class UserRecipeLikeController {
     @PostMapping("/toggle")
     public ResponseDto<UserRecipeLikeResponseDto> toggleUserCommunityLike(@PathVariable("id") Long postId) {
         Long userId = AuthenticationHolder.getCurrentUserId();
+        UserRecipeLikeResponseDto userRecipeLikeResponseDto = userRecipeLikeMessagePublisher.toggleLike(postId, userId);
 
-        UserRecipeLikeResponseDto userRecipeLikeResponseDto = userRecipeLikeService.toggleLike(postId, userId);
-        userNotificationMessagePublisher.createUserNotification(
-            UserNotificationEventCode.USER_RECIPE_LIKE,
-            userId,
-            postId
-        );
         return ResponseDto.of(userRecipeLikeResponseDto);
     }
 
