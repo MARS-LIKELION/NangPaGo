@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   fetchFavoriteStatus,
   fetchLikeStatus,
@@ -62,6 +62,8 @@ const usePostStatus = (post, isLoggedIn) => {
       eventName = 'COMMUNITY_LIKE_EVENT';
     } else if (post.type === 'recipe') {
       eventName = 'RECIPE_LIKE_EVENT';
+    } else if (post.type === 'user-recipe') {
+      eventName = 'USER_RECIPE_LIKE_EVENT';
     }
 
     eventSource.addEventListener(eventName, (event) => {

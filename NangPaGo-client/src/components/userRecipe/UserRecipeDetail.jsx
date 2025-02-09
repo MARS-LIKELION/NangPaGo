@@ -1,11 +1,12 @@
 // UserRecipeDetail.jsx
 import { useState } from 'react';
-import { AiFillHeart } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import usePostStatus from '../../hooks/usePostStatus';
 import CookingStepsSlider from '../userRecipe/CookingStepsSlider';
 import ToggleButton from '../button/ToggleButton';
 import DeleteModal from '../modal/DeleteModal';
 import DeleteSuccessModal from '../modal/DeleteSuccessModal';
+import RecipeButton from '../button/RecipeButton';
 import { deleteUserRecipe } from '../../api/userRecipe';
 
 function UserRecipeDetail({ data, isLoggedIn }) {
@@ -14,6 +15,13 @@ function UserRecipeDetail({ data, isLoggedIn }) {
   const navigate = useNavigate();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  const post = { type: 'user-recipe', id: data.id };
+  const {
+    isHeartActive,
+    likeCount,
+    toggleHeart,
+  } = usePostStatus(post, isLoggedIn);
 
   const handleCreateClick = () => {
     navigate('/user-recipe/create', { state: { from: window.location.pathname } });
@@ -68,10 +76,12 @@ function UserRecipeDetail({ data, isLoggedIn }) {
           <div className="flex justify-between items-center mt-6 relative">
             <h1 className="text-3xl font-bold">{data.title}</h1>
             {data.isOwnedByUser && <ToggleButton actions={actions} />}
-            <div className="flex items-center gap-1 text-gray-600">
-              <AiFillHeart className="text-red-500 text-xl" />
-              <span>{data.likeCount}</span>
-            </div>
+            <RecipeButton
+              isHeartActive={isHeartActive}
+              likeCount={likeCount}
+              toggleHeart={toggleHeart}
+              className="ml-4"
+            />
           </div>
           <p className="text-gray-700 mt-4">{data.content}</p>
 

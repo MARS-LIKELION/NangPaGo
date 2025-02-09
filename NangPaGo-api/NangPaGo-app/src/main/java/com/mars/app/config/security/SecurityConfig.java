@@ -64,6 +64,13 @@ public class SecurityConfig {
         "/api/community/{id}/like/count",
         "/api/community/{id}/like/notification/subscribe",
     };
+    private static final String[] WHITE_LIST_USER_RECIPE = {
+        "/api/user-recipe/{id}",
+        "/api/user-recipe/{id}/comment",
+        "/api/user-recipe/{id}/comment/count",
+        "/api/user-recipe/{id}/like/count",
+        "/api/user-recipe/{id}/like/notification/subscribe",
+    };
 
 
     private final JwtUtil jwtUtil;
@@ -106,7 +113,8 @@ public class SecurityConfig {
                     Stream.of(WHITE_LIST,
                             WHITE_LIST_SWAGGER,
                             WHITE_LIST_RECIPE,
-                            WHITE_LIST_COMMUNITY
+                            WHITE_LIST_COMMUNITY,
+                            WHITE_LIST_USER_RECIPE
                         )
                         .flatMap(Arrays::stream)
                         .toArray(String[]::new)

@@ -6,6 +6,7 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import com.mars.app.domain.user.message.UserNotificationMessagePublisher;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.domain.user_recipe.dto.like.UserRecipeLikeMessageDto;
+import com.mars.app.domain.user_recipe.event.UserRecipeLikeEvent;
 import com.mars.app.domain.user_recipe.repository.UserRecipeLikeRepository;
 import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
 import com.mars.common.enums.user.UserNotificationEventCode;
@@ -34,6 +35,7 @@ public class UserRecipeLikeMessageConsumer {
     @RabbitListener(queues = "#{@userRecipeLikeQueue.name}")
     public void processLikeMessage(UserRecipeLikeMessageDto messageDto) {
         toggleLikeStatus(messageDto.userRecipeId(), messageDto.userId());
+        publishUserRecipeLikeEvent(messageDto);
     }
 
     private long getLikeCount(Long recipeId) {
@@ -63,5 +65,17 @@ public class UserRecipeLikeMessageConsumer {
             userRecipe.getId()
         );
         return true;
+    }
+
+    private void publishUserRecipeLikeEvent(UserRecipeLikeMessageDto messageDto) {
+        int likeCount = (int) getLikeCount(messageDto.userRecipeId());
+        sseEventPublisher.publishEvent(
+            UserRecipeLikeEvent.of(
+                this,
+                messageDto.userRecipeId(),
+                messageDto.userId(),
+                likeCount
+            )
+        );
     }
 }
