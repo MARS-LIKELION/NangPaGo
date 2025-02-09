@@ -2,12 +2,14 @@ package com.mars.app.domain.user_recipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.app.domain.user.message.UserNotificationMessagePublisher;
 import com.mars.app.domain.user_recipe.dto.comment.UserRecipeCommentRequestDto;
 import com.mars.app.domain.user_recipe.dto.comment.UserRecipeCommentResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.user_recipe.service.UserRecipeCommentService;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;
+import com.mars.common.enums.user.UserNotificationEventCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserRecipeCommentController {
 
     private final UserRecipeCommentService userRecipeCommentService;
+    private final UserNotificationMessagePublisher userNotificationMessagePublisher;
 
     @Operation(summary = "댓글 목록 조회")
     @GetMapping
@@ -36,10 +39,18 @@ public class UserRecipeCommentController {
     @PostMapping
     public ResponseDto<UserRecipeCommentResponseDto> create(
         @RequestBody UserRecipeCommentRequestDto requestDto,
-        @PathVariable("id") Long id) {
+        @PathVariable("id") Long postId) {
 
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userRecipeCommentService.create(requestDto, userId, id), "댓글이 성공적으로 추가되었습니다.");
+
+        UserRecipeCommentResponseDto responseDto = userRecipeCommentService.create(requestDto, userId, postId);
+        userNotificationMessagePublisher.createUserNotification(
+            UserNotificationEventCode.USER_RECIPE_COMMENT,
+            userId,
+            postId
+        );
+
+        return ResponseDto.of(responseDto);
     }
 
     @Operation(summary = "댓글 수정")
