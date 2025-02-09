@@ -51,4 +51,8 @@ public class Recipe extends BaseEntity {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecipeFavorite> favorites;
+
+    public void updateMainImage(String newImageUrl) {
+        this.mainImage = newImageUrl;
+    }
 }

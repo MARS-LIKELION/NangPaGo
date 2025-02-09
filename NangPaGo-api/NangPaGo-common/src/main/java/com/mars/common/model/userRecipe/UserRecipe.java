@@ -1,6 +1,5 @@
 package com.mars.common.model.userRecipe;
 
-import com.mars.common.enums.comment.UserRecipeCommentStatus;
 import com.mars.common.enums.userRecipe.UserRecipeStatus;
 import com.mars.common.model.BaseEntity;
 import com.mars.common.model.comment.userRecipe.UserRecipeComment;

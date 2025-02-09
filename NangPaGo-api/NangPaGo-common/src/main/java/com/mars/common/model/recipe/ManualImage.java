@@ -18,4 +18,8 @@ public class ManualImage extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
+
+    public void updateImageUrl(String newImageUrl) {
+        this.imageUrl = newImageUrl;
+    }
 }
