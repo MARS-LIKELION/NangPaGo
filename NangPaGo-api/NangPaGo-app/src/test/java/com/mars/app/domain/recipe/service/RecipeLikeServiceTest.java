@@ -2,10 +2,9 @@ package com.mars.app.domain.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mars.app.domain.recipe.service.like.RecipeLikeService;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.recipe.RecipeLike;
-import com.mars.app.domain.recipe.repository.like.RecipeLikeRepository;
+import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;

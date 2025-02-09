@@ -9,7 +9,7 @@ import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.auth.service.OAuth2ProviderTokenService;
 import com.mars.common.dto.page.PageRequestVO;
-import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
+import com.mars.app.domain.recipe.dto.comment.RecipeCommentResponseDto;
 import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeResponseDto;
 import com.mars.common.dto.user.MyPageDto;

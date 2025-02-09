@@ -3,13 +3,14 @@ package com.mars.app.domain.comment.recipe.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.mars.app.domain.recipe.service.RecipeCommentService;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGException;
-import com.mars.app.domain.comment.recipe.dto.RecipeCommentRequestDto;
-import com.mars.app.domain.comment.recipe.dto.RecipeCommentResponseDto;
+import com.mars.app.domain.recipe.dto.comment.RecipeCommentRequestDto;
+import com.mars.app.domain.recipe.dto.comment.RecipeCommentResponseDto;
 import com.mars.common.model.comment.recipe.RecipeComment;
-import com.mars.app.domain.comment.recipe.repository.RecipeCommentRepository;
+import com.mars.app.domain.recipe.repository.RecipeCommentRepository;
 import com.mars.common.model.recipe.Recipe;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.common.model.user.User;

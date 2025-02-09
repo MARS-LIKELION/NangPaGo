@@ -1,4 +1,4 @@
-package com.mars.app.domain.recipe.repository.like;
+package com.mars.app.domain.recipe.repository;
 
 import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.recipe.RecipeLike;

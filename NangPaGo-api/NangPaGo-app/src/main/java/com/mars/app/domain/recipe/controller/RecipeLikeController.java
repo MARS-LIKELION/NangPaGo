@@ -1,11 +1,11 @@
-package com.mars.app.domain.recipe.controller.like;
+package com.mars.app.domain.recipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.recipe.dto.like.RecipeLikeResponseDto;
 import com.mars.app.domain.recipe.event.RecipeLikeSseService;
 import com.mars.app.domain.recipe.message.like.RecipeLikeMessagePublisher;
-import com.mars.app.domain.recipe.service.like.RecipeLikeService;
+import com.mars.app.domain.recipe.service.RecipeLikeService;
 import com.mars.common.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

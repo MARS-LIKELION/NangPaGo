@@ -1,6 +1,6 @@
-package com.mars.app.domain.recipe.service.like;
+package com.mars.app.domain.recipe.service;
 
-import com.mars.app.domain.recipe.repository.like.RecipeLikeRepository;
+import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

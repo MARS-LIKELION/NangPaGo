@@ -3,7 +3,7 @@ package com.mars.app.domain.favorite.recipe.message;
 import static org.assertj.core.api.Assertions.*;
 
 import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteMessageDto;
-import com.mars.app.domain.recipe.repository.favorite.RecipeFavoriteRepository;
+import com.mars.app.domain.recipe.repository.RecipeFavoriteRepository;
 import com.mars.app.domain.recipe.message.favorite.RecipeFavoriteMessageConsumer;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
