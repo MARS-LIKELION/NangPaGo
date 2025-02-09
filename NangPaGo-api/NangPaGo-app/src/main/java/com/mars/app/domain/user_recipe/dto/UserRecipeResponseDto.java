@@ -1,15 +1,12 @@
-package com.mars.app.domain.userRecipe.dto;
+package com.mars.app.domain.user_recipe.dto;
 
-import com.mars.common.model.recipe.Manual;
 import com.mars.common.model.userRecipe.UserRecipe;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.mars.common.model.userRecipe.UserRecipeIngredient;
 import com.mars.common.model.userRecipe.UserRecipeManual;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 public record UserRecipeResponseDto(

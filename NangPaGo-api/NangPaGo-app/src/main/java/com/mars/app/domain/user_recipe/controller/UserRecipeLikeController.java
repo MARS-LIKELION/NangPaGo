@@ -1,10 +1,10 @@
-package com.mars.app.domain.userRecipe.controller;
+package com.mars.app.domain.user_recipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.common.dto.ResponseDto;
-import com.mars.app.domain.userRecipe.dto.UserRecipeLikeResponseDto;
-import com.mars.app.domain.userRecipe.service.UserRecipeLikeService;
+import com.mars.app.domain.user_recipe.dto.UserRecipeLikeResponseDto;
+import com.mars.app.domain.user_recipe.service.UserRecipeLikeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

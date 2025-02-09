@@ -1,4 +1,4 @@
-package com.mars.app.domain.comment.userRecipe.dto;
+package com.mars.app.domain.user_recipe.dto.comment;
 
 import jakarta.validation.constraints.NotEmpty;
 

@@ -1,11 +1,11 @@
-package com.mars.app.domain.userRecipe.service;
+package com.mars.app.domain.user_recipe.service;
 
 import static com.mars.common.exception.NPGExceptionType.*;
-import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
-import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
-import com.mars.app.domain.userRecipe.repository.UserRecipeLikeRepository;
-import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
-import com.mars.app.domain.comment.userRecipe.repository.UserRecipeCommentRepository;
+import com.mars.app.domain.user_recipe.dto.UserRecipeRequestDto;
+import com.mars.app.domain.user_recipe.dto.UserRecipeResponseDto;
+import com.mars.app.domain.user_recipe.repository.UserRecipeLikeRepository;
+import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
+import com.mars.app.domain.user_recipe.repository.UserRecipeCommentRepository;
 import com.mars.app.domain.firebase.service.FirebaseStorageService;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;

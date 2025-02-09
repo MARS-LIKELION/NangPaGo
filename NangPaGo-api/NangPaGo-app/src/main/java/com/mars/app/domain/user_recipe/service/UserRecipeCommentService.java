@@ -1,9 +1,9 @@
-package com.mars.app.domain.comment.userRecipe.service;
+package com.mars.app.domain.user_recipe.service;
 
-import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentRequestDto;
-import com.mars.app.domain.comment.userRecipe.dto.UserRecipeCommentResponseDto;
-import com.mars.app.domain.comment.userRecipe.repository.UserRecipeCommentRepository;
-import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
+import com.mars.app.domain.user_recipe.dto.comment.UserRecipeCommentRequestDto;
+import com.mars.app.domain.user_recipe.dto.comment.UserRecipeCommentResponseDto;
+import com.mars.app.domain.user_recipe.repository.UserRecipeCommentRepository;
+import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;

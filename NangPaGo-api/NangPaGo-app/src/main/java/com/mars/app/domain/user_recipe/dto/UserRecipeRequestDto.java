@@ -1,4 +1,4 @@
-package com.mars.app.domain.userRecipe.dto;
+package com.mars.app.domain.user_recipe.dto;
 
 import jakarta.validation.constraints.Size;
 import lombok.Builder;

@@ -1,11 +1,11 @@
-package com.mars.app.domain.userRecipe.controller;
+package com.mars.app.domain.user_recipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.common.dto.ResponseDto;
-import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
-import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
-import com.mars.app.domain.userRecipe.service.UserRecipeService;
+import com.mars.app.domain.user_recipe.dto.UserRecipeRequestDto;
+import com.mars.app.domain.user_recipe.dto.UserRecipeResponseDto;
+import com.mars.app.domain.user_recipe.service.UserRecipeService;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,10 +1,10 @@
-package com.mars.app.domain.userRecipe.service;
+package com.mars.app.domain.user_recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mars.app.domain.userRecipe.dto.UserRecipeRequestDto;
-import com.mars.app.domain.userRecipe.dto.UserRecipeResponseDto;
-import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
+import com.mars.app.domain.user_recipe.dto.UserRecipeRequestDto;
+import com.mars.app.domain.user_recipe.dto.UserRecipeResponseDto;
+import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.enums.userRecipe.UserRecipeStatus;

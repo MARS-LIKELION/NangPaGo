@@ -1,4 +1,4 @@
-package com.mars.app.domain.userRecipe.dto;
+package com.mars.app.domain.user_recipe.dto;
 
 import lombok.Builder;
 

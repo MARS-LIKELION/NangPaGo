@@ -4,7 +4,7 @@ import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.dto.UserNotificationMessageDto;
 import com.mars.app.domain.user.event.UserNotificationEvent;
 import com.mars.app.domain.user.repository.UserNotificationRepository;
-import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
+import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.common.model.user.UserNotification;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,10 @@
-package com.mars.app.domain.userRecipe.service;
+package com.mars.app.domain.user_recipe.service;
 
-import com.mars.app.domain.userRecipe.dto.UserRecipeLikeResponseDto;
+import com.mars.app.domain.user_recipe.dto.UserRecipeLikeResponseDto;
 import com.mars.common.model.userRecipe.UserRecipe;
 import com.mars.common.model.userRecipe.UserRecipeLike;
-import com.mars.app.domain.userRecipe.repository.UserRecipeLikeRepository;
-import com.mars.app.domain.userRecipe.repository.UserRecipeRepository;
+import com.mars.app.domain.user_recipe.repository.UserRecipeLikeRepository;
+import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
