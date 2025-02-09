@@ -7,7 +7,7 @@ import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
 
 function UserRecipeListContent() {
   const [recipeList, setRecipeList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ function UserRecipeListContent() {
   };
 
   useEffect(() => {
-    loadUserRecipeList(0);
+    loadUserRecipeList(1);
   }, []);
 
   useEffect(() => {

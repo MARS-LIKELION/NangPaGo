@@ -2,7 +2,7 @@ import axiosInstance from '../api/axiosInstance';
 import { PAGE_INDEX, PAGE_SIZE } from '../common/constants/pagination';
 
 export const fetchPosts = async (
-  pageNo = PAGE_INDEX.zero,
+  pageNo = PAGE_INDEX.one,
   pageSize = PAGE_SIZE.search,
 ) => {
   try {

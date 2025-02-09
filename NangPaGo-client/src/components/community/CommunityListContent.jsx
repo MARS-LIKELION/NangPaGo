@@ -7,7 +7,7 @@ import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
 
 function CommunityListContent() {
   const [communityList, setCommunityList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ function CommunityListContent() {
   };
 
   useEffect(() => {
-    loadCommunityList(0);
+    loadCommunityList(1);
   }, []);
 
   useEffect(() => {
