@@ -6,15 +6,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.mars.app.domain.community.dto.like.CommunityLikeMessageDto;
 import com.mars.app.domain.community.repository.CommunityLikeRepository;
 import com.mars.app.domain.community.repository.CommunityRepository;
+import com.mars.app.domain.user.message.UserNotificationMessagePublisher;
 import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.exception.NPGException;
 import com.mars.common.model.community.Community;
 import com.mars.common.model.community.CommunityLike;
 import com.mars.common.model.user.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -26,9 +31,20 @@ class CommunityLikeMessageConsumerTest extends IntegrationTestSupport {
     private CommunityRepository communityRepository;
     @Autowired
     private UserRepository userRepository;
+    @Mock
+    private UserNotificationMessagePublisher userNotificationMessagePublisher;
+
+    @Mock
+    private ApplicationEventPublisher sseEventPublisher;
 
     @Autowired
     private CommunityLikeMessageConsumer communityLikeMessageConsumer;
+
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(communityLikeMessageConsumer, "sseEventPublisher", sseEventPublisher);
+        ReflectionTestUtils.setField(communityLikeMessageConsumer, "userNotificationMessagePublisher", userNotificationMessagePublisher);
+    }
 
     @DisplayName("커뮤니티 게시글 좋아요 메시지를 처리하고 좋아요를 추가할 수 있다.")
     @Test
