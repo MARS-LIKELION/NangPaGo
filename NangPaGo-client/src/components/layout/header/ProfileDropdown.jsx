@@ -4,19 +4,31 @@ import { HEADER_STYLES } from '../../../common/styles/Header';
 import { BiChevronLeft } from "react-icons/bi";
 import LogoutModal from '../../modal/LogoutModal';
 import { FaRegUser, FaSignOutAlt, FaRegBell } from 'react-icons/fa';
+import { getNotificationList, markNotificationsAsRead } from '../../../api/notification';
 
 const ProfileDropdown = ({
   isActive,
   Icon,
-  notifications,
+  unreadCount,
   onLogout,
   onLinkClick,
+  onNotificationsRead,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const menuRef = useRef(null);
-  const notificationCount = notifications.length;
+  const notificationCount = unreadCount;
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await getNotificationList();
+      setNotifications(response);
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -40,6 +52,7 @@ const ProfileDropdown = ({
   const handleNicknameClick = () => {
     setNotificationOpen(true);
     setIsOpen(false);
+    fetchNotifications();
   };
 
   const handleBackClick = () => {
@@ -77,7 +90,7 @@ const ProfileDropdown = ({
                 (isOpen || notificationOpen || isActive) ? "text-primary" : "text-text-900 group-hover:text-primary"
               )}
             />
-            {notificationCount > 0 && (
+            {unreadCount > 0 && (
               <span className={HEADER_STYLES.notificationDot}></span>
             )}
           </span>
@@ -101,6 +114,7 @@ const ProfileDropdown = ({
             onBack={handleBackClick}
             notificationCount={notificationCount}
             notifications={notifications}
+            onNotificationsRead={onNotificationsRead}
           />
         )}
       </div>
@@ -153,26 +167,47 @@ const DropdownMenu = ({ notificationCount, onNicknameClick, onMyPageClick, onLog
   </DropdownContainer>
 );
 
-const NotificationPanel = ({ onBack, notificationCount, notifications }) => (
-  <DropdownContainer width="w-64">
-    <div className="px-4 py-2">
-      <button onClick={onBack} className={HEADER_STYLES.back}>
-        <BiChevronLeft size={25} className="mr-auto" />
-      </button>
-      {notificationCount > 0 ? (
-        <ul className="max-h-60 overflow-y-auto overflow-x-hidden -mr-2 pr-2">
-          {notifications.map((notification, index) => (
-            <li key={index} className={clsx(HEADER_STYLES.notificationMessage, "border-b border-secondary last:border-b-0")}>
-              <p className="text-sm">{notification.message}</p>
-              <span className="text-xs text-gray-500">{new Date(notification.timestamp).toLocaleString()}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className={HEADER_STYLES.notificationStatus}>새로운 알림이 없습니다.</p>
-      )}
-    </div>
-  </DropdownContainer>
-);
+const NotificationPanel = ({ onBack, notificationCount, notifications, onNotificationsRead }) => {
+  useEffect(() => {
+    const markAsRead = async () => {
+      try {
+        await markNotificationsAsRead();
+        onNotificationsRead();
+      } catch (error) {
+        console.error('Failed to mark notifications as read:', error);
+      }
+    };
+
+    if (notifications.length > 0) {
+      markAsRead();
+    }
+  }, [notifications, onNotificationsRead]);
+
+  return (
+    <DropdownContainer width="w-64">
+      <div className="px-4 py-2">
+        <button onClick={onBack} className={HEADER_STYLES.back}>
+          <BiChevronLeft size={25} className="mr-auto" />
+        </button>
+        {notifications.length > 0 ? (
+          <ul className="max-h-60 overflow-y-auto overflow-x-hidden -mr-2 pr-2">
+            {notifications.map((notification, index) => (
+              <li key={index} className={clsx(HEADER_STYLES.notificationMessage, "border-b border-secondary last:border-b-0")}>
+                <p className="text-sm">
+                  {notification.postType === 'COMMUNITY' ? '커뮤니티' : '레시피'} 게시물에 새로운 알림이 있습니다.
+                </p>
+                <span className="text-xs text-gray-500">
+                  {new Date(notification.timestamp).toLocaleString()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className={HEADER_STYLES.notificationStatus}>새로운 알림이 없습니다.</p>
+        )}
+      </div>
+    </DropdownContainer>
+  );
+};
 
 export default ProfileDropdown;

@@ -57,7 +57,7 @@ public class CommunityCommentController {
 
         // 유저 알림 발송
         userNotificationMessagePublisher.createUserNotification(
-            UserNotificationEventCode.USER_RECIPE_COMMENT,
+            UserNotificationEventCode.COMMUNITY_COMMENT,
             userId,
             postId
         );

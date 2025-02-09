@@ -2,29 +2,35 @@ package com.mars.app.domain.user.dto;
 
 import com.mars.common.enums.user.UserNotificationEventCode;
 import com.mars.common.model.user.UserNotification;
+import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
 public record UserNotificationMessageDto(
     UserNotificationEventCode userNotificationEventCode,
     Long senderId,
-    Long postId
+    Long postId,
+    LocalDateTime timestamp
 ) {
     public static UserNotificationMessageDto of(UserNotificationEventCode userNotificationEventCode,
         Long senderId,
-        Long postId) {
+        Long postId,
+        LocalDateTime timestamp) {
         return UserNotificationMessageDto.builder()
             .userNotificationEventCode(userNotificationEventCode)
             .senderId(senderId)
             .postId(postId)
+            .timestamp(timestamp)
             .build();
     }
 
-    public UserNotification toEntity() {
+    public UserNotification toEntityWithReceiverId(Long receiverId) {
         return UserNotification.builder()
             .userNotificationEventCode(this.userNotificationEventCode)
+            .userId(receiverId)
             .senderId(this.senderId)
             .postId(this.postId)
+            .timestamp(this.timestamp)
             .build();
     }
 }

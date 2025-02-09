@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../slices/loginSlice.js';
@@ -20,7 +20,7 @@ function Header({ isBlocked = false }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isReconnecting, setIsReconnecting] = useState(false);
-  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const handleSseError = useCallback(() => {
     if (!isReconnecting) {
@@ -30,6 +30,20 @@ function Header({ isBlocked = false }) {
       }, 3000);
     }
   }, [isReconnecting]);
+
+  const fetchNotificationCount = async () => {
+    if (loginState.isLoggedIn) {
+      try {
+        const response = await axiosInstance.get('/api/user/notification/count');
+        const data = response.data?.data;
+        if (data) {
+          setUnreadCount(data.count);
+        }
+      } catch (error) {
+        console.error('알림 목록 조회 실패:', error);
+      }
+    }
+  };
 
   // SSE 구독 설정
   useEffect(() => {
@@ -44,15 +58,18 @@ function Header({ isBlocked = false }) {
 
       const eventName = 'USER_NOTIFICATION_EVENT';
 
-      eventSource.addEventListener(eventName, (event) => {
-        const eventData = JSON.parse(event.data);
-        setNotifications((prev) => [...prev, eventData]);
+      eventSource.addEventListener(eventName, () => {
+        // SSE 이벤트 수신 시 알림 개수 새로 불러오기
+        fetchNotificationCount();
       });
 
       eventSource.onerror = () => {
         eventSource.close();
         handleSseError();
       };
+
+      // 초기 알림 개수 불러오기
+      fetchNotificationCount();
     }
 
     return () => {
@@ -91,6 +108,10 @@ function Header({ isBlocked = false }) {
       return;
     }
     navigate(path);
+  };
+
+  const handleNotificationsRead = () => {
+    setUnreadCount(0);
   };
 
   if (!loginState.isInitialized) {
@@ -139,9 +160,10 @@ function Header({ isBlocked = false }) {
               isActive={isActive('/my-page')}
               Icon={CgProfile}
               nickname={loginState.nickname}
-              notifications={notifications}
+              unreadCount={unreadCount}
               onLogout={handleLogout}
               onLinkClick={handleLinkClick}
+              onNotificationsRead={handleNotificationsRead}
             />
           ) : (
             <NavItem

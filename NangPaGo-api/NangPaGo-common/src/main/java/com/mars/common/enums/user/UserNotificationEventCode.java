@@ -2,6 +2,8 @@ package com.mars.common.enums.user;
 
 import static com.mars.common.exception.NPGExceptionType.BAD_REQUEST_INVALID_EVENTCODE;
 
+import com.mars.common.model.community.Community;
+import com.mars.common.model.userRecipe.UserRecipe;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,10 +16,12 @@ import lombok.Getter;
 public enum UserNotificationEventCode {
 
     // Like
-    USER_RECIPE_LIKE("L01", "USER_RECIPE"),
+    COMMUNITY_LIKE("C01", "COMMUNITY"),
+    COMMUNITY_COMMENT("C02", "COMMUNITY"),
 
     // Comment
-    USER_RECIPE_COMMENT("C01", "USER_RECIPE"),
+    USER_RECIPE_LIKE("U01", "USER_RECIPE"),
+    USER_RECIPE_COMMENT("U02", "USER_RECIPE"),
 
     ;
 
@@ -30,6 +34,14 @@ public enum UserNotificationEventCode {
     public static UserNotificationEventCode from(String code) {
         return Optional.ofNullable(CODE_MAP.get(code))
             .orElseThrow(() -> invalidEventCodeException(code));
+    }
+
+    public boolean isCommunityType() {
+        return this.postType.equals("COMMUNITY");
+    }
+
+    public boolean isUserRecipeType() {
+        return this.postType.equals("USER_RECIPE");
     }
 
     private static RuntimeException invalidEventCodeException(String code) {

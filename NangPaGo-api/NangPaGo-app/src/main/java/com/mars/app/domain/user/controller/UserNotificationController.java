@@ -2,6 +2,7 @@ package com.mars.app.domain.user.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.app.domain.user.dto.UserNotificationCountResponseDto;
 import com.mars.app.domain.user.dto.UserNotificationResponseDto;
 import com.mars.app.domain.user.event.UserNotificationSseService;
 import com.mars.app.domain.user.service.UserNotificationService;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -50,5 +52,21 @@ public class UserNotificationController {
     public ResponseDto<List<UserNotificationResponseDto>> getNotificationList() {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userNotificationService.getRecentNotifications(userId));
+    }
+
+    @Operation(summary = "미확인 알림 개수 조회")
+    @AuthenticatedUser
+    @GetMapping("/count")
+    public ResponseDto<UserNotificationCountResponseDto> getUnreadNotificationCount() {
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userNotificationService.getUnreadNotificationCount(userId));
+    }
+
+    @Operation(summary = "알림 읽음 상태 업데이트")
+    @AuthenticatedUser
+    @PutMapping("/state/read")
+    public ResponseDto<UserNotificationCountResponseDto> updateNotificationState() {
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userNotificationService.markAsReadToAllNotification(userId));
     }
 }
