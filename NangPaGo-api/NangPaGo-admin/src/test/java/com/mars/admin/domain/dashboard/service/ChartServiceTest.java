@@ -54,14 +54,17 @@ class ChartServiceTest extends IntegrationTestSupport {
         }
         communityRepository.saveAll(posts);
 
-        String currentMonthKey = YearMonth.now().format(DateTimeFormatter.ofPattern("MM")) + "월";
+        int minMonth = 4;
+        YearMonth currentMonthKey = YearMonth.now();
+        String minMonthKey = currentMonthKey.minusMonths(minMonth - 1)
+            .format(DateTimeFormatter.ofPattern("MM")) + "월";
 
         // when
         List<MonthPostCountDto> totals = chartService.getPostMonthCountTotals();
 
         // then
-        assertThat(totals.size()).isEqualTo(1);
-        assertThat(totals.get(0).month()).contains(currentMonthKey);
-        assertThat(totals.get(0).count()).isEqualTo(5L);
+        assertThat(totals.size()).isEqualTo(minMonth);
+        assertThat(totals.get(0).month()).contains(minMonthKey);
+        assertThat(totals.get(3).count()).isEqualTo(5L);
     }
 }

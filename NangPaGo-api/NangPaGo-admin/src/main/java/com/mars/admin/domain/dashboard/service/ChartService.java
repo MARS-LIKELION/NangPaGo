@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChartService {
 
-    private static int MONTHS = 12;
+    private static int MAX_MONTHS = 12;
+    private static int MIN_MONTHS = 4;
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
 
@@ -54,10 +55,9 @@ public class ChartService {
         List<MonthPostCountDto> monthPostCountDtos = new ArrayList<>();
 
         YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
+        YearMonth fourMonthsAgo = YearMonth.from(now).minusMonths(MIN_MONTHS - 1);
 
-        if (startDate == null) {
-            return monthPostCountDtos;
-        }
+        startDate = startDate.isAfter(fourMonthsAgo) ? fourMonthsAgo : startDate;
 
         for (YearMonth month = startDate; !month.isAfter(now); month = month.plusMonths(1)) {
             monthPostCountDtos.add(MonthPostCountDto.of(month, map.getOrDefault(month, 0L)));
@@ -76,7 +76,7 @@ public class ChartService {
 
     private List<Object[]> getMonthPostCounts() {
         YearMonth now = YearMonth.now();
-        YearMonth startMonth = now.minusMonths(MONTHS - 1);
+        YearMonth startMonth = now.minusMonths(MAX_MONTHS - 1);
 
         LocalDateTime start = startMonth.atDay(1).atStartOfDay();
         LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
@@ -94,7 +94,7 @@ public class ChartService {
 
     private List<Object[]> getMonthRegisterCounts() {
         YearMonth now = YearMonth.now();
-        YearMonth startMonth = now.minusMonths(MONTHS - 1);
+        YearMonth startMonth = now.minusMonths(MAX_MONTHS - 1);
 
         LocalDateTime start = startMonth.atDay(1).atStartOfDay();
         LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
