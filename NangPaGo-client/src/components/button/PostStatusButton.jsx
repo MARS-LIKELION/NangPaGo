@@ -1,20 +1,40 @@
 import { FaHeart, FaRegHeart, FaStar, FaRegStar } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
+import usePostStatus from '../../hooks/usePostStatus';
+import LoginModal from '../modal/LoginModal';
 
-function PostStatusButton({
-  isHeartActive,
-  isStarActive,
-  likeCount,
-  toggleHeart,
-  toggleStar,
-  className = '',
-}) {
+function PostStatusButton({ post, isLoggedIn, className = '' }) {
+  const postStatus = usePostStatus(post, isLoggedIn);
+
+  const {
+    isHeartActive,
+    likeCount,
+    toggleHeart,
+    modalState,
+    setModalState,
+    isStarActive = false,
+    toggleStar = () => {},
+  } = postStatus;
+
   return (
     <div className={`flex items-center justify-between gap-4 ${className}`}>
       {toggleHeart && (
-        <LikeButton isHeartActive={isHeartActive} likeCount={likeCount} toggleHeart={toggleHeart} />
+        <LikeButton
+          isHeartActive={isHeartActive}
+          likeCount={likeCount}
+          toggleHeart={toggleHeart}
+        />
       )}
-      {toggleStar && <FavoriteButton isStarActive={isStarActive} toggleStar={toggleStar} />}
+      {post.type === 'recipe' && (
+        <FavoriteButton isStarActive={isStarActive} toggleStar={toggleStar} />
+      )}
+      {modalState.type === 'login' && (
+        <LoginModal
+          isOpen={true}
+          onClose={() => setModalState({ type: null, data: null })}
+          description={modalState.data}
+        />
+      )}
     </div>
   );
 }

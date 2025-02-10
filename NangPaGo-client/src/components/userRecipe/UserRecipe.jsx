@@ -13,15 +13,6 @@ const formatDate = (date) =>
 
 function UserRecipe({ post, data, isLoggedIn }) {
   if (!data) return <p className="text-center text-gray-500">레시피를 불러오는 중...</p>; // TODO: LoadingSpinner로 통일
-  const {
-    isHeartActive,
-    isStarActive,
-    likeCount,
-    toggleHeart,
-    toggleStar,
-    modalState,
-    setModalState,
-  } = usePostStatus(post, isLoggedIn);
 
   const hasManuals = Array.isArray(data.manuals) && data.manuals.length > 0;
 
@@ -42,9 +33,8 @@ function UserRecipe({ post, data, isLoggedIn }) {
           <div className="flex justify-between items-center mt-6 relative">
             <h1 className="text-2xl font-bold">{data.title}</h1>
             <PostStatusButton
-              isHeartActive={isHeartActive}
-              likeCount={likeCount}
-              toggleHeart={toggleHeart}
+              post={post}
+              isLoggedIn={isLoggedIn}
             />
           </div>
           <div className="mt-2 text-gray-500 text-xs">

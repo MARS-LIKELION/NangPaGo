@@ -1,7 +1,6 @@
 import { Fragment, useState, useEffect } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { IMAGE_STYLES } from '../../common/styles/Image';
-import usePostStatus from '../../hooks/usePostStatus';
 import PostStatusButton from '../button/PostStatusButton';
 
 const formatDate = (date) =>
@@ -20,12 +19,6 @@ const renderContentLines = (content) =>
   ));
 
 function Community({ post, data: community, isLoggedIn }) {
-  const {
-    isHeartActive,
-    likeCount,
-    toggleHeart,
-  } = usePostStatus(post, isLoggedIn);
-
   return (
     <>
       <div className="mt-6 px-4">
@@ -46,9 +39,8 @@ function Community({ post, data: community, isLoggedIn }) {
       </div>
       <div className="mt-2 flex items-center justify-between px-4">
         <PostStatusButton
-          isHeartActive={isHeartActive}
-          likeCount={likeCount}
-          toggleHeart={toggleHeart}
+          post={post}
+          isLoggedIn={isLoggedIn}
         />
       </div>
       <div className="mt-4 px-4">

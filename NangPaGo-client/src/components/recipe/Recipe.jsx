@@ -5,23 +5,8 @@ import IngredientList from './IngredientList';
 import RecipeImage from './RecipeImage';
 import RecipeInfo from './RecipeInfo';
 import PostStatusButton from '../button/PostStatusButton';
-import usePostStatus from '../../hooks/usePostStatus';
-import LoginModal from '../modal/LoginModal';
-
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 
 function Recipe({ post, data: recipe, isLoggedIn }) {
-  const {
-    isHeartActive,
-    isStarActive,
-    likeCount,
-    toggleHeart,
-    toggleStar,
-    modalState,
-    setModalState,
-  } = usePostStatus(post, isLoggedIn);
-
   const rightSectionRef = useRef(null);
   const imageRef = useRef(null);
   const sliderRef = useRef(null);
@@ -70,11 +55,8 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
         />
         <div className="mt-4 md:hidden">
           <PostStatusButton
-            isHeartActive={isHeartActive}
-            isStarActive={isStarActive}
-            likeCount={likeCount}
-            toggleHeart={toggleHeart}
-            toggleStar={toggleStar}
+            post={post}
+            isLoggedIn={isLoggedIn}
             className="w-full"
           />
         </div>
@@ -87,11 +69,8 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
               <RecipeInfo recipe={recipe} />
               <div className="hidden md:flex items-center gap-4">
                 <PostStatusButton
-                  isHeartActive={isHeartActive}
-                  isStarActive={isStarActive}
-                  likeCount={likeCount}
-                  toggleHeart={toggleHeart}
-                  toggleStar={toggleStar}
+                  post={post}
+                  isLoggedIn={isLoggedIn}
                 />
               </div>
             </div>
@@ -129,13 +108,6 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
           </span>
         </div>
       </section>
-      {modalState.type === 'login' && (
-        <LoginModal
-          isOpen={true}
-          onClose={() => setModalState({ type: null, data: null })}
-          description={modalState.data}
-        />
-      )}
     </>
   );
 }
