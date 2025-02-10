@@ -1,5 +1,4 @@
-import { Fragment, useState, useEffect } from 'react';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { Fragment } from 'react';
 import { IMAGE_STYLES } from '../../common/styles/Image';
 import PostStatusButton from '../button/PostStatusButton';
 
@@ -26,22 +25,21 @@ function Community({ post, data: community, isLoggedIn }) {
         <div className="mt-2 flex flex-col text-gray-500 text-xs">
           <span>
             <strong className="mr-2">{community.nickname}</strong>
-              <span>・ {formatDate(community.updatedAt)} </span>
+            <span>・ {formatDate(community.updatedAt)} </span>
           </span>
         </div>
       </div>
-      <div className="mt-4 px-4">
-        <img
-          src={community.imageUrl}
-          alt={community.title}
-          className={IMAGE_STYLES.mainImage}
-        />
+      <div className="w-full px-4">
+        <div className="w-full h-[70vh] overflow-hidden rounded-md flex justify-center items-center bg-gray-50">
+          <img
+            src={community.imageUrl}
+            alt={community.title}
+            className={IMAGE_STYLES.mainImage}
+          />
+        </div>
       </div>
       <div className="mt-2 flex items-center justify-between px-4">
-        <PostStatusButton
-          post={post}
-          isLoggedIn={isLoggedIn}
-        />
+        <PostStatusButton post={post} isLoggedIn={isLoggedIn} />
       </div>
       <div className="mt-4 px-4">
         <p className="text-gray-700 text-sm">

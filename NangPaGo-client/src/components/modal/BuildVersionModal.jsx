@@ -1,6 +1,5 @@
 import React from 'react';
 import Modal from '../common/Modal';
-import PropTypes from 'prop-types';
 
 function BuildVersionModal({ isOpen, onClose, version }) {
   return (

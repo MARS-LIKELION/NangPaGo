@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import usePostStatus from '../../hooks/usePostStatus';
 import CookingStepsSlider from '../userRecipe/CookingStepsSlider';
 import PostStatusButton from '../button/PostStatusButton';
 
