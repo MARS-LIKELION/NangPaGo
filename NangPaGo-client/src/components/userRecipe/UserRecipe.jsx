@@ -2,23 +2,25 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePostStatus from '../../hooks/usePostStatus';
 import CookingStepsSlider from '../userRecipe/CookingStepsSlider';
-import RecipeButton from '../button/RecipeButton';
+import PostStatusButton from '../button/PostStatusButton';
 
-function UserRecipe({ data, isLoggedIn }) {
-  if (!data) return <p className="text-center text-gray-500">레시피를 불러오는 중...</p>;
+const formatDate = (date) =>
+  new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(date));
 
-  const formatDate = (date) =>
-    new Intl.DateTimeFormat('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).format(new Date(date));
-
-  const post = { type: 'user-recipe', id: data.id };
+function UserRecipe({ post, data, isLoggedIn }) {
+  if (!data) return <p className="text-center text-gray-500">레시피를 불러오는 중...</p>; // TODO: LoadingSpinner로 통일
   const {
     isHeartActive,
+    isStarActive,
     likeCount,
     toggleHeart,
+    toggleStar,
+    modalState,
+    setModalState,
   } = usePostStatus(post, isLoggedIn);
 
   const hasManuals = Array.isArray(data.manuals) && data.manuals.length > 0;
@@ -39,11 +41,10 @@ function UserRecipe({ data, isLoggedIn }) {
         <div className="md:w-1/2">
           <div className="flex justify-between items-center mt-6 relative">
             <h1 className="text-2xl font-bold">{data.title}</h1>
-            <RecipeButton
+            <PostStatusButton
               isHeartActive={isHeartActive}
               likeCount={likeCount}
               toggleHeart={toggleHeart}
-              className="ml-4"
             />
           </div>
           <div className="mt-2 text-gray-500 text-xs">

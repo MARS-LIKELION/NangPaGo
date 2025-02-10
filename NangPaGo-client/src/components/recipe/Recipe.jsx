@@ -4,7 +4,7 @@ import NutritionInfo from './NutritionInfo';
 import IngredientList from './IngredientList';
 import RecipeImage from './RecipeImage';
 import RecipeInfo from './RecipeInfo';
-import RecipeButton from '../button/RecipeButton';
+import PostStatusButton from '../button/PostStatusButton';
 import usePostStatus from '../../hooks/usePostStatus';
 import LoginModal from '../modal/LoginModal';
 
@@ -69,7 +69,7 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
           recipeName={recipe.name}
         />
         <div className="mt-4 md:hidden">
-          <RecipeButton
+          <PostStatusButton
             isHeartActive={isHeartActive}
             isStarActive={isStarActive}
             likeCount={likeCount}
@@ -86,7 +86,7 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
             <div className="flex flex-col md:flex-row md:items-start md:justify-between mt-4 md:mt-0">
               <RecipeInfo recipe={recipe} />
               <div className="hidden md:flex items-center gap-4">
-                <RecipeButton
+                <PostStatusButton
                   isHeartActive={isHeartActive}
                   isStarActive={isStarActive}
                   likeCount={likeCount}
