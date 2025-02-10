@@ -1,21 +1,4 @@
 import axiosInstance from './axiosInstance';
-import { PAGE_INDEX, PAGE_SIZE } from '../common/constants/pagination';
-
-export const fetchPosts = async (
-  pageNo = PAGE_INDEX.one,
-  pageSize = PAGE_SIZE.search,
-) => {
-  try {
-    const response = await axiosInstance.get('/api/community/list', {
-      params: { pageNo, pageSize },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(
-      `커뮤니티 목록을 가져오는 중 오류가 발생했습니다: ${error.message}`,
-    );
-  }
-};
 
 export const createCommunity = async (data, file) => {
   const formData = new FormData();

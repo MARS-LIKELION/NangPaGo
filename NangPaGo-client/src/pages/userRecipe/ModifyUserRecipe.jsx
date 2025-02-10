@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { fetchUserRecipeById, updateUserRecipe } from '../../api/userRecipe';
+import { fetchPostById } from '../../api/post';
+import { updateUserRecipe } from '../../api/userRecipe';
 import Header from '../../components/layout/header/Header';
 import Footer from '../../components/layout/Footer';
 import TextInput from '../../components/userRecipe/TextInput';
@@ -41,7 +42,7 @@ function ModifyUserRecipe() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchUserRecipeById(id);
+        const { data } = await fetchPostById({ type: 'user-recipe', id: id });
         setTitle(data.title);
         setContent(data.content);
         setIsPublic(data.isPublic);

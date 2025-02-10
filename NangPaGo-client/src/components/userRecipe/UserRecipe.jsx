@@ -1,4 +1,3 @@
-// UserRecipeDetail.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePostStatus from '../../hooks/usePostStatus';
@@ -9,7 +8,7 @@ import DeleteSuccessModal from '../modal/DeleteSuccessModal';
 import RecipeButton from '../button/RecipeButton';
 import { deleteUserRecipe } from '../../api/userRecipe';
 
-function UserRecipeDetail({ data, isLoggedIn }) {
+function UserRecipe({ data, isLoggedIn }) {
   if (!data) return <p className="text-center text-gray-500">레시피를 불러오는 중...</p>;
 
   const navigate = useNavigate();
@@ -141,4 +140,4 @@ function UserRecipeDetail({ data, isLoggedIn }) {
   );
 }
 
-export default UserRecipeDetail;
+export default UserRecipe;

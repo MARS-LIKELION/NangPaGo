@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { fetchPosts } from '../../api/userRecipe';
+import { fetchPostList } from '../../api/post';
 import UserRecipeCard from '../../components/userRecipe/UserRecipeCard';
 import { PAGE_STYLES } from '../../common/styles/ListPage';
 import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
@@ -21,7 +21,7 @@ function UserRecipeListContent() {
     isFetching.current = true;
 
     try {
-      const response = await fetchPosts(page, pageSize);
+      const response = await fetchPostList("user-recipe", page, pageSize);
       const { content, last } = response.data;
 
       setRecipeList((prev) =>
