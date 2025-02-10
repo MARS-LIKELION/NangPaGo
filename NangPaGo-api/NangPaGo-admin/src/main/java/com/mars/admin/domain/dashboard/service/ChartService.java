@@ -21,6 +21,7 @@ public class ChartService {
 
     private static int MAX_MONTHS = 12;
     private static int MIN_MONTHS = 4;
+    
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
 
@@ -34,19 +35,18 @@ public class ChartService {
     public List<MonthRegisterCountDto> getMonthlyRegisterCounts() {
         YearMonth now = YearMonth.now();
         Map<YearMonth, Long> map = monthRegisterToMap();
-        List<MonthRegisterCountDto> monthPostCountDtos = new ArrayList<>();
+        List<MonthRegisterCountDto> monthRegisterCountDtos = new ArrayList<>();
 
         YearMonth startDate = map.keySet().stream().findFirst().orElse(null);
+        YearMonth fourMonthsAgo = YearMonth.from(now).minusMonths(MIN_MONTHS - 1);
 
-        if (startDate == null) {
-            return monthPostCountDtos;
-        }
+        startDate = startDate.isAfter(fourMonthsAgo) ? fourMonthsAgo : startDate;
 
         for (YearMonth month = startDate; !month.isAfter(now); month = month.plusMonths(1)) {
-            monthPostCountDtos.add(MonthRegisterCountDto.of(month, map.getOrDefault(month, 0L)));
+            monthRegisterCountDtos.add(MonthRegisterCountDto.of(month, map.getOrDefault(month, 0L)));
         }
 
-        return monthPostCountDtos;
+        return monthRegisterCountDtos;
     }
 
     public List<MonthPostCountDto> getPostMonthCountTotals() {
