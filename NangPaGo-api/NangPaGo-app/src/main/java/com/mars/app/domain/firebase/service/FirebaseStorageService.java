@@ -52,6 +52,7 @@ public class FirebaseStorageService {
         if (isValidFile(file)) {
             return previousImageUrl;
         }
+
         String newFileUrl = uploadNewFile(file);
         if (previousImageUrl != null && !previousImageUrl.isBlank()) {
             deleteFileFromFirebase(previousImageUrl);

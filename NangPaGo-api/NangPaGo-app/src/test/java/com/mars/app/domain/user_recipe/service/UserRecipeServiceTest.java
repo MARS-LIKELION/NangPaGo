@@ -1,7 +1,10 @@
 package com.mars.app.domain.user_recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 
+import com.mars.app.domain.firebase.service.FirebaseStorageService;
 import com.mars.app.domain.user_recipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.user_recipe.dto.UserRecipeResponseDto;
 import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
@@ -18,6 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +36,9 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserRecipeService userRecipeService;
+
+    @MockBean
+    private FirebaseStorageService firebaseStorageService;
 
     @DisplayName("유저는 본인의 레시피를 작성할 수 있다.")
     @Test
@@ -71,6 +78,8 @@ class UserRecipeServiceTest extends IntegrationTestSupport {
     @DisplayName("유저는 본인의 레시피를 수정할 수 있다.")
     @Test
     void updateUserRecipe() {
+        doNothing().when(firebaseStorageService).deleteFileFromFirebase(anyString());
+
         User user = User.builder().email("email@example.com").build();
         userRepository.save(user);
 

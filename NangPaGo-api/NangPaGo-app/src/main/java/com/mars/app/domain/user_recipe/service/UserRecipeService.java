@@ -113,9 +113,7 @@ public class UserRecipeService {
     }
 
     private String getUploadedImage(MultipartFile file, String existingImageUrl) {
-        if (file != null && !file.isEmpty()) {
-            return firebaseStorageService.uploadNewFile(file);
-        }
+        firebaseStorageService.uploadNewFile(file);
         return (existingImageUrl == null || existingImageUrl.isBlank())
             ? UserRecipeResponseDto.DEFAULT_IMAGE_URL
             : existingImageUrl;
