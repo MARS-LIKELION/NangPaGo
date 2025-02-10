@@ -1,6 +1,7 @@
 package com.mars.app.domain.recipe.controller;
 
 import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
+import com.mars.app.domain.recipe.dto.RecipeSearchResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.common.dto.page.PageRequestVO;
@@ -44,6 +45,18 @@ public class RecipeController {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(recipeEsService.searchRecipes(userId, keyword, searchType, pageRequestVO));
     }
+
+    @Operation(summary = "키워드로 레시피 검색", description = "검색 시 최소한의 정보만 반환")
+    @GetMapping("/search/keyword")
+    public ResponseDto<Page<RecipeSearchResponseDto>> searchRecipesByKeyword(
+        PageRequestVO pageRequestVO,
+        @RequestParam(name = "keyword") String keyword,
+        @RequestParam(name = "searchType", defaultValue = "NAME") String searchType
+    ) {
+        Page<RecipeSearchResponseDto> results = recipeEsService.searchRecipeByKeyword(pageRequestVO, keyword, searchType);
+        return ResponseDto.of(results);
+    }
+
 
     @Operation(summary = "MySQL 원천 데이터를 ES에 덮어쓰기", description = "ES의 기존 데이터 삭제 후 재생성 (실행 전 주의 필요!!)")
     @PostMapping("/bulk-upload/mysql")

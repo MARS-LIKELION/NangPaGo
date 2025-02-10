@@ -51,6 +51,7 @@ public class SecurityConfig {
     };
     private static final String[] WHITE_LIST_RECIPE = {
         "/api/recipe/search",
+        "/api/recipe/search/keyword",
         "/api/recipe/{id}",
         "/api/image/optimize",
         "/api/recipe/{id}/comment",

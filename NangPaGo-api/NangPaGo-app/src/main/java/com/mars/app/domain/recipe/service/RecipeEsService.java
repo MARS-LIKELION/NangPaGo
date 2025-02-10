@@ -6,6 +6,7 @@ import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
+import com.mars.app.domain.recipe.dto.RecipeSearchResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.exception.NPGExceptionType;
@@ -69,7 +70,8 @@ public class RecipeEsService {
                 .query(query)
                 .highlight(h -> h
                     .fields("name.ngram", f -> f)
-                    .preTags("<em>").postTags("</em>")
+                    .preTags("<em>")
+                    .postTags("</em>")
                 )
                 .sort(sort -> sort
                     .field(FieldSort.of(f -> f
@@ -159,5 +161,36 @@ public class RecipeEsService {
         } catch (Exception e) {
             throw NPGExceptionType.SERVER_ERROR.of("String type recipeId parse to Long is failed (recipeComment)");
         }
+    }
+
+    public Page<RecipeSearchResponseDto> searchRecipeByKeyword(PageRequestVO pageRequestVO, String keyword, String searchType) {
+        Pageable pageable = pageRequestVO.toPageable();
+
+        // 쿼리 빌더 기존꺼 계속 사용
+        EsRecipeSearchQueryBuilder queryBuilder = new EsRecipeSearchQueryBuilder();
+        Query query = queryBuilder.buildSearchQuery(keyword, searchType);
+
+        //하이라이트 추가해서 Elasticsearch 검색 실행
+        SearchResponse<RecipeEs> response = getRecipeEsSearchResponse(query, pageable);
+
+        // 결과를 검색 dto로 매핑
+        List<RecipeSearchResponseDto> dtos = response.hits().hits().stream()
+            .filter(hit -> hit.source() != null)
+            .map(hit -> {
+                RecipeEs source = hit.source();
+                String highlightedName = Optional.ofNullable(hit.highlight())
+                    .map(highlight -> highlight.get("name.ngram"))
+                    .filter(highlights -> !highlights.isEmpty())
+                    .map(highlights -> highlights.get(0))
+                    .orElse(source.getName());
+                return RecipeSearchResponseDto.from(source, highlightedName);
+            })
+            .toList();
+
+        long total = Optional.ofNullable(response.hits().total())
+            .map(totalHits -> Optional.of(totalHits.value()).orElse(0L))
+            .orElse(0L);
+
+        return new PageImpl<>(dtos, pageable, total);
     }
 }
