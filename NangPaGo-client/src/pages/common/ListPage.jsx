@@ -65,15 +65,9 @@ function ListPage({ type }) {
   const renderButton = () => (
     <aside className={BUTTON_STYLES.wrapper}>
       <div className={BUTTON_STYLES.body}>
-        {type === 'user-recipe' && (
+        {type !== 'recipe' && (
           <CreateButton
-            onClick={() => navigate('/user-recipe/create')}
-            isTopButtonVisible={isTopButtonVisible}
-          />
-        )}
-        {type === 'community' && (
-          <CreateButton
-            onClick={() => navigate('/community/create')}
+            onClick={() => navigate(`/${type}/create`)}
             isTopButtonVisible={isTopButtonVisible}
           />
         )}

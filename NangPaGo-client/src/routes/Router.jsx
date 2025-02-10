@@ -121,7 +121,7 @@ const router = createBrowserRouter([
         element: <ListPage type="user-recipe" />
       },
       {
-        path: '/user-recipe/:id',
+        path: ':id',
         element: <DetailPage type="user-recipe" />,
       },
       {
@@ -133,7 +133,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: '/user-recipe/:id/modify',
+        path: ':id/modify',
         element: (
           <AuthenticatedRoute>
             <ModifyUserRecipe />
