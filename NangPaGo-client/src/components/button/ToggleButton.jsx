@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPen, FaTimes } from 'react-icons/fa';
+import { FaPen, FaTimes, FaEllipsisV } from 'react-icons/fa';
 import { BUTTON_STYLES } from '../../common/styles/ListPage';
 
 function ToggleButton({ actions = [] }) {
@@ -22,7 +22,7 @@ function ToggleButton({ actions = [] }) {
         ) : isMenuOpen ? (
           <FaTimes className="text-xl" />
         ) : (
-          <FaPen className="text-lg" />
+          <FaEllipsisV className="text-lg" />
         )}
       </button>
 
