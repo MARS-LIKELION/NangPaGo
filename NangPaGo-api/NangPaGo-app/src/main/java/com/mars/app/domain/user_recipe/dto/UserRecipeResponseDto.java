@@ -14,7 +14,7 @@ public record UserRecipeResponseDto(
     String title,
     String content,
     String mainImageUrl,
-    String email,
+    String nickname,
     int likeCount,
     int commentCount,
     boolean isOwnedByUser,
@@ -34,7 +34,7 @@ public record UserRecipeResponseDto(
             .title(userRecipe.getTitle())
             .content(userRecipe.getContent())
             .mainImageUrl(getImageUrlOrDefault(userRecipe.getMainImageUrl()))
-            .email(maskEmail(userRecipe.getUser().getEmail()))
+            .nickname(userRecipe.getUser().getNickname())
             .likeCount(likeCount)
             .commentCount(commentCount)
             .isOwnedByUser(userRecipe.getUser().getId().equals(userId))
@@ -53,13 +53,6 @@ public record UserRecipeResponseDto(
 
     private static String getImageUrlOrDefault(String imageUrl) {
         return (imageUrl == null || imageUrl.isBlank()) ? DEFAULT_IMAGE_URL : imageUrl;
-    }
-
-    private static String maskEmail(String email) {
-        if (email.indexOf("@") <= 3) {
-            return email.replaceAll("(?<=.).(?=.*@)", "*");
-        }
-        return email.replaceAll("(?<=.{3}).(?=.*@)", "*");
     }
 
     @Builder

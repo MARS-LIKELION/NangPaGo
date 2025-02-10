@@ -16,6 +16,13 @@ function UserRecipeDetail({ data, isLoggedIn }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
+  const formatDate = (date) =>
+    new Intl.DateTimeFormat('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date(date));
+
   const post = { type: 'user-recipe', id: data.id };
   const {
     isHeartActive,
@@ -74,7 +81,7 @@ function UserRecipeDetail({ data, isLoggedIn }) {
         {/* 우측 열: 제목, 내용, 재료 등 */}
         <div className="md:w-1/2">
           <div className="flex justify-between items-center mt-6 relative">
-            <h1 className="text-3xl font-bold">{data.title}</h1>
+            <h1 className="text-2xl font-bold">{data.title}</h1>
             {data.isOwnedByUser && <ToggleButton actions={actions} />}
             <RecipeButton
               isHeartActive={isHeartActive}
@@ -82,6 +89,11 @@ function UserRecipeDetail({ data, isLoggedIn }) {
               toggleHeart={toggleHeart}
               className="ml-4"
             />
+          </div>
+          <div className="mt-2 text-gray-500 text-xs">
+            <strong className="mr-2">{data.nickname}</strong>
+            <span>・</span>
+            <span className="ml-2">{formatDate(data.updatedAt)}</span>
           </div>
           <p className="text-gray-700 mt-4">{data.content}</p>
 
@@ -101,13 +113,13 @@ function UserRecipeDetail({ data, isLoggedIn }) {
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-2">조리 과정</h2>
         {hasManuals ? (
-          <CookingStepsSlider 
-            manuals={data.manuals.map(manual => ({
+          <CookingStepsSlider
+            manuals={data.manuals.map((manual) => ({
               description: manual.description,
-              imageUrl: manual.imageUrl
+              imageUrl: manual.imageUrl,
             }))}
-            manualImages={data.manuals.map(manual => manual.imageUrl)}
-            isUserRecipe={true}  
+            manualImages={data.manuals.map((manual) => manual.imageUrl)}
+            isUserRecipe={true}
           />
         ) : (
           <p className="text-gray-500">조리 과정 정보가 없습니다.</p>

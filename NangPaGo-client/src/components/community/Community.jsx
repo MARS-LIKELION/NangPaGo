@@ -6,8 +6,6 @@ import { IMAGE_STYLES } from '../../common/styles/Image';
 import { deleteCommunity } from '../../api/community';
 import usePostStatus from '../../hooks/usePostStatus';
 
-const maskEmail = (email) => (email ? `${email.slice(0, 3)}***` : '');
-
 const formatDate = (date) =>
   new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',
@@ -76,9 +74,9 @@ function Community({ post, data: community, isLoggedIn }) {
         <h1 className="text-xl font-bold">{community.title}</h1>
         <div className="mt-2 flex flex-col text-gray-500 text-xs">
           <span>
-            <strong>{maskEmail(community.email)}</strong>
+            <strong className="mr-2">{community.nickname}</strong>
+              <span>・ {formatDate(community.updatedAt)} </span>
           </span>
-          <span>{formatDate(community.updatedAt)}</span>
         </div>
       </div>
       <div className="mt-4 px-4">
