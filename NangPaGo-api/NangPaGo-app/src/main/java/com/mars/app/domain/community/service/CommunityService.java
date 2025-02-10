@@ -4,6 +4,7 @@ import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_COMMUNITY;
 import static com.mars.common.exception.NPGExceptionType.NOT_FOUND_USER;
 import static com.mars.common.exception.NPGExceptionType.UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT;
 
+import com.mars.app.domain.community.dto.CommunityListResponseDto;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.app.domain.community.repository.CommunityCommentRepository;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
@@ -44,14 +45,14 @@ public class CommunityService {
         return CommunityResponseDto.of(community, userId);
     }
 
-    public PageResponseDto<CommunityResponseDto> pagesByCommunity(Long userId, PageRequestVO pageRequestVO) {
+    public PageResponseDto<CommunityListResponseDto> pagesByCommunity(Long userId, PageRequestVO pageRequestVO) {
         List<CommunityLike> communityLikes = getCommunityLikesBy(userId);
 
         return PageResponseDto.of((communityRepository.findByIsPublicTrueOrUserId(userId, pageRequestVO.toPageable()))
                 .map(community -> {
                     int likeCount = communityLikeRepository.countByCommunityId(community.getId());
                     int commentCount = communityCommentRepository.countByCommunityId(community.getId());
-                    return CommunityResponseDto.of(community, likeCount, commentCount, userId, communityLikes);
+                    return CommunityListResponseDto.of(community, likeCount, commentCount, communityLikes);
                 })
         );
     }

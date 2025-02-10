@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.mars.app.domain.recipe.dto.comment.RecipeCommentResponseDto;
-import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
-import com.mars.app.domain.recipe.dto.RecipeResponseDto;
+import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.dto.page.PageResponseDto;
@@ -134,14 +133,14 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageResponseDto<RecipeResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeEsListResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), pageRequestVO);
 
         // then
         assertThat(myLikedRecipes)
             .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myLikedRecipes.getContent())
-            .extracting(RecipeResponseDto::name)
+            .extracting(RecipeEsListResponseDto::title)
             .containsExactlyInAnyOrder(
                 "테스트 레시피 1",
                 "테스트 레시피 2"
@@ -166,14 +165,14 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageResponseDto<RecipeFavoriteListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeEsListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), pageRequestVO);
 
         // then
         assertThat(myFavorites)
             .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myFavorites.getContent())
-            .extracting(RecipeFavoriteListResponseDto::name)
+            .extracting(RecipeEsListResponseDto::title)
             .containsExactlyInAnyOrder(
                 "테스트 레시피 1",
                 "테스트 레시피 2"

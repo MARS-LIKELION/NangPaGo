@@ -49,8 +49,8 @@ function ModifyCommunity() {
         setTitle(data.title);
         setContent(data.content);
         setIsPublic(data.isPublic);
-        if (data.imageUrl && data.imageUrl !== DEFAULT_IMAGE_URL) {
-          setImagePreview(data.imageUrl);
+        if (data.mainImageUrl && data.mainImageUrl !== DEFAULT_IMAGE_URL) {
+          setImagePreview(data.mainImageUrl);
         } else {
           setImagePreview(null);
         }

@@ -5,7 +5,7 @@ import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
+import com.mars.app.domain.recipe.dto.RecipeListResponseDto;
 import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteResponseDto;
 import com.mars.app.domain.recipe.service.RecipeFavoriteService;
 import com.mars.common.dto.page.PageRequestVO;
@@ -26,7 +26,7 @@ public class RecipeFavoriteController {
     @Operation(summary = "즐겨찾기 목록 조회")
     @AuthenticatedUser
     @GetMapping("/favorite/list")
-    public ResponseDto<PageResponseDto<RecipeFavoriteListResponseDto>> getFavoriteRecipes(PageRequestVO pageRequestVO) {
+    public ResponseDto<PageResponseDto<RecipeListResponseDto>> getFavoriteRecipes(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(recipeFavoriteService.getFavoriteRecipes(userId, pageRequestVO));
     }

@@ -32,7 +32,7 @@ function Community({ post, data: community, isLoggedIn }) {
       <div className="w-full px-4">
         <div className="w-full h-[70vh] overflow-hidden rounded-md flex justify-center items-center bg-gray-50">
           <img
-            src={community.imageUrl}
+            src={community.mainImageUrl}
             alt={community.title}
             className={IMAGE_STYLES.mainImage}
           />

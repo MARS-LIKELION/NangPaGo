@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { fetchPostList } from '../../api/post';
-import UserRecipeCard from '../../components/userRecipe/UserRecipeCard';
+import ContentCard from '../../components/common/ContentCard';
 import { PAGE_STYLES } from '../../common/styles/ListPage';
 import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
 
@@ -61,10 +61,9 @@ function UserRecipeListContent() {
       <ul className={PAGE_STYLES.list}>
         {recipeList.length > 0 ? (
           recipeList.map((recipe) => (
-            <UserRecipeCard
-              key={recipe.id}
-              item={recipe}
-              onClick={() => navigate(`/user-recipe/${recipe.id}`)}
+            <ContentCard
+              type={'user-recipe'}
+              data={recipe}
             />
           ))
         ) : (

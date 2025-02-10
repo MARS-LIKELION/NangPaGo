@@ -21,7 +21,9 @@ public interface RecipeLikeRepository extends JpaRepository<RecipeLike, Long> {
     @Query("SELECT COUNT(rl) FROM RecipeLike rl WHERE rl.recipe.id = :recipeId")
     int countByRecipeId(@Param("recipeId") Long recipeId);
 
-    Page<RecipeLike> findRecipeLikeByUser(User user, Pageable pageable);
+    @Query("SELECT rl FROM RecipeLike rl WHERE rl.user = :user")
+    Page<RecipeLike> findAllByUser(@Param("user") User user, Pageable pageable);
+
     List<RecipeLike> findRecipeLikesByUserId(Long userId);
     int countByUser(User user);
 }

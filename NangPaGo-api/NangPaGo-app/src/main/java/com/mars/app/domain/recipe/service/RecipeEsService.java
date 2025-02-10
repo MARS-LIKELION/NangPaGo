@@ -5,7 +5,9 @@ import co.elastic.clients.elasticsearch._types.FieldSort;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
+import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.exception.NPGExceptionType;
 import com.mars.app.domain.recipe.repository.RecipeCommentRepository;
 import com.mars.app.domain.recipe.builder.EsRecipeSearchQueryBuilder;
@@ -16,8 +18,6 @@ import com.mars.common.model.recipe.RecipeLike;
 import com.mars.common.model.user.User;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,20 +32,34 @@ public class RecipeEsService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeCommentRepository recipeCommentRepository;
 
-    public Page<RecipeEsResponseDto> searchRecipes(PageRequestVO pageRequestVO, String keyword, String searchType, Long userId) {
+    public PageResponseDto<RecipeEsListResponseDto> searchRecipes(
+        Long userId,
+        String keyword,
+        String searchType,
+        PageRequestVO pageRequestVO
+        ) {
+
         Pageable pageable = pageRequestVO.toPageable();
 
         EsRecipeSearchQueryBuilder queryBuilder = new EsRecipeSearchQueryBuilder();
         Query query = queryBuilder.buildSearchQuery(keyword, searchType);
 
         SearchResponse<RecipeEs> response = getRecipeEsSearchResponse(query, pageable);
-        List<RecipeEsResponseDto> results = getResponseDtos(response, userId);
+        List<RecipeEsListResponseDto> results = getResponseDto(response, userId);
 
         long total = Optional.ofNullable(response.hits().total())
             .map(totalHits -> Optional.of(totalHits.value()).orElse(0L))
             .orElse(0L);
 
-        return new PageImpl<>(results, pageable, total);
+        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
+
+        return new PageResponseDto<>(
+            results,
+            pageable.getPageNumber(),
+            totalPages,
+            total,
+            response.hits().hits().size() < pageable.getPageSize()
+        );
     }
 
     private SearchResponse<RecipeEs> getRecipeEsSearchResponse(Query query, Pageable pageable) {
@@ -70,7 +84,33 @@ public class RecipeEsService {
         }
     }
 
-    private List<RecipeEsResponseDto> getResponseDtos(SearchResponse<RecipeEs> response, Long userId) {
+    private List<RecipeEsListResponseDto> getResponseDto(SearchResponse<RecipeEs> response, Long userId) {
+        List<RecipeLike> recipeLikes = getRecipeLikesBy(userId);
+
+        return response.hits().hits().stream()
+            .filter(hit -> hit.source() != null)
+            .map(hit -> {
+                RecipeEs source = hit.source();
+                String highlightedName = Optional.ofNullable(hit.highlight())
+                    .map(highlight -> highlight.get("name.ngram"))
+                    .filter(highlights -> !highlights.isEmpty())
+                    .map(highlights -> highlights.get(0))
+                    .orElse(source.getName());
+                int likeCount = getRecipeLikeCountBy(source.getId());
+                int commentCount = getRecipeCommentCountBy(source.getId());
+
+                return RecipeEsListResponseDto.of(
+                    source,
+                    highlightedName,
+                    likeCount,
+                    commentCount,
+                    recipeLikes
+                );
+            })
+            .toList();
+    }
+
+    private List<RecipeEsResponseDto> getResponseDtoDetail(SearchResponse<RecipeEs> response, Long userId) { // TODO: MatchScore 보여줄 것인지
         List<RecipeLike> recipeLikes = getRecipeLikesBy(userId);
 
         return response.hits().hits().stream()

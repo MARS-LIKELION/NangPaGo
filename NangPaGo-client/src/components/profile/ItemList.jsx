@@ -57,14 +57,14 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
                 onClick={() => navigate(`/recipe/${item.postId}`)}
               >
                 <img
-                  src={item.imageUrl}
+                  src={item.mainImageUrl}
                   alt={item.title}
                   className="w-full h-full object-cover"
                 />
               </div>
               <p
                 className="line-clamp-1 text-sm cursor-pointer"
-                onClick={() => navigate(`/recipe/${item.id}`)}
+                onClick={() => navigate(`/recipe/${item.postId}`)}
               >
                 {item.title}
               </p>
@@ -87,7 +87,7 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
             className="block overflow-hidden rounded-md shadow-md hover:shadow-xl transition-shadow duration-300 border"
           >
             <img
-              src={item.imageUrl}
+              src={item.mainImageUrl}
               alt={item.title}
               className="w-full h-48 object-cover"
             />
@@ -105,12 +105,12 @@ const ItemList = ({ items, activeTab, hasMore, onLoadMore, isLoading }) => {
             className="block overflow-hidden rounded-md shadow-md hover:shadow-xl transition-shadow duration-300"
           >
             <img
-              src={item.recipeImageUrl || item.mainImage || ''}
-              alt={item.name}
+              src={item.mainImageUrl || ''}
+              alt={item.title}
               className="w-full h-48 object-cover"
             />
             <div className="p-4 flex flex-col gap-2">
-              <h3 className="text-lg font-semibold">{item.name}</h3>
+              <h3 className="text-lg font-semibold">{item.title}</h3>
               <div className="flex flex-row gap-2 text-sm">
                 {item.cookingMethod && (
                   <span className={PAGE_STYLES.tag}>

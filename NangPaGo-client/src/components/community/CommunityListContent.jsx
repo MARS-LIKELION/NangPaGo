@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { fetchPostList } from '../../api/post';
-import CommunityCard from '../../components/community/CommunityCard';
+import ContentCard from '../../components/common/ContentCard';
 import { PAGE_STYLES } from '../../common/styles/ListPage';
 import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
 
@@ -101,10 +101,9 @@ function CommunityListContent() {
   return (
     <ul className={PAGE_STYLES.list}>
       {communityList.map((community) => (
-        <CommunityCard
-          key={community.id}
-          item={community}
-          onClick={() => navigate(`/community/${community.id}`)}
+        <ContentCard
+          type={'community'}
+          data={community}
         />
       ))}
       {hasMore && (

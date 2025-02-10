@@ -3,6 +3,7 @@ package com.mars.app.domain.community.controller;
 import com.mars.app.aop.audit.AuditLog;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.app.domain.community.dto.CommunityListResponseDto;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.community.dto.CommunityRequestDto;
@@ -34,7 +35,7 @@ public class CommunityController {
 
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
-    public ResponseDto<PageResponseDto<CommunityResponseDto>> list(PageRequestVO pageRequestVO) {
+    public ResponseDto<PageResponseDto<CommunityListResponseDto>> list(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(communityService.pagesByCommunity(userId, pageRequestVO));
     }

@@ -4,14 +4,13 @@ package com.mars.app.domain.user.controller;
 import com.mars.app.aop.audit.AuditLog;
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
-import com.mars.app.domain.community.dto.CommunityResponseDto;
+import com.mars.app.domain.community.dto.CommunityListResponseDto;
+import com.mars.app.domain.recipe.dto.comment.RecipeCommentListResponseDto;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.auth.service.OAuth2ProviderTokenService;
 import com.mars.common.dto.page.PageRequestVO;
-import com.mars.app.domain.recipe.dto.comment.RecipeCommentResponseDto;
-import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
-import com.mars.app.domain.recipe.dto.RecipeResponseDto;
+import com.mars.app.domain.recipe.dto.RecipeListResponseDto;
 import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;
 import com.mars.common.dto.user.UserInfoResponseDto;
@@ -73,32 +72,32 @@ public class UserController {
     }
 
     @Operation(summary = "좋아요 한 레시피 조회")
-    @GetMapping("/recipe/like")
-    public ResponseDto<PageResponseDto<RecipeResponseDto>> getMyLikedRecipes(PageRequestVO pageRequestVO) {
+    @GetMapping("/recipe/like/list")
+    public ResponseDto<PageResponseDto<RecipeListResponseDto>> getMyLikedRecipes(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyLikedRecipes(userId, pageRequestVO));
     }
 
     @Operation(summary = "즐겨찾기 한 레시피 조회")
     @AuthenticatedUser
-    @GetMapping("/recipe/favorite")
-    public ResponseDto<PageResponseDto<RecipeFavoriteListResponseDto>> getMyFavorites(PageRequestVO pageRequestVO) {
+    @GetMapping("/recipe/favorite/list")
+    public ResponseDto<PageResponseDto<RecipeListResponseDto>> getMyFavorites(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyFavorites(userId, pageRequestVO));
     }
 
     @Operation(summary = "작성한 게시글 조회")
     @AuthenticatedUser
-    @GetMapping("/community/post")
-    public ResponseDto<PageResponseDto<CommunityResponseDto>> getMyPosts(PageRequestVO pageRequestVO) {
+    @GetMapping("/community/list")
+    public ResponseDto<PageResponseDto<CommunityListResponseDto>> getMyPosts(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyPosts(userId, pageRequestVO));
     }
 
     @Operation(summary = "댓글 조회")
     @AuthenticatedUser
-    @GetMapping("/recipe/comment")
-    public ResponseDto<PageResponseDto<RecipeCommentResponseDto>> getMyComments(PageRequestVO pageRequestVO) {
+    @GetMapping("/recipe/comment/list")
+    public ResponseDto<PageResponseDto<RecipeCommentListResponseDto>> getMyComments(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userService.getMyComments(userId, pageRequestVO));
     }

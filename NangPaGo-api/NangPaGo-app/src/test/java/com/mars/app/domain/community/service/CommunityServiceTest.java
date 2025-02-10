@@ -68,7 +68,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
         // then
         assertThat(result.title()).isEqualTo("테스트제목");
         assertThat(result.content()).isEqualTo("테스트내용");
-        assertThat(result.imageUrl()).isNotBlank();
+        assertThat(result.mainImageUrl()).isNotBlank();
         assertThat(result.nickname()).isEqualTo("kimdonghwan");
         assertThat(result.isPublic()).isTrue();
         assertThat(result.likeCount()).isZero();
@@ -83,7 +83,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
         User user = createUser("kimdonghwan");
         userRepository.save(user);
 
-        // of(user, title, content, imageUrl, isPublic)
+        // of(user, title, content, mainImageUrl, isPublic)
         Community community = Community.of(user, "공개제목", "공개내용", null, true);
         communityRepository.save(community);
 
@@ -177,7 +177,7 @@ class CommunityServiceTest extends IntegrationTestSupport {
         // then
         assertThat(result.title()).isEqualTo("새제목");
         assertThat(result.content()).isEqualTo("새내용");
-        assertThat(result.imageUrl()).isEqualTo("sample.png");
+        assertThat(result.mainImageUrl()).isEqualTo("sample.png");
         assertThat(result.isPublic()).isFalse();
         assertThat(result.isOwnedByUser()).isTrue();
     }

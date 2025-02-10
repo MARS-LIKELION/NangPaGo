@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Header from '../../components/layout/header/Header';
 import IngredientList from '../../components/refrigerator/IngredientList';
 import AddIngredientForm from '../../components/refrigerator/AddIngredientForm';
-import RecipeCard from '../../components/recipe/RecipeCard';
+import ContentCard from '../../components/common/ContentCard';
 import TopButton from '../../components/button/TopButton';
 
 function Refrigerator() {
@@ -51,7 +51,10 @@ function Refrigerator() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recipes.length > 0 ? (
                   recipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
+                    <ContentCard
+                      type={'recipe'}
+                      data={recipe}
+                    />
                   ))
                 ) : (
                   <p className="text-center text-gray-500">

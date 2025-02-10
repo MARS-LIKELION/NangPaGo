@@ -6,7 +6,7 @@ import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.recipe.service.RecipeFavoriteService;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
-import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
+import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
 import com.mars.common.model.favorite.recipe.RecipeFavorite;
 import com.mars.app.domain.recipe.repository.RecipeFavoriteRepository;
 import com.mars.common.model.recipe.Recipe;
@@ -94,14 +94,14 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageResponseDto<RecipeFavoriteListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
+        PageResponseDto<RecipeEsListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
             user.getId(), pageRequestVO);
 
         //then
         assertThat(recipeFavorites)
             .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 4L);
-        assertThat(recipeFavorites.getContent().get(1).name()).isEqualTo("순대국밥");
+        assertThat(recipeFavorites.getContent().get(1).title()).isEqualTo("순대국밥");
     }
 
     @DisplayName("응답 레시피 리스트에 사용자의 좋아요 상태를 포함시킬 수 있다.")
@@ -133,7 +133,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         recipeLikeRepository.save(recipeLike1);
 
         // when
-        PageResponseDto<RecipeFavoriteListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
+        PageResponseDto<RecipeEsListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
             user.getId(), pageRequestVO);
 
         // then

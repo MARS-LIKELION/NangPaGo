@@ -11,7 +11,7 @@ public record CommunityResponseDto(
     Long id,
     String title,
     String content,
-    String imageUrl,
+    String mainImageUrl,
     String nickname,
     int likeCount,
     int commentCount,
@@ -29,7 +29,7 @@ public record CommunityResponseDto(
             .id(community.getId())
             .title(community.getTitle())
             .content(community.getContent())
-            .imageUrl(getImageUrlOrDefault(community.getImageUrl()))
+            .mainImageUrl(getImageUrlOrDefault(community.getImageUrl()))
             .nickname(community.getUser().getNickname())
             .isOwnedByUser(community.getUser().getId().equals(userId))
             .isPublic(community.isPublic())
@@ -38,12 +38,18 @@ public record CommunityResponseDto(
             .build();
     }
 
-    public static CommunityResponseDto of(Community community, int likeCount, int commentCount, Long userId, List<CommunityLike> communityLikes) {
+    public static CommunityResponseDto of(
+        Community community,
+        int likeCount,
+        int commentCount,
+        Long userId,
+        List<CommunityLike> communityLikes
+    ) {
         return CommunityResponseDto.builder()
             .id(community.getId())
             .title(community.getTitle())
             .content(community.getContent())
-            .imageUrl(getImageUrlOrDefault(community.getImageUrl()))
+            .mainImageUrl(getImageUrlOrDefault(community.getImageUrl()))
             .nickname(community.getUser().getNickname())
             .likeCount(likeCount)
             .commentCount(commentCount)

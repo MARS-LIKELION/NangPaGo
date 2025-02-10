@@ -21,10 +21,11 @@ function RecipeSearch() {
     setKeyword('');
   }
 
+  // TODO: 키워드를 클릭 시, 디테일 페이지로 이동해야하는 거 아닌가? (ex, 가지탕수육)
   function handleResultClick(recipe) {
-    setKeyword(recipe.name);
+    setKeyword(recipe.title);
     navigate('/', {
-      state: { searchTerm: recipe.name },
+      state: { searchTerm: recipe.title },
     });
   }
 

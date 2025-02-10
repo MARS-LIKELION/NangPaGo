@@ -2,6 +2,7 @@ package com.mars.app.domain.user_recipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
 import com.mars.app.component.auth.AuthenticationHolder;
+import com.mars.app.domain.user_recipe.dto.UserRecipeListResponseDto;
 import com.mars.common.dto.ResponseDto;
 import com.mars.app.domain.user_recipe.dto.UserRecipeRequestDto;
 import com.mars.app.domain.user_recipe.dto.UserRecipeResponseDto;
@@ -34,9 +35,9 @@ public class UserRecipeController {
 
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
-    public ResponseDto<PageResponseDto<UserRecipeResponseDto>> list(PageRequestVO pageRequestVO) {
+    public ResponseDto<PageResponseDto<UserRecipeListResponseDto>> list(PageRequestVO pageRequestVO) {
         Long userId = AuthenticationHolder.getCurrentUserId();
-        return ResponseDto.of(userRecipeService.getPagedUserRecipes(pageRequestVO, userId));
+        return ResponseDto.of(userRecipeService.getPagedUserRecipes(userId, pageRequestVO));
     }
 
     @Operation(summary = "수정 페이지용 게시물 조회")

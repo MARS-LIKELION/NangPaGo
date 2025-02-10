@@ -10,8 +10,6 @@ public record RecipeCommentResponseDto(
     Long id,
     Long postId,
     String content,
-    String imageUrl,
-    String title,
     String writerName,
     boolean isOwnedByUser,
     LocalDateTime createdAt,
@@ -22,19 +20,10 @@ public record RecipeCommentResponseDto(
             .id(recipeComment.getId())
             .postId(recipeComment.getRecipe().getId())
             .content(recipeComment.getContent())
-            .imageUrl(recipe.getMainImage())
-            .title(recipe.getName())
             .writerName(recipeComment.getUser().getNickname())
             .isOwnedByUser(recipeComment.getUser().getId().equals(userId))
             .createdAt(recipeComment.getCreatedAt())
             .updatedAt(recipeComment.getUpdatedAt())
             .build();
-    }
-
-    private static String maskEmail(String email) {
-        if (email.indexOf("@") <= 3) {
-            return email.replaceAll("(?<=.).(?=.*@)", "*");
-        }
-        return email.replaceAll("(?<=.{3}).(?=.*@)", "*");
     }
 }

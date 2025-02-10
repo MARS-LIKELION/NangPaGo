@@ -1,25 +1,22 @@
 package com.mars.app.domain.user.service;
 
-import com.mars.app.domain.community.dto.CommunityResponseDto;
+import com.mars.app.domain.community.dto.CommunityListResponseDto;
 import com.mars.app.domain.community.repository.CommunityRepository;
+import com.mars.app.domain.recipe.dto.RecipeListResponseDto;
+import com.mars.app.domain.recipe.dto.comment.RecipeCommentListResponseDto;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
 import com.mars.common.exception.NPGExceptionType;
-import com.mars.app.domain.recipe.dto.comment.RecipeCommentResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeCommentRepository;
-import com.mars.app.domain.recipe.dto.favorite.RecipeFavoriteListResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeFavoriteRepository;
-import com.mars.app.domain.recipe.dto.RecipeResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.refrigerator.repository.RefrigeratorRepository;
 import com.mars.common.dto.user.MyPageDto;
 import com.mars.common.dto.user.UserInfoRequestDto;
 import com.mars.common.dto.user.UserInfoResponseDto;
 import com.mars.common.dto.user.UserResponseDto;
-import com.mars.common.model.recipe.Recipe;
 import com.mars.common.model.user.User;
 import com.mars.app.domain.user.repository.UserRepository;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,35 +52,33 @@ public class UserService {
         return MyPageDto.of(user, likeCount, favoriteCount, postCount, commentCount);
     }
 
-    public PageResponseDto<RecipeResponseDto> getMyLikedRecipes(Long userId, PageRequestVO pageRequestVO) {
+    public PageResponseDto<RecipeListResponseDto> getMyLikedRecipes(Long userId, PageRequestVO pageRequestVO) {
         return PageResponseDto.of(
-            recipeLikeRepository.findRecipeLikeByUser(findUserById(userId), pageRequestVO.toPageable())
-                .map(recipeLike -> RecipeResponseDto.from(recipeLike.getRecipe()))
+            recipeLikeRepository.findAllByUser(findUserById(userId), pageRequestVO.toPageable())
+                .map(recipeLike -> RecipeListResponseDto.from(recipeLike.getRecipe()))
         );
     }
 
-    public PageResponseDto<RecipeFavoriteListResponseDto> getMyFavorites(Long userId, PageRequestVO pageRequestVO) {
-        return PageResponseDto.of(recipeFavoriteRepository.findAllByUser(findUserById(userId), pageRequestVO.toPageable())
-                .map(recipeFavorite -> {
-                    Recipe recipe = recipeFavorite.getRecipe();
-                    int likeCount = recipeLikeRepository.countByRecipeId(recipe.getId());
-                    int commentCount = recipeCommentRepository.countByRecipeId(recipe.getId());
-                    return RecipeFavoriteListResponseDto.of(recipe, likeCount, commentCount, new ArrayList<>());
-                })
+    public PageResponseDto<RecipeListResponseDto> getMyFavorites(Long userId, PageRequestVO pageRequestVO) {
+        return PageResponseDto.of(
+            recipeFavoriteRepository.findAllByUser(findUserById(userId), pageRequestVO.toPageable())
+                .map(recipeFavorite -> RecipeListResponseDto.from(recipeFavorite.getRecipe()))
         );
     }
 
-    public PageResponseDto<RecipeCommentResponseDto> getMyComments(Long userId, PageRequestVO pageRequestVO) {
-        return PageResponseDto.of(recipeCommentRepository.findByUserIdWithRecipe(userId, pageRequestVO.toPageable())
+    public PageResponseDto<RecipeCommentListResponseDto> getMyComments(Long userId, PageRequestVO pageRequestVO) {
+        return PageResponseDto.of(
+            recipeCommentRepository.findByUserIdWithRecipe(userId, pageRequestVO.toPageable())
                 .map(recipeComment -> {
-                    return RecipeCommentResponseDto.from(recipeComment, recipeComment.getRecipe(), userId);
+                    return RecipeCommentListResponseDto.of(recipeComment, recipeComment.getRecipe());
                 })
         );
     }
 
-    public PageResponseDto<CommunityResponseDto> getMyPosts(Long userId, PageRequestVO pageRequestVO) {
-        return PageResponseDto.of(communityRepository.findByUserId(userId, pageRequestVO.toPageable())
-            .map(community -> CommunityResponseDto.of(community, userId)));
+    public PageResponseDto<CommunityListResponseDto> getMyPosts(Long userId, PageRequestVO pageRequestVO) {
+        return PageResponseDto.of(
+            communityRepository.findByUserId(userId, pageRequestVO.toPageable())
+            .map(community -> CommunityListResponseDto.from(community)));
     }
 
     public UserInfoResponseDto getUserDetailInfo(Long userId) {

@@ -31,11 +31,11 @@ export const fetchRecommendedPosts = async (
     };
     const response = await axiosInstance.get('/api/recipe/search', { params });
 
-    const { content, last, number } = response.data.data;
-    return { content: content || [], last, number };
+    const { content, currentPage, last, totalItems, totalPages } = response.data.data;
+    return { content: content || [], currentPage, last, totalItems, totalPages };
   } catch (error) {
     console.error('Error fetching recommended recipes:', error);
-    return { content: [], last: true, number: pageNo };
+    return { content: [], currentPage, last, totalItems, totalPages };
   }
 };
 
@@ -48,10 +48,10 @@ export const fetchFavoritePosts = async (page, size) => {
     const response = await axiosInstance.get('/api/recipe/favorite/list', {
       params,
     });
-    const { content, last, number } = response.data.data;
-    return { content: content || [], last, number };
+    const { content, currentPage, last, totalItems, totalPages } = response.data.data;
+    return { content: content || [], currentPage, last, totalItems, totalPages };
   } catch (error) {
     console.error('즐겨찾기한 레시피 목록 조회 실패:', error);
-    return { content: [], last: true, number: page };
+    return { content: [], currentPage, last, totalItems, totalPages };
   }
 };

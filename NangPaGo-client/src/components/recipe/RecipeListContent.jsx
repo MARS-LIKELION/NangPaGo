@@ -1,4 +1,4 @@
-import RecipeCard from './RecipeCard';
+import ContentCard from '../common/ContentCard';
 import { useEffect, useRef, useState } from 'react';
 import { fetchFavoritePosts, fetchRecommendedPosts } from '../../api/recipe';
 import { PAGE_INDEX, PAGE_SIZE } from '../../common/constants/pagination';
@@ -85,7 +85,10 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
     <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {recipes[activeTab]?.length > 0 ? (
         recipes[activeTab].map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
+          <ContentCard
+            type={'recipe'}
+            data={recipe}
+          />
         ))
       ) : (
         <div className="flex items-center justify-center col-span-full text-text-900">

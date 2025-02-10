@@ -16,7 +16,7 @@ public interface UserRecipeCommentRepository extends JpaRepository<UserRecipeCom
     Page<UserRecipeComment> findByUserRecipeId(@Param("userRecipeId") Long userRecipeId, Pageable pageable);
 
 
-    long countByUserRecipeId(Long userRecipeId);
+    int countByUserRecipeId(Long userRecipeId);
 
     @Query("SELECT COUNT(urc) FROM UserRecipeComment urc WHERE urc.userRecipe.id = :userRecipeId AND urc.commentStatus = 'ACTIVE'")
     long countByActiveUserRecipeId(@Param("userRecipeId") Long userRecipeId);
