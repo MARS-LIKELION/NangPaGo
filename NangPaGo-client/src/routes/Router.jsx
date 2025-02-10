@@ -96,7 +96,7 @@ const router = createBrowserRouter([
         element: <DetailPage type="community" />,
       },
       {
-        path: 'new',
+        path: 'create',
         element: (
           <AuthenticatedRoute>
             <CreateCommunity />
@@ -117,12 +117,8 @@ const router = createBrowserRouter([
     path: '/user-recipe',
     children: [
       {
-        path: 'list',
-        element: (
-          <AuthenticatedRoute>
-            <ListPage type="user-recipe" />
-          </AuthenticatedRoute>
-        ),
+        index: true,
+        element: <ListPage type="user-recipe" />
       },
       {
         path: '/user-recipe/:id',

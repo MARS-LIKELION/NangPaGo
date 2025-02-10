@@ -2,18 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePostStatus from '../../hooks/usePostStatus';
 import CookingStepsSlider from '../userRecipe/CookingStepsSlider';
-import ToggleButton from '../button/ToggleButton';
-import DeleteModal from '../modal/DeleteModal';
-import DeleteSuccessModal from '../modal/DeleteSuccessModal';
 import RecipeButton from '../button/RecipeButton';
-import { deleteUserRecipe } from '../../api/userRecipe';
 
 function UserRecipe({ data, isLoggedIn }) {
   if (!data) return <p className="text-center text-gray-500">레시피를 불러오는 중...</p>;
-
-  const navigate = useNavigate();
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const formatDate = (date) =>
     new Intl.DateTimeFormat('ko-KR', {
@@ -28,40 +20,6 @@ function UserRecipe({ data, isLoggedIn }) {
     likeCount,
     toggleHeart,
   } = usePostStatus(post, isLoggedIn);
-
-  const handleCreateClick = () => {
-    navigate('/user-recipe/create', { state: { from: window.location.pathname } });
-  };
-  const handleEditClick = () => {
-    navigate(`/user-recipe/${data.id}/modify`, { state: { from: window.location.pathname } });
-  };
-  const handleDeleteClick = () => {
-    setIsDeleteModalOpen(true);
-  };
-
-  const confirmDelete = async () => {
-    try {
-      await deleteUserRecipe(data.id);
-      setIsDeleteModalOpen(false);
-      setIsSuccessModalOpen(true);
-    } catch (error) {
-      console.error(error);
-      alert('삭제에 실패했습니다.');
-    }
-  };
-
-  const handleSuccessModalClose = () => {
-    setIsSuccessModalOpen(false);
-    navigate('/user-recipe/list');
-  };
-
-  const actions = data.isOwnedByUser
-    ? [
-        { label: '글작성', onClick: handleCreateClick },
-        { label: '글수정', onClick: handleEditClick },
-        { label: '글삭제', onClick: handleDeleteClick }
-      ]
-    : [{ label: '글작성', onClick: handleCreateClick }];
 
   const hasManuals = Array.isArray(data.manuals) && data.manuals.length > 0;
 
@@ -81,7 +39,6 @@ function UserRecipe({ data, isLoggedIn }) {
         <div className="md:w-1/2">
           <div className="flex justify-between items-center mt-6 relative">
             <h1 className="text-2xl font-bold">{data.title}</h1>
-            {data.isOwnedByUser && <ToggleButton actions={actions} />}
             <RecipeButton
               isHeartActive={isHeartActive}
               likeCount={likeCount}
@@ -124,18 +81,6 @@ function UserRecipe({ data, isLoggedIn }) {
           <p className="text-gray-500">조리 과정 정보가 없습니다.</p>
         )}
       </div>
-
-      <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onDelete={confirmDelete}
-      />
-
-      <DeleteSuccessModal
-        isOpen={isSuccessModalOpen}
-        onClose={handleSuccessModalClose}
-        message="레시피가 삭제되었습니다."
-      />
     </div>
   );
 }

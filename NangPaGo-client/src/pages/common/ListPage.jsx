@@ -73,7 +73,7 @@ function ListPage({ type }) {
         )}
         {type === 'community' && (
           <CreateButton
-            onClick={() => navigate('/community/new')}
+            onClick={() => navigate('/community/create')}
             isTopButtonVisible={isTopButtonVisible}
           />
         )}

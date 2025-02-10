@@ -144,7 +144,7 @@ function Header({ isBlocked = false }) {
                 isActive={isActive('/user-recipe')}
                 label="유저 레시피"
                 Icon={BiBlanket}
-                onClick={() => handleLinkClick('/user-recipe/list')}
+                onClick={() => handleLinkClick('/user-recipe')}
               />
               </>
           )}
