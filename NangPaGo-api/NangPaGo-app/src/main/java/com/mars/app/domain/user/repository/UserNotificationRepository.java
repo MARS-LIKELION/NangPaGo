@@ -10,14 +10,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserNotificationRepository extends MongoRepository<UserNotification, String> {
-    @Query("""
+    @Query(value = """
         {
             '$and': [
                 { 'timestamp': { '$gte': ?0 } },
                 { 'userId': ?1 }
             ]
         }
-        """)
+        """,
+        sort = "{ 'timestamp': -1 }")
     List<UserNotification> findNotificationsSince(LocalDateTime timestamp, Long userId);
 
     @Query(value = "{ 'userId': ?0, 'isRead': false }", count = true)
