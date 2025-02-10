@@ -61,7 +61,7 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
           />
         </div>
         <div
-          className="md:w-1/2 md:flex md:flex-col md:justify-between"
+          className="md:w-5/12 md:flex md:flex-col md:justify-between md:ml-auto"
           ref={rightSectionRef}
         >
           <div>
