@@ -27,4 +27,7 @@ public interface UserNotificationRepository extends MongoRepository<UserNotifica
     @Query(value = "{ 'userId': ?0, 'isRead': false }", delete = false)
     @Update("{ '$set': { 'isRead': true }}")
     void markAllAsReadByUserId(Long userId);
+
+    @Query(value = "{ 'userId': ?0 }", delete = true, count = true)
+    long deleteByUserId(Long userId);
 }

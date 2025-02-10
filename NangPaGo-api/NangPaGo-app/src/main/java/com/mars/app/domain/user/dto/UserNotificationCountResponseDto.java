@@ -6,5 +6,9 @@ import lombok.Builder;
 public record UserNotificationCountResponseDto(
     long count
 ) {
-
+    public static UserNotificationCountResponseDto of(long count) {
+        return UserNotificationCountResponseDto.builder()
+            .count(count)
+            .build();
+    }
 }

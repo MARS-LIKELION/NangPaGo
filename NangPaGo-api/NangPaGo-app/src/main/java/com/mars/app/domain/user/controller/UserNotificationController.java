@@ -17,6 +17,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,5 +61,13 @@ public class UserNotificationController {
     public ResponseDto<UserNotificationCountResponseDto> getUnreadNotificationCount() {
         Long userId = AuthenticationHolder.getCurrentUserId();
         return ResponseDto.of(userNotificationService.getUnreadNotificationCount(userId));
+    }
+
+    @Operation(summary = "유저 알림 삭제")
+    @AuthenticatedUser
+    @DeleteMapping
+    public ResponseDto<UserNotificationCountResponseDto> deleteUserNotificationByUserId() {
+        Long userId = AuthenticationHolder.getCurrentUserId();
+        return ResponseDto.of(userNotificationService.deleteUserNotificationBy(userId));
     }
 }

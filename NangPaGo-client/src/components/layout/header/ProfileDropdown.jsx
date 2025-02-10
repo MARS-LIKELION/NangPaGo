@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { HEADER_STYLES } from '../../../common/styles/Header';
-import { BiChevronLeft } from "react-icons/bi";
 import LogoutModal from '../../modal/LogoutModal';
-import { FaRegUser, FaSignOutAlt, FaRegBell } from 'react-icons/fa';
+import { FaRegUser, FaSignOutAlt, FaRegBell, FaRegTrashAlt, FaChevronLeft } from 'react-icons/fa';
 import { getNotificationList } from '../../../api/notification';
 import { useNavigate } from 'react-router-dom';
 
@@ -209,9 +208,19 @@ const NotificationPanel = ({ onBack, notifications, onNotificationsRead }) => {
   return (
     <DropdownContainer width="w-80">
       <div className="px-4 py-2">
-        <button onClick={onBack} className={HEADER_STYLES.back}>
-          <BiChevronLeft size={25} className="mr-auto" />
-        </button>
+        <div className="flex items-center justify-between mt-1 mb-3">
+          <button onClick={onBack} className={HEADER_STYLES.back}>
+            <FaChevronLeft />
+          </button>
+          {notifications.length > 0 && (
+            <button 
+              onClick={() => setNotifications([])} 
+              className={HEADER_STYLES.trashButton}
+            >
+              <FaRegTrashAlt />
+            </button>
+          )}
+        </div>
         {notifications.length > 0 ? (
           <ul className="max-h-60 overflow-y-auto overflow-x-hidden -mr-2 pr-2">
             {notifications.map((notification, index) => (

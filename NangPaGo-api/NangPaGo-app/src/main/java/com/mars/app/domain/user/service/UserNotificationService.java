@@ -45,9 +45,13 @@ public class UserNotificationService {
 
     public UserNotificationCountResponseDto getUnreadNotificationCount(Long userId) {
         long countIsReadFalse = userNotificationRepository.countByUserIdAndIsReadFalse(userId);
-        return UserNotificationCountResponseDto.builder()
-            .count(countIsReadFalse)
-            .build();
+        return UserNotificationCountResponseDto.of(countIsReadFalse);
+    }
+
+    @Transactional
+    public UserNotificationCountResponseDto deleteUserNotificationBy(Long userId) {
+        long deletedCount = userNotificationRepository.deleteByUserId(userId);
+        return UserNotificationCountResponseDto.of(deletedCount);
     }
 
     private String findAuthorNicknameBy(UserNotification userNotification) {
