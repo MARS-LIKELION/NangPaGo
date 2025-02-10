@@ -21,7 +21,7 @@ function RecipeSearch() {
     setKeyword('');
   }
 
-  // TODO: 키워드를 클릭 시, 디테일 페이지로 이동해야하는 거 아닌가? (ex, 가지탕수육)
+  // // TODO: 검색어 클릭 시 목록 vs 상세 피이지 이동? (ex. 가지탕수육)
   function handleResultClick(recipe) {
     setKeyword(recipe.title);
     navigate('/', {
