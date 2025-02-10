@@ -2,11 +2,11 @@ package com.mars.app.domain.favorite.recipe.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.mars.app.domain.recipe.dto.RecipeListResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeLikeRepository;
 import com.mars.app.domain.recipe.service.RecipeFavoriteService;
 import com.mars.common.dto.page.PageResponseDto;
 import com.mars.common.dto.page.PageRequestVO;
-import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
 import com.mars.common.model.favorite.recipe.RecipeFavorite;
 import com.mars.app.domain.recipe.repository.RecipeFavoriteRepository;
 import com.mars.common.model.recipe.Recipe;
@@ -94,7 +94,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageResponseDto<RecipeEsListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
+        PageResponseDto<RecipeListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
             user.getId(), pageRequestVO);
 
         //then
@@ -133,7 +133,7 @@ class RecipeFavoriteServiceTest extends IntegrationTestSupport {
         recipeLikeRepository.save(recipeLike1);
 
         // when
-        PageResponseDto<RecipeEsListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
+        PageResponseDto<RecipeListResponseDto> recipeFavorites = recipeFavoriteService.getFavoriteRecipes(
             user.getId(), pageRequestVO);
 
         // then

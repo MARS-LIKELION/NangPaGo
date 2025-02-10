@@ -3,8 +3,8 @@ package com.mars.app.domain.user.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.mars.app.domain.recipe.dto.comment.RecipeCommentResponseDto;
-import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
+import com.mars.app.domain.recipe.dto.RecipeListResponseDto;
+import com.mars.app.domain.recipe.dto.comment.RecipeCommentListResponseDto;
 import com.mars.app.domain.recipe.repository.RecipeRepository;
 import com.mars.app.support.IntegrationTestSupport;
 import com.mars.common.dto.page.PageResponseDto;
@@ -133,14 +133,14 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageResponseDto<RecipeEsListResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeListResponseDto> myLikedRecipes = userService.getMyLikedRecipes(user.getId(), pageRequestVO);
 
         // then
         assertThat(myLikedRecipes)
             .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myLikedRecipes.getContent())
-            .extracting(RecipeEsListResponseDto::title)
+            .extracting(RecipeListResponseDto::title)
             .containsExactlyInAnyOrder(
                 "테스트 레시피 1",
                 "테스트 레시피 2"
@@ -165,14 +165,14 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageResponseDto<RecipeEsListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeListResponseDto> myFavorites = userService.getMyFavorites(user.getId(), pageRequestVO);
 
         // then
         assertThat(myFavorites)
             .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myFavorites.getContent())
-            .extracting(RecipeEsListResponseDto::title)
+            .extracting(RecipeListResponseDto::title)
             .containsExactlyInAnyOrder(
                 "테스트 레시피 1",
                 "테스트 레시피 2"
@@ -196,14 +196,14 @@ class UserServiceTest extends IntegrationTestSupport {
         PageRequestVO pageRequestVO = PageRequestVO.of(1, 12);
 
         // when
-        PageResponseDto<RecipeCommentResponseDto> myComments = userService.getMyComments(user.getId(), pageRequestVO);
+        PageResponseDto<RecipeCommentListResponseDto> myComments = userService.getMyComments(user.getId(), pageRequestVO);
 
         // then
         assertThat(myComments)
             .extracting(PageResponseDto::getTotalPages, PageResponseDto::getTotalItems)
             .containsExactly(1, 2L);
         assertThat(myComments.getContent())
-            .extracting(RecipeCommentResponseDto::content)
+            .extracting(RecipeCommentListResponseDto::content)
             .containsExactlyInAnyOrder(
                 "테스트 댓글 1",
                 "테스트 댓글 2"
