@@ -5,7 +5,7 @@ function AuthErrorModal({ isOpen, onClose, onConfirm }) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="세션이 만료되었습니다."
+      title="인증 정보가 없습니다."
       buttons={{
         primary: {
           text: '확인',
@@ -13,7 +13,7 @@ function AuthErrorModal({ isOpen, onClose, onConfirm }) {
         }
       }}
     >
-      <p>세션이 만료되어 로그아웃됩니다.</p>
+      <p>인증 정보가 없어 로그아웃됩니다.</p>
     </Modal>
   );
 }

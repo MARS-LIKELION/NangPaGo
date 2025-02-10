@@ -22,12 +22,11 @@ function Modal({ isOpen, onClose, title, description, children, buttons }) {
     e.stopPropagation();
   };
 
-  // 브라우저 뒤로가기 감지 및 강제 리다이렉트
   useEffect(() => {
     const handlePopState = () => {
       if (isOpen) {
-        onClose(); // 모달 닫기
-        window.location.href = '/'; // 원하는 경로로 강제 리다이렉트
+        onClose();
+        window.location.href = '/';
       }
     };
 
@@ -40,7 +39,7 @@ function Modal({ isOpen, onClose, title, description, children, buttons }) {
 
   return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      className="fixed inset-0 flex items-center justify-center"
       onClick={handleBackgroundClick}
     >
       <div

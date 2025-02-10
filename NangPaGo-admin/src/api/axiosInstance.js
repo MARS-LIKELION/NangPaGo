@@ -5,19 +5,21 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// 에러 핸들러 함수 (실제 구현은 다른 파일에서)
-let errorHandler = (error) => console.error(error);
+let navigate;
 
-// 에러 핸들러 설정 함수
-export const setErrorHandler = (handler) => {
-  errorHandler = handler;
+export const setNavigate = (nav) => {
+  navigate = nav;
 };
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && error.response.status === 401) {
-      errorHandler(error);
+      if (navigate) {
+        navigate('/auth-error');
+      } else {
+        window.location.href = '/auth-error';
+      }
     }
     return Promise.reject(error);
   }
