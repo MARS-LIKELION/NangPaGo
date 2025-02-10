@@ -23,6 +23,8 @@ function Modal({ isOpen, onClose, title, description, children, buttons }) {
     }
   };
 
+  const renderButtons = buttons && (primaryButtonText || secondaryButtonText);
+
   return ReactDOM.createPortal(
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
@@ -41,24 +43,26 @@ function Modal({ isOpen, onClose, title, description, children, buttons }) {
           <p className="text-center text-sm text-gray-500">{description}</p>
         )}
         <div>{children}</div>
-        <div className="flex justify-between mt-4">
-          {secondaryButtonText && secondaryButtonAction && (
+        {renderButtons && (
+          <div className="flex justify-between mt-4">
+            {secondaryButtonText && secondaryButtonAction && (
+              <button
+                onClick={secondaryButtonAction}
+                className="bg-gray-300 text-black px-5 py-3 rounded-lg mr-2"
+              >
+                {secondaryButtonText}
+              </button>
+            )}
             <button
-              onClick={secondaryButtonAction}
-              className="bg-gray-300 text-black px-5 py-3 rounded-lg mr-2"
+              onClick={primaryButtonAction}
+              className={`bg-primary text-white px-5 py-3 rounded-lg ${
+                secondaryButtonText ? 'ml-2' : ''
+              }`}
             >
-              {secondaryButtonText}
+              {primaryButtonText}
             </button>
-          )}
-          <button
-            onClick={primaryButtonAction}
-            className={`bg-primary text-white px-5 py-3 rounded-lg ${
-              secondaryButtonText ? 'ml-2' : ''
-            }`}
-          >
-            {primaryButtonText}
-          </button>
-        </div>
+          </div>
+        )}
       </div>
     </div>,
     document.body,
@@ -70,6 +74,7 @@ Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
   children: PropTypes.node,
   title: PropTypes.string,
+  description: PropTypes.string,
   buttons: PropTypes.shape({
     primary: PropTypes.shape({
       text: PropTypes.string,
