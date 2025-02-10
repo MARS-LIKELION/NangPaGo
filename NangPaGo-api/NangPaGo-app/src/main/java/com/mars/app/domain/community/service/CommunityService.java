@@ -70,7 +70,7 @@ public class CommunityService {
 
         String imageUrl = null;
         if (file != null && !file.isEmpty()) {
-            imageUrl = firebaseStorageService.uploadFile(file);
+            imageUrl = firebaseStorageService.uploadNewFile(file);
         }
 
         Community community = Community.of(
@@ -86,27 +86,15 @@ public class CommunityService {
     }
 
     @Transactional
-    public CommunityResponseDto updateCommunity(Long id, CommunityRequestDto requestDto, MultipartFile file,
-        Long userId) {
+    public CommunityResponseDto updateCommunity(Long id, CommunityRequestDto requestDto, MultipartFile file, Long userId) {
         Community community = getCommunity(id);
         validateOwnership(community, userId);
 
-        String imageUrl = community.getImageUrl();
-        if (file != null && !file.isEmpty()) {
-            imageUrl = firebaseStorageService.uploadFile(file);
-        }
-
-        String updatedTitle =
-            (requestDto.title() != null && !requestDto.title().isEmpty()) ? requestDto.title() : community.getTitle();
-        String updatedContent = (requestDto.content() != null && !requestDto.content().isEmpty()) ? requestDto.content()
-            : community.getContent();
-        boolean updatedIsPublic = requestDto.isPublic();
-
         community.update(
-            updatedTitle,
-            updatedContent,
-            updatedIsPublic,
-            imageUrl
+            requestDto.title(),
+            requestDto.content(),
+            requestDto.isPublic(),
+            getUpdatedImageUrl(file, community.getImageUrl())
         );
 
         return CommunityResponseDto.of(community, userId);
@@ -116,13 +104,8 @@ public class CommunityService {
     public void deleteCommunity(Long id, Long userId) {
         Community community = getCommunity(id);
         validateOwnership(community, userId);
+        firebaseStorageService.deleteFileFromFirebase(community.getImageUrl());
         communityRepository.deleteById(id);
-    }
-
-    private List<CommunityLike> getCommunityLikesBy(Long userId) {
-        return userId.equals(User.ANONYMOUS_USER_ID)
-            ? new ArrayList<>()
-            : communityLikeRepository.findCommunityLikesByUserId(userId);
     }
 
     private Community getCommunity(Long id) {
@@ -135,4 +118,18 @@ public class CommunityService {
             throw UNAUTHORIZED_NO_AUTHENTICATION_CONTEXT.of("게시물을 수정/삭제할 권한이 없습니다.");
         }
     }
+
+    private List<CommunityLike> getCommunityLikesBy(Long userId) {
+        return userId.equals(User.ANONYMOUS_USER_ID)
+            ? new ArrayList<>()
+            : communityLikeRepository.findCommunityLikesByUserId(userId);
+    }
+
+    private String getUpdatedImageUrl(MultipartFile file, String previousImageUrl) {
+        if (file == null || file.isEmpty()) {
+            return previousImageUrl;
+        }
+        return firebaseStorageService.updateFile(file, previousImageUrl);
+    }
+
 }

@@ -114,7 +114,7 @@ public class UserRecipeService {
 
     private String getUploadedImage(MultipartFile file, String existingImageUrl) {
         if (file != null && !file.isEmpty()) {
-            return firebaseStorageService.uploadFile(file);
+            return firebaseStorageService.uploadNewFile(file);
         }
         return (existingImageUrl == null || existingImageUrl.isBlank())
             ? UserRecipeResponseDto.DEFAULT_IMAGE_URL
@@ -123,8 +123,8 @@ public class UserRecipeService {
 
     @Transactional
     public UserRecipeResponseDto updateUserRecipe(Long id, UserRecipeRequestDto requestDto,
-                                                  MultipartFile mainFile, List<MultipartFile> otherFiles,
-                                                  Long userId) {
+        MultipartFile mainFile, List<MultipartFile> otherFiles,
+        Long userId) {
         UserRecipe recipe = userRecipeRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("레시피를 찾을 수 없습니다."));
 
@@ -132,13 +132,16 @@ public class UserRecipeService {
             throw new RuntimeException("권한이 없습니다.");
         }
 
+        String previousMainImageUrl = recipe.getMainImageUrl();
+
         String mainImageUrl = (mainFile != null && !mainFile.isEmpty()) ?
-            firebaseStorageService.uploadFile(mainFile) :
-            recipe.getMainImageUrl();
+            firebaseStorageService.updateFile(mainFile, previousMainImageUrl) : previousMainImageUrl;
 
         recipe.update(requestDto.getTitle(), requestDto.getContent(), requestDto.isPublic(), mainImageUrl);
+
         recipe.getIngredients().clear();
         recipe.getIngredients().addAll(buildIngredients(requestDto, recipe));
+
         recipe.getManuals().clear();
         recipe.getManuals().addAll(buildManuals(requestDto, otherFiles, recipe));
 

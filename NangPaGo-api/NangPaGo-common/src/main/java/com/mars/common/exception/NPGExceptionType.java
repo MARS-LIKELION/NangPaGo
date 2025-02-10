@@ -53,6 +53,7 @@ public enum NPGExceptionType {
     SERVER_ERROR_ELASTICSEARCH(HttpStatus.INTERNAL_SERVER_ERROR, "Elasticsearch 서버 에러"),
     SERVER_ERROR_IMAGE_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드 중 서버 오류"),
     SERVER_ERROR_FILE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "Firebase Storage에서 파일을 찾을 수 없습니다."),
+    SERVER_ERROR_FILE_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "Firebase 스토리지에서 기존 이미지 삭제 실패"),
     SERVER_ERROR_RABBITMQ_CONNECTION(HttpStatus.INTERNAL_SERVER_ERROR, "RabbitMQ 연결에 실패했습니다."),
     SERVER_ERROR_SEND_LIKE_COUNT(HttpStatus.INTERNAL_SERVER_ERROR, "좋아요 수 전송 중 오류가 발생했습니다."),
     ;
