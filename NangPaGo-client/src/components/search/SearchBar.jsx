@@ -42,7 +42,7 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
         className="relative flex items-center border border-primary rounded-md bg-white cursor-pointer"
         onClick={handleClick}
       >
-        <div className="w-full px-4 py-2 text-text-400">
+        <div className={`w-full px-4 py-2 ${searchTerm ? 'text-text-800 font-bold' : 'text-text-400'}`}>
           {searchTerm || '레시피 검색...'}
         </div>
         {getIcon()}

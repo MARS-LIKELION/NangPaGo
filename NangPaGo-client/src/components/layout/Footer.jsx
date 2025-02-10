@@ -8,8 +8,8 @@ function Footer() {
   const { version, fetchVersion } = versionFetcher();
 
   return (
-    <footer className="sticky bottom-0 right-0 bg-gray-100 p-4 flex flex-col items-center text-center md:flex-row md:justify-between">
-      <div className="flex gap-4 mb-2 md:mb-0 z-10">
+    <footer className="sticky z-50 bottom-0 right-0 bg-gray-100 p-4 flex flex-col items-center text-center md:flex-row md:justify-between">
+      <div className="flex gap-4 mb-2 md:mb-0">
         <a
           href={FOOTER.GITHUB_LINK}
           target="_blank"
