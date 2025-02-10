@@ -8,14 +8,16 @@ import lombok.Builder;
 public record UserNotificationResponseDto(
     boolean isRead,
     Long postId,
-    String postType,
+    String senderNickname,
+    String eventCode,
     LocalDateTime timestamp
 ) {
-    public static UserNotificationResponseDto from(UserNotification userNotification) {
+    public static UserNotificationResponseDto of(UserNotification userNotification, String senderNickname) {
         return UserNotificationResponseDto.builder()
             .isRead(userNotification.getIsRead())
             .postId(userNotification.getPostId())
-            .postType(userNotification.getPostType())
+            .senderNickname(senderNickname)
+            .eventCode(userNotification.getUserNotificationEventCode())
             .timestamp(userNotification.getTimestamp())
             .build();
     }
