@@ -12,11 +12,11 @@ public record UserNotificationResponseDto(
     String eventCode,
     LocalDateTime timestamp
 ) {
-    public static UserNotificationResponseDto of(UserNotification userNotification, String senderNickname) {
+    public static UserNotificationResponseDto from(UserNotification userNotification) {
         return UserNotificationResponseDto.builder()
             .isRead(userNotification.getIsRead())
             .postId(userNotification.getPostId())
-            .senderNickname(senderNickname)
+            .senderNickname(userNotification.getSenderNickname())
             .eventCode(userNotification.getUserNotificationEventCode())
             .timestamp(userNotification.getTimestamp())
             .build();

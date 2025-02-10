@@ -25,6 +25,7 @@ public class UserNotification {
     private Long userId;
     @NotNull
     private Long senderId;
+    private String senderNickname;
 
     private String postType;
     private Long postId;
@@ -33,17 +34,20 @@ public class UserNotification {
     private LocalDateTime timestamp;
 
     @Builder
-    private UserNotification(UserNotificationEventCode userNotificationEventCode, Long userId, Long senderId, Long postId, LocalDateTime timestamp) {
+    private UserNotification(UserNotificationEventCode userNotificationEventCode,
+        Long userId,
+        Long senderId,
+        String senderNickname,
+        Long postId,
+        LocalDateTime timestamp) {
+
         this.userNotificationEventCode = userNotificationEventCode.getCode();
         this.userId = userId;
         this.senderId = senderId;
+        this.senderNickname = senderNickname;
         this.postType = userNotificationEventCode.getPostType();
         this.postId = postId;
         this.isRead = false;
         this.timestamp = timestamp;
-    }
-
-    public void markAsRead() {
-        this.isRead = true;
     }
 }

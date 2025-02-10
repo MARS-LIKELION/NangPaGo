@@ -4,8 +4,10 @@ import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.dto.UserNotificationMessageDto;
 import com.mars.app.domain.user.event.UserNotificationEvent;
 import com.mars.app.domain.user.repository.UserNotificationRepository;
+import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
 import com.mars.common.exception.NPGExceptionType;
+import com.mars.common.model.user.User;
 import com.mars.common.model.user.UserNotification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -19,6 +21,7 @@ public class UserNotificationMessageConsumer {
 
     private final CommunityRepository communityRepository;
     private final UserRecipeRepository userRecipeRepository;
+    private final UserRepository userRepository;
     private final UserNotificationRepository userNotificationRepository;
     private final ApplicationEventPublisher sseEventPublisher;
 
@@ -26,7 +29,8 @@ public class UserNotificationMessageConsumer {
     @RabbitListener(queues = "#{@userNotificationQueue.name}")
     public void processUserNotificationMessage(UserNotificationMessageDto messageDto) {
         Long receiverId = findReceiverId(messageDto);
-        saveAndPublishNotification(messageDto, receiverId);
+        String senderNickname = findSenderNickname(messageDto);
+        saveUserNotification(messageDto, receiverId, senderNickname);
         publishUserNotificationEvent(messageDto, receiverId);
     }
 
@@ -46,8 +50,14 @@ public class UserNotificationMessageConsumer {
         throw NPGExceptionType.BAD_REQUEST_INVALID_EVENTCODE.of();
     }
 
-    private void saveAndPublishNotification(UserNotificationMessageDto dto, Long receiverId) {
-        UserNotification entity = dto.toEntityWithReceiverId(receiverId);
+    private String findSenderNickname(UserNotificationMessageDto messageDto) {
+        User sender = userRepository.findById(messageDto.senderId())
+            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
+        return sender.getNickname();
+    }
+
+    private void saveUserNotification(UserNotificationMessageDto dto, Long receiverId, String senderNickname) {
+        UserNotification entity = dto.toUserNotification(receiverId, senderNickname);
         userNotificationRepository.save(entity);
     }
 

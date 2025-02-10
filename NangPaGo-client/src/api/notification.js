@@ -9,3 +9,13 @@ export async function getNotificationList() {
     throw error;
   }
 }
+
+export async function deleteNotification() {
+  try {
+    const response = await axiosInstance.delete('/api/user/notification');
+    return response.data.data;
+  } catch (error) {
+    console.error('알림 삭제 실패:', error);
+    throw error;
+  }
+}

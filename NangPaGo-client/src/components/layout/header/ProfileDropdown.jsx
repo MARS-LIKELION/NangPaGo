@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { HEADER_STYLES } from '../../../common/styles/Header';
 import LogoutModal from '../../modal/LogoutModal';
 import { FaRegUser, FaSignOutAlt, FaRegBell, FaRegTrashAlt, FaChevronLeft } from 'react-icons/fa';
-import { getNotificationList } from '../../../api/notification';
+import { getNotificationList, deleteNotification } from '../../../api/notification';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileDropdown = ({
@@ -20,7 +20,6 @@ const ProfileDropdown = ({
   const [notifications, setNotifications] = useState([]);
   const menuRef = useRef(null);
   const notificationCount = unreadCount;
-  const navigate = useNavigate();
 
   const fetchNotifications = async () => {
     try {
@@ -114,6 +113,7 @@ const ProfileDropdown = ({
           <NotificationPanel
             onBack={handleBackClick}
             notifications={notifications}
+            setNotifications={setNotifications}
             onNotificationsRead={onNotificationsRead}
           />
         )}
@@ -185,7 +185,7 @@ const getNotificationMessage = (notification) => {
   }
 };
 
-const NotificationPanel = ({ onBack, notifications, onNotificationsRead }) => {
+const NotificationPanel = ({ onBack, notifications, setNotifications, onNotificationsRead }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -205,6 +205,11 @@ const NotificationPanel = ({ onBack, notifications, onNotificationsRead }) => {
     navigate(path);
   };
 
+  const handleDeleteNotification = async () => {
+    await deleteNotification();
+    setNotifications([]);
+  };
+
   return (
     <DropdownContainer width="w-80">
       <div className="px-4 py-2">
@@ -214,7 +219,7 @@ const NotificationPanel = ({ onBack, notifications, onNotificationsRead }) => {
           </button>
           {notifications.length > 0 && (
             <button 
-              onClick={() => setNotifications([])} 
+              onClick={handleDeleteNotification} 
               className={HEADER_STYLES.trashButton}
             >
               <FaRegTrashAlt />

@@ -1,14 +1,9 @@
 package com.mars.app.domain.user.service;
 
-import com.mars.app.domain.community.repository.CommunityRepository;
 import com.mars.app.domain.user.dto.UserNotificationCountResponseDto;
-import com.mars.app.domain.user.dto.UserNotificationMessageDto;
 import com.mars.app.domain.user.dto.UserNotificationResponseDto;
 import com.mars.app.domain.user.repository.UserNotificationRepository;
-import com.mars.app.domain.user_recipe.repository.UserRecipeRepository;
-import com.mars.common.enums.user.UserNotificationEventCode;
-import com.mars.common.exception.NPGExceptionType;
-import com.mars.common.model.user.User;
+import com.mars.app.domain.user.repository.UserRepository;
 import com.mars.common.model.user.UserNotification;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,8 +18,7 @@ public class UserNotificationService {
     private static final long NOTIFICATION_RETENTION_DAYS = 14;
 
     private final UserNotificationRepository userNotificationRepository;
-    private final CommunityRepository communityRepository;
-    private final UserRecipeRepository userRecipeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public List<UserNotificationResponseDto> getRecentNotifications(Long userId) {
@@ -36,10 +30,7 @@ public class UserNotificationService {
         userNotificationRepository.markAllAsReadByUserId(userId);
 
         return notificationsSince.stream()
-            .map((userNotification) -> {
-                String senderNickname = findAuthorNicknameBy(userNotification);
-                return UserNotificationResponseDto.of(userNotification, senderNickname);
-            })
+            .map(UserNotificationResponseDto::from)
             .toList();
     }
 
@@ -50,26 +41,8 @@ public class UserNotificationService {
 
     @Transactional
     public UserNotificationCountResponseDto deleteUserNotificationBy(Long userId) {
-        long deletedCount = userNotificationRepository.deleteByUserId(userId);
+        long deletedCount = userNotificationRepository.countByUserId(userId);
+        userNotificationRepository.deleteByUserId(userId);
         return UserNotificationCountResponseDto.of(deletedCount);
-    }
-
-    private String findAuthorNicknameBy(UserNotification userNotification) {
-        UserNotificationEventCode eventCode = UserNotificationEventCode.from(
-            userNotification.getUserNotificationEventCode());
-
-        if (eventCode.isCommunityType()) {
-            return communityRepository.findById(userNotification.getPostId())
-                .orElseThrow(NPGExceptionType.NOT_FOUND_COMMUNITY::of)
-                .getUser()
-                .getNickname();
-        }
-        if (eventCode.isUserRecipeType()) {
-            return userRecipeRepository.findById(userNotification.getPostId())
-                .orElseThrow(NPGExceptionType.NOT_FOUND_RECIPE::of)
-                .getUser()
-                .getNickname();
-        }
-        throw NPGExceptionType.BAD_REQUEST_INVALID_EVENTCODE.of();
     }
 }

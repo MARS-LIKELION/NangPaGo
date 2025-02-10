@@ -24,11 +24,12 @@ public record UserNotificationMessageDto(
             .build();
     }
 
-    public UserNotification toEntityWithReceiverId(Long receiverId) {
+    public UserNotification toUserNotification(Long receiverId, String senderNickname) {
         return UserNotification.builder()
             .userNotificationEventCode(this.userNotificationEventCode)
             .userId(receiverId)
             .senderId(this.senderId)
+            .senderNickname(senderNickname)
             .postId(this.postId)
             .timestamp(this.timestamp)
             .build();
