@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { fetchPostList } from '../../api/post';
 import ContentCard from '../../components/common/ContentCard';
@@ -9,7 +8,6 @@ function CommunityListContent() {
   const [communityList, setCommunityList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const navigate = useNavigate();
 
   const observerRef = useRef(null);
   const observerInstance = useRef(null);
@@ -24,7 +22,7 @@ function CommunityListContent() {
     isFetching.current = true;
 
     try {
-      const response = await fetchPostList("community", page, pageSize);
+      const response = await fetchPostList('community', page, pageSize);
       const { content, last } = response.data;
 
       setCommunityList((prev) =>
@@ -101,10 +99,7 @@ function CommunityListContent() {
   return (
     <ul className={PAGE_STYLES.list}>
       {communityList.map((community) => (
-        <ContentCard
-          type={'community'}
-          data={community}
-        />
+        <ContentCard type={'community'} data={community} />
       ))}
       {hasMore && (
         <div ref={observerRef} style={{ height: '20px', opacity: 0 }}></div>

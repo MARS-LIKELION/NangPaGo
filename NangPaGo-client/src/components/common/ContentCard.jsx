@@ -6,7 +6,7 @@ import { PAGE_STYLES } from '../../common/styles/ListPage';
 function ContentCard({ type, data }) {
   return (
     <Link
-      to={`${type}/${data.id}`}
+      to={`/${type}/${data.id}`}
       className="block overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
     >
       <img
@@ -33,10 +33,7 @@ function ContentCard({ type, data }) {
         {type === 'recipe' ? (
           <div className="flex flex-wrap gap-2">
             {data.ingredientsDisplayTag.map((tag, index) => (
-              <span
-                key={index}
-                className={PAGE_STYLES.tag}
-              >
+              <span key={index} className={PAGE_STYLES.tag}>
                 {tag}
               </span>
             ))}
