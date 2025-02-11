@@ -21,7 +21,6 @@ function RecipeSearch() {
     setKeyword('');
   }
 
-  // // TODO: 검색어 클릭 시 목록 vs 상세 피이지 이동? (ex. 가지탕수육)
   function handleResultClick(recipe) {
     setKeyword(recipe.title);
     navigate('/', {

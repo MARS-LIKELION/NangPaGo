@@ -11,7 +11,6 @@ public record UserRecipeListResponseDto(
     String title,
     String content,
     String mainImageUrl,
-//    String nickname, // TODO: 리스트 페이지에 게시물 닉네임을 보여줄지 여부 결정
     int likeCount,
     int commentCount,
     boolean isLiked
