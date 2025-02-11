@@ -20,16 +20,17 @@ public class VisitLog {
     private LocalDateTime timestamp;
 
     @Builder
-    private VisitLog(Long userId, String ip) {
+    private VisitLog(Long userId, String ip, LocalDateTime timestamp) {
         this.userId = userId;
         this.ip = ip;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = timestamp;
     }
 
-    public static VisitLog of(Long userId, String ip) {
+    public static VisitLog of(Long userId, String ip, LocalDateTime timestamp) {
         return VisitLog.builder()
             .userId(userId)
             .ip(ip)
+            .timestamp(timestamp)
             .build();
     }
 }
