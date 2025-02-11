@@ -1,4 +1,4 @@
-package com.mars.app.config.common;
+package com.mars.common.config.common;
 
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;

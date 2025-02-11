@@ -34,6 +34,13 @@ spring:
       connection-timeout: 30000
       max-lifetime: 1500000
 
+  # RabbitMQ
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
   # Table 자동 생성 방지
   jpa:
     hibernate:

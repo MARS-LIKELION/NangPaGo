@@ -1,4 +1,4 @@
-package com.mars.app.config.rabbitmq;
+package com.mars.common.config.rabbitmq;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.mars.app.config.rabbitmq.impl;
 
-import com.mars.app.config.rabbitmq.RabbitMQCommonConfig;
-import com.mars.app.config.rabbitmq.RabbitMQConfig;
+import com.mars.common.config.rabbitmq.RabbitMQCommonConfig;
+import com.mars.common.config.rabbitmq.RabbitMQConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
