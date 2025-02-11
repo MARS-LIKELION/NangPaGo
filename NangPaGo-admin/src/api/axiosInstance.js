@@ -16,7 +16,8 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     if (error.response && error.response.status === 401) {
       if (navigate) {
-        navigate('/auth-error');
+        const errorData = encodeURIComponent(JSON.stringify(error.response.data));
+        navigate(`/auth-error?error=${errorData}`);
       } else {
         window.location.href = '/auth-error';
       }

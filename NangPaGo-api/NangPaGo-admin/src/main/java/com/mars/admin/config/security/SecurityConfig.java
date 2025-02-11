@@ -2,6 +2,7 @@ package com.mars.admin.config.security;
 
 import com.mars.admin.auth.entrypoint.UnauthorizedEntryPoint;
 import com.mars.admin.auth.handler.AdminSuccessHandler;
+import com.mars.admin.auth.handler.AdminFailureHandler;
 import com.mars.admin.auth.service.AdminLogoutSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ public class SecurityConfig {
     };
 
     private final AdminSuccessHandler adminSuccessHandler;
+    private final AdminFailureHandler adminFailureHandler;
     private final AdminLogoutSuccessHandler adminLogoutSuccessHandler;
 
     @Value("${client.host}")
@@ -53,6 +55,7 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .successHandler(adminSuccessHandler)
+                .failureHandler(adminFailureHandler)
             )
             .logout(logout -> logout
                 .logoutUrl("/api/logout")
@@ -61,7 +64,6 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionFixation().changeSessionId() // 세션 고정 보호
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .invalidSessionUrl("/login") // 유효하지 않은 세션 리다이렉트
             )
             .httpBasic(AbstractHttpConfigurer::disable)
             .exceptionHandling(exception -> exception
