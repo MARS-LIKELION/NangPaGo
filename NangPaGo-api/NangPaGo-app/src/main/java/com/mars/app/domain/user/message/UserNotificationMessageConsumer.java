@@ -29,6 +29,10 @@ public class UserNotificationMessageConsumer {
     @RabbitListener(queues = "#{@userNotificationQueue.name}")
     public void processUserNotificationMessage(UserNotificationMessageDto messageDto) {
         Long receiverId = findReceiverId(messageDto);
+        if (isSenderSameAsReceiver(messageDto, receiverId)) {
+            return;
+        }
+
         String senderNickname = findSenderNickname(messageDto);
         saveUserNotification(messageDto, receiverId, senderNickname);
         publishUserNotificationEvent(messageDto, receiverId);
@@ -48,6 +52,10 @@ public class UserNotificationMessageConsumer {
                 .getId();
         }
         throw NPGExceptionType.BAD_REQUEST_INVALID_EVENTCODE.of();
+    }
+
+    private boolean isSenderSameAsReceiver(UserNotificationMessageDto messageDto, Long receiverId) {
+        return messageDto.senderId().equals(receiverId);
     }
 
     private String findSenderNickname(UserNotificationMessageDto messageDto) {
