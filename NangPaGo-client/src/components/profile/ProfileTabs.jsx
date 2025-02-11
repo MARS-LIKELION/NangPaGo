@@ -1,7 +1,7 @@
 import {FaComment, FaFileAlt, FaHeart, FaStar} from 'react-icons/fa';
 
 const ProfileTabs = ({ activeTab, totalCounts, onTabChange }) => (
-  <div className="grid grid-cols-4 border-b">
+  <div className="grid grid-cols-4 border-b mb-4">
     {[
       {
         key: 'likes',
