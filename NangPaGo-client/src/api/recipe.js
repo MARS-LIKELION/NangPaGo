@@ -18,6 +18,24 @@ export const searchPostsByKeyword = async (
   }
 };
 
+// 🔹 새로운 추천 검색 함수 (search/keyword 사용)
+export const fetchSearchSuggestions = async (
+  keyword,
+  pageNo = PAGE_INDEX.one,
+  pageSize = PAGE_SIZE.search,
+  searchType = 'NAME',
+) => {
+  try {
+    const response = await axiosInstance.get('/api/recipe/search/keyword', {
+      params: { pageNo, pageSize, keyword, searchType },
+    });
+    return response.data.data.content;
+  } catch (error) {
+    console.error('추천 검색 요청 실패:', error);
+    return [];
+  }
+};
+
 export const fetchRecommendedPosts = async (
   searchTerm,
   pageNo = PAGE_INDEX.one,
