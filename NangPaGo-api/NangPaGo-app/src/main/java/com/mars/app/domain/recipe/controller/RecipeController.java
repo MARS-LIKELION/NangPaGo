@@ -37,8 +37,8 @@ public class RecipeController {
         return ResponseDto.of(recipeService.recipeById(id));
     }
 
-    @Operation(summary = "추천 레시피 조회, 레시피 검색", description = "keyword 를 비워서 요청하면 '추천 레시피 조회' 동작")
-    @GetMapping("/search")
+    @Operation(summary = "추천 레시피 조회 및 검색", description = "keyword 를 비워서 요청하면 추천 레시피 조회 동작")
+    @GetMapping("/recommendations")
     public ResponseDto<PageResponseDto<RecipeEsListResponseDto>> searchRecipes(
         PageRequestVO pageRequestVO,
         @RequestParam(name = "keyword", required = false) String keyword,
@@ -48,7 +48,7 @@ public class RecipeController {
     }
 
     @Operation(summary = "키워드로 레시피 검색", description = "검색 시 최소한의 정보만 반환")
-    @GetMapping("/search/keyword")
+    @GetMapping("/search")
     public ResponseDto<Page<RecipeSearchResponseDto>> searchRecipesByKeyword(
         PageRequestVO pageRequestVO,
         @RequestParam(name = "keyword") String keyword,
@@ -57,7 +57,6 @@ public class RecipeController {
         Page<RecipeSearchResponseDto> results = recipeEsService.searchRecipeByKeyword(pageRequestVO, keyword, searchType);
         return ResponseDto.of(results);
     }
-
 
     @Operation(summary = "MySQL 원천 데이터를 ES에 덮어쓰기", description = "ES의 기존 데이터 삭제 후 재생성 (실행 전 주의 필요!!)")
     @PostMapping("/bulk-upload/mysql")

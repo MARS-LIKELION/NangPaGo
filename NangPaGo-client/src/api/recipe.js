@@ -30,7 +30,7 @@ export const fetchSearchSuggestions = async (
   searchType = 'NAME',
 ) => {
   try {
-    const response = await axiosInstance.get('/api/recipe/search/keyword', {
+    const response = await axiosInstance.get('/api/recipe/search', {
       params: { pageNo, pageSize, keyword, searchType },
     });
 
@@ -56,7 +56,7 @@ export const fetchRecommendedPosts = async (
       pageSize,
       ...(searchTerm && { keyword: searchTerm, searchType: 'NAME' }),
     };
-    const response = await axiosInstance.get('/api/recipe/search', { params });
+    const response = await axiosInstance.get('/api/recipe/recommendations', { params });
 
     const { content, currentPage, last, totalItems, totalPages } = response.data.data;
     return { content: content || [], currentPage, last, totalItems, totalPages };
@@ -72,9 +72,7 @@ export const fetchFavoritePosts = async (page, size) => {
       pageNo: page,
       pageSize: size,
     };
-    const response = await axiosInstance.get('/api/recipe/favorite/list', {
-      params,
-    });
+    const response = await axiosInstance.get('/api/recipe/favorite/list', { params });
     const { content, currentPage, last, totalItems, totalPages } = response.data.data;
     return { content: content || [], currentPage, last, totalItems, totalPages };
   } catch (error) {
