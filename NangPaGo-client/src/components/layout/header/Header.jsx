@@ -3,12 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../../slices/loginSlice.js';
 import axiosInstance from '../../../api/axiosInstance.js';
-import {
-  CgSmartHomeRefrigerator,
-  CgList,
-  CgProfile,
-  CgLogIn
-} from 'react-icons/cg';
+import { CgList, CgProfile, CgLogIn, CgHome } from 'react-icons/cg';
 import NavItem from './NavItem.jsx';
 import { BiBlanket } from 'react-icons/bi';
 import ProfileDropdown from './ProfileDropdown.jsx';
@@ -130,15 +125,15 @@ function Header({ isBlocked = false }) {
           />
         </div>
         <div className={HEADER_STYLES.navContainer}>
+          <NavItem
+            to="/"
+            isActive={location.pathname === '/'}
+            label="추천 레시피"
+            Icon={CgHome}
+            onClick={() => handleLinkClick('/')}
+          />
           {loginState.isLoggedIn && (
             <>
-            <NavItem
-              to="/refrigerator"
-              isActive={isActive('/refrigerator')}
-              label="냉장고"
-              Icon={CgSmartHomeRefrigerator}
-              onClick={() => handleLinkClick('/refrigerator')}
-            />
             <NavItem
                 to="/user-recipe"
                 isActive={isActive('/user-recipe')}
@@ -157,7 +152,7 @@ function Header({ isBlocked = false }) {
           />
           {loginState.isLoggedIn ? (
             <ProfileDropdown
-              isActive={isActive('/my-page')}
+              isActive={isActive('/my-page') || isActive('/refrigerator')}
               Icon={CgProfile}
               nickname={loginState.nickname}
               unreadCount={unreadCount}

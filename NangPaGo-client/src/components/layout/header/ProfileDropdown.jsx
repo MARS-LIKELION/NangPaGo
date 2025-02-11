@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { HEADER_STYLES } from '../../../common/styles/Header';
 import LogoutModal from '../../modal/LogoutModal';
+import { CgSmartHomeRefrigerator } from 'react-icons/cg';
 import { FaRegUser, FaSignOutAlt, FaRegBell, FaRegTrashAlt, FaChevronLeft } from 'react-icons/fa';
 import { getNotificationList, deleteNotification } from '../../../api/notification';
 import { useNavigate } from 'react-router-dom';
@@ -98,7 +99,7 @@ const ProfileDropdown = ({
             HEADER_STYLES.buttonText,
             (isOpen || notificationOpen || isActive) ? "text-primary" : "text-text-900 group-hover:text-primary"
           )}>
-            프로필
+            MY
           </span>
         </button>
         {isOpen && !notificationOpen && (
@@ -106,6 +107,7 @@ const ProfileDropdown = ({
             notificationCount={notificationCount}
             onNicknameClick={handleNicknameClick}
             onMyPageClick={() => onLinkClick('/my-page')}
+            onRefrigeratorClick={() => onLinkClick('/refrigerator')}
             onLogout={handleLogoutClick}
           />
         )}
@@ -135,13 +137,19 @@ const DropdownContainer = ({ children, width = 'w-48' }) => (
   </div>
 );
 
-const DropdownMenu = ({ notificationCount, onNicknameClick, onMyPageClick, onLogout }) => (
+const DropdownMenu = ({
+  notificationCount,
+  onNicknameClick,
+  onMyPageClick,
+  onRefrigeratorClick,
+  onLogout,
+}) => (
   <DropdownContainer>
     <div className={HEADER_STYLES.dropdownContent}>
       <div className="group">
         <div className={HEADER_STYLES.arrowContainer}></div>
-        <button 
-          onClick={onNicknameClick} 
+        <button
+          onClick={onNicknameClick}
           className={clsx(HEADER_STYLES.dropdownItem, "font-medium")}
         >
           <FaRegBell />
@@ -156,6 +164,10 @@ const DropdownMenu = ({ notificationCount, onNicknameClick, onMyPageClick, onLog
       <button onClick={onMyPageClick} className={HEADER_STYLES.dropdownItem}>
         <FaRegUser />
         마이페이지
+      </button>
+      <button onClick={onRefrigeratorClick} className={HEADER_STYLES.dropdownItem}>
+        <CgSmartHomeRefrigerator />
+        내 냉장고
       </button>
       <div className="border-t border-gray-200">
         <button onClick={onLogout} className={clsx(HEADER_STYLES.dropdownItem, "text-red-400")}>

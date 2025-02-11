@@ -5,6 +5,7 @@ import IngredientList from '../../components/refrigerator/IngredientList';
 import AddIngredientForm from '../../components/refrigerator/AddIngredientForm';
 import ContentCard from '../../components/common/ContentCard';
 import TopButton from '../../components/button/TopButton';
+import { PAGE_STYLES } from '../../common/styles/ListPage.js';
 
 function Refrigerator() {
   const {
@@ -46,9 +47,9 @@ function Refrigerator() {
           </>
         ) : (
           <>
-            <div className="mt-6 flex-grow flex flex-col">
-              <h2 className="text-lg font-medium mb-4">추천 레시피</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex-grow flex flex-col">
+              <div className={PAGE_STYLES.header}> 내 냉장고 재료 기반 - 추천 레시피 </div>
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recipes.length > 0 ? (
                   recipes.map((recipe) => (
                     <ContentCard
