@@ -6,6 +6,9 @@ spring:
 
 server:
   port: ${API_SERVER_PORT}
+  servlet:
+    session:
+      timeout: 30m
 client:
   host: ${CLIENT_HOST}
 

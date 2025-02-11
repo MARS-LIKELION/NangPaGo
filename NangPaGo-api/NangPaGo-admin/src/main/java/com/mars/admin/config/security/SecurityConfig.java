@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @RequiredArgsConstructor
 @Configuration
@@ -56,6 +57,11 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutUrl("/api/logout")
                 .logoutSuccessHandler(adminLogoutSuccessHandler)
+            )
+            .sessionManagement(session -> session
+                .sessionFixation().changeSessionId() // 세션 고정 보호
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .invalidSessionUrl("/login") // 유효하지 않은 세션 리다이렉트
             )
             .httpBasic(AbstractHttpConfigurer::disable)
             .exceptionHandling(exception -> exception
