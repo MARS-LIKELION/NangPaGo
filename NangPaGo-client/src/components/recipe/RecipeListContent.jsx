@@ -23,7 +23,7 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
   const isFetching = useRef(false);
 
   const fetchFunctions = {
-    recommended: (page) => fetchRecommendedPosts(searchTerm, page, pageSize),
+    recommended: (page) => fetchRecommendedPosts("NAME", searchTerm, page, pageSize),
     favorites: (page) => fetchFavoritePosts(page, pageSize),
   };
 

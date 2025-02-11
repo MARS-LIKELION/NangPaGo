@@ -124,7 +124,7 @@ export function useRefrigerator(recipeSize = 12) {
       .map((i) => i.ingredientName);
     const searchTerm = checkedIngredients.join(' ');
 
-    fetchRecommendedPosts(searchTerm, nextPage, recipeSize)
+    fetchRecommendedPosts("INGREDIENTS", searchTerm, nextPage, recipeSize)
       .then((recipeData) => {
         setRecipes((prev) => [...prev, ...recipeData.content]);
         setRecipePage(nextPage);
@@ -155,7 +155,7 @@ export function useRefrigerator(recipeSize = 12) {
     setRecipePage(1);
     setHasMoreRecipes(true);
 
-    fetchRecommendedPosts(searchTerm, 1, recipeSize)
+    fetchRecommendedPosts("INGREDIENTS", searchTerm, 1, recipeSize)
       .then((recipeData) => {
         setRecipes(recipeData.content);
         setHasMoreRecipes(!recipeData.last);

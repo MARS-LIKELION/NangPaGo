@@ -46,6 +46,7 @@ export const fetchSearchSuggestions = async (
 };
 
 export const fetchRecommendedPosts = async (
+  searchType,
   searchTerm,
   pageNo = PAGE_INDEX.one,
   pageSize = PAGE_SIZE.list
@@ -54,7 +55,7 @@ export const fetchRecommendedPosts = async (
     const params = {
       pageNo,
       pageSize,
-      ...(searchTerm && { keyword: searchTerm, searchType: 'NAME' }),
+      ...(searchTerm && { keyword: searchTerm, searchType: searchType }),
     };
     const response = await axiosInstance.get('/api/recipe/recommendations', { params });
 
