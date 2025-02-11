@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import CookingStepsSlider from './CookingStepsSlider';
 import NutritionInfo from './NutritionInfo';
 import IngredientList from './IngredientList';
@@ -11,27 +11,28 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
   const imageRef = useRef(null);
   const sliderRef = useRef(null);
 
+  const adjustImageHeight = useCallback(() => {
+    if (!rightSectionRef.current || !imageRef.current) {
+      return;
+    }
+
+    if (window.innerWidth > 767) {
+      const rightSectionHeight = rightSectionRef.current.offsetHeight;
+      imageRef.current.style.height = `${rightSectionHeight}px`;
+      imageRef.current.style.objectFit = 'cover';
+      return;
+    }
+
+    imageRef.current.style.height = 'auto';
+  }, []);
+
   useEffect(() => {
-    const adjustImageHeight = () => {
-      if (!rightSectionRef.current || !imageRef.current) {
-        return;
-      }
-
-      if (window.innerWidth > 767) {
-        const rightSectionHeight = rightSectionRef.current.offsetHeight;
-        imageRef.current.style.height = `${rightSectionHeight}px`;
-        imageRef.current.style.objectFit = 'cover';
-        return;
-      }
-
-      imageRef.current.style.height = 'auto';
-    };
-
     adjustImageHeight();
     window.addEventListener('resize', adjustImageHeight);
 
     return () => window.removeEventListener('resize', adjustImageHeight);
-  }, []);
+  }, [adjustImageHeight]);
+
 
   useEffect(() => {
     const resetSlider = () => {
@@ -53,13 +54,6 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
           mainImage={recipe.mainImage}
           recipeName={recipe.name}
         />
-        <div className="mt-4 md:hidden">
-          <PostStatusButton
-            post={post}
-            isLoggedIn={isLoggedIn}
-            className="w-full"
-          />
-        </div>
         <div
           className="md:w-5/12 md:flex md:flex-col md:justify-between md:ml-auto"
           ref={rightSectionRef}
@@ -67,11 +61,8 @@ function Recipe({ post, data: recipe, isLoggedIn }) {
           <div>
             <div className="flex flex-col md:flex-row md:items-start md:justify-between mt-4 md:mt-0">
               <RecipeInfo recipe={recipe} />
-              <div className="hidden md:flex items-center gap-4">
-                <PostStatusButton
-                  post={post}
-                  isLoggedIn={isLoggedIn}
-                />
+              <div className="flex items-center gap-4 w-full mt-4 md:mt-0 md:w-auto">
+                <PostStatusButton post={post} isLoggedIn={isLoggedIn} className="w-full md:w-auto" />
               </div>
             </div>
           </div>
