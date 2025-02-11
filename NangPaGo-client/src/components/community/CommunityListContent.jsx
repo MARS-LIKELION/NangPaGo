@@ -98,8 +98,12 @@ function CommunityListContent() {
 
   return (
     <ul className={PAGE_STYLES.list}>
-      {communityList.map((community) => (
-        <ContentCard type={'community'} data={community} />
+      {communityList.map((community, index) => (
+        <ContentCard
+        key={community.id || community.title || `community-${index}`}
+        type={'community'}
+        data={community}
+      />
       ))}
       {hasMore && (
         <div ref={observerRef} style={{ height: '20px', opacity: 0 }}></div>

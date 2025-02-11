@@ -86,8 +86,9 @@ function RecipeListContent({ activeTab, searchTerm = '', isLoggedIn }) {
       {recipes[activeTab]?.length > 0 ? (
         recipes[activeTab].map((recipe) => (
           <ContentCard
+            key={recipe.id}
             type={'recipe'}
-            data={recipe}
+            data={{ ...recipe, title: recipe.title || recipe.name }}
           />
         ))
       ) : (

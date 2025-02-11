@@ -5,9 +5,9 @@ function SearchResult({ results, parseHighlightedName, onResultClick }) {
 
   return (
     <div className="space-y-2">
-      {results.map((recipe) => (
+      {results.map((recipe, index) => (
         <div
-          key={recipe.id}
+          key={recipe.id || recipe.name || recipe.title || `recipe-${index}`}
           onClick={() => onResultClick(recipe)}
           className="p-3 rounded-lg cursor-pointer hover:text-white transition duration-200"
         >

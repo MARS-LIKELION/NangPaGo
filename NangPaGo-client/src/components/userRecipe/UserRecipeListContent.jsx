@@ -62,6 +62,7 @@ function UserRecipeListContent() {
         {recipeList.length > 0 ? (
           recipeList.map((recipe) => (
             <ContentCard
+              key={recipe.id || recipe.title || Math.random()}
               type={'user-recipe'}
               data={recipe}
             />

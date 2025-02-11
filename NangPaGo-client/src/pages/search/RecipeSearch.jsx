@@ -22,16 +22,16 @@ function RecipeSearch() {
   }
 
   function handleResultClick(recipe) {
-    setKeyword(recipe.title);
+    setKeyword(recipe.title || '');
     navigate('/', {
-      state: { searchTerm: recipe.title },
+      state: { searchTerm: recipe.title || '' }, 
     });
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!keyword.trim()) return;
-    fetchSearchResults(keyword); // 🔹 일반 검색 실행
+    fetchSearchResults(keyword);
     navigate('/', {
       state: { searchTerm: keyword },
     });
@@ -48,14 +48,13 @@ function RecipeSearch() {
           <BiArrowBack className="text-text-400 text-2xl" />
         </button>
         <SearchInput
-          value={keyword}
+          value={keyword || ''}
           onChange={handleChange}
           onClear={clearKeyword}
           onSubmit={handleSubmit}
         />
       </div>
 
-      {/* 🔹 추천 검색 결과 표시 */}
       <div className="px-4 py-2">
         <SearchResult
           results={suggestions}
@@ -63,8 +62,7 @@ function RecipeSearch() {
           onResultClick={handleResultClick}
         />
       </div>
-
-      {/* 🔹 일반 검색 결과 표시 */}
+      
       {results.length > 0 && (
         <div className="px-4 py-2">
           <h2 className="text-lg font-semibold mb-2">검색 결과</h2>

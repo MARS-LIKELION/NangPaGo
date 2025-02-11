@@ -11,14 +11,18 @@ export const searchPostsByKeyword = async (
     const response = await axiosInstance.get('/api/recipe/search', {
       params: { pageNo, pageSize, keyword, searchType },
     });
-    return response.data.data.content;
+
+    return response.data.data.content.map((recipe, index) => ({
+      id: recipe.id || `search-${index}`,
+      title: recipe.title || recipe.name,
+      highlightedName: recipe.highlightedName || recipe.name || '',
+    }));
   } catch (error) {
     console.error('레시피 검색 요청 실패:', error);
     return [];
   }
 };
 
-// 🔹 새로운 추천 검색 함수 (search/keyword 사용)
 export const fetchSearchSuggestions = async (
   keyword,
   pageNo = PAGE_INDEX.one,
@@ -29,7 +33,12 @@ export const fetchSearchSuggestions = async (
     const response = await axiosInstance.get('/api/recipe/search/keyword', {
       params: { pageNo, pageSize, keyword, searchType },
     });
-    return response.data.data.content;
+
+    return response.data.data.content.map((recipe, index) => ({
+      id: recipe.id || `suggestion-${index}`,
+      title: recipe.title || recipe.name,
+      highlightedName: recipe.highlightedName || recipe.name || '',
+    }));
   } catch (error) {
     console.error('추천 검색 요청 실패:', error);
     return [];

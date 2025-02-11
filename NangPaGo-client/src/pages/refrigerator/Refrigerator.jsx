@@ -52,6 +52,7 @@ function Refrigerator() {
                 {recipes.length > 0 ? (
                   recipes.map((recipe) => (
                     <ContentCard
+                      key={recipe.id || recipe.name || recipe.title || `recipe-${index}`}
                       type={'recipe'}
                       data={recipe}
                     />
