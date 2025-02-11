@@ -48,7 +48,7 @@ function Refrigerator() {
         ) : (
           <>
             <div className="flex-grow flex flex-col">
-              <div className={PAGE_STYLES.header}> 내 냉장고 재료 기반 - 추천 레시피 </div>
+              <div className={PAGE_STYLES.header}> 추천 레시피 </div>
               <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recipes.length > 0 ? (
                   recipes.map((recipe) => (
