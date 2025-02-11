@@ -1,6 +1,7 @@
 package com.mars.app.domain.user_recipe.controller;
 
 import com.mars.app.aop.auth.AuthenticatedUser;
+import com.mars.app.aop.visit.VisitLog;
 import com.mars.app.component.auth.AuthenticationHolder;
 import com.mars.app.domain.user_recipe.dto.UserRecipeListResponseDto;
 import com.mars.common.dto.ResponseDto;
@@ -33,6 +34,7 @@ public class UserRecipeController {
         return ResponseDto.of(userRecipeService.getUserRecipeById(id, userId));
     }
 
+    @VisitLog
     @Operation(summary = "게시물 목록 조회")
     @GetMapping("/list")
     public ResponseDto<PageResponseDto<UserRecipeListResponseDto>> list(PageRequestVO pageRequestVO) {

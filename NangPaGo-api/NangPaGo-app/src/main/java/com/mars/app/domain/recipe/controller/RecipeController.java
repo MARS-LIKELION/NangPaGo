@@ -1,5 +1,6 @@
 package com.mars.app.domain.recipe.controller;
 
+import com.mars.app.aop.visit.VisitLog;
 import com.mars.app.domain.recipe.dto.RecipeEsListResponseDto;
 import com.mars.app.domain.recipe.dto.RecipeSearchResponseDto;
 import com.mars.common.dto.ResponseDto;
@@ -37,6 +38,7 @@ public class RecipeController {
         return ResponseDto.of(recipeService.recipeById(id));
     }
 
+    @VisitLog
     @Operation(summary = "추천 레시피 조회 및 검색", description = "keyword 를 비워서 요청하면 추천 레시피 조회 동작")
     @GetMapping("/recommendations")
     public ResponseDto<PageResponseDto<RecipeEsListResponseDto>> searchRecipes(
