@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
-import Home from './pages/Home';
+import Dashboard from './pages/Dashboard.jsx';
 import Users from './pages/Users';
 import Audit from './pages/Audit';
 import AuthErrorPage from './components/common/AuthErrorPage';
@@ -26,7 +26,7 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardLayout>
-                <Home />
+                <Dashboard />
               </DashboardLayout>
             </ProtectedRoute>
           }

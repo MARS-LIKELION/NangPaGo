@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import axiosInstance from '../api/axiosInstance.js';
 import {useNavigate} from 'react-router-dom';
+import {SOCIAL_BUTTON_STYLES} from "../common/styles/CommonButton.js";
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -75,11 +76,7 @@ export default function Login() {
             <div>
               <button
                   type="submit"
-                  className="group relative w-full flex 
-                  justify-center py-2 px-4
-                   border border-transparent text-md font-medium 
-                   rounded-md text-white 
-                   bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  className={`${SOCIAL_BUTTON_STYLES.common.btn} group relative w-full flex justify-center py-2 px-4`}
               >
                 로그인
               </button>

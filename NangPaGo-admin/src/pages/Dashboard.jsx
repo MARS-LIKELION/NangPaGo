@@ -58,7 +58,7 @@ const monthlyAverageLoginStats = [
   { time: '23:00', avgLogins: 323 }
 ];
 
-export default function Home() {
+export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState({});
   const [months, setMonths] = useState(11);
 
