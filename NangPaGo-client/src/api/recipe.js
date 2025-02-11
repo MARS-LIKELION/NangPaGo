@@ -5,7 +5,7 @@ export const searchPostsByKeyword = async (
   keyword,
   pageNo = PAGE_INDEX.one,
   pageSize = PAGE_SIZE.search,
-  searchType = 'NAME',
+  searchType = 'NAME'
 ) => {
   try {
     const response = await axiosInstance.get('/api/recipe/search', {
@@ -27,7 +27,7 @@ export const fetchSearchSuggestions = async (
   keyword,
   pageNo = PAGE_INDEX.one,
   pageSize = PAGE_SIZE.search,
-  searchType = 'NAME',
+  searchType = 'NAME'
 ) => {
   try {
     const response = await axiosInstance.get('/api/recipe/search', {
@@ -48,7 +48,7 @@ export const fetchSearchSuggestions = async (
 export const fetchRecommendedPosts = async (
   searchTerm,
   pageNo = PAGE_INDEX.one,
-  pageSize = PAGE_SIZE.list,
+  pageSize = PAGE_SIZE.list
 ) => {
   try {
     const params = {
@@ -62,7 +62,7 @@ export const fetchRecommendedPosts = async (
     return { content: content || [], currentPage, last, totalItems, totalPages };
   } catch (error) {
     console.error('Error fetching recommended recipes:', error);
-    return { content: [], currentPage, last, totalItems, totalPages };
+    return { content: [], currentPage: 1, last: true, totalItems: 0, totalPages: 0 };
   }
 };
 
@@ -77,6 +77,6 @@ export const fetchFavoritePosts = async (page, size) => {
     return { content: content || [], currentPage, last, totalItems, totalPages };
   } catch (error) {
     console.error('즐겨찾기한 레시피 목록 조회 실패:', error);
-    return { content: [], currentPage, last, totalItems, totalPages };
+    return { content: [], currentPage: 1, last: true, totalItems: 0, totalPages: 0 };
   }
 };

@@ -52,7 +52,7 @@ export async function deleteIngredient(ingredientName) {
 export async function searchPostsByIngredient(
   ingredients = [],
   pageNo = PAGE_INDEX.one,
-  pageSize = PAGE_SIZE.list,
+  pageSize = PAGE_SIZE.list
 ) {
   try {
     const keyword = ingredients.join(' ');
@@ -66,7 +66,7 @@ export async function searchPostsByIngredient(
     return response.data;
   } catch (error) {
     throw new Error(
-      `레시피를 가져오는 중 오류가 발생했습니다: ${error.message}`,
+      `레시피를 가져오는 중 오류가 발생했습니다: ${error.message}`
     );
   }
 }

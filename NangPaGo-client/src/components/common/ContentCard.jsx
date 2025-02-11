@@ -31,16 +31,17 @@ function ContentCard({ type, data }) {
         </div>
         <h2 className="text-lg font-semibold truncate">{data.title}</h2>
         {type === 'recipe' ? (
-          <div className="flex flex-wrap gap-2">
-            {data.ingredientsDisplayTag.map((tag, index) => (
-              <span key={index} className={PAGE_STYLES.tag}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-text-600 line-clamp-2">{data.content}</p>
-        )}
+  <div className="flex flex-wrap gap-2">
+    {data.ingredientsDisplayTag?.map((tag, index) => (
+      <span key={index} className={PAGE_STYLES.tag}>
+        {tag}
+      </span>
+    )) || null}
+  </div>
+) : (
+  <p className="text-sm text-text-600 line-clamp-2">{data.content}</p>
+)}
+
       </div>
     </Link>
   );

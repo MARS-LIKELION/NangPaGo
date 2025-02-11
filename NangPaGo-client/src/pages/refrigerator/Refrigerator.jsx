@@ -23,7 +23,7 @@ function Refrigerator() {
 
   const hasChecked = ingredients.some((i) => i.checked);
   const location = useLocation();
-
+  
   return (
     <div className="bg-white shadow-md mx-auto min-h-screen flex flex-col justify-between max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
       <Header />
@@ -50,10 +50,10 @@ function Refrigerator() {
               <h2 className="text-lg font-medium mb-4">추천 레시피</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recipes.length > 0 ? (
-                  recipes.map((recipe) => (
+                  recipes.map((recipe, index) => (
                     <ContentCard
                       key={recipe.id || recipe.name || recipe.title || `recipe-${index}`}
-                      type={'recipe'}
+                      type="recipe"
                       data={recipe}
                     />
                   ))
@@ -74,7 +74,9 @@ function Refrigerator() {
             onClick={handleFindRecipes}
             disabled={!hasChecked}
             className={`w-full py-3 text-lg font-medium ${
-              hasChecked ? '' : 'bg-yellow-200 text-white cursor-not-allowed'
+              hasChecked
+                ? ''
+                : 'bg-yellow-200 text-white cursor-not-allowed'
             }`}
           >
             선택한 재료로 레시피 찾기
@@ -82,7 +84,7 @@ function Refrigerator() {
         ) : (
           <button
             onClick={resetAndGoBack}
-            className="w-full py-3 text-lg font-medium "
+            className="w-full py-3 text-lg font-medium"
           >
             돌아가기
           </button>
