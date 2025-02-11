@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, forwardRef } from 'react';
+import React, { useRef, useState, forwardRef } from 'react';
 import Slider from 'react-slick';
 import CookingSteps from './CookingSteps';
 import SliderArrowButton from '../button/SliderArrowButton.jsx';
@@ -6,42 +6,39 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const CookingStepsSlider = forwardRef(
-  ({ manuals = [], manualImages = [], isUserRecipe = false }, ref) => {
-    const [sliderKey, setSliderKey] = useState(0);
-    const [currentSlide, setCurrentSlide] = useState(0);
+  ({ manuals = [], manualImages = [] }, ref) => {
     const sliderRef = useRef(null);
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [currentSlide, setCurrentSlide] = useState(0);
 
-    useEffect(() => {
-      const handleResize = () => setIsMobile(window.innerWidth < 768);
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    const sliderSettings = {
+      dots: true,
+      infinite: false,
+      draggable: true,
+      slidesToShow: 1,
+      centerMode: true,
+      centerPadding: '10%',
+      beforeChange: (_, next) => setCurrentSlide(next),
+      prevArrow: (
+        <SliderArrowButton
+          direction="left"
+          currentStep={currentSlide + 1}
+          totalSteps={manuals.length}
+        />
+      ),
+      nextArrow: (
+        <SliderArrowButton
+          direction="right"
+          currentStep={currentSlide + 1}
+          totalSteps={manuals.length}
+        />
+      ),
+    };
 
-    useEffect(() => {
-      if (ref && ref.current !== sliderRef.current) {
-        ref.current = sliderRef.current;
-      }
-    }, [ref]);
-
-    useEffect(() => {
-      const handleResize = () => setSliderKey(prevKey => prevKey + 1);
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    useEffect(() => {
-      if (sliderRef.current?.slickGoTo) {
-        sliderRef.current.slickGoTo(currentSlide);
-      }
-    }, [sliderKey, currentSlide]);
-
-    const formattedManuals = manuals;
-
-    if (isMobile) {
-      return (
-        <div className="flex flex-col space-y-4">
-          {formattedManuals.map((step, index) => (
+    return (
+      <div>
+        {/* 모바일 뷰 (TailwindCSS md:hidden) */}
+        <div className="flex flex-col space-y-6 md:hidden">
+          {manuals.map((step, index) => (
             <div key={index}>
               <CookingSteps
                 steps={[step]}
@@ -51,56 +48,36 @@ const CookingStepsSlider = forwardRef(
             </div>
           ))}
         </div>
-      );
-    }
 
-    const sliderSettings = {
-      dots: true,
-      infinite: false,
-      draggable: true,
-      slidesToShow: 1,
-      centerMode: true,
-      centerPadding: '20%',
-      beforeChange: (_, next) => setCurrentSlide(next),
-      prevArrow: (
-        <SliderArrowButton
-          direction="left"
-          currentStep={currentSlide + 1}
-          totalSteps={formattedManuals.length}
-        />
-      ),
-      nextArrow: (
-        <SliderArrowButton
-          direction="right"
-          currentStep={currentSlide + 1}
-          totalSteps={formattedManuals.length}
-        />
-      ),
-    };
-
-    return (
-      <div className="slider-wrapper" style={{ position: 'relative', padding: '50px 0', overflow: 'hidden' }}>
-        <Slider {...sliderSettings} key={sliderKey} ref={sliderRef}>
-          {formattedManuals.map((step, index) => (
-            <div key={index}>
-              <CookingSteps
-                steps={[step]}
-                stepImages={[manualImages[index]]}
-                slideIndex={index}
-              />
-            </div>
-          ))}
-        </Slider>
-        <style jsx global="true">{`
-          .slick-list {
-            overflow-x: hidden !important;
-            overflow-y: visible !important;
-          }
-          .slick-slide > div .cooking-step-card {
-            transform: scale(1);
-            transition: transform 0.5s ease;
-          }
-        `}</style>
+        {/* 데스크톱 뷰 (TailwindCSS hidden md:block) */}
+        <div className="hidden md:block slider-wrapper" style={{ position: 'relative', overflow: 'hidden' }}>
+          <Slider {...sliderSettings} ref={sliderRef}>
+            {manuals.map((step, index) => (
+              <div key={index}>
+                <CookingSteps
+                  steps={[step]}
+                  stepImages={[manualImages[index]]}
+                  slideIndex={index}
+                />
+              </div>
+            ))}
+          </Slider>
+          <style jsx global="true">{`
+            .slick-list {
+              overflow: visible !important;
+            }
+            .slick-slide > div {
+              padding: 10px; /* 슬라이드 간 간격 추가 */
+            }
+            .slick-slide > div .cooking-step-card {
+              transform: scale(0.9);
+              transition: transform 0.3s ease;
+            }
+            .slick-current > div .cooking-step-card {
+              transform: scale(1);
+            }
+          `}</style>
+        </div>
       </div>
     );
   }

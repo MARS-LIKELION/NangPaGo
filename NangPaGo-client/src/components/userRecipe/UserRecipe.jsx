@@ -1,3 +1,4 @@
+import { useEffect, useRef, useCallback } from 'react';
 import CookingStepsSlider from '../userRecipe/CookingStepsSlider';
 import PostStatusButton from '../button/PostStatusButton';
 
@@ -9,53 +10,94 @@ const formatDate = (date) =>
   }).format(new Date(date));
 
 function UserRecipe({ post, data, isLoggedIn }) {
-  if (!data) return <p className="text-center text-gray-500">레시피를 불러오는 중...</p>; // TODO: LoadingSpinner로 통일
+  const rightSectionRef = useRef(null);
+  const imageRef = useRef(null);
+
+  const adjustImageHeight = useCallback(() => {
+    if (!rightSectionRef.current || !imageRef.current) return;
+
+    if (window.innerWidth > 767) {
+      const rightSectionHeight = rightSectionRef.current.offsetHeight;
+      imageRef.current.style.height = `${rightSectionHeight}px`;
+      imageRef.current.style.objectFit = 'cover';
+      return;
+    }
+
+    imageRef.current.style.height = 'auto';
+  }, []);
+
+  useEffect(() => {
+    adjustImageHeight();
+    window.addEventListener('resize', adjustImageHeight);
+
+    return () => window.removeEventListener('resize', adjustImageHeight);
+  }, [adjustImageHeight]);
+
+  if (!data)
+    return (
+      <p className="text-center text-gray-500">레시피를 불러오는 중...</p>
+    );
 
   const hasManuals = Array.isArray(data.manuals) && data.manuals.length > 0;
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 relative">
-      <div className="md:flex md:items-start gap-8">
-        {/* 좌측 열: 대표이미지만 표시 */}
-        <div className="md:w-1/2">
-          <img
-            src={data.mainImageUrl}
-            alt={data.title}
-            className="w-full max-h-80 object-cover rounded-2xl shadow-md mb-6"
-          />
+    <>
+      {/* 첫번째 행 */}
+      <section className="mt-4 px-4 md:flex md:gap-8 md:items-start">
+        {/* 왼쪽 열: 이미지 */}
+        <div className="lg:w-7/12 md:w-1/2">
+          <div className="overflow-hidden rounded-md flex justify-center items-center bg-gray-50 min-h-[160px]">
+            <img
+              ref={imageRef}
+              src={data.mainImageUrl}
+              alt={data.title}
+            />
+          </div>
         </div>
-
-        {/* 우측 열: 제목, 내용, 재료 등 */}
-        <div className="md:w-1/2">
-          <div className="flex justify-between items-center mt-6 relative">
+        {/* 오른쪽 열: 제목, 버튼, 정보 */}
+        <div
+          className="md:w-5/12 md:flex md:flex-col md:justify-between md:ml-auto"
+          ref={rightSectionRef}
+        >
+          {/* 제목과 상태 버튼 */}
+          <div className="flex justify-between items-start mt-4 md:mt-0">
             <h1 className="text-2xl font-bold">{data.title}</h1>
             <PostStatusButton
               post={post}
               isLoggedIn={isLoggedIn}
+              className="w-auto"
             />
           </div>
-          <div className="mt-2 text-gray-500 text-xs">
+
+          {/* 작성자 정보 */}
+          <div className="text-gray-500 text-sm mt-2">
             <strong className="mr-2">{data.nickname}</strong>
             <span>・</span>
             <span className="ml-2">{formatDate(data.updatedAt)}</span>
           </div>
-          <p className="text-gray-700 mt-4">{data.content}</p>
-
-          <h2 className="text-lg font-semibold mt-6 mb-2">재료</h2>
-          <ul className="list-disc list-inside space-y-2">
-            {(data.ingredients || []).map((ingredient, index) => (
-              <li key={index} className="text-gray-700 flex justify-between">
-                <span className="font-semibold">{ingredient.name}</span>
-                <span className="ml-6">{ingredient.amount}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="p-4 rounded-lg shadow-sm mt-2">
+            <h2 className="text-md font-semibold mb-3">재료</h2>
+            <ul className="text-sm list-disc list-inside space-y-2">
+              {(data.ingredients || []).map((ingredient, index) => (
+                <li key={index} className="text-gray-700 flex justify-between">
+                  <span>{ingredient.name}</span>
+                  <span className="text-gray-600">{ingredient.amount || "-"}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-
-      {/* 조리 과정 영역 – 모든 메뉴얼(조리 과정)을 슬라이더로 표시 */}
-      <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-2">조리 과정</h2>
+      </section>
+      {/* 두번째 행: 레시피 소개 */}
+      <section className="mt-4 px-4 md:items-start">
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-sm">
+          <h2 className="text-sm font-semibold mb-2">레시피 소개</h2>
+          <p className="text-gray-700 font-semibold text-base leading-relaxed">{data.content}</p>
+        </div>
+      </section>
+      {/* 세번째 행: 조리 과정 */}
+      <section className="mt-4 px-4 md:items-start p-4">
+        <h2 className="text-xl font-semibold mb-4">조리 과정</h2>
         {hasManuals ? (
           <CookingStepsSlider
             manuals={data.manuals.map((manual) => ({
@@ -63,13 +105,12 @@ function UserRecipe({ post, data, isLoggedIn }) {
               imageUrl: manual.imageUrl,
             }))}
             manualImages={data.manuals.map((manual) => manual.imageUrl)}
-            isUserRecipe={true}
           />
         ) : (
           <p className="text-gray-500">조리 과정 정보가 없습니다.</p>
         )}
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
 

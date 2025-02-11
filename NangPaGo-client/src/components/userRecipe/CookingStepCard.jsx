@@ -1,26 +1,34 @@
 import React from 'react';
 
-function CookingStepCard({ step, image, index, extraClassName = '' }) {
+function CookingStepCard({ step, image, index }) {
   return (
-    <div className={`relative cooking-step-card p-10 border rounded-lg bg-white shadow-md mx-2 ${extraClassName}`}>
-
-      <div className="absolute top-0 left-0 mt-2 ml-3 bg-green-800 text-white px-3 py-1 rounded-full text-sm font-bold">
-        Step {index + 1}
+    <div className="cooking-step-card-container space-y-4">
+      <div
+        className={`relative cooking-step-card p-4 border rounded-lg bg-white shadow-md`}
+      >
+        {/* 이미지 컨테이너 */}
+        {image && (
+          <div className="w-full h-80 flex items-center justify-center">
+            <img
+              src={image}
+              alt={`Step image ${index + 1}`}
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+        )}
       </div>
-      
-      {/* 메뉴얼 설명 */}
-      <p className="text-gray-800 mb-4">{step.description}</p>
-      
-      {image && (
-        // 이미지 컨테이너: 고정 높이를 주어 모든 카드가 동일한 크기로 보이게 하고, overflow‑hidden 제거
-        <div className="w-full h-80 flex items-center justify-center">
-          <img
-            src={image}
-            alt={`Step image ${index + 1}`}
-            className="max-w-full max-h-full object-contain"
-          />
-        </div>
-      )}
+
+      {/* Step 번호와 설명 */}
+      <div
+        className={`step-info-container px-4 grid grid-cols-[auto,1fr] gap-x-4 items-start items-center`}
+      >
+        <span className="bg-green-800 text-white rounded-full text-sm font-bold px-3 py-1 self-start">
+          Step {index + 1}
+        </span>
+        <p className="text-gray-800 text-sm leading-relaxed break-words">
+          {step.description}
+        </p>
+      </div>
     </div>
   );
 }
