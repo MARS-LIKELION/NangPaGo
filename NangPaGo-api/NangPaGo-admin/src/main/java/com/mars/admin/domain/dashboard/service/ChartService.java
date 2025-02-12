@@ -149,16 +149,16 @@ public class ChartService {
     }
 
     private String getGroupedAction(String action) {
-        if (action.startsWith("USER")) {
-            return "회원 활동";
-        }
-        if (action.startsWith("RECIPE")) {
-            return "레시피";
-        }
         if (action.startsWith("USER_RECIPE")) {
             return "유저 레시피";
         }
-        if (action.startsWith("COMMUNITY")) {
+        else if (action.startsWith("USER")) {
+            return "회원 활동";
+        }
+        else if (action.startsWith("RECIPE")) {
+            return "레시피";
+        }
+        else if (action.startsWith("COMMUNITY")) {
             return "커뮤니티";
         }
         return action;
