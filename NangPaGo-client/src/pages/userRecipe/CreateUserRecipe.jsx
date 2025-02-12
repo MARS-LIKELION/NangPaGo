@@ -89,24 +89,25 @@ function CreateUserRecipe() {
       formData.append(`ingredients[${index}].amount`, ing.amount);
     });
 
-    manuals.forEach((manual, index) => {
-      formData.append(`manuals[${index}].step`, String(index + 1));
-      formData.append(`manuals[${index}].description`, manual.description);
-      formData.append(`manuals[${index}].imageUrl`, "");
-    });
-
     if (mainFile) {
       formData.append('mainFile', mainFile);
     }
-    manuals
-      .filter((manual) => manual.description && manual.image)
-      .forEach((manual, index) => {
-        const file = manual.image;
-        const newFile = new File([file], `step${index + 1}_${file.name}`, {
-          type: file.type,
-        });
-        formData.append('otherFiles', newFile);
+
+    manuals.forEach((manual, index) => {
+    formData.append(`manuals[${index}].description`, manual.description || '');
+    formData.append(`manuals[${index}].step`, index + 1);
+
+     if (manual.image) {
+      const file = manual.image;
+      const newFile = new File([file], `step${index + 1}_${file.name}`, {
+        type: file.type,
       });
+      formData.append('otherFiles', newFile);
+    } else {
+      // 파일이 없는 경우에도 빈 값을 명시적으로 추가
+      formData.append(`otherFiles[${index}]`, null);
+    }
+  });
 
     try {
       const responseData = await createUserRecipe(formData);
