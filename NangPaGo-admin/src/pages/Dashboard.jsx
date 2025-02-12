@@ -1,36 +1,10 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ComposedChart, } from 'recharts';
-import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ComposedChart } from 'recharts';
+import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
 import { getDashboardData } from '../api/total';
+import { format, eachDayOfInterval } from 'date-fns';
 
-// 더미 데이터
-const dailyUserStats = [
-  { name: '6/7', users: 0 },
-  { name: '6/8', users: 445 },
-  { name: '6/9', users: 389 },
-  { name: '6/10', users: 401 },
-  { name: '6/11', users: 367 },
-  { name: '6/12', users: 388 },
-  { name: '6/13', users: 152 },
-  { name: '6/14', users: 434 },
-  { name: '6/15', users: 456 },
-  { name: '6/16', users: 390 },
-  { name: '6/17', users: 387 },
-  { name: '6/18', users: 411 },
-  { name: '6/19', users: 394 },
-  { name: '6/20', users: 378 },
-  { name: '6/21', users: 402 },
-  { name: '6/22', users: 445 },
-  { name: '6/23', users: 467 },
-  { name: '6/24', users: 458 },
-  { name: '6/25', users: 398 },
-  { name: '6/26', users: 378 },
-  { name: '6/27', users: 401 },
-  { name: '6/28', users: 423 },
-  { name: '6/29', users: 445 },
-  { name: '6/30', users: 467 }
-];
-
+// 월 평균 로그인 통계 (더미 데이터)
 const monthlyAverageLoginStats = [
   { time: '00:00', avgLogins: 300 },
   { time: '01:00', avgLogins: 98 },
@@ -74,6 +48,35 @@ export default function Dashboard() {
 
     fetchData();
   }, []);
+
+  // 일별 사용자 통계 처리
+  const processedData = (() => {
+    if (!dashboardData.dailyUserStats || !dashboardData.dailyUserStats.length) return [];
+
+    const sortedData = [...dashboardData.dailyUserStats].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+
+    const allDates = eachDayOfInterval({
+      start: new Date(sortedData[0].date),
+      end: new Date(sortedData[sortedData.length - 1].date),
+    }).map((date) => format(date, 'yyyy-MM-dd'));
+
+    const mappedData = allDates.map((date) => {
+      const found = sortedData.find((entry) => entry.date === date);
+      return found || { date, users: 0, unregisteredUsers: 0 };
+    });
+
+    const today = format(new Date(), 'yyyy-MM-dd');
+    if (mappedData[mappedData.length - 1].date !== today) {
+      mappedData.push({ date: today, users: 0, unregisteredUsers: 0 });
+    }
+
+    return mappedData;
+  })();
+
+  const today = new Date().toISOString().split('T')[0]
+  const todayData = dashboardData.dailyUserStats?.find((stat) => stat.date === today) || { users: 0, unregisteredUsers: 0 };
 
   return (
     <div className="p-6">
@@ -122,10 +125,11 @@ export default function Dashboard() {
 
       {/* 그래프 */}
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {/* 월별 회원가입 통계 */}
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입통계</h3>
-            <ComposedChart width={600} height={300} data={dashboardData.monthlyRegisterData}>
+            <ComposedChart width={600} height={300} data={dashboardData.monthlyRegisterData || []}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
@@ -137,10 +141,11 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* 월별 게시글 통계 */}
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 게시글 통계</h3>
-            <BarChart width={600} height={300} data={dashboardData.monthPostCountData}>
+            <BarChart width={600} height={300} data={dashboardData.monthPostCountData || []}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
@@ -151,32 +156,54 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* 일일 접속자 통계 */}
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">일일 접속자 통계</h3>
-            <LineChart width={600} height={300} data={dashboardData.dailyUserStats}>
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 flex justify-between items-center w-[600px]">
+              <span>일일 접속자 수 통계</span>
+              <div className="flex items-center">
+                <div className="mr-4 flex items-center">
+                  <span className="text-xs font-medium text-gray-500">오늘의 로그인 사용자</span>
+                  <div className="ml-2 bg-red-100 text-red-800 rounded-full px-3 py-1 text-sm">
+                    {todayData.users ? `총 ${todayData.users}명` : '0명'}
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-xs font-medium text-gray-500">비로그인 사용자</span>
+                  <div className="ml-2 bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm">
+                    {todayData.unregisteredUsers ? `총 ${todayData.unregisteredUsers}명` : '0명'}
+                  </div>
+                </div>
+              </div>
+            </h3>
+            <LineChart width={600} height={300} data={processedData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
-                tickFormatter={(date) => {
-                  const [month, day] = date.split('/');
-                  return `${month}/${day}`;
-                }}
-                interval={2}
+              <XAxis dataKey="date" />
+              <YAxis
+                allowDecimals={false}
+                domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]}
               />
-              <YAxis />
-              <Tooltip
-                labelFormatter={(date) => {
-                  const [year, month, day] = date.split('-');
-                  return `${year}년 ${month}월 ${day}일`;
-                }}
-              />
+              <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="users" name="접속자 수" stroke="#4f46e5" />
+              <Line
+                type="monotone"
+                dataKey="users"
+                name="로그인 사용자"
+                stroke="#FF0000"
+                dot={(data) => data.value === 0 ? false : true}
+              />
+              <Line
+                type="monotone"
+                dataKey="unregisteredUsers"
+                name="비로그인 사용자"
+                stroke="#0000FF"
+                dot={(data) => data.value === 0 ? false : true}
+              />
             </LineChart>
           </div>
         </div>
 
+        {/* 월 평균 시간대별 사용자 활동 현황 */}
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월 평균 시간대별 사용자 활동 현황</h3>
