@@ -18,9 +18,11 @@ export default function Audit() {
     navigate(`/dashboard/users?searchType=EMAIL&searchKeyword=${email}`);
   };
 
-  const fetchData = async () => {
+  const fetchData = async (newPage = currentPage) => {
     try {
-      const response = await getAuditLogs(currentPage, pageSize);
+      setExpandedRow(null);
+      setCurrentPage(newPage);
+      const response = await getAuditLogs(newPage, pageSize);
       setAuditLogs(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
     } catch (error) {
