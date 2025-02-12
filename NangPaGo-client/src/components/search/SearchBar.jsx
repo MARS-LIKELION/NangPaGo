@@ -15,10 +15,6 @@ function SearchBar({ searchPath, searchTerm = '', onClear }) {
     if (!searchTerm) return;
 
     onClear();
-    navigate('/', {
-      state: { searchTerm: '' },
-      replace: true,
-    });
   };
 
   const getIcon = () => {

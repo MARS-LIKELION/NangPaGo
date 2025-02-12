@@ -81,7 +81,7 @@ function ListPage({ type }) {
   return (
     <div className={PAGE_STYLES.wrapper}>
       <Header />
-      <main className={PAGE_STYLES.body}>
+      <main key={searchTerm} className={PAGE_STYLES.body}>
         {renderHeader()}
         <ContentComponent
           activeTab={activeTab}
