@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import {getAuditLogs} from '../api/audit';
 
 export default function Audit() {
@@ -7,9 +8,14 @@ export default function Audit() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(10);
   const [expandedRow, setExpandedRow] = useState(null);
+  const navigate = useNavigate();
 
   const handleRowClick = (index) => {
     setExpandedRow(expandedRow === index ? null : index);
+  };
+
+  const handleEmailClick = (email) => {
+    navigate(`/dashboard/users?searchType=EMAIL&searchKeyword=${email}`);
   };
 
   const fetchData = async () => {
@@ -100,7 +106,12 @@ export default function Audit() {
                           </div>
                           <div>
                             <span className="font-semibold">Email: </span>
-                            <span>{log.email}</span>
+                            <button
+                              onClick={() => handleEmailClick(log.email)}
+                              className="text-blue-600 hover:underline"
+                            >
+                              {log.email}
+                            </button>
                           </div>
                           <div>
                             <span className="font-semibold">Request DTO: </span>

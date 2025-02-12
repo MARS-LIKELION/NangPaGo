@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getUserList, banUser, unBanUser } from '../api/usermanage';
 import { SOCIAL_BUTTON_STYLES } from '../common/styles/CommonButton.js';
 
@@ -11,7 +12,7 @@ export default function Users() {
   const [actionType, setActionType] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState([]);
   const [selectedProviders, setSelectedProviders] = useState([]);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(0);
   const [sortField, setSortField] = useState('ID');
   const [isAscending, setIsAscending] = useState(true);
   const [dataUpdateFlag, setDataUpdateFlag] = useState(0);
@@ -20,6 +21,8 @@ export default function Users() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [appliedSearchType, setAppliedSearchType] = useState('');
   const [appliedSearchKeyword, setAppliedSearchKeyword] = useState('');
+
+  const location = useLocation();
 
   const userStatuses = [
     { value: 'ACTIVE', label: '정상' },
@@ -94,6 +97,13 @@ export default function Users() {
 
   const fetchData = async () => {
     try {
+      const params = new URLSearchParams(location.search);
+      const typeFromUrl = params.get('searchType');
+      const keywordFromUrl = params.get('searchKeyword');
+
+      if (typeFromUrl) setSearchType(typeFromUrl);
+      if (keywordFromUrl) setSearchKeyword(keywordFromUrl);
+
       const sortType = `${sortField}_${isAscending ? 'ASC' : 'DESC'}`;
       const response = await getUserList(
         currentPage,
@@ -101,8 +111,8 @@ export default function Users() {
         selectedStatuses,
         selectedProviders,
         pageSize,
-        appliedSearchType,
-        appliedSearchKeyword
+        typeFromUrl || appliedSearchType,
+        keywordFromUrl || appliedSearchKeyword
       );
       setUsers(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
@@ -113,7 +123,7 @@ export default function Users() {
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, isAscending, sortField, selectedStatuses, selectedProviders, dataUpdateFlag, appliedSearchType, appliedSearchKeyword]);
+  }, [currentPage, isAscending, sortField, selectedStatuses, selectedProviders, dataUpdateFlag, appliedSearchType, appliedSearchKeyword, location.search]);
 
   return (
     <div className="p-6">
@@ -267,7 +277,8 @@ export default function Users() {
                 <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.updatedAt}</td>
                 <td className="px-4 py-2 text-sm text-gray-700 w-[120px]">
                   {user.userStatus === 'WITHDRAWN' ? (
-                    <div className="text-gray-500 px-2 py-1.5 w-[100px] overflow-hidden whitespace-nowrap text-ellipsis h-[32px] flex items-center border rounded">
+                    <div
+                      className="text-gray-500 px-2 py-1.5 w-[100px] overflow-hidden whitespace-nowrap text-ellipsis h-[32px] flex items-center border rounded">
                       WITHDRAWN
                     </div>
                   ) : (
