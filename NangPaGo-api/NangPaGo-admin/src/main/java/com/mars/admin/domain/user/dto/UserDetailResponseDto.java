@@ -10,8 +10,6 @@ public record UserDetailResponseDto(
     Long id,
     String email,
     String nickname,
-    String birthday,
-    String phone,
     OAuth2Provider oAuth2Provider,
     String createdAt,
     String updatedAt,
@@ -23,8 +21,6 @@ public record UserDetailResponseDto(
             .id(user.getId())
             .email(user.getEmail())
             .nickname(user.getNickname())
-            .birthday(user.getBirthday())
-            .phone(user.getPhone())
             .oAuth2Provider(user.getOauth2Provider())
             .createdAt(user.getCreatedAt().toString())
             .updatedAt(user.getUpdatedAt().toString())

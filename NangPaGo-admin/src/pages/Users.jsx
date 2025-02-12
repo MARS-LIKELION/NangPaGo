@@ -158,13 +158,11 @@ export default function Users() {
           <table className="w-full table-fixed border-collapse min-w-[800px]">
             <colgroup>
               <col className="w-[5%]" />{/* ID */}
-              <col className="w-[20%]" />{/* 이메일 */}
-              <col className="w-[13%]" />{/* 닉네임 */}
-              <col className="w-[8%]" />{/* 생년월일 */}
-              <col className="w-[9%]" />{/* 전화번호 */}
-              <col className="w-[7%]" />{/* 가입 경로 */}
-              <col className="w-[12%]" />{/* 가입일 */}
-              <col className="w-[12%]" />{/* 수정일 */}
+              <col className="w-[16%]" />{/* 이메일 */}
+              <col className="w-[12%]" />{/* 닉네임 */}
+              <col className="w-[8%]" />{/* 가입 경로 */}
+              <col className="w-[14%]" />{/* 가입일 */}
+              <col className="w-[14%]" />{/* 수정일 */}
               <col className="w-[9%]" />{/* 상태 */}
             </colgroup>
           <thead>
@@ -196,8 +194,6 @@ export default function Users() {
                   </span>
                 </div>
               </th>
-              <th className="px-4 py-3 text-left text-sm font-semibold border-b">생년월일</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold border-b">전화번호</th>
               <th className="px-4 py-3 text-left text-sm font-semibold border-b">가입 경로</th>
               <th
                 className="px-4 py-3 text-left text-sm font-semibold border-b cursor-pointer group"
@@ -239,8 +235,6 @@ export default function Users() {
                   <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.id}</td>
                   <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.email}</td>
                   <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.nickname}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.birthday || '-'}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.phone || '-'}</td>
                   <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.oAuth2Provider}</td>
                   <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.createdAt}</td>
                   <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.updatedAt}</td>
