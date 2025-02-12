@@ -163,7 +163,7 @@ export function useRefrigerator(recipeSize = 12) {
       );
       if (lastSearchIngredients && recipes.length === 0) {
         const searchTerm = lastSearchIngredients.join(' ');
-        fetchRecommendedPosts(searchTerm, 1, recipeSize)
+        fetchRecommendedPosts("INGREDIENTS", searchTerm, 1, recipeSize)
           .then((recipeData) => {
             setRecipes(recipeData.content);
             setRecipePage(1);
