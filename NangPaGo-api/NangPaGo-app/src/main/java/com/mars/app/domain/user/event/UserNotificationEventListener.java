@@ -6,25 +6,22 @@ import com.mars.common.exception.NPGExceptionType;
 import com.mars.common.model.user.User;
 import com.mars.common.sse.AbstractSseEmitterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class UserNotificationEventListener {
 
     private final AbstractSseEmitterService<UserNotificationSseDto> userNotificationSseService;
-    private final UserRepository userRepository;
 
     @EventListener
     public void handleUserNotificationEvent(UserNotificationEvent event) {
-        User sender = userRepository.findById(event.getSenderId())
-            .orElseThrow(NPGExceptionType.NOT_FOUND_USER::of);
-
-        String message = sender.getNickname() + "님이 게시물에 댓글을 작성하였습니다.";
-
+        log.warn("event: senderId: {}, receiverId: {}, postId: {}", event.getSenderId(), event.getReceiverId(), event.getPostId());
         UserNotificationSseDto userNotificationSseDto = UserNotificationSseDto.of(
-            event.getSenderId(), event.getPostId(), message
+            event.getSenderId(), event.getPostId()
         );
         userNotificationSseService.sendToClient(event.getReceiverId(), userNotificationSseDto);
     }

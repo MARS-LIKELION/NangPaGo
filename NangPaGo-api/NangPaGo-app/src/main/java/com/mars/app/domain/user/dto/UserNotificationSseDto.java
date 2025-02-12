@@ -5,14 +5,12 @@ import lombok.Builder;
 @Builder
 public record UserNotificationSseDto(
     Long senderId,
-    Long postId,
-    String message
+    Long postId
 ) {
-    public static UserNotificationSseDto of(Long senderId, Long postId, String message) {
+    public static UserNotificationSseDto of(Long senderId, Long postId) {
         return UserNotificationSseDto.builder()
             .senderId(senderId)
             .postId(postId)
-            .message(message)
             .build();
     }
 }
