@@ -23,7 +23,9 @@ function ModifyUserRecipe() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
-  const [manuals, setManuals] = useState([{ step: 1, description: '', image: null, preview: '' }]);
+  const [manuals, setManuals] = useState([
+    { step: 1, description: '', image: null, preview: '' },
+  ]);
   const [mainFile, setMainFile] = useState(null);
   const [existingImageUrl, setExistingImageUrl] = useState('');
   const [isPublic, setIsPublic] = useState(true);
@@ -52,8 +54,8 @@ function ModifyUserRecipe() {
             step: man.step,
             description: man.description,
             image: null,
-            preview: man.imageUrl || ''
-          }))
+            preview: man.imageUrl || '',
+          })),
         );
         setExistingImageUrl(data.mainImageUrl || '');
         setImagePreview(data.mainImageUrl || '');
@@ -114,33 +116,40 @@ function ModifyUserRecipe() {
       isPublic,
       mainImageUrl: existingImageUrl,
       ingredients,
-      manuals: manuals.map(manual => ({
-        step: manual.step,
+      manuals: manuals.map((manual, index) => ({
+        step: index + 1,
         description: manual.description,
-        imageUrl: manual.preview || ""
-      }))
+        imageUrl: manual.image instanceof File ? manual.previousImageUrl || '' : manual.preview || '',
+      })),
     };
 
     const formData = new FormData();
-    formData.append('requestDto', new Blob([JSON.stringify(requestDto)], { type: "application/json" }));
+    formData.append(
+      'requestDto',
+      new Blob([JSON.stringify(requestDto)], { type: 'application/json' }),
+    );
 
     if (mainFile) {
       formData.append('mainFile', mainFile);
     }
 
     manuals.forEach((manual, index) => {
-      if (manual.image && manual.image instanceof File) {
+      if (manual.image instanceof File) {
         formData.append('otherFiles', manual.image);
+      } else if (manual.preview && manual.preview.startsWith('blob:')) {
+        formData.append('otherFiles', new Blob([]), `placeholder-${index}`);
       } else {
         formData.append('otherFiles', new Blob([]), `placeholder-${index}`);
       }
     });
-    
+
     try {
       const responseData = await updateUserRecipe(id, formData);
       if (responseData.data?.id) {
         setIsBlocked(false);
-        navigate(`/user-recipe/${responseData.data.id}`, { state: { from: '/user-recipe/modify' } });
+        navigate(`/user-recipe/${responseData.data.id}`, {
+          state: { from: '/user-recipe/modify' },
+        });
       } else {
         setError('레시피 수정 후 ID를 가져올 수 없습니다.');
       }
@@ -177,7 +186,10 @@ function ModifyUserRecipe() {
           placeholder="레시피 설명"
           rows={5}
         />
-        <IngredientInput ingredients={ingredients} setIngredients={setIngredients} />
+        <IngredientInput
+          ingredients={ingredients}
+          setIngredients={setIngredients}
+        />
         <ManualInput manuals={manuals} setManuals={setManuals} />
         <div className="mt-5">
           <SubmitButton onClick={handleSubmit} label="레시피 수정" />
@@ -185,7 +197,10 @@ function ModifyUserRecipe() {
         {error && <p className="mt-2 text-red-500">{error}</p>}
       </div>
       <Footer />
-      <FileSizeErrorModal isOpen={showFileSizeError} onClose={() => setShowFileSizeError(false)} />
+      <FileSizeErrorModal
+        isOpen={showFileSizeError}
+        onClose={() => setShowFileSizeError(false)}
+      />
     </div>
   );
 }

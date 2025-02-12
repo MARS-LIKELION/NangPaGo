@@ -23,15 +23,33 @@ function ManualInput({ manuals, setManuals, maxFileSize, onFileSizeError }) {
   const handleManualImageChange = (index, e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > maxFileSize) {
-        onFileSizeError();
-        return;
-      }
-      const updatedManuals = [...manuals];
-      updatedManuals[index].image = file;
-      updatedManuals[index].preview = URL.createObjectURL(file);
-      setManuals(updatedManuals);
+      setManuals((prev) =>
+        prev.map((manual, i) =>
+          i === index
+            ? {
+                ...manual,
+                image: file,
+                preview: URL.createObjectURL(file),
+                previousImageUrl: manual.preview
+              }
+            : manual
+        )
+      );
     }
+  };
+
+  const handleManualImageCancel = (index) => {
+    setManuals((prev) =>
+      prev.map((manual, i) =>
+        i === index
+          ? {
+              ...manual,
+              image: null,
+              preview: ''
+            }
+          : manual
+      )
+    );
   };
 
   const removeManual = (index) => {
@@ -89,7 +107,7 @@ function ManualInput({ manuals, setManuals, maxFileSize, onFileSizeError }) {
                 file={manual.image}
                 imagePreview={manual.preview || (typeof manual.image === 'string' ? manual.image : null)}
                 onChange={(e) => handleManualImageChange(index, e)}
-                onCancel={() => updateManual(index, "image", null)}
+                onCancel={() => handleManualImageCancel(index)}
               />
             </motion.div>
           </motion.div>

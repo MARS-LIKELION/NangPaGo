@@ -7,7 +7,9 @@ import static com.mars.common.exception.NPGExceptionType.SERVER_ERROR_IMAGE_UPLO
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
+import com.mars.common.exception.NPGException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import net.coobird.thumbnailator.Thumbnails;
@@ -19,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FirebaseStorageService {
@@ -68,17 +71,17 @@ public class FirebaseStorageService {
             return;
         }
 
-        String fileName = extractFileName(imageUrl);
-        Blob blob = bucket.get(fileName);
-
-        if (blob == null) {
-            throw SERVER_ERROR_FILE_DELETE.of("삭제할 파일을 찾을 수 없습니다.");
-        }
-
         try {
+            String fileName = extractFileName(imageUrl);
+            Blob blob = bucket.get(fileName);
+
+            if (blob == null) {
+                throw SERVER_ERROR_FILE_DELETE.of("파일을 찾을 수 없습니다. URL: " + imageUrl);
+            }
+
             blob.delete();
-        } catch (Exception e) {
-            throw SERVER_ERROR_FILE_DELETE.of("Firebase 파일 삭제 중 오류 발생");
+        } catch (NPGException e) {
+            log.error("Firebase 파일 삭제 중 오류 발생. URL: {}, 에러: {}", imageUrl, e.getMessage());
         }
     }
 

@@ -38,6 +38,7 @@ public class UserRecipe extends BaseEntity {
 
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @OrderBy("step ASC")
     private List<UserRecipeManual> manuals = new ArrayList<>();
 
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
