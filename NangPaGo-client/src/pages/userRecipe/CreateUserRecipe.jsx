@@ -100,8 +100,12 @@ function CreateUserRecipe() {
     }
     manuals
       .filter((manual) => manual.description && manual.image)
-      .forEach((manual) => {
-        formData.append('otherFiles', manual.image);
+      .forEach((manual, index) => {
+        const file = manual.image;
+        const newFile = new File([file], `step${index + 1}_${file.name}`, {
+          type: file.type,
+        });
+        formData.append('otherFiles', newFile);
       });
 
     try {

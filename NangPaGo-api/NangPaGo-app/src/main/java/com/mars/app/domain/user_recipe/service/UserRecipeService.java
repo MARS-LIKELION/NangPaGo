@@ -37,8 +37,6 @@ public class UserRecipeService {
 
     public static final int DEFAULT_LIKE_COUNT = 0;
     public static final int DEFAULT_COMMENT_COUNT = 0;
-    public static final int MIN_STEP = 0;
-    public static final int STEP_OFFSET = 1;
 
     private final UserRecipeRepository userRecipeRepository;
     private final UserRecipeLikeRepository userRecipeLikeRepository;
@@ -178,10 +176,18 @@ public class UserRecipeService {
     }
 
     private MultipartFile getFileByIndex(List<MultipartFile> files, int step) {
-        if (files == null || step <= MIN_STEP || step - STEP_OFFSET >= files.size()) {
+        if (files == null || files.isEmpty()) {
             return null;
         }
-        return files.get(step - STEP_OFFSET);
+        
+        // 파일명에서 스텝 정보 추출
+        for (MultipartFile file : files) {
+            String filename = file.getOriginalFilename();
+            if (filename != null && filename.startsWith("step" + step + "_")) {
+                return file;
+            }
+        }
+        return null;
     }
 
     private void validateOwnership(UserRecipe userRecipe, Long userId) {

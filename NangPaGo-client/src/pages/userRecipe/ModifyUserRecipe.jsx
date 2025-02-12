@@ -133,15 +133,15 @@ function ModifyUserRecipe() {
       formData.append('mainFile', mainFile);
     }
 
-    manuals.forEach((manual, index) => {
-      if (manual.image instanceof File) {
-        formData.append('otherFiles', manual.image);
-      } else if (manual.preview && manual.preview.startsWith('blob:')) {
-        formData.append('otherFiles', new Blob([]), `placeholder-${index}`);
-      } else {
-        formData.append('otherFiles', new Blob([]), `placeholder-${index}`);
-      }
-    });
+    manuals
+      .filter((manual) => manual.image instanceof File)
+      .forEach((manual) => {
+        const file = manual.image;
+        const newFile = new File([file], `step${manual.step}_${file.name}`, {
+          type: file.type,
+        });
+        formData.append('otherFiles', newFile);
+      });
 
     try {
       const responseData = await updateUserRecipe(id, formData);
