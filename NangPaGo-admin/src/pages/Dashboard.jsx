@@ -4,34 +4,6 @@ import { useState, useEffect } from 'react';
 import { getDashboardData } from '../api/total';
 import { format, eachDayOfInterval } from 'date-fns';
 
-// 월 평균 로그인 통계 (더미 데이터)
-const monthlyAverageLoginStats = [
-  { time: '00:00', avgLogins: 300 },
-  { time: '01:00', avgLogins: 98 },
-  { time: '02:00', avgLogins: 67 },
-  { time: '03:00', avgLogins: 45 },
-  { time: '04:00', avgLogins: 34 },
-  { time: '05:00', avgLogins: 56 },
-  { time: '06:00', avgLogins: 123 },
-  { time: '07:00', avgLogins: 234 },
-  { time: '08:00', avgLogins: 456 },
-  { time: '09:00', avgLogins: 567 },
-  { time: '10:00', avgLogins: 678 },
-  { time: '11:00', avgLogins: 745 },
-  { time: '12:00', avgLogins: 834 },
-  { time: '13:00', avgLogins: 756 },
-  { time: '14:00', avgLogins: 645 },
-  { time: '15:00', avgLogins: 567 },
-  { time: '16:00', avgLogins: 634 },
-  { time: '17:00', avgLogins: 745 },
-  { time: '18:00', avgLogins: 867 },
-  { time: '19:00', avgLogins: 923 },
-  { time: '20:00', avgLogins: 845 },
-  { time: '21:00', avgLogins: 734 },
-  { time: '22:00', avgLogins: 534 },
-  { time: '23:00', avgLogins: 323 }
-];
-
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState({});
   const [months, setMonths] = useState(11);
@@ -128,16 +100,24 @@ export default function Dashboard() {
         {/* 월별 회원가입 통계 */}
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입통계</h3>
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입 통계</h3>
             <ComposedChart width={600} height={300} data={dashboardData.monthlyRegisterData || []}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Legend />
+              <Legend
+                formatter={(value, entry, index) => {
+                  if (entry.dataKey === 'userCount' && index === 0) {
+                    return '';
+                  }
+                  return value;
+                }}
+              />
               <Bar dataKey="userCount" name="사용자 수" fill="#87CEEB" />
-              <Line type="monotone" dataKey="userCount" stroke="#8884d8" />
+              <Line type="monotone" dataKey="userCount" name="사용자 수(선)" stroke="#8884d8" />
             </ComposedChart>
+
           </div>
         </div>
 
@@ -160,7 +140,7 @@ export default function Dashboard() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 flex justify-between items-center w-[600px]">
-              <span>일일 접속자 수 통계</span>
+              <span>일일 접속자 통계</span>
               <div className="flex items-center">
                 <div className="mr-4 flex items-center">
                   <span className="text-xs font-medium text-gray-500">오늘의 로그인 사용자</span>
@@ -203,17 +183,18 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* 월 평균 시간대별 사용자 활동 현황 */}
+        {/* 최근 30일간 시간대별 사용자 활동 분석 */}
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월 평균 시간대별 사용자 활동 현황</h3>
-            <LineChart width={600} height={300} data={monthlyAverageLoginStats}>
+            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+              최근 30일간 시간대별 사용자 활동 분석
+            </h3>
+            <LineChart width={600} height={300} data={dashboardData.hourlyUserActionCountsDto}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
-                dataKey="time"
-                interval={2}
-                angle={-45}
-                textAnchor="end"
+                dataKey="hour"
+                angle={0} // Remove rotation for consistency with other charts
+                textAnchor="middle"
                 height={50}
               />
               <YAxis />
@@ -221,13 +202,16 @@ export default function Dashboard() {
               <Legend />
               <Line
                 type="monotone"
-                name="평균 로그인 수"
-                dataKey="avgLogins"
+                name="사용자 활동 빈도"
+                dataKey="count"
                 stroke="#6366f1"
                 strokeWidth={2}
                 dot={false}
               />
             </LineChart>
+            <div className="mt-2 text-xs text-gray-500 text-right w-[600px]">
+              *사용자 활동은 로그인, 게시물 및 댓글 작성/수정/삭제 등 다양한 활동을 기반으로 측정됩니다.
+            </div>
           </div>
         </div>
       </div>

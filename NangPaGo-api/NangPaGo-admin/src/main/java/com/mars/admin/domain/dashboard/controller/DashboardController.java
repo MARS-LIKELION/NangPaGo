@@ -2,6 +2,7 @@ package com.mars.admin.domain.dashboard.controller;
 
 import com.mars.admin.domain.dashboard.dto.DailyUserStatsDto;
 import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
+import com.mars.admin.domain.dashboard.dto.HourlyUserActionCountDto;
 import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
 import com.mars.admin.domain.dashboard.dto.MonthRegisterCountDto;
 import com.mars.admin.domain.dashboard.service.ChartService;
@@ -26,8 +27,9 @@ public class DashboardController {
         List<MonthRegisterCountDto> monthlyRegisterData = chartService.getMonthlyRegisterCounts();
         List<MonthPostCountDto> monthPostCountData = chartService.getPostMonthCountTotals();
         List<DailyUserStatsDto> dailyUserCountData = chartService.getDailyUserCounts();
+        List<HourlyUserActionCountDto> hourlyActionCounts = chartService.getHourlyActionCounts();
         DashboardResponseDto dashboardResponseDto = DashboardResponseDto.of(totals, monthlyRegisterData,
-            monthPostCountData, dailyUserCountData);
+            monthPostCountData, dailyUserCountData, hourlyActionCounts);
         return ResponseDto.of(dashboardResponseDto);
     }
 }

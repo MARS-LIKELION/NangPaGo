@@ -1,7 +1,9 @@
 package com.mars.admin.domain.dashboard.service;
 
+import com.mars.admin.domain.audit.repository.AuditLogRepository;
 import com.mars.admin.domain.community.repository.CommunityRepository;
 import com.mars.admin.domain.dashboard.dto.DailyUserStatsDto;
+import com.mars.admin.domain.dashboard.dto.HourlyUserActionCountDto;
 import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
 import com.mars.admin.domain.dashboard.dto.MonthRegisterCountDto;
 import com.mars.admin.domain.stats.repository.VisitLogRepository;
@@ -9,9 +11,11 @@ import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +31,7 @@ public class ChartService {
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
     private final VisitLogRepository visitLogRepository;
+    private final AuditLogRepository auditLogRepository;
 
     public Map<String, Long> getTotals() {
         return Map.of(
@@ -107,5 +112,24 @@ public class ChartService {
 
     public List<DailyUserStatsDto> getDailyUserCounts() {
         return visitLogRepository.getDailyUserStats();
+    }
+
+    public List<HourlyUserActionCountDto> getHourlyActionCounts() {
+        Date oneMonthAgoDate = new Date(System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000);
+
+        List<HourlyUserActionCountDto> results = auditLogRepository.findHourlyActionCounts(oneMonthAgoDate);
+
+        List<HourlyUserActionCountDto> hourlyCounts = IntStream.range(0, 24)
+            .mapToObj(i -> {
+                long count = results.stream()
+                    .filter(dto -> Integer.parseInt(dto.hour().replace("시", "")) == i)
+                    .mapToLong(HourlyUserActionCountDto::count)
+                    .sum();
+
+                return HourlyUserActionCountDto.of(i, count);
+            })
+            .collect(Collectors.toList());
+
+        return hourlyCounts;
     }
 }
