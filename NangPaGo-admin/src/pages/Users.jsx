@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getUserList, banUser, unBanUser } from '../api/usermanage';
+import { SOCIAL_BUTTON_STYLES } from '../common/styles/CommonButton.js';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -118,41 +119,67 @@ export default function Users() {
     <div className="p-6">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">사용자 관리</h2>
       <div className="bg-white p-4 rounded-md shadow-md mb-6">
-      <div className="flex flex-col space-y-4">
-        <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-2">사용자 상태</h3>
-          <div className="flex flex-wrap gap-6">
-            {userStatuses.map(status => (
-              <label key={status.value} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={selectedStatuses.includes(status.value)}
-                  onChange={() => handleStatusChange(status.value)}
-                  className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded"
-                />
-                <span className="text-sm text-gray-700">{status.label}</span>
-              </label>
-            ))}
+        <div className="flex flex-col space-y-4">
+          <div>
+            <h3 className="text-sm font-medium text-gray-700 mb-2">사용자 상태</h3>
+            <div className="flex flex-wrap gap-6">
+              {userStatuses.map(status => (
+                <label key={status.value} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedStatuses.includes(status.value)}
+                    onChange={() => handleStatusChange(status.value)}
+                    className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded"
+                  />
+                  <span className="text-sm text-gray-700">{status.label}</span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
-        <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-2">가입 경로</h3>
-          <div className="flex flex-wrap gap-6">
-            {oAuthProviders.map(provider => (
-              <label key={provider.value} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={selectedProviders.includes(provider.value)}
-                  onChange={() => handleProviderChange(provider.value)}
-                  className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded"
-                />
-                <span className="text-sm text-gray-700">{provider.label}</span>
-              </label>
-            ))}
+          <div>
+            <h3 className="text-sm font-medium text-gray-700 mb-2">가입 경로</h3>
+            <div className="flex flex-wrap gap-6">
+              {oAuthProviders.map(provider => (
+                <label key={provider.value} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedProviders.includes(provider.value)}
+                    onChange={() => handleProviderChange(provider.value)}
+                    className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded"
+                  />
+                  <span className="text-sm text-gray-700">{provider.label}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="flex justify-end mb-4">
+        <form onSubmit={handleSearch}
+              className="flex items-center space-x-2">
+          <select
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+            className="border rounded px-3 py-1.5 text-sm"
+          >
+            <option value="EMAIL">이메일</option>
+            <option value="NICKNAME">닉네임</option>
+          </select>
+          <input
+            type="text"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            placeholder="검색어를 입력하세요"
+            className="border rounded px-3 py-1.5 text-sm w-64"
+          />
+          <button
+              type="submit"
+              className={`${SOCIAL_BUTTON_STYLES.common.btn} ml-2 px-4 py-1.5 text-sm font-medium`}
+          >
+            검색
+          </button>
+        </form>
+      </div>
       <div className="bg-white p-4 rounded-md shadow-md flex flex-col">
         <div className="flex-1 overflow-x-auto">
           <table className="w-full table-fixed border-collapse min-w-[800px]">
@@ -225,37 +252,37 @@ export default function Users() {
             </tr>
           </thead>
             <tbody>
-              {users.map((user, index) => (
-                <tr
-                  key={user.id}
-                  className={`${
-                    index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-                  } hover:bg-blue-50 border-b`}
-                >
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.id}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.email}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.nickname}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.oAuth2Provider}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.createdAt}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.updatedAt}</td>
-                  <td className="px-4 py-2 text-sm text-gray-700 w-[120px]">
+            {users.map((user, index) => (
+              <tr
+                key={user.id}
+                className={`${
+                  index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+                } hover:bg-blue-50 border-b`}
+              >
+                <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.id}</td>
+                <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.email}</td>
+                <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.nickname}</td>
+                <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.oAuth2Provider}</td>
+                <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.createdAt}</td>
+                <td className="px-4 py-2 text-sm text-gray-700 overflow-hidden whitespace-nowrap text-ellipsis">{user.updatedAt}</td>
+                <td className="px-4 py-2 text-sm text-gray-700 w-[120px]">
                   {user.userStatus === 'WITHDRAWN' ? (
                     <div className="text-gray-500 px-2 py-1.5 w-[100px] overflow-hidden whitespace-nowrap text-ellipsis h-[32px] flex items-center border rounded">
                       WITHDRAWN
                     </div>
                   ) : (
-                        <select
-                          value={user.userStatus}
-                          onChange={(e) => handleUserStatusChange(user, e.target.value)}
-                          className="border rounded px-2 py-1.5 text-sm w-[100px] h-[32px]"
-                        >
-                          <option value="ACTIVE">ACTIVE</option>
-                          <option value="BANNED">BANNED</option>
-                        </select>
-                      )}
-                    </td>
-                    </tr>
-                  ))}
+                    <select
+                      value={user.userStatus}
+                      onChange={(e) => handleUserStatusChange(user, e.target.value)}
+                      className="border rounded px-2 py-1.5 text-sm w-[100px] h-[32px]"
+                    >
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="BANNED">BANNED</option>
+                    </select>
+                  )}
+                </td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </div>
@@ -286,7 +313,7 @@ export default function Users() {
               <span className="text-sm text-gray-600">/ {Math.max(totalPages, 1)}</span>
             </div>
 
-            <button
+            <button 
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))}
               disabled={currentPage === totalPages - 1 || totalPages === 0}
               className={`
@@ -303,31 +330,6 @@ export default function Users() {
               </svg>
             </button>
           </div>
-        </div>
-        <div className="flex justify-center mb-4">
-          <form onSubmit={handleSearch} className="flex items-center space-x-2">
-            <select
-              value={searchType}
-              onChange={(e) => setSearchType(e.target.value)}
-              className="border rounded px-3 py-1.5 text-sm"
-            >
-              <option value="EMAIL">이메일</option>
-              <option value="NICKNAME">닉네임</option>
-            </select>
-            <input
-              type="text"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              placeholder="검색어를 입력하세요"
-              className="border rounded px-3 py-1.5 text-sm w-64"
-            />
-            <button
-              type="submit"
-              className="bg-indigo-500 text-white px-4 py-1.5 rounded text-sm hover:bg-indigo-600"
-            >
-              검색
-            </button>
-          </form>
         </div>
       </div>
       {showConfirm && (
