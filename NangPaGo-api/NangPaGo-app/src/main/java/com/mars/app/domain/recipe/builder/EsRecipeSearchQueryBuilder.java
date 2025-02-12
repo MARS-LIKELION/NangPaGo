@@ -13,11 +13,11 @@ public class EsRecipeSearchQueryBuilder {
     }
 
     private Query createKeywordSearchQuery(String keyword, String searchType) {
-        if ("NAME".equals(searchType)) {
-            return getQueryByNameWithNgram(keyword);
-        }
-
-        return getQueryByIngredients(keyword);
+        return switch (searchType) {
+            case "NAME" -> getQueryByNameWithNgram(keyword);
+            case "INGREDIENTS" -> getQueryByIngredients(keyword);
+            default -> getQueryByNameWithNgram(keyword);
+        };
     }
 
     private Query getQueryByIngredients(String keyword) {

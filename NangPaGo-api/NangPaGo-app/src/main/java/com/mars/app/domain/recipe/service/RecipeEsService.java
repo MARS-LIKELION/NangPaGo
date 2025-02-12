@@ -19,8 +19,6 @@ import com.mars.common.model.recipe.RecipeLike;
 import com.mars.common.model.user.User;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +33,7 @@ public class RecipeEsService {
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeCommentRepository recipeCommentRepository;
 
-    public PageResponseDto<RecipeEsListResponseDto> searchRecipes(
+    public PageResponseDto<RecipeEsListResponseDto> searchRecipeEsList(
         Long userId,
         String keyword,
         String searchType,
@@ -165,18 +163,20 @@ public class RecipeEsService {
         }
     }
 
-    public Page<RecipeSearchResponseDto> searchRecipeByKeyword(PageRequestVO pageRequestVO, String keyword, String searchType) {
+    public PageResponseDto<RecipeSearchResponseDto> searchRecipeByKeyword(
+        PageRequestVO pageRequestVO,
+        String keyword,
+        String searchType
+    ) {
+
         Pageable pageable = pageRequestVO.toPageable();
 
-        // 쿼리 빌더 기존꺼 계속 사용
         EsRecipeSearchQueryBuilder queryBuilder = new EsRecipeSearchQueryBuilder();
         Query query = queryBuilder.buildSearchQuery(keyword, searchType);
 
-        //하이라이트 추가해서 Elasticsearch 검색 실행
         SearchResponse<RecipeEs> response = getRecipeEsSearchResponse(query, pageable);
 
-        // 결과를 검색 dto로 매핑
-        List<RecipeSearchResponseDto> dtos = response.hits().hits().stream()
+        List<RecipeSearchResponseDto> results = response.hits().hits().stream()
             .filter(hit -> hit.source() != null)
             .map(hit -> {
                 RecipeEs source = hit.source();
@@ -185,7 +185,7 @@ public class RecipeEsService {
                     .filter(highlights -> !highlights.isEmpty())
                     .map(highlights -> highlights.get(0))
                     .orElse(source.getName());
-                return RecipeSearchResponseDto.from(source, highlightedName);
+                return RecipeSearchResponseDto.of(source, highlightedName);
             })
             .toList();
 
@@ -193,6 +193,14 @@ public class RecipeEsService {
             .map(totalHits -> Optional.of(totalHits.value()).orElse(0L))
             .orElse(0L);
 
-        return new PageImpl<>(dtos, pageable, total);
+        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
+
+        return new PageResponseDto<>(
+            results,
+            pageable.getPageNumber(),
+            totalPages,
+            total,
+            response.hits().hits().size() < pageable.getPageSize()
+        );
     }
 }

@@ -7,7 +7,7 @@ public record RecipeSearchResponseDto(
     String name,
     String highlightedName
 ) {
-    public static RecipeSearchResponseDto from(RecipeEs recipeEs, String highlightedName) {
+    public static RecipeSearchResponseDto of(RecipeEs recipeEs, String highlightedName) {
         return new RecipeSearchResponseDto(
             recipeEs.getId(),
             recipeEs.getName(),
