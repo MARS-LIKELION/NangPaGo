@@ -8,17 +8,20 @@ import lombok.Builder;
 public record DashboardResponseDto(
     Map<String, Long> totals,
     List<MonthRegisterCountDto> monthlyRegisterData,
-    List<MonthPostCountDto> monthPostCountData
+    List<MonthPostCountDto> monthPostCountData,
+    List<DailyUserStatsDto> dailyUserStats
 ) {
     public static DashboardResponseDto of(
         Map<String, Long> totals,
         List<MonthRegisterCountDto> monthlyRegisterData,
-        List<MonthPostCountDto> monthPostCountData
+        List<MonthPostCountDto> monthPostCountData,
+        List<DailyUserStatsDto> dailyUserStats
     ) {
         return DashboardResponseDto.builder()
             .totals(totals)
             .monthlyRegisterData(monthlyRegisterData)
             .monthPostCountData(monthPostCountData)
+            .dailyUserStats(dailyUserStats)
             .build();
     }
 }

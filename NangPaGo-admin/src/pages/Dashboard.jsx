@@ -154,13 +154,25 @@ export default function Dashboard() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">일일 접속자 통계</h3>
-            <LineChart width={600} height={300} data={dailyUserStats}>
+            <LineChart width={600} height={300} data={dashboardData.dailyUserStats}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis
+                dataKey="date"
+                tickFormatter={(date) => {
+                  const [month, day] = date.split('/');
+                  return `${month}/${day}`;
+                }}
+                interval={2}
+              />
               <YAxis />
-              <Tooltip />
+              <Tooltip
+                labelFormatter={(date) => {
+                  const [year, month, day] = date.split('-');
+                  return `${year}년 ${month}월 ${day}일`;
+                }}
+              />
               <Legend />
-              <Line type="monotone" dataKey="users" stroke="#4f46e5" />
+              <Line type="monotone" dataKey="users" name="접속자 수" stroke="#4f46e5" />
             </LineChart>
           </div>
         </div>

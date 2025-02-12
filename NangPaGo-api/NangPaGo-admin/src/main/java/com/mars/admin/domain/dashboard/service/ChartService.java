@@ -1,8 +1,10 @@
 package com.mars.admin.domain.dashboard.service;
 
 import com.mars.admin.domain.community.repository.CommunityRepository;
+import com.mars.admin.domain.dashboard.dto.DailyUserStatsDto;
 import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
 import com.mars.admin.domain.dashboard.dto.MonthRegisterCountDto;
+import com.mars.admin.domain.stats.repository.VisitLogRepository;
 import com.mars.admin.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -24,6 +26,7 @@ public class ChartService {
     
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+    private final VisitLogRepository visitLogRepository;
 
     public Map<String, Long> getTotals() {
         return Map.of(
@@ -100,5 +103,9 @@ public class ChartService {
         LocalDateTime end = now.atEndOfMonth().atTime(23, 59, 59);
 
         return userRepository.getMonthRegisterCount(start, end);
+    }
+
+    public List<DailyUserStatsDto> getDailyUserCounts() {
+        return visitLogRepository.getDailyUserStats();
     }
 }

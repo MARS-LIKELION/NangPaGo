@@ -1,5 +1,6 @@
 package com.mars.admin.domain.dashboard.controller;
 
+import com.mars.admin.domain.dashboard.dto.DailyUserStatsDto;
 import com.mars.admin.domain.dashboard.dto.DashboardResponseDto;
 import com.mars.admin.domain.dashboard.dto.MonthPostCountDto;
 import com.mars.admin.domain.dashboard.dto.MonthRegisterCountDto;
@@ -10,7 +11,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -25,8 +25,9 @@ public class DashboardController {
         Map<String, Long> totals = chartService.getTotals();
         List<MonthRegisterCountDto> monthlyRegisterData = chartService.getMonthlyRegisterCounts();
         List<MonthPostCountDto> monthPostCountData = chartService.getPostMonthCountTotals();
+        List<DailyUserStatsDto> dailyUserCountData = chartService.getDailyUserCounts();
         DashboardResponseDto dashboardResponseDto = DashboardResponseDto.of(totals, monthlyRegisterData,
-            monthPostCountData);
+            monthPostCountData, dailyUserCountData);
         return ResponseDto.of(dashboardResponseDto);
     }
 }
