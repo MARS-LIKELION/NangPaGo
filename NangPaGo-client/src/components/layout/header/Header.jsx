@@ -17,12 +17,24 @@ function Header({ isBlocked = false }) {
   const [isReconnecting, setIsReconnecting] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  const MAX_RETRIES = 5;
+  const RETRY_INTERVAL = 3000;
+  let retryCount = 0;
+
   const handleSseError = useCallback(() => {
-    if (!isReconnecting) {
+    if (!isReconnecting && retryCount < MAX_RETRIES) {
       setIsReconnecting(true);
+      retryCount++;
+      
+      console.log(`SSE 연결 재시도 ${retryCount}/${MAX_RETRIES}`);
+      
       setTimeout(() => {
         setIsReconnecting(false);
-      }, 3000);
+        // EventSource 재생성
+        setupEventSource();
+      }, RETRY_INTERVAL * Math.pow(2, retryCount - 1)); // 지수 백오프
+    } else if (retryCount >= MAX_RETRIES) {
+      console.error('SSE 연결 최대 재시도 횟수 초과');
     }
   }, [isReconnecting]);
 
