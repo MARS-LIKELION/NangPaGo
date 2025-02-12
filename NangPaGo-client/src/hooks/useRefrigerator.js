@@ -11,23 +11,37 @@ import {
 import { fetchRecommendedPosts } from '../api/recipe';
 
 export function useRefrigerator(recipeSize = 12) {
-  const [ingredients, setIngredients] = useState(
-    () => JSON.parse(localStorage.getItem('ingredients')) || []
-  );
-  const [recipes, setRecipes] = useState(
-    () => JSON.parse(localStorage.getItem('recipes')) || []
-  );
-  const [recipePage, setRecipePage] = useState(
-    () => parseInt(localStorage.getItem('recipePage'), 10) || 1
-  );
-  const [hasMoreRecipes, setHasMoreRecipes] = useState(
-    () => localStorage.getItem('hasMoreRecipes') === 'true'
-  );
-
+  const [ingredients, setIngredients] = useState([]);
+  const [recipes, setRecipes] = useState([]);
+  const [recipePage, setRecipePage] = useState(1);
+  const [hasMoreRecipes, setHasMoreRecipes] = useState(true);
   const isFetching = useRef(false);
   const navigate = useNavigate();
   const observerRef = useRef(null);
   const observerInstance = useRef(null);
+
+  useEffect(() => {
+    // 레시피 목록 페이지로 돌아왔을 때
+    if (location.pathname === '/refrigerator/recipe') {
+      // localStorage에서 마지막 검색 정보 복원
+      const lastSearchIngredients = JSON.parse(localStorage.getItem('lastSearchIngredients'));
+      
+      if (lastSearchIngredients && recipes.length === 0) {
+        // 이전 검색 결과가 없는 경우에만 재검색
+        const searchTerm = lastSearchIngredients.join(' ');
+        
+        fetchRecommendedPosts(searchTerm, 1, recipeSize)
+          .then((recipeData) => {
+            setRecipes(recipeData.content);
+            setRecipePage(1);
+            setHasMoreRecipes(!recipeData.last);
+          })
+          .catch((error) => {
+            console.error('레시피 검색 실패:', error);
+          });
+      }
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     localStorage.setItem('ingredients', JSON.stringify(ingredients));
@@ -117,66 +131,73 @@ export function useRefrigerator(recipeSize = 12) {
   const loadMoreRecipes = useCallback(() => {
     if (!hasMoreRecipes || isFetching.current) return;
     isFetching.current = true;
-
-    const nextPage = recipePage + 1;
+  
     const checkedIngredients = ingredients
       .filter((i) => i.checked)
       .map((i) => i.ingredientName);
     const searchTerm = checkedIngredients.join(' ');
-
-    fetchRecommendedPosts(searchTerm, nextPage, recipeSize)
-      .then((recipeData) => {
-        setRecipes((prev) => [...prev, ...recipeData.content]);
-        setRecipePage(nextPage);
-        setHasMoreRecipes(!recipeData.last);
-      })
-      .catch(() =>
-        alert('레시피 더 불러오기에 실패했습니다. 다시 시도해주세요.')
-      )
-      .finally(() => {
-        isFetching.current = false;
-      });
-  }, [hasMoreRecipes, ingredients, recipePage, recipeSize]);
+  
+    // 현재 페이지 번호를 안전하게 참조
+    setRecipePage((currentPage) => {
+      const nextPage = currentPage + 1;
+      
+      fetchRecommendedPosts(searchTerm, nextPage, recipeSize)
+        .then((recipeData) => {
+          setRecipes((prev) => [...prev, ...recipeData.content]);
+          setHasMoreRecipes(!recipeData.last);
+        })
+        .catch((error) => {
+          console.error('추가 레시피 로딩 실패:', error);
+          alert('레시피 더 불러오기에 실패했습니다. 다시 시도해주세요.');
+        })
+        .finally(() => {
+          isFetching.current = false;
+        });
+  
+      return nextPage;
+    });
+  }, [hasMoreRecipes, ingredients, recipeSize]);
 
   const handleFindRecipes = useCallback(() => {
     if (isFetching.current) return;
     isFetching.current = true;
-
+  
     const checkedItems = ingredients.filter((i) => i.checked);
     if (checkedItems.length === 0) {
       isFetching.current = false;
       return;
     }
-
-    const searchTerm = checkedItems
-      .map((i) => i.ingredientName)
-      .join(' ');
-
+  
+    const searchIngredients = checkedItems.map((i) => i.ingredientName);
+    const searchTerm = searchIngredients.join(' ');
+  
+    // 검색 조건 저장
+    localStorage.setItem('lastSearchIngredients', JSON.stringify(searchIngredients));
+  
+    setRecipes([]);
     setRecipePage(1);
     setHasMoreRecipes(true);
-
+  
     fetchRecommendedPosts(searchTerm, 1, recipeSize)
       .then((recipeData) => {
         setRecipes(recipeData.content);
         setHasMoreRecipes(!recipeData.last);
         navigate('/refrigerator/recipe');
-        setTimeout(loadMoreRecipes, 300);
       })
-      .catch(() =>
-        alert('레시피 검색에 실패했습니다. 다시 시도해주세요.')
-      )
+      .catch((error) => {
+        console.error('레시피 검색 실패:', error);
+        alert('레시피 검색에 실패했습니다. 다시 시도해주세요.');
+      })
       .finally(() => {
         isFetching.current = false;
       });
-  }, [ingredients, recipeSize, navigate, loadMoreRecipes]);
+  }, [ingredients, recipeSize, navigate]);
 
   const resetAndGoBack = useCallback(() => {
     setRecipes([]);
     setRecipePage(1);
     setHasMoreRecipes(true);
-    localStorage.removeItem('recipes');
-    localStorage.removeItem('recipePage');
-    localStorage.removeItem('hasMoreRecipes');
+    localStorage.removeItem('lastSearchIngredients');
     navigate('/refrigerator');
   }, [navigate]);
 
