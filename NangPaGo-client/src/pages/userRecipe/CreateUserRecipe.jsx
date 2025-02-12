@@ -104,7 +104,6 @@ function CreateUserRecipe() {
       });
       formData.append('otherFiles', newFile);
     } else {
-      // 파일이 없는 경우에도 빈 값을 명시적으로 추가
       formData.append(`otherFiles[${index}]`, null);
     }
   });
