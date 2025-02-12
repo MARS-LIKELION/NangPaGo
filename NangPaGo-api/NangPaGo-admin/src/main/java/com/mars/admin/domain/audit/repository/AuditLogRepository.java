@@ -21,9 +21,9 @@ public interface AuditLogRepository extends MongoRepository<AuditLog, String> {
     @Aggregation(pipeline = {
         "{ '$match': { 'timestamp': { '$gte': ?0 } } }",
         "{ '$addFields': { 'kstTimestamp': { '$add': ['$timestamp', { '$multiply': [9, 60, 60, 1000] } ] } } }",
-        "{ '$group': { '_id': { '$hour': '$kstTimestamp' }, 'count': { '$sum': 1 } } }",
-        "{ '$sort': { '_id': 1 } }",
-        "{ '$project': { 'hour': '$_id', 'count': 1, '_id': 0 } }"
+        "{ '$group': { '_id': { 'hour': { '$hour': '$kstTimestamp' }, 'action': '$action' }, 'count': { '$sum': 1 } } }",
+        "{ '$sort': { '_id.hour': 1, '_id.action': 1 } }",
+        "{ '$project': { 'hour': '$_id.hour', 'action': '$_id.action', 'count': 1, '_id': 0 } }"
     })
     List<HourlyUserActionCountDto> findHourlyActionCounts(Date oneMonthAgoDate);
 }

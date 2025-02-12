@@ -2,7 +2,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart,
 import { UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
 import { getDashboardData } from '../api/total';
-import { format, eachDayOfInterval } from 'date-fns';
+import { format } from 'date-fns';
+import { processDailyUserStats, getTodayData, groupDataByAction } from '../components/util/dashboardUtils';
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState({});
@@ -11,7 +12,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-      const response = await getDashboardData(months);
+        const response = await getDashboardData(months);
         setDashboardData(response.data);
       } catch (error) {
         console.error('대시보드 데이터 가져오기 에러: ', error);
@@ -21,34 +22,13 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
-  // 일별 사용자 통계 처리
-  const processedData = (() => {
-    if (!dashboardData.dailyUserStats || !dashboardData.dailyUserStats.length) return [];
+  const dailyUserStats = processDailyUserStats(dashboardData.dailyUserStats);
+  const todayData = getTodayData(dashboardData.dailyUserStats);
 
-    const sortedData = [...dashboardData.dailyUserStats].sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
+  const userActionData = groupDataByAction(dashboardData.hourlyUserActionCountsDto || []);
 
-    const allDates = eachDayOfInterval({
-      start: new Date(sortedData[0].date),
-      end: new Date(sortedData[sortedData.length - 1].date),
-    }).map((date) => format(date, 'yyyy-MM-dd'));
-
-    const mappedData = allDates.map((date) => {
-      const found = sortedData.find((entry) => entry.date === date);
-      return found || { date, users: 0, unregisteredUsers: 0 };
-    });
-
-    const today = format(new Date(), 'yyyy-MM-dd');
-    if (mappedData[mappedData.length - 1].date !== today) {
-      mappedData.push({ date: today, users: 0, unregisteredUsers: 0 });
-    }
-
-    return mappedData;
-  })();
-
-  const today = new Date().toISOString().split('T')[0]
-  const todayData = dashboardData.dailyUserStats?.find((stat) => stat.date === today) || { users: 0, unregisteredUsers: 0 };
+  const actions = ['회원 활동', '레시피', '유저 레시피', '커뮤니티'];
+  const colorPalette = ['#FF5733', '#3357FF', '#33FF57', '#F1C40F'];
 
   return (
     <div className="p-6">
@@ -101,23 +81,14 @@ export default function Dashboard() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">월별 회원가입 통계</h3>
-            <ComposedChart width={600} height={300} data={dashboardData.monthlyRegisterData || []}>
+            <BarChart width={600} height={300} data={dashboardData.monthlyRegisterData || []}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Legend
-                formatter={(value, entry, index) => {
-                  if (entry.dataKey === 'userCount' && index === 0) {
-                    return '';
-                  }
-                  return value;
-                }}
-              />
+              <Legend />
               <Bar dataKey="userCount" name="사용자 수" fill="#87CEEB" />
-              <Line type="monotone" dataKey="userCount" name="사용자 수(선)" stroke="#8884d8" />
-            </ComposedChart>
-
+            </BarChart>
           </div>
         </div>
 
@@ -156,7 +127,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </h3>
-            <LineChart width={600} height={300} data={processedData}>
+            <LineChart width={600} height={300} data={dailyUserStats}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis
@@ -170,6 +141,7 @@ export default function Dashboard() {
                 dataKey="users"
                 name="로그인 사용자"
                 stroke="#FF0000"
+                strokeWidth={2}
                 dot={(data) => data.value === 0 ? false : true}
               />
               <Line
@@ -177,6 +149,7 @@ export default function Dashboard() {
                 dataKey="unregisteredUsers"
                 name="비로그인 사용자"
                 stroke="#0000FF"
+                strokeWidth={2}
                 dot={(data) => data.value === 0 ? false : true}
               />
             </LineChart>
@@ -189,28 +162,31 @@ export default function Dashboard() {
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
               최근 30일간 시간대별 사용자 활동 분석
             </h3>
-            <LineChart width={600} height={300} data={dashboardData.hourlyUserActionCountsDto}>
+            <LineChart width={600} height={300} data={userActionData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="hour"
-                angle={0} // Remove rotation for consistency with other charts
+                angle={0}
                 textAnchor="middle"
                 height={50}
               />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line
-                type="monotone"
-                name="사용자 활동 빈도"
-                dataKey="count"
-                stroke="#6366f1"
-                strokeWidth={2}
-                dot={false}
-              />
+              {actions.map((action, index) => (
+                <Line
+                  key={action}
+                  type="monotone"
+                  dataKey={action}
+                  name={action}
+                  stroke={colorPalette[index % colorPalette.length]}
+                  strokeWidth={2}
+                  dot={false}
+                />
+              ))}
             </LineChart>
             <div className="mt-2 text-xs text-gray-500 text-right w-[600px]">
-              *사용자 활동은 로그인, 게시물 및 댓글 작성/수정/삭제 등 다양한 활동을 기반으로 측정됩니다.
+              *사용자 활동은 로그인, 게시글 및 댓글의 작성/수정/삭제, 회원 정보 갱신 등 다양한 행동을 기반으로 측정됩니다.
             </div>
           </div>
         </div>

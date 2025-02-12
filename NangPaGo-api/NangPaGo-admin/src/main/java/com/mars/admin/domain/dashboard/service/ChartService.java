@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -119,17 +120,47 @@ public class ChartService {
 
         List<HourlyUserActionCountDto> results = auditLogRepository.findHourlyActionCounts(oneMonthAgoDate);
 
-        List<HourlyUserActionCountDto> hourlyCounts = IntStream.range(0, 24)
-            .mapToObj(i -> {
-                long count = results.stream()
-                    .filter(dto -> Integer.parseInt(dto.hour().replace("시", "")) == i)
-                    .mapToLong(HourlyUserActionCountDto::count)
-                    .sum();
+        Map<Integer, Map<String, Long>> groupedCounts = IntStream.range(0, 24)
+            .boxed()
+            .collect(Collectors.toMap(
+                hour -> hour,
+                hour -> new HashMap<>()
+            ));
 
-                return HourlyUserActionCountDto.of(i, count);
-            })
-            .collect(Collectors.toList());
+        for (HourlyUserActionCountDto dto : results) {
+            int hour = Integer.parseInt(dto.hour().replace("시", ""));
+            String groupedAction = getGroupedAction(dto.action());
+
+            groupedCounts
+                .computeIfAbsent(hour, k -> new HashMap<>())
+                .merge(groupedAction, dto.count(), Long::sum);
+        }
+
+        List<HourlyUserActionCountDto> hourlyCounts = new ArrayList<>();
+        for (int hour = 0; hour < 24; hour++) {
+            for (String group : List.of("회원 활동", "유저 레시피", "커뮤니티", "레시피")) {
+                hourlyCounts.add(HourlyUserActionCountDto.of(
+                    hour, group, groupedCounts.get(hour).getOrDefault(group, 0L)
+                ));
+            }
+        }
 
         return hourlyCounts;
+    }
+
+    private String getGroupedAction(String action) {
+        if (action.startsWith("USER")) {
+            return "회원 활동";
+        }
+        if (action.startsWith("RECIPE")) {
+            return "레시피";
+        }
+        if (action.startsWith("USER_RECIPE")) {
+            return "유저 레시피";
+        }
+        if (action.startsWith("COMMUNITY")) {
+            return "커뮤니티";
+        }
+        return action;
     }
 }
