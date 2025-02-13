@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface UserRecipeRepository extends JpaRepository<UserRecipe, Long> {
 
-    @Query("SELECT ur FROM UserRecipe ur WHERE (ur.isPublic = true OR ur.user.id = :userId) AND ur.recipeStatus = 'ACTIVE' ORDER BY ur.updatedAt DESC")
+    @Query("SELECT ur FROM UserRecipe ur WHERE (ur.isPublic = true OR ur.user.id = :userId) AND ur.recipeStatus = 'ACTIVE' ORDER BY ur.createdAt DESC")
     Page<UserRecipe> findByIsPublicTrueOrUserIdAndRecipeStatus(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT ur FROM UserRecipe ur WHERE ur.user.id = :userId ORDER BY ur.createdAt DESC")
