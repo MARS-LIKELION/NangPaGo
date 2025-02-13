@@ -1,8 +1,11 @@
-function SubmitButton({ onClick, label }) {
+function SubmitButton({ onClick, label, disabled }) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-white py-2 text-center font-semibold"
+      disabled={disabled}
+      className={`w-full py-3 text-lg font-medium ${
+        disabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-primary hover:bg-primary-dark'
+      }`}
     >
       {label}
     </button>

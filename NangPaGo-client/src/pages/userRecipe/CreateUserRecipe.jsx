@@ -27,6 +27,7 @@ function CreateUserRecipe() {
   const [imagePreview, setImagePreview] = useState(null);
   const [showFileSizeError, setShowFileSizeError] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (location.state?.from) {
@@ -78,6 +79,8 @@ function CreateUserRecipe() {
       return;
     }
 
+    setIsSubmitting(true);
+
     const formData = new FormData();
 
     formData.append('title', title);
@@ -121,6 +124,8 @@ function CreateUserRecipe() {
     } catch (err) {
       console.error('레시피 등록 중 오류 발생:', err);
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -160,7 +165,7 @@ function CreateUserRecipe() {
           onFileSizeError={() => setShowFileSizeError(true)}
         />
         <div className="mt-5">
-          <SubmitButton onClick={handleSubmit} label="레시피 추가" />
+          <SubmitButton onClick={handleSubmit} label="레시피 추가" disabled={isSubmitting} />
         </div>
       </div>
       <Footer />

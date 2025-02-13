@@ -25,6 +25,7 @@ function CreateCommunity() {
   const [imagePreview, setImagePreview] = useState(null);
   const [showFileSizeError, setShowFileSizeError] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (location.state?.from) {
@@ -95,6 +96,8 @@ function CreateCommunity() {
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
       const responseData = await createCommunity(
         { title, content, isPublic },
@@ -111,6 +114,8 @@ function CreateCommunity() {
     } catch (err) {
       console.error('게시글 등록 중 오류 발생:', err);
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -161,7 +166,7 @@ function CreateCommunity() {
           </label>
         </div>
         <p className={ERROR_STYLES.community}>{error}</p>
-        <SubmitButton onClick={handleSubmit} label="게시글 등록" />
+        <SubmitButton onClick={handleSubmit} label="게시글 등록" disabled={isSubmitting} />
       </div>
       <Footer />
       <FileSizeErrorModal

@@ -33,6 +33,7 @@ function ModifyUserRecipe() {
   const [imagePreview, setImagePreview] = useState('');
   const [showFileSizeError, setShowFileSizeError] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (location.state?.from) {
@@ -110,6 +111,8 @@ function ModifyUserRecipe() {
       return;
     }
 
+    setIsSubmitting(true);
+
     const requestDto = {
       title,
       content,
@@ -156,6 +159,8 @@ function ModifyUserRecipe() {
     } catch (err) {
       console.error(err);
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -192,7 +197,7 @@ function ModifyUserRecipe() {
         />
         <ManualInput manuals={manuals} setManuals={setManuals} />
         <div className="mt-5">
-          <SubmitButton onClick={handleSubmit} label="레시피 수정" />
+          <SubmitButton onClick={handleSubmit} label="레시피 수정" disabled={isSubmitting} />
         </div>
         {error && <p className="mt-2 text-red-500">{error}</p>}
       </div>

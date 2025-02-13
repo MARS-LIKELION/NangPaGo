@@ -29,6 +29,7 @@ function ModifyCommunity() {
   const [imagePreview, setImagePreview] = useState(null);
   const [showFileSizeError, setShowFileSizeError] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (location.state?.from) {
@@ -129,6 +130,8 @@ function ModifyCommunity() {
       setError('제목과 내용을 모두 입력해주세요.');
       return;
     }
+    setIsSubmitting(true);
+
     try {
       const formData = new FormData();
       formData.append('title', title);
@@ -145,6 +148,8 @@ function ModifyCommunity() {
     } catch (err) {
       console.error('게시글 수정 중 오류 발생:', err);
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -197,7 +202,11 @@ function ModifyCommunity() {
         <p className={ERROR_STYLES.community}>{error}</p>
         <div className="mt-4">
           {' '}
-          <SubmitButton onClick={handleSubmit} label="수정 완료" />
+          <SubmitButton
+            onClick={handleSubmit}
+            label="수정 완료"
+            disabled={isSubmitting}
+          />
         </div>
       </div>
       <Footer className="mt-4" />
