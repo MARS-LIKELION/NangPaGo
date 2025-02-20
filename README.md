@@ -187,8 +187,13 @@
 ---
 
 ## 📄 프로젝트 구조
-```yaml
+```text
 .
-├── NangPaGo-be/ # 백엔드
-├── NangPaGo-fe/ # 프론트엔드
-└── NangPaGo-data/ # 데이터 처리
+├── NangPaGo-admin      # [Admin 페이지] React 프로젝트
+├── NangPaGo-client     # [냉파고 App] React 프로젝트
+├── NangPaGo-api        # SpringBoot 루트 경로
+│   ├── NangPaGo-admin    # [Admin 페이지] Spring 서버 프로젝트
+│   ├── NangPaGo-app      # [냉파고 App] Spring 서버 프로젝트
+│   ├── NangPaGo-common   # Spring 프로젝트가 공통으로 사용하는 모듈
+└── NangPaGo-data       # 데이터 처리
+```
