@@ -1,33 +1,53 @@
 # NangPaGo
 
-<div align="center">
+<div>
    
 ![alt text](assets/thumbnail.png)
 
-## Elasticsearch 검색 엔진 구축 프로젝트
+## 소개
 
 냉장고 속 남은 재료로 무엇을 요리할지 고민되시나요?  
-**냉파고**는 냉장고 속 재료를 기반으로 맛있고 간단한 레시피를 추천해주는 웹 애플리케이션입니다.
+**냉파고**는 냉장고 속 재료를 활용할 수 있는 레시피를 추천해주는 웹 애플리케이션입니다.
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4-green?logo=springboot&logoColor=white)
-![Java](https://img.shields.io/badge/Java-17-orange?logo=java&logoColor=white)
-![JUnit5](https://img.shields.io/badge/JUnit5-Test%20Framework-brightgreen?logo=java&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql&logoColor=white)
-![ElasticSearch](https://img.shields.io/badge/ElasticSearch-7.16.2-yellow?logo=elasticsearch&logoColor=white)
-![Firebase Storage](https://img.shields.io/badge/Firebase%20Storage-Cloud-orange?logo=firebase&logoColor=white)
+### 사용 기술
 
-![Docker](https://img.shields.io/badge/Docker-20.10-blue?logo=docker&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-lightblue?logo=githubactions&logoColor=white)
-![NCP](https://img.shields.io/badge/Naver%20Cloud%20Platform-Cloud-green?logo=naver&logoColor=white)
+**Backend**
 
-![React](https://img.shields.io/badge/React-18-blue?logo=react&logoColor=white)
-![Redux Toolkit](https://img.shields.io/badge/Redux%20Toolkit-State%20Management-purple?logo=redux&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.0-blue?logo=tailwindcss&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-Build%20Tool-yellow?logo=vite&logoColor=white)
+![Java](https://img.shields.io/badge/☕_Java-F89820?&style=for-the-badge&logo=Java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?&style=for-the-badge&logo=SpringBoot&logoColor=white)
+![JUnit5](https://img.shields.io/badge/JUnit5-25A162?&style=for-the-badge&logo=JUnit5&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?&style=for-the-badge&logo=Gradle&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?&style=for-the-badge&logo=Swagger&logoColor=black)
+
+**Database & Storage**
+
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Firebase Storage](https://img.shields.io/badge/Firebase_Storage-DD2C00?style=for-the-badge&logo=firebase&logoColor=white)
+
+**Search Engine & Message Broker**
+
+![ElasticSearch](https://img.shields.io/badge/ElasticSearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
+
+**DevOps & Infrastructure**
+
+![macOS](https://img.shields.io/badge/macOS(server)-000000?style=for-the-badge&logo=macos&logoColor=white)
+![NGINX](https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white)
+
+**Frontend**
+
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Redux](https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
 ## 🕒 프로젝트 기간
 
-**1차 프로젝트: 2024년 12월 17일 ~ 2025년 1월 9일 (발표일: 1월 10일), 24일** 
+2024.12.17 ~ 2025.02.13 **(2개월)** 
 
 
 ## 🎯 프로젝트 목적
