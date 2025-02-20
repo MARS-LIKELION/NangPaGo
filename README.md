@@ -120,9 +120,23 @@
 - **게시물 관리**: 작성, 수정, 삭제, 조회 기능 지원
 - **댓글 소통**: 사용자 간 댓글을 통한 소통 지원
 - **실시간 알림**: 댓글 작성 시 게시물 작성자에게 실시간 알림 제공
+- **사용자 레시피 공유 기능**: 사용자가 직접 레시피를 작성, 다른 사용자들과 공유 
 
 ---
 
+## 📊 데이터셋 및 전처리
+레시피 데이터셋 출처: 식품의약품안전처 조리식품 레시피 DB
+
+데이터 전처리:
+- 정규화식을 통한 전처리, 불필요한 열 제거 및 null 값 처리.
+- 재료 리스트를 ElasticSearch에 최적화된 형태로 변환.
+
+### 레시피 추천 흐름
+- 사용자가 보유한 재료 입력.
+- ElasticSearch에서 해당 재료를 포함한 레시피 검색.
+- 정렬 및 필터링 후 사용자가 선호할 만한 결과 반환.
+
+---
 
 ## 🤝 협업 도구 & 워크플로우
 
@@ -148,36 +162,29 @@
 
 ---
 
-## 서버 아키텍처
-### 배포 URL: https://nangpago.site
+## 💻 배포 환경
+
+### 서버 아키텍처
+#### 배포 URL: https://nangpago.site
+- **자체 웹서버 구축**
+  - 홈 네트워크에 포트 포워딩 설정, 여분의 macOS 랩탑(맥북)을 웹 서버로 구성하여 자체 서버 구축
+- **Docker Compose 활용**
+  - Backend, Frontend, DB, ElasticSearch, RabbitMQ, Jenkins 모두 컨테이너화.
 
 ![alt text](assets/server_architecture.png)
 
-
-## 📊 데이터셋 및 전처리
-레시피 데이터셋
-출처: 식품의약품안전처 조리식품 레시피 DB
-데이터 전처리:
-- 정규화식을 통한 전처리, 불필요한 열 제거 및 null 값 처리.
-- 재료 리스트를 ElasticSearch에 최적화된 형태로 변환.
-
-## 레시피 추천 흐름
-- 사용자가 보유한 재료 입력.
-- ElasticSearch에서 해당 재료를 포함한 레시피 검색.
-- 정렬 및 필터링 후 사용자가 선호할 만한 결과 반환.
-
----
-
-## 배포 환경
+### CI/CD 파이프라인
 ![alt text](assets/cicd.png)
-- **CI/CD 파이프라인 구성:**
-  - PR 생성 시 자동 Build/Test 수행.
-  - Release 버전이 생성되면 자동으로 Docker 컨테이너 배포.
-- **Docker Compose 활용:**
-  - Backend, Frontend, DB, ElasticSearch 모두 컨테이너화.
+
+- **CI/CD 파이프라인 구성**
+  - Git pre-push 훅을 통해 로컬 환경에서 테스트 자동 수행
+    - 테스트 통과 시에만 원격 저장소 Push 허용
+  - Pull Request 생성 시 GitHub Actions를 통한 자동 빌드 수행
+  - Release 버전 생성 시 Jenkins Webhook 트리거
+    - Jenkins가 main 브랜치 기반으로 Build, Test, Deploy 자동화
+    - 배포 결과 Discord 알림 발송
 
 ---
-
 
 ## 📄 프로젝트 구조
 ```yaml
