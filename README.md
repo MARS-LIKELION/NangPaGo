@@ -124,17 +124,26 @@
 ---
 
 
-## 🤝 협업 방법 워크플로우
+## 🤝 협업 도구 & 워크플로우
 
-### 협업 도구
-![Jira](https://img.shields.io/badge/Jira-Task%20Management-blue?logo=jira&logoColor=white)
-![Confluence](https://img.shields.io/badge/Confluence-Documentation-blue?logo=confluence&logoColor=white)
-![Discord](https://img.shields.io/badge/Discord-Team%20Communication-purple?logo=discord&logoColor=white)
+### 🤼 협업 도구
 
-### 워크플로우
+**Task Management**
+
+![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
+
+**Documents**
+
+![Confluence](https://img.shields.io/badge/Confluence-172B4D?style=for-the-badge&logo=confluence&logoColor=white)
+
+**Communication**
+
+![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
+
+### 💼 워크플로우
 - 작업 관리: Jira를 활용해 작업 티켓 생성 및 상태 추적.
 - 문서 관리: Confluence에 프로젝트 설계 및 기술 문서 기록.
-- CI/CD 파이프라인: GitHub Actions로 빌드, 테스트, 배포 자동화.
+- CI 파이프라인: GitHub Actions로 빌드 & 테스트를 통한 검증 자동화
 - 코드 리뷰: PR 작성 및 최소 1명 이상의 승인 후 병합.
 
 ---
