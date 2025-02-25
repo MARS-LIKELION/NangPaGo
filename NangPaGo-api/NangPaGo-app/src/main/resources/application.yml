@@ -148,6 +148,9 @@ spring:
     activate:
       on-profile: local
 
+  elasticsearch:
+    index-name: recipe_dev
+
 logging:
   level:
     root: info
@@ -158,6 +161,9 @@ spring:
   config:
     activate:
       on-profile: prod
+
+  elasticsearch:
+    index-name: recipe_prod
 
 logging:
   file:
@@ -176,6 +182,8 @@ spring:
   config:
     activate:
       on-profile: test
+  elasticsearch:
+    index-name: recipe_dev
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
