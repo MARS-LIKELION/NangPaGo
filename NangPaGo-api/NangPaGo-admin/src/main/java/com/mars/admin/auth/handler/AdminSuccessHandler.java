@@ -37,7 +37,7 @@ public class AdminSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String email = userDetails.getUsername();
 
         checkAuthority(email);
-        setCsrfToken(request, response);
+        issueCsrfTokenInCookie(request, response);
     }
 
     private void checkAuthority(String email) {
@@ -49,7 +49,7 @@ public class AdminSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         }
     }
 
-    private void setCsrfToken(HttpServletRequest request, HttpServletResponse response) {
+    private void issueCsrfTokenInCookie(HttpServletRequest request, HttpServletResponse response) {
         CsrfToken csrfToken = cookieCsrfTokenRepository.generateToken(request);
         cookieCsrfTokenRepository.saveToken(csrfToken, request, response);
     }
