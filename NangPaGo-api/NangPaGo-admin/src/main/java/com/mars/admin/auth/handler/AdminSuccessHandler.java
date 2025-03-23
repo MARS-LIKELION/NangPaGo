@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Component;
 public class AdminSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
+    private final CookieCsrfTokenRepository cookieCsrfTokenRepository;
+
     @Value("${client.host}")
     private String clientHost;
 
@@ -32,11 +36,21 @@ public class AdminSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String email = userDetails.getUsername();
 
+        checkAuthority(email);
+        setCsrfToken(request, response);
+    }
+
+    private void checkAuthority(String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> NOT_FOUND_USER.of("사용자 검증 에러: " + email));
 
         if (!user.getRole().equals("ROLE_ADMIN")) {
             throw FORBIDDEN.of("해당 아이디로 접근할 수 없습니다.");
         }
+    }
+
+    private void setCsrfToken(HttpServletRequest request, HttpServletResponse response) {
+        CsrfToken csrfToken = cookieCsrfTokenRepository.generateToken(request);
+        cookieCsrfTokenRepository.saveToken(csrfToken, request, response);
     }
 }
