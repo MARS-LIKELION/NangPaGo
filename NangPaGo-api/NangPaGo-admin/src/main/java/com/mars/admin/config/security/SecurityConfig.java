@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,35 +32,37 @@ public class SecurityConfig {
         "/api-docs/**",
         "/v3/api-docs/**",
     };
+    private static final String LOGIN_URI = "/api/login/proc";
+    private static final String LOGOUT_URI = "/api/logout";
 
     private final AdminSuccessHandler adminSuccessHandler;
     private final AdminFailureHandler adminFailureHandler;
     private final AdminLogoutSuccessHandler adminLogoutSuccessHandler;
+    private final CookieCsrfTokenRepository cookieCsrfTokenRepository;
+    private final CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler;
 
     @Value("${client.host}")
     private String clientHost;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(AbstractHttpConfigurer::disable)
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(cookieCsrfTokenRepository)
+                .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
+                .ignoringRequestMatchers(LOGIN_URI)
+            )
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/api/login/proc")
+                .loginProcessingUrl(LOGIN_URI)
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .successHandler(adminSuccessHandler)
                 .failureHandler(adminFailureHandler)
             )
             .logout(logout -> logout
-                .logoutUrl("/api/logout")
+                .logoutUrl(LOGOUT_URI)
                 .logoutSuccessHandler(adminLogoutSuccessHandler)
             )
             .sessionManagement(session -> session
@@ -71,11 +75,15 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(WHITE_LIST).permitAll()
-                .requestMatchers("/api/**")
-                .hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
             )
             .build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
