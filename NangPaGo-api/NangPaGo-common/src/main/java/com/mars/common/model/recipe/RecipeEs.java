@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(indexName = "recipes")
+@Document(indexName = "#{@elasticsearchIndexConfig.getIndexName()}")
 public class RecipeEs {
 
     @Id
